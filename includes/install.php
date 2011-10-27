@@ -19,7 +19,7 @@ if(!defined('IN_MP')){die('Access denied!');}
 				padding-right:10px;
 				padding-left:10px;
 				background-color: #CCCCCC; 
-				height: 20em; 
+				height: 30em; 
 				-webkit-border-radius:10px;
 				-moz-border-radius:10px;
 				border-radius:10px;
@@ -143,7 +143,7 @@ if(!defined('IN_MP')){die('Access denied!');}
 		</div>
 
 		</div>
-		<div id="ft" role="contentinfo"><p>Powered by MapleLeaf <?php echo MP_VERSION;?></p></div>
+		<div id="ft" role="contentinfo"><p>Powered by YuanPad <?php echo MP_VERSION;?></p></div>
 		<?php }?>
 		</div>
 	</body>

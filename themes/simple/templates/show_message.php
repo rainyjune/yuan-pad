@@ -28,7 +28,7 @@ echo '<pre>';
 print_r($msg);
 echo '</pre>';
 ?>
-            <br /><?php echo (ZFramework::app()->copyright_info)?htmlspecialchars_decode(ZFramework::app()->copyright_info):"Powered by MapleLeaf";?>
+            <br /><?php echo (ZFramework::app()->copyright_info)?htmlspecialchars_decode(ZFramework::app()->copyright_info):"Powered by YuanPad";?>
 
     </div>
 </body></html>

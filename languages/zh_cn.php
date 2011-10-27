@@ -1,7 +1,7 @@
 <?php
 return array(
-    'WELCOME_SYS'=>'欢迎使用MapleLeaf',
-    'THANKS'=>'感谢使用枫叶留言板.',
+    'WELCOME_SYS'=>'欢迎使用YuanPad',
+    'THANKS'=>'感谢使用 YuanPad.',
     'STATS_INFO'=>'统计信息',
     'NUM_POSTS'=>'帖子数量',
     'NUM_REPLY'=>'回复数量',
@@ -186,8 +186,8 @@ return array(
     'LANGUAGE_ERROR'=>'语言未定义!',
     'QUERY_ERROR'=>'查询错误!',
     //安装
-    'INSTALL_PANEL'=>'枫叶留言板安装面板',
-    'INSTALL_MP'=>'安装 MapleLeaf',
+    'INSTALL_PANEL'=>'YuanPad 安装面板',
+    'INSTALL_MP'=>'安装 YuanPad',
     'ADMIN_USERNAME'=>'管理员用户名',
     'ADMIN_USERNAME_MIN'=>'至少三个字符',
     'ADMIN_PASSWORD'=>'管理员密码',

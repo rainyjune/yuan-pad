@@ -1,11 +1,10 @@
 <?php
 /**
- * @author rainyjune <dreamneverfall@gmail.com>
- * @link http://mapleleaf.googlecode.com/
+ * @author rainyjune <rainyjune@live.cn>
+ * @link http://yuan-pad.googlecode.com/
  * @copyright Copyright &copy; 2008-2011 rainyjune
  * @license GPL2
  * @version $Id: index.php 584 2011-09-17 01:21:57Z dreamneverfall@gmail.com $
- * @since 1.9
  */
 
 session_start();

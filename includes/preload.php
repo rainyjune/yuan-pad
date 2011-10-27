@@ -2,7 +2,7 @@
 /**
  * Bootstrap file
  *
- * @author rainyjune <dreamneverfall@gmail.com>
+ * @author rainyjune <rainyjune@live.cn>
  * @version $Id: preload.php 590 2011-09-17 03:58:44Z dreamneverfall@gmail.com $
  */
 if(!defined('IN_MP')){die('Access denied!');}
@@ -35,7 +35,7 @@ else
     include './sites/default/default.config.php';
 //定义常量
 define('CONFIGFILE', conf_path().'/config.php');
-define('MP_VERSION','2.0 alpha');
+define('MP_VERSION','1.0');
 define('THEMEDIR', 'themes/');
 define('SMILEYDIR', 'http://mapleleaf.googlecode.com/files/');
 

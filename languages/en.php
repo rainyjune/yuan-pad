@@ -1,11 +1,11 @@
 <?php
 return array(
-    'WELCOME_SYS'=>'Welcome to MapleLeaf',
-    'THANKS'=>'Thanks for using MapleLeaf.',
+    'WELCOME_SYS'=>'Welcome to YuanPad',
+    'THANKS'=>'Thanks for using YuanPad.',
     'STATS_INFO'=>'Statistical Information',
     'NUM_POSTS'=>'Number of Posts',
     'NUM_REPLY'=>'Number of Replies',
-    'MP_VERSION'=>'MapleLeaf Version',
+    'MP_VERSION'=>'YuanPad Version',
     'SYS_INFO'=>'System Info',
     'PHP_VERSION'=>'PHP Version',
     'GD_VERSION'=>'GD Version',
@@ -188,8 +188,8 @@ return array(
     'LANGUAGE_ERROR'=>'Language undefined!',
     'QUERY_ERROR'=>'Query error!',
     //installation
-    'INSTALL_PANEL'=>'MapleLeaf Installation Panel',
-    'INSTALL_MP'=>'MapleLeaf Installation',
+    'INSTALL_PANEL'=>'YuanPad Installation Panel',
+    'INSTALL_MP'=>'YuanPad Installation',
     'ADMIN_USERNAME'=>'Administrator username',
     'ADMIN_USERNAME_MIN'=>'at least 3 characters',
     'ADMIN_PASSWORD'=>'Administrator password',

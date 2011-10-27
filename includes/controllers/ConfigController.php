@@ -34,7 +34,7 @@ class ConfigController extends BaseController{
         header("Location:index.php?action=control_panel&subtab=siteset");
     }
     private function set_board_name(){
-        $board_name=$_POST['board_name']?maple_quotes($_POST['board_name']):'MapleLeaf';
+        $board_name=$_POST['board_name']?maple_quotes($_POST['board_name']):'YuanPad';
         $this->_model->query(sprintf(parse_tbprefix("UPDATE <sysvar> SET varvalue='%s' WHERE varname='board_name'"),$board_name));
     }
 
@@ -54,7 +54,7 @@ class ConfigController extends BaseController{
     }
 
     private function set_copyright_info(){
-        @$copyright_info=$_POST['copyright_info']?maple_quotes($_POST['copyright_info']):'Copyright &copy; 2011 mapleleaf.googlecode.com';
+        @$copyright_info=$_POST['copyright_info']?maple_quotes($_POST['copyright_info']):'Copyright &copy; 2011 yuan-pad.googlecode.com';
         $this->_model->query(sprintf(parse_tbprefix("UPDATE <sysvar> SET varvalue='%s' WHERE varname='copyright_info'"),$copyright_info));
     }
 
