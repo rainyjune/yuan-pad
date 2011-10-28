@@ -1,7 +1,7 @@
 <?php
 /**
  * @author rainyjune <dreamneverfall@gmail.com>
- * @version $Id: functions.php 592 2011-09-17 05:02:00Z dreamneverfall@gmail.com $
+ * @version $Id$
  */
 
 /**

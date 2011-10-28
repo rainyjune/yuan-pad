@@ -1,8 +1,7 @@
 <?php
 /**
  * @author rainyjune <dreamneverfall@gmail.com>
- * @version $Id: api.php 591 2011-09-17 04:03:22Z dreamneverfall@gmail.com $
- * @since 1.9
+ * @version $Id$
  */
 session_start();
 define('IN_MP',true);

@@ -3,7 +3,7 @@
  * Badip controller
  *
  * @author rainyjune <dreamneverfall@gmail.com>
- * @version $Id: BadipController.php 587 2011-09-17 02:58:14Z dreamneverfall@gmail.com $
+ * @version $Id$
  */
 class BadipController extends BaseController
 {

@@ -55,7 +55,7 @@
  * @author	 Michal Migurski <mike-json@teczno.com>
  * @author	 Matt Knapp <mdknapp[at]gmail[dot]com>
  * @author	 Brett Stimmerman <brettstimmerman[at]gmail[dot]com>
- * @version $Id: CJSON.php 2569 2010-10-25 18:50:08Z qiang.xue $
+ * @version $Id$
  * @package	system.web.helpers
  * @since 1.0
  */

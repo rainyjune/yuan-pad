@@ -3,7 +3,7 @@
  * Bootstrap file
  *
  * @author rainyjune <rainyjune@live.cn>
- * @version $Id: preload.php 590 2011-09-17 03:58:44Z dreamneverfall@gmail.com $
+ * @version $Id$
  */
 if(!defined('IN_MP')){die('Access denied!');}
 if(version_compare(PHP_VERSION,'5.1.0','<')){die('PHP Version 5.1.0+ required!');}

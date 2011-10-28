@@ -1,4 +1,9 @@
 <?php
+/**
+ * Site Controller
+ * @author rainyjune <rainyjune@live.cn>
+ * @version $Id$
+ */
 class SiteController extends BaseController{
     protected   $_model;
     protected   $_verifyCode;
@@ -43,46 +48,52 @@ class SiteController extends BaseController{
     //安装程序
     public function actionInstall(){
         $languages=get_all_langs();
-        if(!isset($_GET['l']) || !in_array($_GET['l'],$languages) || $_GET['l']=='en'){	$language='en';}
-        else
-            $language=$_GET['l'];
+		$language=(isset($_GET['l']) && in_array($_GET['l'],$languages))?$_GET['l']:'en';
         $installed=FALSE;
+		$tips=array();
         if(!file_exists(CONFIGFILE))        //先检查配置文件是否存在和可写
-            $tips=t('CONFIG_FILE_NOTEXISTS',array('{config_file}'=>CONFIGFILE),$language);
+            $tips[]=t('CONFIG_FILE_NOTEXISTS',array('{config_file}'=>CONFIGFILE),$language);
         elseif(!is_writable(CONFIGFILE))
-            $tips=t('CONFIG_FILE_NOTWRITABLE',array('{config_file}'=>CONFIGFILE),$language);
-        elseif(!is_writable(APPROOT.'/data/'))
-            $tips= t ('DATADIR_NOT_WRITABLE', array(), $language);
-        if(!empty ($_POST['adminname']) && !empty($_POST['adminpass']) && !empty ($_POST['dbtype']) &&!empty ($_POST['dbusername']) && !empty ($_POST['dbname']) && !empty ($_POST['dbhost']) && strlen(trim($_POST['adminname']))>2 ){
-            $adminname=maple_quotes($_POST['adminname']);
-            $adminpass=maple_quotes($_POST['adminpass']);
-            $dbname=  maple_quotes($_POST['dbname']);
-            $tbprefix=$_POST['tbprefix'];
-            $url=$_POST['dbtype'].'://'.$_POST['dbusername'].':'.$_POST['dbpwd'].'@'.$_POST['dbhost'].'/'.$_POST['dbname'];
-            #$db=YDB::factory($url);
-            $formError='';
-            try{
-                $db=YDB::factory($url);
-            }
-            catch (Exception $e){
-                $formError=$e->getMessage();
-            }
-            if(!$formError){
-                $url_string="<?php\n\$db_url = '$url';\n\$db_prefix = '$tbprefix';\n?>";
-                file_put_contents(CONFIGFILE, $url_string);
-                $sql_file=APPROOT.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.$_POST['dbtype'].'.sql';
-                $sql_array=file($sql_file);
-                $translate=array('{time}'=>  time(),'{ip}'=>  getIP(),'{admin}'=>$adminname,'{adminpass}'=>$adminpass,'{lang}'=>$language,'<'=>$tbprefix,'>'=>'');
-                foreach ($sql_array as $sql) {
-                    $_sql=html_entity_decode(strtr(trim($sql),$translate),ENT_COMPAT,'UTF-8');
-                    $db->query($_sql);
-                }
-                $installed=TRUE;
-            }
-        }
-	if(file_exists(dirname(dirname(__FILE__)).'/install.php')){
-	    include dirname(dirname(__FILE__)).'/install.php';
-	}  else {
+            $tips[]=t('CONFIG_FILE_NOTWRITABLE',array('{config_file}'=>CONFIGFILE),$language);
+        if(!is_writable(APPROOT.'/data/'))
+            $tips[]=t('DATADIR_NOT_WRITABLE', array(), $language);
+		if(isset($_POST['dbtype']))
+		{
+			if(!empty ($_POST['adminname']) && !empty($_POST['adminpass']) && !empty ($_POST['dbtype']) &&!empty ($_POST['dbusername']) && !empty ($_POST['dbname']) && !empty ($_POST['dbhost']) && strlen(trim($_POST['adminname']))>2 ){
+				$adminname=maple_quotes($_POST['adminname']);
+				$adminpass=maple_quotes($_POST['adminpass']);
+				$dbname=  maple_quotes($_POST['dbname']);
+				$tbprefix=$_POST['tbprefix'];
+				$url=$_POST['dbtype'].'://'.$_POST['dbusername'].':'.$_POST['dbpwd'].'@'.$_POST['dbhost'].'/'.$_POST['dbname'];
+				#$db=YDB::factory($url);
+				$formError='';
+				try{
+					$db=YDB::factory($url);
+				}
+				catch (Exception $e){
+					$formError=$e->getMessage();
+				}
+			}
+			else
+			{
+				$formError=t('FILL_NOT_COMPLETE',array(),$language);
+			}
+			if(!$formError){
+				$url_string="<?php\n\$db_url = '$url';\n\$db_prefix = '$tbprefix';\n?>";
+				file_put_contents(CONFIGFILE, $url_string);
+				$sql_file=APPROOT.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.$_POST['dbtype'].'.sql';
+				$sql_array=file($sql_file);
+				$translate=array('{time}'=>  time(),'{ip}'=>  getIP(),'{admin}'=>$adminname,'{adminpass}'=>$adminpass,'{lang}'=>$language,'<'=>$tbprefix,'>'=>'');
+				foreach ($sql_array as $sql) {
+					$_sql=html_entity_decode(strtr(trim($sql),$translate),ENT_COMPAT,'UTF-8');
+					$db->query($_sql);
+				}
+				$installed=TRUE;
+			}
+		}
+		if(file_exists(dirname(dirname(__FILE__)).'/install.php')){
+		    include dirname(dirname(__FILE__)).'/install.php';
+		}  else {
             die ('Access denied!');
         }
     }

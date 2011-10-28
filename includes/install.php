@@ -67,27 +67,32 @@ if(!defined('IN_MP')){die('Access denied!');}
 	<body>
 
 		<div id="custom-doc" class="yui-t7">
-	<?php
-		if($installed){
-			echo t('FINISHED', array(), $language);
-		}else{
-	?>
-		<div id="hd" role="banner">
-		<div class="right"><a href="index.php?action=install&amp;l=en">English</a>&nbsp;<a href="index.php?action=install&amp;l=zh_cn">中文</a></div>
-		<h1><?php echo t('INSTALL_MP', array(), $language);?></h1>
-		</div>
-		<div id="bd" role="main">
-		<div class="yui-g">
 		<?php
-		if(isset ($tips)){
-			echo '<font color="red">'.$tips."</font>";
-			echo "<a href='{$_SERVER["PHP_SELF"]}?action=install&l=$language&amp;s=".  rand()."'>".t('RETRY', array(), $language)."</a>&nbsp;";
-			echo "<a href='http://yuan-pad.googlecode.com/' target='_blank'>".t('INSTALL_NEED_HELP', array(), $language)."</a>";
-		}else{
-			if(@$formError){
-				echo '<p><font color="red">'.$formError.'</font></p>';
-			}
-			?>
+			if($installed){
+				echo t('FINISHED', array(), $language);
+			}else{
+		?>
+			<div id="hd" role="banner">
+				<div class="right"><a href="index.php?action=install&amp;l=en">English</a>&nbsp;<a href="index.php?action=install&amp;l=zh_cn">中文</a></div>
+				<h1><?php echo t('INSTALL_MP', array(), $language);?></h1>
+			</div>
+			<div id="bd" role="main">
+				<div class="yui-g">
+				<?php
+				if(!empty($tips)){
+					echo '<ol>';
+					foreach($tips as $tip)
+					{
+						echo '<li><font color="red">'.$tip."</font></li>";
+					}
+					echo '</ol>';
+					echo "<a href='{$_SERVER["PHP_SELF"]}?action=install&l=$language&amp;s=".  rand()."'>".t('RETRY', array(), $language)."</a>&nbsp;";
+					echo "<a href='http://yuan-pad.googlecode.com/' target='_blank'>".t('INSTALL_NEED_HELP', array(), $language)."</a>";
+				}else{
+					if(@$formError){
+						echo '<p><font color="red">'.$formError.'</font></p>';
+					}
+					?>
 				<form action="index.php?action=install&l=<?php echo $language;?>" method="post">
 				<table align="center">
 				<tr>

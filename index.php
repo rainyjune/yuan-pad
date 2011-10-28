@@ -4,7 +4,7 @@
  * @link http://yuan-pad.googlecode.com/
  * @copyright Copyright &copy; 2008-2011 rainyjune
  * @license GPL2
- * @version $Id: index.php 584 2011-09-17 01:21:57Z dreamneverfall@gmail.com $
+ * @version $Id$
  */
 
 session_start();
