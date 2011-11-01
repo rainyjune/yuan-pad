@@ -94,13 +94,29 @@ function is_email($value)
  *
  * @global array $actionEvent
  * @param string $action <p>The name of action</p>
- * @param string $evt <p>The name of event</p>
+ * @param mixed $evt <p>The name of event</p>
  */
 function attachEvent($action,$evt)
 {
 	global $actionEvent;
 	if (!@in_array($evt, $actionEvent[$action]))
 		$actionEvent[$action][]=$evt;
+}
+/**
+ * 执行绑定到action的事件
+ * @global array $actionEvent
+ * @param string $action
+ * @param array $param 
+ */
+function performEvent($action,$param=array())
+{
+	global $actionEvent;
+	$functions=@$actionEvent[$action];
+	if($functions){
+		foreach($functions as $function){
+			call_user_func_array($function, $param);
+		}
+	}
 }
 
 /**
@@ -471,6 +487,27 @@ function getLangArray($userSpecifiedLanguage=null)
 		}
 	}
 	return include APPROOT.'/languages/'.getConfigVar('lang').'.php';
+}
+/**
+ * 得到所有插件
+ * 
+ * @param boolean $loadPlugin 是否载入插件
+ * @return array
+ */
+function get_alll_plugins($loadPlugin=FALSE)
+{
+	$plugins=array();
+	$d=dir(PLUGINDIR);
+	while(false!==($entry=$d->read())){
+		if(substr($entry,0,1)!='.' && is_dir(PLUGINDIR.DIRECTORY_SEPARATOR.$entry)){
+			$plugins[$entry]=$entry;
+			if($loadPlugin){
+				require_once PLUGINDIR.$entry.DIRECTORY_SEPARATOR.$entry.'.php';
+			}
+		}
+	}
+	$d->close();
+	return array_filter($plugins,'_removeIndex');
 }
 
 /**

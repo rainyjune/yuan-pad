@@ -47,6 +47,7 @@ class PostController extends BaseController{
             //写入数据库
             if(!$this->_model->query($sql_insert))
                 die($this->_model->error());
+			performEvent('PostController/actionCreate',array($user,$content, time()+ZFramework::app()->timezone*60*60));
             if(defined('API_MODE')){
                 $json_array=array('insert_id'=>  $this->_model->insert_id());
                 die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));

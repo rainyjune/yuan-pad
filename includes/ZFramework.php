@@ -107,7 +107,8 @@ class ZFramework{
             if(class_exists($this->getController())){
                 $rc=new ReflectionClass($this->getController());
                 if($rc->isSubclassOf('BaseController')){
-                    if($rc->hasMethod($this->getAction())){                        
+                    if($rc->hasMethod($this->getAction())){      
+						get_alll_plugins(TRUE);
                         $controller=$rc->newInstance();
                         $method=$rc->getMethod($this->getAction());
                         $method->invoke($controller);
