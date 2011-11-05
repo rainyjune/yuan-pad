@@ -38,7 +38,7 @@ define('CONFIGFILE', conf_path().'/config.php');
 define('MP_VERSION','1.0');
 define('THEMEDIR', 'themes/');
 define('PLUGINDIR', 'plugins/');
-define('SMILEYDIR', 'http://mapleleaf.googlecode.com/files/');
+define('SMILEYDIR', 'misc/images/');
 
 if (!function_exists('json_encode')){ include 'CJSON.php'; }
 include_once 'Imgcode.php';
