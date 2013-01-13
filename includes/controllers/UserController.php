@@ -11,8 +11,6 @@ class UserController extends BaseController{
         $tabs_array=array('overview','siteset','message','ban_ip','user');
         $tabs_name_array=array(t('ACP_OVERVIEW'),t('ACP_CONFSET'),t('ACP_MANAGE_POST'),t('ACP_MANAGE_IP'),  t('USER_ADMIN'));
         $user_data=$this->_model->queryAll(parse_tbprefix("SELECT * FROM <user>"));
-        //echo '<pre>';
-        //var_dump($user_data);exit;
         $this->render('user_list',array('users'=>$user_data,'tabs_array'=>$tabs_array,'current_tab'=>$current_tab,'tabs_name_array'=>$tabs_name_array,));
     }
     public function actionCreate(){
@@ -146,14 +144,14 @@ class UserController extends BaseController{
     public function actionLogin(){
         global $API_CODE;
         $session_name=session_name();
-        if (isset($_SESSION['admin'])){//若管理员已经登录
+        if (isset($_SESSION['admin'])){//admin logged in
             if(defined('API_MODE')){
                 $json_array=array('admin'=>$_SESSION['admin'],'session_name'=>$session_name,'session_value'=>session_id());
                 die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
             }
             header("Location:index.php?action=control_panel");exit;
         }
-	if (isset($_SESSION['user'])){//若普通用户已经登录
+	if (isset($_SESSION['user'])){//common user logged in
             if(defined('API_MODE')){
                 $json_array=array('user'=>$_SESSION['user'],'uid'=>$_SESSION['uid'],'session_name'=>$session_name,'session_value'=>session_id());
                 die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
@@ -161,20 +159,20 @@ class UserController extends BaseController{
             header("Location:index.php");exit;
         }
         //exit;
-        if(isset($_REQUEST['user']) && isset($_REQUEST['password'])){//若用户提交了登录表单
+        if(isset($_REQUEST['user']) && isset($_REQUEST['password'])){// The login form submitted
             $user=  $this->_model->escape_string($_REQUEST['user']);
             $password=$this->_model->escape_string($_REQUEST['password']);
-	    if( ($user==ZFramework::app()->admin) && ($password==ZFramework::app()->password) ){//若使用管理员帐户成功登录
+	    if( ($user==ZFramework::app()->admin) && ($password==ZFramework::app()->password) ){//Admin user
                 $_SESSION['admin']=$_REQUEST['user'];
                 if(defined('API_MODE')){
                     $json_array=array('admin'=>$_SESSION['admin'],'session_name'=>$session_name,'session_value'=>session_id());
                     die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
                 }
-		
+
 		header("Location:index.php?action=control_panel");
 		exit;
 	    }
-	    else{//使用普通用户登录
+	    else{//common user
                 $user_result=  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <user> WHERE username='%s' AND password='%s'"),$user,$password));
 		$user_result=@$user_result[0];
 		if($user_result){
@@ -183,7 +181,7 @@ class UserController extends BaseController{
                     if(defined('API_MODE')){
                         $json_array=array('user'=>$_REQUEST['user'],'uid'=>$user_result['uid'],'session_name'=>$session_name,'session_value'=>session_id());
                         die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
-                    }	    
+                    }
 		    header("Location:index.php");exit;
 		}else{
 		    $errormsg=t('LOGIN_ERROR');
@@ -214,5 +212,5 @@ class UserController extends BaseController{
         }
         header("Location:index.php");
     }
-    
+
 }

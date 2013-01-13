@@ -2,28 +2,17 @@ $(document).ready(function() {
     var d = new Date()
     if(self.location!=parent.location){parent.location.replace(self.location);}
     $.ajax({type: "GET",url: 'index.php',data: {action: "getSysJSON",t:d.getTime()},dataType: 'json',cache:false,contentType: "application/json",success: function(data){languageTips=data;},error: function(xhr, status, error) {alert(error);}});
-    //点击表情图案将对应代码写入留言中
     $('#smileys img').click(function(){imgId=String($(this).attr('id'));$('#content').val($('#content').val()+imgId);});
-    //鼠标在验证码图案上时，使用小手鼠标手势
     $('#captcha_img').mouseover(function(){$(this).addClass('pointer');});
-    //点击验证码，刷新
     $('#captcha_img').click(function(){$(this).attr('src',$(this).attr('src')+'&id='+Math.random());});
-    //将代表ajax请求的隐藏字段写入表单
     $('<input type="hidden" name="ajax" value="true" />').insertAfter('#pid');
-    /*同时按下 Enter + Ctrl 提交表单*/
     $(document).keypress(function(e){if(e.ctrlKey && e.which == 13 || e.which == 10) {$("#guestbook").submit();} else if (e.shiftKey && e.which==13 || e.which == 10) {$("#guestbook").submit();}});
-    //显示默认隐藏的表情图案
     $('#smileys').css('display','block');
-    //显示默认隐藏的“点击留言”
     $('#toggleForm').css('display','inline');
-    //隐藏留言表单
     $("#add_table").hide();
     $("#search").click(function(){$(this).val('')});
-    //显示“Press Ctrl+Enter to post”
     $('#post_shortcut').show();
-    //为“点击留言”应用鼠标手势
     $("#toggleForm").hover(function(){$(this).addClass("pointer");});
-    //点击“点击留言”，隐藏，显示表单
     $("#toggleForm").click( function() {$("#add_table").animate({height: 'show', opacity: 'show'}, 'slow');$('#toggleForm').fadeOut('slow');});
     var post={
         message:null,
@@ -42,9 +31,8 @@ $(document).ready(function() {
                         success: function(data){
                             $('#captcha_img').attr('src',$('#captcha_img').attr('src')+'&id='+Math.random());
                             if(data == "OK"){
-                                document.getElementById('guestbook').reset();//重置留言表单
+                                document.getElementById('guestbook').reset();
                                 post.showSuccess();
-                                //刷新留言
                                 $.getJSON('index.php',{ajax:'yes',pid:$('#pid').val()},function(data){
                                     $("#main_table tr:not('.header')").remove();
                                     $.each(data.messages,function(i,item){
@@ -59,9 +47,8 @@ $(document).ready(function() {
                                                 trString += _C;
                                             }
                                         trString+="</div></td>\n<td>"+item.time+"</td>\n</tr>\n";
-                                        $(".header").after(trString);  
+                                        $(".header").after(trString);
                                     });
-                                    //刷新分页（若开启）
                                     if(document.getElementById('pagination')){
                                         $('span#totalNum').html(data.total);
                                         $('span#totalPages').html(data.pagenum);
@@ -77,12 +64,12 @@ $(document).ready(function() {
                                         }
                                         $('span#pagenumString').html(pagenumString);
                                     };
-									prettyPrint();//页面刷新后执行代码高亮
+									prettyPrint();
                                 });
                             }else{
                                 post.message=data;
                                 post.showError();
-                            }     
+                            }
                         },
                         error:post.error,
                         complete:function(){
@@ -233,5 +220,5 @@ $(document).ready(function() {
         onHide: closeModal,
         onShow: openInFrame
     });
-	prettyPrint();//页面载入后执行代码高亮
+	prettyPrint();
 });

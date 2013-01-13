@@ -37,7 +37,7 @@
 		<div id="tagContent">
 
 		      <div id="user_container" class="tagContent selectTag">
-			<!-- 用户管理 -->
+			<!-- User Management -->
                         <form id="user_manage" action="index.php?controller=user&amp;action=delete_multi" method="post">
 			<table width="800px">
                             <thead>

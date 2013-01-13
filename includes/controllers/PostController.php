@@ -13,8 +13,8 @@ class PostController extends BaseController{
      */
     public function actionCreate(){
         global $API_CODE;
-        if(isset ($_POST['user'])){//只允许 POST 方式
-            //插入到数据库前的验证
+        if(isset ($_POST['user'])){
+            //Validation
             $new_data_error_msg='';
             if ( !strlen(trim($_POST['user'])) || !strlen(trim($_POST['content'])))
                 $new_data_error_msg=t('FILL_NOT_COMPLETE');
@@ -32,7 +32,7 @@ class PostController extends BaseController{
                 else
                     show_message ($new_data_error_msg, true, 'index.php');
             }
-            //准备插入数据
+            // Ready to send query to database
             $user=  $this->_model->escape_string($_POST['user']);
             if(!isset($_SESSION['admin']) && $_POST['user']==ZFramework::app()->admin )
                 $user='anonymous';
@@ -44,7 +44,7 @@ class PostController extends BaseController{
                 $sql_insert= sprintf (parse_tbprefix("INSERT INTO <post> ( uid , content , post_time , ip ) VALUES ( %d , '%s' , %d , '%s' )"), $_SESSION['uid'],$content,  time (),  getIp ());
             else
                 $sql_insert = sprintf (parse_tbprefix("INSERT INTO <post> ( uname , content , post_time , ip ) VALUES ( '%s' ,'%s' , %d , '%s')"), $user,$content,  time (),  getIp ());
-            //写入数据库
+            // Send query to database
             if(!$this->_model->query($sql_insert))
                 die($this->_model->error());
 			performEvent('PostController/actionCreate',array($user,$content, time()+ZFramework::app()->timezone*60*60));

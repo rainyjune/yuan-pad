@@ -1,30 +1,18 @@
 <?php
 /**
- * 定义 FLEA_Helper_ImgCode 类
+ * FLEA_Helper_ImgCode Class
  *
  * @copyright Copyright (c) 2005 - 2008 QeeYuan China Inc. (http://www.qeeyuan.com)
- * @author 起源科技 (www.qeeyuan.com)
+ * @author www.qeeyuan.com
  * @version $Id$
  */
 class FLEA_Helper_ImgCode
 {
-     // 生成的验证码
-    var $_code;    
-     // 验证码过期时间
+    var $_code;
     var $_expired;
-     // 验证码图片的类型（默认为 jpeg）
     var $imagetype = 'jpeg';
-    /**
-     * 指示是否在生成验证码图片时保留已有的验证码
-     * 保留已有的验证码可以让用户在各个不同的页面都看到一致的验证码。
-     * 只有这个验证码使用后，已有的验证码才会失效。
-     * @var boolean
-     */
     var $keepCode = false;
 
-    /**
-     * 构造函数
-     */
     function FLEA_Helper_ImgCode()
     {
         @session_start();
@@ -35,11 +23,6 @@ class FLEA_Helper_ImgCode
                 $_SESSION['IMGCODE_EXPIRED'] : 0;
     }
 
-    /**
-     * 检查图像验证码是否有效
-     * @param string $code
-     * @return boolean
-     */
     function check($code)
     {
         $time = time();
@@ -49,11 +32,6 @@ class FLEA_Helper_ImgCode
         return true;
     }
 
-    /**
-     * 检查图像验证码是否有效（区分大小写）
-     * @param string $code
-     * @return boolean
-     */
     function checkCaseSensitive($code)
     {
         $time = time();
@@ -63,41 +41,17 @@ class FLEA_Helper_ImgCode
         return true;
     }
 
-    /**
-     * 清除 session 中的 imgcode 相关信息
-     */
     function clear()
     {
         unset($_SESSION['IMGCODE']);
         unset($_SESSION['IMGCODE_EXPIRED']);
     }
 
-    /**
-     * 利用 GD 库产生验证码图像
-     *
-     * 目前 $options 参数支持下列选项：
-     * -  paddingLeft, paddingRight, paddingTop, paddingBottom
-     * -  border, borderColor
-     * -  font, color, bgcolor
-     *
-     * 如果 font 为 0-5，则使用 GD 库内置的字体。
-     * 如果要指定字体文件，则 font 选项必须为字体文件的绝对路径，例如：
-     * <code>
-     * $options = array('font' => '/var/www/example/myfont.gdf');
-     * image($type, $length, $lefttime, $options);
-     * </code>
-     *
-     * @param int $type 验证码包含的字符类型，0 - 数字、1 - 字母、其他值 - 数字和字母
-     * @param int $length 验证码长度
-     * @param int $leftime 验证码有效时间（秒）
-     * @param array $options 附加选项，可以指定字体、宽度和高度等参数
-     */
     function image($type = 0, $length = 4, $lefttime = 900, $options = null)
     {
         if ($this->keepCode && $this->_code != '') {
             $code = $this->_code;
         } else {
-            // 生成验证码
             switch ($type) {
             case 0:
                 $seed = '0123456789';
@@ -120,7 +74,6 @@ class FLEA_Helper_ImgCode
         }
         $_SESSION['IMGCODE_EXPIRED'] = time() + $lefttime;
 
-        // 设置选项
         $paddingLeft = isset($options['paddingLeft']) ?
                 (int)$options['paddingLeft'] : 3;
         $paddingRight = isset($options['paddingRight']) ?
@@ -134,7 +87,6 @@ class FLEA_Helper_ImgCode
         $border = isset($options['border']) ? (int)$options['border'] : 1;
         $bdColor = isset($options['borderColor']) ? $options['borderColor'] : '0x000000';
 
-        // 确定要使用的字体
         if (!isset($options['font'])) {
             $font = 5;
         } else if (is_int($options['font'])) {
@@ -144,38 +96,31 @@ class FLEA_Helper_ImgCode
             $font = imageloadfont($options['font']);
         }
 
-        // 确定字体宽度和高度
         $fontWidth = imagefontwidth($font);
         $fontHeight = imagefontheight($font);
 
-        // 确定图像的宽度和高度
         $width = $fontWidth * strlen($code) + $paddingLeft + $paddingRight +
                 $border * 2 + 1;
         $height = $fontHeight + $paddingTop + $paddingBottom + $border * 2 + 1;
 
-        // 创建图像
         $img = imagecreate($width, $height);
 
-        // 绘制边框
         if ($border) {
             list($r, $g, $b) = $this->_hex2rgb($bdColor);
             $borderColor = imagecolorallocate($img, $r, $g, $b);
             imagefilledrectangle($img, 0, 0, $width, $height, $borderColor);
         }
 
-        // 绘制背景
         list($r, $g, $b) = $this->_hex2rgb($bgcolor);
         $backgroundColor = imagecolorallocate($img, $r, $g, $b);
         imagefilledrectangle($img, $border, $border,
                 $width - $border - 1, $height - $border - 1, $backgroundColor);
 
-        // 绘制文字
         list($r, $g, $b) = $this->_hex2rgb($color);
         $textColor = imagecolorallocate($img, $r, $g, $b);
         imagestring($img, $font, $paddingLeft + $border, $paddingTop + $border,
                 $code, $textColor);
 
-        // 输出图像
         switch (strtolower($this->imagetype)) {
         case 'png':
             header("Content-type: " . image_type_to_mime_type(IMAGETYPE_PNG));
@@ -195,11 +140,6 @@ class FLEA_Helper_ImgCode
         unset($img);
     }
 
-    /**
-     * 将 16 进制颜色值转换为 rgb 值
-     * @param string $hex
-     * @return array
-     */
     function _hex2rgb($color, $defualt = 'ffffff')
     {
         $color = strtolower($color);

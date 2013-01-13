@@ -2,7 +2,7 @@
 /**
  * Badip controller
  *
- * @author rainyjune <dreamneverfall@gmail.com>
+ * @author rainyjune <rainyjune@live.cn>
  * @version $Id$
  */
 class BadipController extends BaseController
@@ -36,7 +36,7 @@ class BadipController extends BaseController
 		{
             header("Location:index.php?action=control_panel&subtab=ban_ip");exit;
         }
-        foreach ($ip_update_array as $_ip) 
+        foreach ($ip_update_array as $_ip)
 		{
             $this->_model->query(sprintf(parse_tbprefix("DELETE FROM <badip> WHERE ip = '%s'"),$_ip));
         }

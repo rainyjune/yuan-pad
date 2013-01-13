@@ -43,7 +43,7 @@
 
     </div>
     <div class="copyright">
-	    Powered by YuanPad <?php echo MP_VERSION;?>  Copyright &copy;2008-2011
+	    Powered by YuanPad <?php echo MP_VERSION;?>  Copyright &copy;2008-2013
     </div>
 </body>
 </html>

@@ -1,9 +1,4 @@
 <?php
-/**
- * 控制器基础类
- *
- *
- */
 class BaseController{
     public function render($tplFile,$vars=NULL){
         if ($vars)
@@ -14,10 +9,6 @@ class BaseController{
     }
 }
 
-/**
- * 框架类，核心是 URL 路由分配
- *
- */
 class ZFramework{
     protected   $_controller;
     protected   $_action;
@@ -45,30 +36,17 @@ class ZFramework{
         'UserController/actionUpdate',
         );
 
-	/**
-	 * 返回一个本类的实例
-	 *
-	 */
     public static function app(){
         if(!(self::$_instance instanceof  self)){
             self::$_instance=new self();
         }
         return self::$_instance;
     }
-	
-	/**
-	 * getConfigVar 的代理函数
-	 * @param $name 
-	 * @return mixed
-	 */
+
     public function  __get($name) {
 		return getConfigVar($name);
     }
 
-	/**
-	 * 构造函数
-	 *
-	 */
     private function  __construct(){
         $this->preloadAllControllers();
         $this->_controller=!empty ($_GET['controller'])?ucfirst($_GET['controller']).'Controller':$this->defaultController;
@@ -77,11 +55,7 @@ class ZFramework{
             $this->_params[$key]=$value;
         }
     }
-	
-	/**
-	 * 预载入所有 controller
-	 *
-	 */
+
     protected function preloadAllControllers(){
         $dir=dirname(__FILE__).'/'.$this->_controllerPath;
         $d=dir($dir);
@@ -93,10 +67,6 @@ class ZFramework{
         $d->close();
     }
 
-	/**
-	 * 执行任务
-	 *
-	 */
     public function run(){
         global $API_CODE;
         if (defined('API_MODE') && !in_array($this->_controller.'/'.$this->_action, $this->allow_request_api)){
@@ -107,7 +77,7 @@ class ZFramework{
             if(class_exists($this->getController())){
                 $rc=new ReflectionClass($this->getController());
                 if($rc->isSubclassOf('BaseController')){
-                    if($rc->hasMethod($this->getAction())){      
+                    if($rc->hasMethod($this->getAction())){
 						get_alll_plugins(TRUE);
                         $controller=$rc->newInstance();
                         $method=$rc->getMethod($this->getAction());
@@ -137,28 +107,14 @@ class ZFramework{
         }
     }
 
-	/**
-	 * 得到 GET 参数
-	 *
-	 * @return array
-	 */
     public function getParams(){
         return $this->_params;
     }
-	
-	/**
-	 * 返回当前的 controller
-	 *
-	 * @return string
-	 */
+
     public function getController(){
         return $this->_controller;
     }
 
-	/**
-	 * 返回当前的 action
-	 * @return string
-	 */
     public function getAction(){
         return $this->_action;
     }

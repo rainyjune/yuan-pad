@@ -1,6 +1,6 @@
 <?php
 /**
- * @author rainyjune <dreamneverfall@gmail.com>
+ * @author rainyjune <rainyjune@live.cn>
  * @version $Id$
  */
 session_start();

@@ -33,7 +33,7 @@ class SiteController extends BaseController{
         $admin=isset($_SESSION['admin'])?true:false;
         $adminName=  ZFramework::app()->admin;
         $smileys=show_smileys_table();
-        
+
         $this->render('index',array(
             'data'=>$data,
             'admin'=>$admin,
@@ -45,13 +45,12 @@ class SiteController extends BaseController{
             ));
     }
 
-    //安装程序
     public function actionInstall(){
         $languages=get_all_langs();
 		$language=(isset($_GET['l']) && in_array($_GET['l'],$languages))?$_GET['l']:'en';
         $installed=FALSE;
 		$tips=array();
-        if(!file_exists(CONFIGFILE))        //先检查配置文件是否存在和可写
+        if(!file_exists(CONFIGFILE))        // Check the configuration file permissions
             $tips[]=t('CONFIG_FILE_NOTEXISTS',array('{config_file}'=>CONFIGFILE),$language);
         elseif(!is_writable(CONFIGFILE))
             $tips[]=t('CONFIG_FILE_NOTWRITABLE',array('{config_file}'=>CONFIGFILE),$language);
@@ -187,5 +186,5 @@ HERE;
         $langArray['ADMIN_NAME_INDEX']=ZFramework::app()->admin;
         echo function_exists('json_encode') ? json_encode($langArray) : CJSON::encode($langArray);
     }
-     
+
 }

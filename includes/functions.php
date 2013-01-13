@@ -1,6 +1,6 @@
 <?php
 /**
- * @author rainyjune <dreamneverfall@gmail.com>
+ * @author rainyjune <rainyjune@live.cn>
  * @version $Id$
  */
 
@@ -8,7 +8,7 @@
  * Validate IP Address
  *
  * @param string $ip
- * @return boolean 
+ * @return boolean
  */
 function valid_ip($ip)
 {
@@ -64,8 +64,8 @@ function gd_version()
 
 /**
  * Get IP of visitor
- * 
- * @return string 
+ *
+ * @return string
  */
 function getIP()
 {
@@ -103,10 +103,10 @@ function attachEvent($action,$evt)
 		$actionEvent[$action][]=$evt;
 }
 /**
- * 执行绑定到action的事件
+ * Trigger all events attached to the specified action
  * @global array $actionEvent
  * @param string $action
- * @param array $param 
+ * @param array $param
  */
 function performEvent($action,$param=array())
 {
@@ -159,21 +159,21 @@ function performEvent($action,$param=array())
  * @return
  *   The path of the matching directory.
  */
-function conf_path($require_settings = TRUE, $reset = FALSE) 
+function conf_path($require_settings = TRUE, $reset = FALSE)
 {
-	static $conf = '';//静态变量
+	static $conf = '';
 
-	if ($conf && !$reset) {//若静态变量有值，并且 $reset 为默认
-		return $conf;//返回匹配的目录
+	if ($conf && !$reset) {
+		return $conf;
 	}
 
-	$confdir = 'sites';//配置目录
-	$uri = explode('/', $_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : $_SERVER['SCRIPT_FILENAME']);//当前脚本的路径
-	$server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));//将主机名分离为数组
-	for ($i = count($uri) - 1; $i > 0; $i--) {//遍历
+	$confdir = 'sites';
+	$uri = explode('/', $_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : $_SERVER['SCRIPT_FILENAME']);
+	$server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));
+	for ($i = count($uri) - 1; $i > 0; $i--) {
 		for ($j = count($server); $j > 0; $j--) {
 			$dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
-			if (file_exists("$confdir/$dir/config.php") || (!$require_settings && file_exists("$confdir/$dir"))) {//若匹配文件找到或者，探测一个匹配的目录并且有指定的目录存在
+			if (file_exists("$confdir/$dir/config.php") || (!$require_settings && file_exists("$confdir/$dir"))) {
 				$conf = "$confdir/$dir";
 				return $conf;
 			}
@@ -200,7 +200,7 @@ function is_flatfile()
 /**
  * Delete backuped data , only triggered by admin logout
  *
- * @global string $db_url 
+ * @global string $db_url
  */
 function delete_backup_files()
 {
@@ -240,7 +240,7 @@ function is_baned($ip)
 	return false;
 }
 /**
- * 
+ *
  *
  * @global string $db_prefix
  * @param string $str
@@ -259,7 +259,7 @@ function get_all_data($parse_smileys=true,$filter_words=false,$processUsername=f
 	$data=$db->queryAll(parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS user,p.content AS post_content,p.post_time AS time,r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <user> AS u ON p.uid=u.uid ORDER BY p.post_time DESC"));
 	foreach ($data as &$_data) {
 		if($apply_filter && ZFramework::app()->filter_type==ConfigController::FILTER_TRIPTAGS){
-			if(strstr(ZFramework::app()->allowed_tags, 'code')){//若允许了 code 标签，执行替换
+			if(strstr(ZFramework::app()->allowed_tags, 'code')){
 				$_data['post_content'] = preg_replace_callback('|<code>(.*)</code>|sU', create_function(
 							// single quotes are essential here,
 							// or alternative escape all $ as \$
@@ -272,7 +272,7 @@ function get_all_data($parse_smileys=true,$filter_words=false,$processUsername=f
 							'$matches',
 							'return "<pre class=\'prettyprint\'>".str_replace(">","&gt;",str_replace("<","&lt;",$matches[1]))."</pre>";'
 							),$_data['reply_content']);
-				if(!strstr(ZFramework::app()->allowed_tags, 'pre')){//若允许了 code 但不允许 pre ，允许 pre
+				if(!strstr(ZFramework::app()->allowed_tags, 'pre')){
 					ZFramework::app()->allowed_tags .= "<pre>";
 				}
 			}
@@ -300,7 +300,7 @@ function get_all_data($parse_smileys=true,$filter_words=false,$processUsername=f
 }
 
 /**
- * 将表情符号转换为表情图案
+ * Parse smileys
  * @param $str
  * @param $image_url
  * @param $smileys
@@ -319,7 +319,7 @@ function parse_smileys($str = '', $image_url = '', $smileys = NULL)
 	return $str;
 }
 /**
- * 过滤敏感词语
+ * Filter words
  * @param array $input
  */
 function filter_words($input)
@@ -329,7 +329,7 @@ function filter_words($input)
 	return $input;
 }
 /**
- * 显示表情
+ * Show all smileys
  */
 function show_smileys_table()
 {
@@ -337,7 +337,7 @@ function show_smileys_table()
 	return $smiley;
 }
 /**
- * 替换被过滤的词语
+ *
  * @param array $filter_words
  */
 function fix_filter_string($filter_words)
@@ -365,7 +365,7 @@ function get_supported_rdbms()
 	return $supported_rdbms;
 }
 /**
- * 判断是否已安装
+ * Determine whether the app installed or not
  *
  * @return bool
  */
@@ -377,20 +377,16 @@ function is_installed()
 	return true;
 }
 
-/**
- * 转义字符串
- *
- */
 function maple_quotes($var,$charset='UTF-8')
 {
 	return htmlspecialchars(trim($var),ENT_QUOTES,  $charset);
 }
 
 /**
- * 得到留言板的配置参数
- * @param $name 配置参数名
- * @return mixed 配置参数值或者NULL
- */	
+ * Get specified config value
+ * @param $name config name
+ * @return mixed config value or NULL
+ */
 function getConfigVar($name)
 {
 	global $db_url;
@@ -404,7 +400,7 @@ function getConfigVar($name)
 }
 
 /**
- * 得到表情图案
+ * Get smileys
  * @return array
  */
 function getSmileys()
@@ -414,7 +410,7 @@ function getSmileys()
 
 
 /**
- * 得到所有可用的主题
+ * Get all available themes
  */
 function get_all_themes()
 {
@@ -429,7 +425,7 @@ function get_all_themes()
 }
 
 /**
- * 得到所有可用的语言。在 languages/ 目录里搜寻语言文件
+ * Get all available languages
  *
  * @return array
  */
@@ -451,7 +447,7 @@ function _removeIndex($var){
 
 
 /**
- * 得到所有的时区，翻译后的时区信息
+ * Get all time zones.
  *
  * @return array
  */
@@ -459,11 +455,11 @@ function get_all_timezone()
 {
 	$timezone=  include APPROOT.'/languages/'.getConfigVar('lang').'.php';
 	return $timezone['TZ_ZONES'];
-}    
+}
 
 
 /**
- * 显示信息
+ * Show message
  */
 function show_message($msg,$redirect=false,$redirect_url='index.php',$time_delay=3)
 {
@@ -472,7 +468,7 @@ function show_message($msg,$redirect=false,$redirect_url='index.php',$time_delay
 
 
 /**
- * 得到指定语言的语言翻译信息
+ * Get specified language
  *
  * @param mixed $userSpecifiedLanguage
  * @return array
@@ -489,9 +485,9 @@ function getLangArray($userSpecifiedLanguage=null)
 	return include APPROOT.'/languages/'.getConfigVar('lang').'.php';
 }
 /**
- * 得到所有插件
- * 
- * @param boolean $loadPlugin 是否载入插件
+ * Get all available plugins
+ *
+ * @param boolean $loadPlugin
  * @return array
  */
 function get_alll_plugins($loadPlugin=FALSE)
@@ -511,7 +507,7 @@ function get_alll_plugins($loadPlugin=FALSE)
 }
 
 /**
- * 翻译指定信息
+ * Translate one message
  *
  * @param mixed $message
  * @param array $params
@@ -527,7 +523,7 @@ function t($message,$params=array(),$userSpecifiedLanguage=null)
 }
 
 /**
- * 判断是否是关闭模式
+ * Determine the site is in maintenance mode or not.
  *
  */
 function is_closedMode()
@@ -549,7 +545,7 @@ function stripslashes_deep($value)
 }
 
 /**
- * 反设置所有被禁止的全局变量.
+ * Unset all disabled global variables.
  * @return void
  */
 function maple_unset_globals()

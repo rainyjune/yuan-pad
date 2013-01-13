@@ -164,7 +164,7 @@
 			</form>
 		    </div><!-- Configuration -->
 		    <div id="message_container" <?php if($current_tab=='message'){?>	class="tagContent selectTag" <?php } else {?>	class="tagContent" <?php }?>>
-			<!-- 留言管理 -->
+			<!-- Messages management -->
                         <form id="message_manage" action="index.php?controller=post&amp;action=delete_multi_messages" method="post">
 			<table width="800px">
                             <thead>
@@ -211,7 +211,7 @@
 		    </div><!-- Messages -->
 
 		    <div id="ip_container" <?php if($current_tab=='ban_ip'){?> class="tagContent selectTag" <?php } else {?> class="tagContent" <?php }?>>
-			<!-- IP管理 -->
+			<!-- IP Management -->
 			<form id="banip_manage" action="index.php?controller=badip&amp;action=update" method="post">
 			    <table class="table2">
                                 <thead>

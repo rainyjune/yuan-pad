@@ -13,7 +13,7 @@ class ConfigController extends BaseController{
         is_admin();
         if(!$_POST){ header ("Location:index.php?action=control_panel");exit;}
         $this->_admin_password=  ZFramework::app()->password;
-        
+
         $this->set_board_name();
         $this->set_site_close();
         $this->set_close_reason();
@@ -30,7 +30,7 @@ class ConfigController extends BaseController{
 
         $this->set_filter_type();
         $this->set_allowed_tags();
-        
+
         header("Location:index.php?action=control_panel&subtab=siteset");
     }
     private function set_board_name(){
@@ -49,7 +49,7 @@ class ConfigController extends BaseController{
     }
 
     private function set_admin_email(){
-        $admin_email=$_POST['admin_email']?maple_quotes($_POST['admin_email']):'dreamneverfall@gmail.com';
+        $admin_email=$_POST['admin_email']?maple_quotes($_POST['admin_email']):'rainyjune@live.cn';
         $this->_model->query(sprintf(parse_tbprefix("UPDATE <sysvar> SET varvalue='%s' WHERE varname='admin_email'"),$admin_email));
     }
 
