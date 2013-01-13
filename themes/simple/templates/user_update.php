@@ -4,7 +4,7 @@
   <head>
       <meta charset="utf-8">
       <title><?php echo t('UPDATE');?></title>
-      <link rel="stylesheet" href="http://yui.yahooapis.com/2.8.0r4/build/reset-fonts-grids/reset-fonts-grids.css" type="text/css" />
+      <link rel="stylesheet" href="misc/reset-fonts-grids.css" type="text/css" />
         <style type="text/css">
            #custom-doc { width: 62%; min-width: 250px; background-color: #CCCCCC; height: 10em;}
            div{text-align: center; }
