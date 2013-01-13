@@ -1,8 +1,8 @@
 <?php if(!defined('IN_MP')){die('Access denied!');} ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 <meta http-equiv="pragma" content="no-cache" />
 <meta http-equiv="Cache-Control" content="no-cache,must-revalidate" />
 <meta http-equiv="expires" content="0" />
@@ -11,8 +11,8 @@
 <!--[if lt IE 8]><link rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/';?>blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]-->
 <link type="text/css" rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/admin.css';?>" />
 <link type="text/css" rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/jqModal.css';?>" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://mapleleaf.googlecode.com/files/jqModal.js"></script>
+<script type="text/javascript" src="misc/jquery.min.js"></script>
+<script type="text/javascript" src="misc/jqModal.js"></script>
 <script type="text/javascript" src="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/admin.js';?>"></script>
 <title><?php echo t('ACP_INDEX');?></title>
 </head>
@@ -229,7 +229,7 @@
 			    </table>
 			</form>
 		    </div><!-- Bad IPs -->
-		    
+
 		</div>
 	    </div><!-- yui-g  -->
 	</div><!-- body -->

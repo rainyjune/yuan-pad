@@ -1,8 +1,8 @@
 <?php if(!defined('IN_MP')){die('Access denied!');} ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<!DOCTYPE html>
 <html>
   <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <meta charset="utf-8">
       <title><?php echo t('UPDATE');?></title>
       <link rel="stylesheet" href="http://yui.yahooapis.com/2.8.0r4/build/reset-fonts-grids/reset-fonts-grids.css" type="text/css" />
         <style type="text/css">
@@ -10,7 +10,7 @@
            div{text-align: center; }
            #language{float: right}
         </style>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+        <script type="text/javascript" src="misc/jquery.min.js"></script>
         <script type="text/javascript">
         $(document).ready(function(){
             $('a').hide();

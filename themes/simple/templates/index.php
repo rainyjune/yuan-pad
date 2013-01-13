@@ -1,8 +1,8 @@
 <?php if(!defined('IN_MP')){die('Access denied!');} ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta charset="utf-8" />
 <meta http-equiv="pragma" content="no-cache" />
 <meta http-equiv="Cache-Control" content="no-cache,must-revalidate" />
 <meta http-equiv="expires" content="0" />
@@ -12,11 +12,11 @@
 <link type="text/css" rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/jqModal.css';?>" />
 <link type="text/css" rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/index.css';?>" />
 <link type="text/css" rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/jqModal_frame.css';?>" />
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
-<script type="text/javascript" src="http://mapleleaf.googlecode.com/files/jqModal.js"></script>
+<script type="text/javascript" src="misc/jquery.min.js"></script>
+<script type="text/javascript" src="misc/jqModal.js"></script>
 <script type="text/javascript" src="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/index.js';?>"></script>
-<link href="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.css" type="text/css" rel="stylesheet" /> 
-<script src="http://google-code-prettify.googlecode.com/svn/trunk/src/prettify.js" type="text/javascript"></script>
+<link href="misc/prettify.css" type="text/css" rel="stylesheet" /> 
+<script src="misc/prettify.js" type="text/javascript"></script>
 <title><?php echo t('WELCOME',array('{site_name}'=>ZFramework::app()->board_name));?></title>
 </head>
 
@@ -113,11 +113,11 @@
                 <div class="clear">
                     <form action="index.php?controller=search" method="post">
 				<input id="search" type="text" size="10" value="Search" name="s">
-				<input type="image" src="http://aguestbook.sourceforge.net/demo/images/posts/search.gif" value="Search" alt="Search" name="searchImg">
+				<input type="image" src="misc/images/search.gif" value="Search" alt="Search" name="searchImg">
                     </form>
                 </div>
         </div><!-- body -->
-        <div class="clear"><?php echo htmlspecialchars_decode(ZFramework::app()->copyright_info);?> <a href="mailto:<?php echo ZFramework::app()->admin_email;?>"><?php echo t('ADMIN_EMAIL');?></a> <?php if(!isset($_SESSION['user'])): ?><a href="index.php?action=control_panel"><?php echo t('ACP');?></a><?php endif;?> Powered by <a href="http://yuan-pad.googlecode.com/" target="_blank" title="Find More">YuanPad <?php echo MP_VERSION;?></a> <a href="index.php?action=rss"><img src="http://mapleleaf.googlecode.com/files/rss-icon.png" alt="rss" /></a></div><!-- footer -->
+        <div class="clear"><?php echo htmlspecialchars_decode(ZFramework::app()->copyright_info);?> <a href="mailto:<?php echo ZFramework::app()->admin_email;?>"><?php echo t('ADMIN_EMAIL');?></a> <?php if(!isset($_SESSION['user'])): ?><a href="index.php?action=control_panel"><?php echo t('ACP');?></a><?php endif;?> Powered by <a href="http://yuan-pad.googlecode.com/" target="_blank" title="Find More">YuanPad <?php echo MP_VERSION;?></a> <a href="index.php?action=rss"><img src="misc/images/rss-icon.png" alt="rss" /></a></div><!-- footer -->
 
 	<!-- jqModal window -->
 	<div id="modalWindow" class="jqmWindow">
