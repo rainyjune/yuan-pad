@@ -33,3 +33,7 @@ a:visited{
 #smileysTable td{
     padding: 1px;
 }
+#valid_code,
+#captcha_img {
+    vertical-align: middle;
+}
