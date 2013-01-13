@@ -3,30 +3,30 @@
  * @version $Id$
  *
  */
-if(!defined('IN_MP')){die('Access denied!');} 
+if(!defined('IN_MP')){die('Access denied!');}
 ?>
 <!DOCTYPE html>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title><?php echo t('INSTALL_PANEL', array(), $language);?></title>
-		<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+		<script type="text/javascript" src="misc/jquery.min.js"></script>
 		<style type="text/css">
 			html { background:#fff; margin:0 1em; }
 			body { text-align:center; }
-			#custom-doc { 
+			#custom-doc {
 				padding-top:10px;
 				padding-right:10px;
 				padding-left:10px;
-				background-color: #CCCCCC; 
-				height: 30em; 
+				background-color: #CCCCCC;
+				height: 30em;
 				-webkit-border-radius:10px;
 				-moz-border-radius:10px;
 				border-radius:10px;
 			}
 			div{
 				clear:both;
-				text-align: center; 
+				text-align: center;
 				margin:0em auto;
 				min-width:544px;
 				max-width:620px;
