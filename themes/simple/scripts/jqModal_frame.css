@@ -1,4 +1,4 @@
-/* 
+/*
     Document   : jqModal_frame
     Created on : 2010-12-30, 20:23:30
     Author     : rainyjune
@@ -6,14 +6,14 @@
         Purpose of the stylesheet follows.
 */
 
-/* 
+/*
    TODO customize this sample style
    Syntax recommendation http://www.w3.org/TR/REC-CSS2/
 */
 
 .jqmOverlay { background-color: #FFF; }
 .jqmWindow {
-    background: #888888 url(modal_bckgrn.gif) left top repeat-x;
+    background: #888888 url(../images/modal_bckgrn.gif) left top repeat-x;
     color: #000;
     border: 1px solid #888888;
     padding: 0 0px 50px;
