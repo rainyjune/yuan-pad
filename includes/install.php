@@ -8,61 +8,10 @@ if(!defined('IN_MP')){die('Access denied!');}
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta charset="utf-8">
 		<title><?php echo t('INSTALL_PANEL', array(), $language);?></title>
-		<script type="text/javascript" src="misc/jquery.min.js"></script>
-		<style type="text/css">
-			html { background:#fff; margin:0 1em; }
-			body { text-align:center; }
-			#custom-doc {
-				padding-top:10px;
-				padding-right:10px;
-				padding-left:10px;
-				background-color: #CCCCCC;
-				height: 30em;
-				-webkit-border-radius:10px;
-				-moz-border-radius:10px;
-				border-radius:10px;
-			}
-			div{
-				clear:both;
-				text-align: center;
-				margin:0em auto;
-				min-width:544px;
-				max-width:620px;
-			}
-			.right{
-				text-align:right;
-			}
-			.require {
-				color: red;
-			}
-			li {
-				text-align:left;
-			}
-			</style>
-			<script type="text/javascript">
-			//<![CDATA[
-			$(document).ready(function(){
-				$("#submitButton").attr('disabled',"disabled");
-				$("#agree").click(function(){
-					if($("#agree").attr("checked")){
-						$("#submitButton").attr('disabled',"");
-					} else {
-						$("#submitButton").attr('disabled',"disabled");
-					}
-				});
-
-				$('form').submit(function(){
-					if($("#dbtype").val()==""){
-						alert("<?php echo t('DB_TYPE_SELECT',array(),$language);?>");
-						return false;
-					}
-					return true;
-				});
-			});
-			//]]>
-		</script>
+        <link rel="stylesheet" href="misc/installation.css" type="text/css">
+        <script type="text/javascript" src="misc/installation.js"></script>
 	</head>
 	<body>
 		<div id="custom-doc" class="yui-t7">

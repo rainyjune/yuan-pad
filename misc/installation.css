@@ -1,0 +1,31 @@
+/**
+ * @version $Id$
+*/
+html { background:#fff; margin:0 1em; }
+body { text-align:center; }
+#custom-doc {
+    padding-top:10px;
+    padding-right:10px;
+    padding-left:10px;
+    background-color: #CCCCCC;
+    height: 30em;
+    -webkit-border-radius:10px;
+    -moz-border-radius:10px;
+    border-radius:10px;
+}
+div{
+    clear:both;
+    text-align: center;
+    margin:0em auto;
+    min-width:544px;
+    max-width:620px;
+}
+.right{
+    text-align:right;
+}
+.require {
+    color: red;
+}
+li {
+    text-align:left;
+}
