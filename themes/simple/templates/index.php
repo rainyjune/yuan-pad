@@ -15,7 +15,7 @@
 <script type="text/javascript" src="misc/jquery.min.js"></script>
 <script type="text/javascript" src="misc/jqModal.js"></script>
 <script type="text/javascript" src="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/index.js';?>"></script>
-<link href="misc/prettify.css" type="text/css" rel="stylesheet" /> 
+<link href="misc/prettify.css" type="text/css" rel="stylesheet" />
 <script src="misc/prettify.js" type="text/javascript"></script>
 <title><?php echo t('WELCOME',array('{site_name}'=>ZFramework::app()->board_name));?></title>
 </head>
@@ -25,7 +25,7 @@
         <div id="hd">
             <div class="right">
                 <?php if(ZFramework::app()->site_close):?><span class="notice"><?php echo t('OFF_LINE_MODE');?></span><?php endif;?>
-                
+
                 <?php
                 if(!isset ($_SESSION['admin']) && !isset ($_SESSION['user']))
                     echo '<a class="thickbox" href="index.php?controller=user&amp;action=create&amp;width=630&amp;height=45%">'.t('REGISTER').'</a>&nbsp;<a href="index.php?controller=user&amp;action=login">'.t('LOGIN').'</a>';
@@ -73,7 +73,7 @@
             </div>
             <?php }?>
             <div style="text-align:center"><h4><span id="toggleForm"><?php echo t('CLICK_POST');?></span></h4></div>
-            <div class="span-20">
+            <div class="span-20" style="overflow: visible;">
                 <div id="returnedError"></div>
                 <form id="guestbook" name="guestbook" action="index.php?controller=post&amp;action=create" method="post">
                 <input id="pid" type="hidden" name="pid" value="<?php echo @$_GET['pid'];?>" />
@@ -93,8 +93,8 @@
                     </tr>
                     <tr>
                         <td><?php echo t('CONTENT');?></td>
-                        <td><textarea class="span-10" id="content" name="content" cols="45" rows="8" ></textarea></td>
-                        <td><div id='smileys'><?php echo $smileys;?></div>&nbsp;<br /><?php if(ConfigController::FILTER_TRIPTAGS==ZFramework::app()->filter_type){ echo t('ALLOWED_TAGS', array('{allowed_tags}'=> htmlentities(ZFramework::app()->allowed_tags)));}?></td>
+                        <td><textarea id="content" name="content" cols="45" rows="8" ></textarea></td>
+                        <td><div id='smileys'><?php echo $smileys;?></div>&nbsp;<br /><p><?php if(ConfigController::FILTER_TRIPTAGS==ZFramework::app()->filter_type){ echo t('ALLOWED_TAGS', array('{allowed_tags}'=> htmlentities(ZFramework::app()->allowed_tags)));}?></p></td>
                     </tr>
                     <?php if(ZFramework::app()->valid_code_open && gd_loaded()){?>
                     <tr>
