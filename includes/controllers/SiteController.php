@@ -47,52 +47,52 @@ class SiteController extends BaseController{
 
     public function actionInstall(){
         $languages=get_all_langs();
-		$language=(isset($_GET['l']) && in_array($_GET['l'],$languages))?$_GET['l']:'en';
+        $language=(isset($_GET['l']) && in_array($_GET['l'],$languages))?$_GET['l']:'en';
         $installed=FALSE;
-		$tips=array();
+        $tips=array();
         if(!file_exists(CONFIGFILE))        // Check the configuration file permissions
             $tips[]=t('CONFIG_FILE_NOTEXISTS',array('{config_file}'=>CONFIGFILE),$language);
         elseif(!is_writable(CONFIGFILE))
             $tips[]=t('CONFIG_FILE_NOTWRITABLE',array('{config_file}'=>CONFIGFILE),$language);
         if(!is_writable(APPROOT.'/data/'))
             $tips[]=t('DATADIR_NOT_WRITABLE', array(), $language);
-		if(isset($_POST['dbtype']))
-		{
-			if(!empty ($_POST['adminname']) && !empty($_POST['adminpass']) && !empty ($_POST['dbtype']) &&!empty ($_POST['dbusername']) && !empty ($_POST['dbname']) && !empty ($_POST['dbhost']) && strlen(trim($_POST['adminname']))>2 ){
-				$adminname=maple_quotes($_POST['adminname']);
-				$adminpass=maple_quotes($_POST['adminpass']);
-				$dbname=  maple_quotes($_POST['dbname']);
-				$tbprefix=$_POST['tbprefix'];
-				$url=$_POST['dbtype'].'://'.$_POST['dbusername'].':'.$_POST['dbpwd'].'@'.$_POST['dbhost'].'/'.$_POST['dbname'];
-				#$db=YDB::factory($url);
-				$formError='';
-				try{
-					$db=YDB::factory($url);
-				}
-				catch (Exception $e){
-					$formError=$e->getMessage();
-				}
-			}
-			else
-			{
-				$formError=t('FILL_NOT_COMPLETE',array(),$language);
-			}
-			if(!$formError){
-				$url_string="<?php\n\$db_url = '$url';\n\$db_prefix = '$tbprefix';\n?>";
-				file_put_contents(CONFIGFILE, $url_string);
-				$sql_file=APPROOT.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.$_POST['dbtype'].'.sql';
-				$sql_array=file($sql_file);
-				$translate=array('{time}'=>  time(),'{ip}'=>  getIP(),'{admin}'=>$adminname,'{adminpass}'=>$adminpass,'{lang}'=>$language,'<'=>$tbprefix,'>'=>'');
-				foreach ($sql_array as $sql) {
-					$_sql=html_entity_decode(strtr(trim($sql),$translate),ENT_COMPAT,'UTF-8');
-					$db->query($_sql);
-				}
-				$installed=TRUE;
-			}
-		}
-		if(file_exists(dirname(dirname(__FILE__)).'/install.php')){
-		    include dirname(dirname(__FILE__)).'/install.php';
-		}  else {
+        if(isset($_POST['dbtype']))
+        {
+            if(!empty ($_POST['adminname']) && !empty($_POST['adminpass']) && !empty ($_POST['dbtype']) &&!empty ($_POST['dbusername']) && !empty ($_POST['dbname']) && !empty ($_POST['dbhost']) && strlen(trim($_POST['adminname']))>2 ){
+                $adminname=maple_quotes($_POST['adminname']);
+                $adminpass=maple_quotes($_POST['adminpass']);
+                $dbname=  maple_quotes($_POST['dbname']);
+                $tbprefix=$_POST['tbprefix'];
+                $url=$_POST['dbtype'].'://'.$_POST['dbusername'].':'.$_POST['dbpwd'].'@'.$_POST['dbhost'].'/'.$_POST['dbname'];
+                #$db=YDB::factory($url);
+                $formError='';
+                try{
+                    $db=YDB::factory($url);
+                }
+                catch (Exception $e){
+                    $formError=$e->getMessage();
+                }
+            }
+            else
+            {
+                $formError=t('FILL_NOT_COMPLETE',array(),$language);
+            }
+            if(!$formError){
+                $url_string="<?php\n\$db_url = '$url';\n\$db_prefix = '$tbprefix';\n?>";
+                file_put_contents(CONFIGFILE, $url_string);
+                $sql_file=APPROOT.DIRECTORY_SEPARATOR.'data'.DIRECTORY_SEPARATOR.$_POST['dbtype'].'.sql';
+                $sql_array=file($sql_file);
+                $translate=array('{time}'=>  time(),'{ip}'=>  getIP(),'{admin}'=>$adminname,'{adminpass}'=>$adminpass,'{lang}'=>$language,'<'=>$tbprefix,'>'=>'');
+                foreach ($sql_array as $sql) {
+                    $_sql=html_entity_decode(strtr(trim($sql),$translate),ENT_COMPAT,'UTF-8');
+                    $db->query($_sql);
+                }
+                $installed=TRUE;
+            }
+        }
+        if(file_exists(dirname(dirname(__FILE__)).'/install.php')){
+            include dirname(dirname(__FILE__)).'/install.php';
+        }  else {
             die ('Access denied!');
         }
     }
@@ -101,14 +101,14 @@ class SiteController extends BaseController{
         is_admin();
         $current_tab='overview';
         $tabs_array=array('overview','siteset','message','ban_ip');
-	$tabs_name_array=array(t('ACP_OVERVIEW'),t('ACP_CONFSET'),t('ACP_MANAGE_POST'),t('ACP_MANAGE_IP'));
+        $tabs_name_array=array(t('ACP_OVERVIEW'),t('ACP_CONFSET'),t('ACP_MANAGE_POST'),t('ACP_MANAGE_IP'));
         if(isset($_GET['subtab'])){
-	    if(in_array($_GET['subtab'],$tabs_array))
-		    $current_tab=$_GET['subtab'];
+        if(in_array($_GET['subtab'],$tabs_array))
+            $current_tab=$_GET['subtab'];
         }
         $themes= get_all_themes();
 
-        $data=get_all_data(TRUE,false,TRUE,TRUE,false);
+        $data=get_all_data(TRUE,false,TRUE,TRUE);
         $reply_data=  $this->_model->queryAll(parse_tbprefix("SELECT * FROM <reply>"));
         $ban_ip_info=  $this->_model->queryAll(parse_tbprefix("SELECT * FROM <badip>"));
 
@@ -117,7 +117,7 @@ class SiteController extends BaseController{
 
         if($gd_exist){
             $gd_info=gd_version();
-	    $gd_version=$gd_info?$gd_info:'<font color="red">'.t('UNKNOWN').'</font>';
+        $gd_version=$gd_info?$gd_info:'<font color="red">'.t('UNKNOWN').'</font>';
         }
         else
             $gd_version='<font color="red">GD'.t('NOT_SUPPORT').'</font>';
@@ -179,7 +179,7 @@ HERE;
         return $data;
     }
     public  function actionCaptcha(){
-	$this->_verifyCode->image(2,4,900,array('borderColor'=>'#66CCFF','bgcolor'=>'#FFCC33'));
+    $this->_verifyCode->image(2,4,900,array('borderColor'=>'#66CCFF','bgcolor'=>'#FFCC33'));
     }
     public function actionGetSysJSON(){
         $langArray=getLangArray();

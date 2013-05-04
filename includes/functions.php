@@ -12,7 +12,7 @@
  */
 function valid_ip($ip)
 {
-	return filter_var($ip,FILTER_VALIDATE_IP);
+    return filter_var($ip,FILTER_VALIDATE_IP);
 }
 
 /**
@@ -21,45 +21,45 @@ function valid_ip($ip)
  */
 function is_admin()
 {
-	if (!isset($_SESSION['admin']))
-	{
-		header("Location:index.php?controller=user&action=login");exit;
-	}
+    if (!isset($_SESSION['admin']))
+    {
+        header("Location:index.php?controller=user&action=login");exit;
+    }
 }
 
 /**
  * Is GD Installed?
  * CI 1.7.2
- * @access	public
- * @return	bool
+ * @access  public
+ * @return  bool
  */
 function gd_loaded()
 {
-	if ( ! extension_loaded('gd'))
-	{
-		if ( ! @dl('gd.so'))
-			return FALSE;
-	}
-	return TRUE;
+    if ( ! extension_loaded('gd'))
+    {
+        if ( ! @dl('gd.so'))
+            return FALSE;
+    }
+    return TRUE;
 }
 
 /**
  * Get GD version
  *
- * @access	public
- * @return	mixed
+ * @access  public
+ * @return  mixed
  */
 function gd_version()
 {
-	$gd_version=FALSE;
-	if (defined('GD_VERSION'))
-		$gd_version=GD_VERSION;
-	elseif(function_exists('gd_info'))
-	{
-		$gd_version = @gd_info();
-		$gd_version = $gd_version['GD Version'];
-	}
-	return $gd_version;
+    $gd_version=FALSE;
+    if (defined('GD_VERSION'))
+        $gd_version=GD_VERSION;
+    elseif(function_exists('gd_info'))
+    {
+        $gd_version = @gd_info();
+        $gd_version = $gd_version['GD Version'];
+    }
+    return $gd_version;
 }
 
 /**
@@ -69,13 +69,13 @@ function gd_version()
  */
 function getIP()
 {
-	$ip = $_SERVER['REMOTE_ADDR'];
-	if (!empty($_SERVER['HTTP_CLIENT_IP']))
-		$ip = $_SERVER['HTTP_CLIENT_IP'];
-	elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
-		$ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-	$ip=$ip?$ip:'127.0.0.1';
-	return $ip;
+    $ip = $_SERVER['REMOTE_ADDR'];
+    if (!empty($_SERVER['HTTP_CLIENT_IP']))
+        $ip = $_SERVER['HTTP_CLIENT_IP'];
+    elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+        $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    $ip=$ip?$ip:'127.0.0.1';
+    return $ip;
 }
 
 /**
@@ -86,7 +86,7 @@ function getIP()
  */
 function is_email($value)
 {
-	return preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $value);
+    return preg_match('/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i', $value);
 }
 
 /**
@@ -98,9 +98,9 @@ function is_email($value)
  */
 function attachEvent($action,$evt)
 {
-	global $actionEvent;
-	if (!@in_array($evt, $actionEvent[$action]))
-		$actionEvent[$action][]=$evt;
+    global $actionEvent;
+    if (!@in_array($evt, $actionEvent[$action]))
+        $actionEvent[$action][]=$evt;
 }
 /**
  * Trigger all events attached to the specified action
@@ -110,13 +110,13 @@ function attachEvent($action,$evt)
  */
 function performEvent($action,$param=array())
 {
-	global $actionEvent;
-	$functions=@$actionEvent[$action];
-	if($functions){
-		foreach($functions as $function){
-			call_user_func_array($function, $param);
-		}
-	}
+    global $actionEvent;
+    $functions=@$actionEvent[$action];
+    if($functions){
+        foreach($functions as $function){
+            call_user_func_array($function, $param);
+        }
+    }
 }
 
 /**
@@ -161,26 +161,26 @@ function performEvent($action,$param=array())
  */
 function conf_path($require_settings = TRUE, $reset = FALSE)
 {
-	static $conf = '';
+    static $conf = '';
 
-	if ($conf && !$reset) {
-		return $conf;
-	}
+    if ($conf && !$reset) {
+        return $conf;
+    }
 
-	$confdir = 'sites';
-	$uri = explode('/', $_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : $_SERVER['SCRIPT_FILENAME']);
-	$server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));
-	for ($i = count($uri) - 1; $i > 0; $i--) {
-		for ($j = count($server); $j > 0; $j--) {
-			$dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
-			if (file_exists("$confdir/$dir/config.php") || (!$require_settings && file_exists("$confdir/$dir"))) {
-				$conf = "$confdir/$dir";
-				return $conf;
-			}
-		}
-	}
-	$conf = "$confdir/default";
-	return $conf;
+    $confdir = 'sites';
+    $uri = explode('/', $_SERVER['SCRIPT_NAME'] ? $_SERVER['SCRIPT_NAME'] : $_SERVER['SCRIPT_FILENAME']);
+    $server = explode('.', implode('.', array_reverse(explode(':', rtrim($_SERVER['HTTP_HOST'], '.')))));
+    for ($i = count($uri) - 1; $i > 0; $i--) {
+        for ($j = count($server); $j > 0; $j--) {
+            $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
+            if (file_exists("$confdir/$dir/config.php") || (!$require_settings && file_exists("$confdir/$dir"))) {
+                $conf = "$confdir/$dir";
+                return $conf;
+            }
+        }
+    }
+    $conf = "$confdir/default";
+    return $conf;
 }
 
 /**
@@ -191,10 +191,10 @@ function conf_path($require_settings = TRUE, $reset = FALSE)
  */
 function is_flatfile()
 {
-	global $db_url;
-	if(substr($db_url, 0, 8)=='flatfile')
-		return true;
-	return false;
+    global $db_url;
+    if(substr($db_url, 0, 8)=='flatfile')
+        return true;
+    return false;
 }
 
 /**
@@ -204,22 +204,22 @@ function is_flatfile()
  */
 function delete_backup_files()
 {
-	global $db_url;
-	is_admin();
-	$url = parse_url($db_url);
-	$url['path'] = urldecode($url['path']);
-	$dbname=substr($url['path'], 1);
-	$dir=APPROOT.'/data/'.$dbname;
-	$d=dir($dir);
-	while(false!==($entry=$d->read()))
-	{
-		if (strlen($entry)==19)
-		{
-			$d_file=$dir.'/'.$entry;
-			unlink($d_file);
-		}
-	}
-	$d->close();
+    global $db_url;
+    is_admin();
+    $url = parse_url($db_url);
+    $url['path'] = urldecode($url['path']);
+    $dbname=substr($url['path'], 1);
+    $dir=APPROOT.'/data/'.$dbname;
+    $d=dir($dir);
+    while(false!==($entry=$d->read()))
+    {
+        if (strlen($entry)==19)
+        {
+            $d_file=$dir.'/'.$entry;
+            unlink($d_file);
+        }
+    }
+    $d->close();
 }
 
 /**
@@ -231,13 +231,13 @@ function delete_backup_files()
  */
 function is_baned($ip)
 {
-	global $db_url;
-	$all_baned_ips=array();
-	$db=YDB::factory($db_url);
-	$result=$db->queryAll(sprintf(parse_tbprefix("SELECT * FROM <badip> WHERE ip='%s'"),$db->escape_string($ip)));
-	if($result)
-		return true;
-	return false;
+    global $db_url;
+    $all_baned_ips=array();
+    $db=YDB::factory($db_url);
+    $result=$db->queryAll(sprintf(parse_tbprefix("SELECT * FROM <badip> WHERE ip='%s'"),$db->escape_string($ip)));
+    if($result)
+        return true;
+    return false;
 }
 /**
  *
@@ -248,55 +248,84 @@ function is_baned($ip)
  */
 function parse_tbprefix($str)
 {
-	global $db_prefix;
-	return strtr($str,array('<'=>$db_prefix,'>'=>''));
+    global $db_prefix;
+    return strtr($str,array('<'=>$db_prefix,'>'=>''));
 }
 
+/**
+ *
+ *
+ * @global string $db_url
+ * @global dom $dom
+ * @param boolean $parse_smileys Defaults to TRUE
+ * @param boolean $filter_words Defaults to FALSE
+ * @param boolean $processUsername Defaults to FALSE
+ * @param boolean $processTime Defaults to FALSE
+ * @param boolean $apply_filter Defaults to TRUE
+ * @return array
+ */
 function get_all_data($parse_smileys=true,$filter_words=false,$processUsername=false,$processTime=false,$apply_filter=true){
-	global $db_url;
-	$db=YDB::factory($db_url);
-	$data=array();
-	$data=$db->queryAll(parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS user,p.content AS post_content,p.post_time AS time,r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <user> AS u ON p.uid=u.uid ORDER BY p.post_time DESC"));
-	foreach ($data as &$_data) {
-		if($apply_filter && ZFramework::app()->filter_type==ConfigController::FILTER_TRIPTAGS){
-			if(strstr(ZFramework::app()->allowed_tags, 'code')){
-				$_data['post_content'] = preg_replace_callback('|<code>(.*)</code>|sU', create_function(
-							// single quotes are essential here,
-							// or alternative escape all $ as \$
-							'$matches',
-							'return "<pre class=\'prettyprint\'>".str_replace(">","&gt;",str_replace("<","&lt;",$matches[1]))."</pre>";'
-							),$_data['post_content']);
-				$_data['reply_content'] = preg_replace_callback('|<code>(.*)</code>|sU', create_function(
-							// single quotes are essential here,
-							// or alternative escape all $ as \$
-							'$matches',
-							'return "<pre class=\'prettyprint\'>".str_replace(">","&gt;",str_replace("<","&lt;",$matches[1]))."</pre>";'
-							),$_data['reply_content']);
-				if(!strstr(ZFramework::app()->allowed_tags, 'pre')){
-					ZFramework::app()->allowed_tags .= "<pre>";
-				}
-			}
-			$_data['post_content']=strip_tags ($_data['post_content'], ZFramework::app()->allowed_tags);
-			$_data['reply_content']=strip_tags ($_data['reply_content'], ZFramework::app()->allowed_tags);
-		}  else{
-			$_data['post_content']=  htmlentities($_data['post_content'],ENT_COMPAT,'UTF-8');
-			$_data['reply_content']=htmlentities($_data['reply_content'],ENT_COMPAT,'UTF-8');
-		}
-		if($parse_smileys){
-			$_data['post_content']=parse_smileys ($_data['post_content'], SMILEYDIR,  getSmileys());
-			$_data['reply_content']=parse_smileys ($_data['reply_content'], SMILEYDIR,  getSmileys());
-		}
-		if($filter_words)
-			$_data['post_content']=filter_words($_data['post_content']);
-		if($processUsername)
-			$_data['user']=($_data['user']==ZFramework::app()->admin)?"<font color='red'>{$_data['user']}</font>":$_data['user'];
-		if($processTime){
-			$_data['time']=date('m-d H:i',$_data['time']+ZFramework::app()->timezone*60*60);
-			$_data['reply_time']=date('m-d H:i',$_data['reply_time']+ZFramework::app()->timezone*60*60);
-		}
+    global $db_url;
+    global $dom;
+    $db=YDB::factory($db_url);
+    $data=array();
+    $data=$db->queryAll(parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS user,p.content AS post_content,p.post_time AS time,r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <user> AS u ON p.uid=u.uid ORDER BY p.post_time DESC"));
+    foreach ($data as &$_data) {
+        if($apply_filter && ZFramework::app()->filter_type==ConfigController::FILTER_TRIPTAGS){
+            if(strstr(ZFramework::app()->allowed_tags, 'code')){
+                $_data['post_content'] = preg_replace_callback('|<code>(.*)</code>|sU', create_function(
+                            // single quotes are essential here,
+                            // or alternative escape all $ as \$
+                            '$matches',
+                            'return "<pre class=\'prettyprint\'>".str_replace(">","&gt;",str_replace("<","&lt;",$matches[1]))."</pre>";'
+                            ),$_data['post_content']);
+                $_data['reply_content'] = preg_replace_callback('|<code>(.*)</code>|sU', create_function(
+                            // single quotes are essential here,
+                            // or alternative escape all $ as \$
+                            '$matches',
+                            'return "<pre class=\'prettyprint\'>".str_replace(">","&gt;",str_replace("<","&lt;",$matches[1]))."</pre>";'
+                            ),$_data['reply_content']);
+                if(!strstr(ZFramework::app()->allowed_tags, 'pre')){
+                    ZFramework::app()->allowed_tags .= "<pre>";
+                }
+            }
+            $_data['post_content']=strip_tags ($_data['post_content'], ZFramework::app()->allowed_tags);
+            $_data['reply_content']=strip_tags ($_data['reply_content'], ZFramework::app()->allowed_tags);
+        }  else{
+            $_data['post_content']=  htmlentities($_data['post_content'],ENT_COMPAT,'UTF-8');
+            $_data['reply_content']=htmlentities($_data['reply_content'],ENT_COMPAT,'UTF-8');
+        }
+        if($parse_smileys){
+            $dom->loadHTML($_data['post_content']);
+            $_data['post_content']= html_entity_decode(parse_smileys ($_data['post_content'], SMILEYDIR,  getSmileys()));
+            if ($_data['reply_content']) {
+                $dom->loadHTML($_data['reply_content']);
+                $_data['reply_content']= html_entity_decode(parse_smileys ($_data['reply_content'], SMILEYDIR,  getSmileys()));
+            }
+        }
+        if($filter_words)
+            $_data['post_content']=filter_words($_data['post_content']);
+        if($processUsername)
+            $_data['user']=($_data['user']==ZFramework::app()->admin)?"<font color='red'>{$_data['user']}</font>":$_data['user'];
+        if($processTime){
+            $_data['time']=date('m-d H:i',$_data['time']+ZFramework::app()->timezone*60*60);
+            $_data['reply_time']=date('m-d H:i',$_data['reply_time']+ZFramework::app()->timezone*60*60);
+        }
 
-	}
-	return $data;
+    }
+    return $data;
+}
+
+function preg_replace_dom($regex, $replacement, DOMNode $dom, array $excludeParents = array()) {
+    if (!empty($dom->childNodes)) {
+        foreach ($dom->childNodes as $node) {
+            if ($node instanceof DOMText && !in_array($node->parentNode->nodeName, $excludeParents)) {
+                $node->nodeValue = preg_replace($regex, $replacement, $node->nodeValue);
+            } else {
+                preg_replace_dom($regex, $replacement, $node, $excludeParents);
+            }
+        }
+    }
 }
 
 /**
@@ -307,16 +336,24 @@ function get_all_data($parse_smileys=true,$filter_words=false,$processUsername=f
  */
 function parse_smileys($str = '', $image_url = '', $smileys = NULL)
 {
-	if ($image_url == '')
-		return $str;
-	if (!is_array($smileys))
-		return $str;
-	// Add a trailing slash to the file path if needed
-	$image_url = preg_replace("/(.+?)\/*$/", "\\1/",  $image_url);
-	foreach ($smileys as $key => $val){
-		$str = str_replace($key, "<img src=\"".$image_url.$smileys[$key][0]."\" width=\"".$smileys[$key][1]."\" height=\"".$smileys[$key][2]."\" title=\"".$smileys[$key][3]."\" alt=\"".$smileys[$key][3]."\" style=\"border:0;\" />", $str);
-	}
-	return $str;
+    global $dom;
+    if ($image_url == '')
+        return $str;
+    if (!is_array($smileys))
+        return $str;
+    // Add a trailing slash to the file path if needed
+    $image_url = preg_replace("/(.+?)\/*$/", "\\1/",  $image_url);
+    $patt = array();
+    $smileIcon = array();
+    foreach ($smileys as $key => $val){
+        $icon = "<img src=\"".$image_url.$smileys[$key][0]."\" width=\"".$smileys[$key][1]."\" height=\"".$smileys[$key][2]."\" title=\"".$smileys[$key][3]."\" alt=\"".$smileys[$key][3]."\" style=\"border:0;\" />";
+        $p = '/'.preg_quote($key, '/').'/';
+        array_push($patt, $p);
+        array_push($smileIcon, $icon);
+    }
+    preg_replace_dom($patt, $smileIcon, $dom->documentElement, array('code', 'pre'));
+    $html_fragment = preg_replace('/^<!DOCTYPE.+?>/', '', str_replace( array('<html>', '</html>', '<body>', '</body>'), array('', '', '', ''), $dom->saveHTML()));
+    return trim($html_fragment);
 }
 /**
  * Filter words
@@ -324,17 +361,17 @@ function parse_smileys($str = '', $image_url = '', $smileys = NULL)
  */
 function filter_words($input)
 {
-	$filter_array=explode(',',  ZFramework::app()->filter_words);
-	$input=str_ireplace($filter_array,'***',$input);
-	return $input;
+    $filter_array=explode(',',  ZFramework::app()->filter_words);
+    $input=str_ireplace($filter_array,'***',$input);
+    return $input;
 }
 /**
  * Show all smileys
  */
 function show_smileys_table()
 {
-	$smiley=  require APPROOT.'/includes/showSmiley.php';
-	return $smiley;
+    $smiley=  require APPROOT.'/includes/showSmiley.php';
+    return $smiley;
 }
 /**
  *
@@ -342,9 +379,9 @@ function show_smileys_table()
  */
 function fix_filter_string($filter_words)
 {
-	$new_string=trim($filter_words,',');
-	$new_string=str_replace(array("\t","\r","\n",'  ',' '),'',$new_string);
-	return $new_string;
+    $new_string=trim($filter_words,',');
+    $new_string=str_replace(array("\t","\r","\n",'  ',' '),'',$new_string);
+    return $new_string;
 }
 
 /**
@@ -354,15 +391,15 @@ function fix_filter_string($filter_words)
  */
 function get_supported_rdbms()
 {
-	$supported_rdbms=array();
-	$rdbms_functions=array('mysql'=>'mysql_connect','mysqli'=>'mysqli_connect','sqlite'=>'sqlite_open');
-	$rdbms_names=array('mysql'=>'MySQL','mysqli'=>'MySQL Improved','sqlite'=>'SQLite');
-	foreach ($rdbms_functions as $k => $v) {
-		if(function_exists($v)){
-			$supported_rdbms[$rdbms_names[$k]]=$k;
-		}
-	}
-	return $supported_rdbms;
+    $supported_rdbms=array();
+    $rdbms_functions=array('mysql'=>'mysql_connect','mysqli'=>'mysqli_connect','sqlite'=>'sqlite_open');
+    $rdbms_names=array('mysql'=>'MySQL','mysqli'=>'MySQL Improved','sqlite'=>'SQLite');
+    foreach ($rdbms_functions as $k => $v) {
+        if(function_exists($v)){
+            $supported_rdbms[$rdbms_names[$k]]=$k;
+        }
+    }
+    return $supported_rdbms;
 }
 /**
  * Determine whether the app installed or not
@@ -371,15 +408,15 @@ function get_supported_rdbms()
  */
 function is_installed()
 {
-	global $db_url;
-	if($db_url=='dummydb://username:password@localhost/databasename')
-		return false;
-	return true;
+    global $db_url;
+    if($db_url=='dummydb://username:password@localhost/databasename')
+        return false;
+    return true;
 }
 
 function maple_quotes($var,$charset='UTF-8')
 {
-	return htmlspecialchars(trim($var),ENT_QUOTES,  $charset);
+    return htmlspecialchars(trim($var),ENT_QUOTES,  $charset);
 }
 
 /**
@@ -389,14 +426,14 @@ function maple_quotes($var,$charset='UTF-8')
  */
 function getConfigVar($name)
 {
-	global $db_url;
-	$db=YDB::factory($db_url);
-	$result=$db->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysvar> WHERE varname='%s'"),  $db->escape_string($name)));
-	$result=@$result[0]['varvalue'];
-	if($result)
-		return $result;
-	else
-		return null;
+    global $db_url;
+    $db=YDB::factory($db_url);
+    $result=$db->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysvar> WHERE varname='%s'"),  $db->escape_string($name)));
+    $result=@$result[0]['varvalue'];
+    if($result)
+        return $result;
+    else
+        return null;
 }
 
 /**
@@ -405,7 +442,7 @@ function getConfigVar($name)
  */
 function getSmileys()
 {
-	return include  dirname(__FILE__).'/smiley.php';
+    return include  dirname(__FILE__).'/smiley.php';
 }
 
 
@@ -414,14 +451,14 @@ function getSmileys()
  */
 function get_all_themes()
 {
-	$themes=array();
-	$d=dir(THEMEDIR);
-	while(false!==($entry=$d->read())){
-		if(substr($entry,0,1)!='.')
-			$themes[$entry]=$entry;
-	}
-	$d->close();
-	return array_filter($themes,'_removeIndex');
+    $themes=array();
+    $d=dir(THEMEDIR);
+    while(false!==($entry=$d->read())){
+        if(substr($entry,0,1)!='.')
+            $themes[$entry]=$entry;
+    }
+    $d->close();
+    return array_filter($themes,'_removeIndex');
 }
 
 /**
@@ -431,18 +468,18 @@ function get_all_themes()
  */
 function get_all_langs()
 {
-	$langs=array();
-	$d=dir(APPROOT.'/languages/');
-	while(false!==($entry=$d->read())){
-		if(substr($entry,0,1)!='.')
-			$langs[substr($entry,0,-4)]=substr($entry,0,-4);
-	}
-	$d->close();
-	return array_filter($langs,'_removeIndex');
+    $langs=array();
+    $d=dir(APPROOT.'/languages/');
+    while(false!==($entry=$d->read())){
+        if(substr($entry,0,1)!='.')
+            $langs[substr($entry,0,-4)]=substr($entry,0,-4);
+    }
+    $d->close();
+    return array_filter($langs,'_removeIndex');
 }
 
 function _removeIndex($var){
-	return (!($var == 'index' || $var == 'index.php'));
+    return (!($var == 'index' || $var == 'index.php'));
 }
 
 
@@ -453,8 +490,8 @@ function _removeIndex($var){
  */
 function get_all_timezone()
 {
-	$timezone=  include APPROOT.'/languages/'.getConfigVar('lang').'.php';
-	return $timezone['TZ_ZONES'];
+    $timezone=  include APPROOT.'/languages/'.getConfigVar('lang').'.php';
+    return $timezone['TZ_ZONES'];
 }
 
 
@@ -463,7 +500,7 @@ function get_all_timezone()
  */
 function show_message($msg,$redirect=false,$redirect_url='index.php',$time_delay=3)
 {
-	include 'themes/'.getConfigVar('theme').'/templates/'."show_message.php"; exit;
+    include 'themes/'.getConfigVar('theme').'/templates/'."show_message.php"; exit;
 }
 
 
@@ -475,14 +512,14 @@ function show_message($msg,$redirect=false,$redirect_url='index.php',$time_delay
  */
 function getLangArray($userSpecifiedLanguage=null)
 {
-	if($userSpecifiedLanguage)
-	{
-		if(file_exists(APPROOT.'/languages/'.$userSpecifiedLanguage.'.php'))
-		{
-			return include APPROOT.'/languages/'.$userSpecifiedLanguage.'.php';
-		}
-	}
-	return include APPROOT.'/languages/'.getConfigVar('lang').'.php';
+    if($userSpecifiedLanguage)
+    {
+        if(file_exists(APPROOT.'/languages/'.$userSpecifiedLanguage.'.php'))
+        {
+            return include APPROOT.'/languages/'.$userSpecifiedLanguage.'.php';
+        }
+    }
+    return include APPROOT.'/languages/'.getConfigVar('lang').'.php';
 }
 /**
  * Get all available plugins
@@ -492,18 +529,18 @@ function getLangArray($userSpecifiedLanguage=null)
  */
 function get_alll_plugins($loadPlugin=FALSE)
 {
-	$plugins=array();
-	$d=dir(PLUGINDIR);
-	while(false!==($entry=$d->read())){
-		if(substr($entry,0,1)!='.' && is_dir(PLUGINDIR.DIRECTORY_SEPARATOR.$entry)){
-			$plugins[$entry]=$entry;
-			if($loadPlugin){
-				require_once PLUGINDIR.$entry.DIRECTORY_SEPARATOR.$entry.'.php';
-			}
-		}
-	}
-	$d->close();
-	return array_filter($plugins,'_removeIndex');
+    $plugins=array();
+    $d=dir(PLUGINDIR);
+    while(false!==($entry=$d->read())){
+        if(substr($entry,0,1)!='.' && is_dir(PLUGINDIR.DIRECTORY_SEPARATOR.$entry)){
+            $plugins[$entry]=$entry;
+            if($loadPlugin){
+                require_once PLUGINDIR.$entry.DIRECTORY_SEPARATOR.$entry.'.php';
+            }
+        }
+    }
+    $d->close();
+    return array_filter($plugins,'_removeIndex');
 }
 
 /**
@@ -516,10 +553,10 @@ function get_alll_plugins($loadPlugin=FALSE)
  */
 function t($message,$params=array(),$userSpecifiedLanguage=null)
 {
-	$messages=getLangArray($userSpecifiedLanguage);
-	if(isset ($messages[$message]) && $messages[$message]!=='')
-		$message=$messages[$message];
-	return $params!==array()?strtr($message, $params):$message;
+    $messages=getLangArray($userSpecifiedLanguage);
+    if(isset ($messages[$message]) && $messages[$message]!=='')
+        $message=$messages[$message];
+    return $params!==array()?strtr($message, $params):$message;
 }
 
 /**
@@ -528,9 +565,9 @@ function t($message,$params=array(),$userSpecifiedLanguage=null)
  */
 function is_closedMode()
 {
-	$disabledAction=array('PostController/actionCreate','SiteController/actionIndex','UserController/actionCreate');
-	if(getConfigVar('site_close')==1 && !isset ($_SESSION['admin']) && in_array((isset($_GET['controller'])?$_GET['controller']:'SiteController').'/'.(isset($_GET['action'])?$_GET['action']:'actionIndex'), $disabledAction))
-		show_message(getConfigVar('close_reason'));
+    $disabledAction=array('PostController/actionCreate','SiteController/actionIndex','UserController/actionCreate');
+    if(getConfigVar('site_close')==1 && !isset ($_SESSION['admin']) && in_array((isset($_GET['controller'])?$_GET['controller']:'SiteController').'/'.(isset($_GET['action'])?$_GET['action']:'actionIndex'), $disabledAction))
+        show_message(getConfigVar('close_reason'));
 }
 
 /**
@@ -541,7 +578,7 @@ function is_closedMode()
  */
 function stripslashes_deep($value)
 {
-	return is_array($value)?array_map('stripslashes_deep',$value):stripslashes($value);
+    return is_array($value)?array_map('stripslashes_deep',$value):stripslashes($value);
 }
 
 /**

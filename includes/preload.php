@@ -9,6 +9,7 @@ if(!defined('IN_MP')){die('Access denied!');}
 if(version_compare(PHP_VERSION,'5.1.0','<')){die('PHP Version 5.1.0+ required!');}
 date_default_timezone_set('UTC');
 error_reporting(E_ALL);
+$dom = new domDocument;
 require 'functions.php';
 
 ini_set('arg_separator.output',     '&amp;');
