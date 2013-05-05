@@ -597,3 +597,43 @@ function maple_unset_globals()
         }
     }
 }
+
+// do nl2br except when in a pre tag
+function nl2brPre($string)
+{
+    // First, check for <pre> tag
+    if(strpos($string, "<pre") === FALSE)
+    {
+        return nl2br($string);
+    }
+
+    // If there is a <pre>, we have to split by line
+    // and manually replace the linebreaks with <br />
+    $strArr=explode("\n", $string);
+    $output="";
+    $preFound=false;
+
+    // Loop over each line
+    foreach($strArr as $line)
+    {    // See if the line has a <pre>. If it does, set $preFound to true
+        //die($line);
+        if(!(strpos($line, "<pre") === FALSE))
+        {
+            $preFound=true;
+        }
+        elseif(strpos($line, "</pre>"))
+        {
+            $preFound=false;
+        }
+        // If we are in a pre tag, just give a \n, else a <br />
+        if($preFound)
+        {
+            $output .= $line . "\n";
+        }
+        else
+        {
+            $output .= $line . "<br />";
+        }
+    }
+    return $output;
+}
