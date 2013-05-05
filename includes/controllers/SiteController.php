@@ -88,6 +88,7 @@ class SiteController extends BaseController{
                     $db->query($_sql);
                 }
                 $installed=TRUE;
+                $_SESSION['admin']=$_POST['adminname'];
             }
         }
         if(file_exists(dirname(dirname(__FILE__)).'/install.php')){
