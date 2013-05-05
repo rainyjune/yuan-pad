@@ -15,10 +15,10 @@ class UserController extends BaseController{
     }
     public function actionCreate(){
         if(isset ($_SESSION['admin']) || isset ($_SESSION['user'])){
-	    header("Location:index.php");exit;
-	}
-	if(isset ($_POST['register'])){
-	    if(!empty ($_POST['user']) && !empty ($_POST['pwd']) && !empty ($_POST['email'])){
+        header("Location:index.php");exit;
+    }
+    if(isset ($_POST['register'])){
+        if(!empty ($_POST['user']) && !empty ($_POST['pwd']) && !empty ($_POST['email'])){
                 if(strlen(trim($_POST['user']))>=2){
                     $user=  $this->_model->escape_string($_POST['user']);
                     $pwd=  $this->_model->escape_string($_POST['pwd']);
@@ -46,14 +46,14 @@ class UserController extends BaseController{
                 }else{
                     $errorMsg=t('USERNAME_TOO_SHORT');
                 }
-	    }else{
-		$errorMsg=t('FILL_NOT_COMPLETE');
-	    }
-	    if(isset ($_POST['ajax'])){
-		die ($errorMsg);
-	    }
-	}
-	include 'themes/'.ZFramework::app()->theme.'/templates/'."register.php";
+        }else{
+        $errorMsg=t('FILL_NOT_COMPLETE');
+        }
+        if(isset ($_POST['ajax'])){
+        die ($errorMsg);
+        }
+    }
+    include 'themes/'.ZFramework::app()->theme.'/templates/'."register.php";
     }
     public function actionUpdate(){
         global $API_CODE;
@@ -69,41 +69,41 @@ class UserController extends BaseController{
                 die (function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
         }
         if((!isset($_SESSION['admin']) && !isset($_SESSION['uid'])) || !isset($_GET['uid']) || (!isset($_SESSION['admin']) && $_GET['uid']!=$_SESSION['uid'])){
-	    header("Location:index.php");exit;
-	}
-	$uid=$_GET['uid'];
-	if(isset ($_POST['user'])){
-	    if(!empty ($_POST['user']) && !empty ($_POST['pwd']) && !empty ($_POST['email'])){
+        header("Location:index.php");exit;
+    }
+    $uid=$_GET['uid'];
+    if(isset ($_POST['user'])){
+        if(!empty ($_POST['user']) && !empty ($_POST['pwd']) && !empty ($_POST['email'])){
                 $user=  $this->_model->escape_string($_POST['user']);
                 $pwd=  $this->_model->escape_string($_POST['pwd']);
-		$email=$_POST['email'];
-		if(is_email($email)){
-		    if($this->_model->query(sprintf(parse_tbprefix("UPDATE <user> SET password = '%s' , email = '%s' WHERE uid = %d"),$pwd,$email,$uid))){
+        $email=$_POST['email'];
+        if(is_email($email)){
+            if($this->_model->query(sprintf(parse_tbprefix("UPDATE <user> SET password = '%s' , email = '%s' WHERE uid = %d"),$pwd,$email,$uid))){
                         if(defined('API_MODE')){
                             $json_array=array('status'=>'OK');
                             die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
                         }
-			header("Location:index.php");exit;
-		    }else{
-			$errorMsg=t('USERUPDATEFAILED');
+            header("Location:index.php");exit;
+            }else{
+            $errorMsg=t('USERUPDATEFAILED');
                         if(defined('API_MODE')){
                             $error_array=array('error_code'=>'500','error'=>$API_CODE['500'],'error_detail'=>$errorMsg);
                             die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
                         }
-		    }
-		}else{
-		    $errorMsg=t('EMAIL_INVALID');
-		}
-	    }else{
-		$errorMsg=t('FILL_NOT_COMPLETE');
-	    }
+            }
+        }else{
+            $errorMsg=t('EMAIL_INVALID');
+        }
+        }else{
+        $errorMsg=t('FILL_NOT_COMPLETE');
+        }
             if(defined('API_MODE') && isset ($errorMsg)){
                 $error_array=array('error_code'=>'400','error'=>$API_CODE['400'],'error_detail'=>$errorMsg);
                 die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
             }
-	}
+    }
         $user_data=  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <user> WHERE uid=%d"),$uid));
-	$user_data=$user_data[0];
+    $user_data=$user_data[0];
         if(defined('API_MODE')){
             if($user_data){
                 die (function_exists('json_encode') ? json_encode($user_data) : CJSON::encode($user_data));
@@ -113,7 +113,7 @@ class UserController extends BaseController{
                 die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
             }
         }
-	include 'themes/'.ZFramework::app()->theme.'/templates/'."user_update.php";
+    include 'themes/'.ZFramework::app()->theme.'/templates/'."user_update.php";
     }
     public function actionDelete(){
         is_admin();
@@ -134,7 +134,7 @@ class UserController extends BaseController{
     public  function actionDelete_multi(){
         is_admin();
         if(!isset($_POST['select_uid'])){header("location:index.php?controller=user");exit;}
-	$del_ids=$_POST['select_uid'];
+    $del_ids=$_POST['select_uid'];
         foreach($del_ids as $deleted_id){
             $this->_model->query(parse_tbprefix("DELETE FROM <user> WHERE uid=$deleted_id"));
             $this->_model->query(parse_tbprefix("UPDATE <post> SET uid=0 WHERE uid=$deleted_id"));
@@ -151,7 +151,7 @@ class UserController extends BaseController{
             }
             header("Location:index.php?action=control_panel");exit;
         }
-	if (isset($_SESSION['user'])){//common user logged in
+    if (isset($_SESSION['user'])){//common user logged in
             if(defined('API_MODE')){
                 $json_array=array('user'=>$_SESSION['user'],'uid'=>$_SESSION['uid'],'session_name'=>$session_name,'session_value'=>session_id());
                 die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
@@ -162,31 +162,31 @@ class UserController extends BaseController{
         if(isset($_REQUEST['user']) && isset($_REQUEST['password'])){// The login form submitted
             $user=  $this->_model->escape_string($_REQUEST['user']);
             $password=$this->_model->escape_string($_REQUEST['password']);
-	    if( ($user==ZFramework::app()->admin) && ($password==ZFramework::app()->password) ){//Admin user
+        if( ($user==ZFramework::app()->admin) && ($password==ZFramework::app()->password) ){//Admin user
                 $_SESSION['admin']=$_REQUEST['user'];
                 if(defined('API_MODE')){
                     $json_array=array('admin'=>$_SESSION['admin'],'session_name'=>$session_name,'session_value'=>session_id());
                     die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
                 }
 
-		header("Location:index.php?action=control_panel");
-		exit;
-	    }
-	    else{//common user
+        header("Location:index.php?action=control_panel");
+        exit;
+        }
+        else{//common user
                 $user_result=  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <user> WHERE username='%s' AND password='%s'"),$user,$password));
-		$user_result=@$user_result[0];
-		if($user_result){
+        $user_result=@$user_result[0];
+        if($user_result){
                     $_SESSION['user']=$_REQUEST['user'];
-		    $_SESSION['uid']=$user_result['uid'];
+            $_SESSION['uid']=$user_result['uid'];
                     if(defined('API_MODE')){
                         $json_array=array('user'=>$_REQUEST['user'],'uid'=>$user_result['uid'],'session_name'=>$session_name,'session_value'=>session_id());
                         die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
                     }
-		    header("Location:index.php");exit;
-		}else{
-		    $errormsg=t('LOGIN_ERROR');
-		}
-	    }
+            header("Location:index.php");exit;
+        }else{
+            $errormsg=t('LOGIN_ERROR');
+        }
+        }
         }
         if(defined('API_MODE')){
             if(isset ($errormsg)){
@@ -197,13 +197,13 @@ class UserController extends BaseController{
                 die (function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
             }
         }
-	include 'themes/'.ZFramework::app()->theme.'/templates/'."login.php";
+    include 'themes/'.ZFramework::app()->theme.'/templates/'."login.php";
     }
     public function actionLogout(){
         if(isset ($_SESSION['user'])){
-	    unset ($_SESSION['user']);
-	    session_destroy();
-	}
+        unset ($_SESSION['user']);
+        session_destroy();
+    }
         if(isset($_SESSION['admin'])){
             if(is_flatfile ())
                 delete_backup_files ();

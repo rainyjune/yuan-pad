@@ -179,7 +179,7 @@ HERE;
         return $data;
     }
     public  function actionCaptcha(){
-    $this->_verifyCode->image(2,4,900,array('borderColor'=>'#66CCFF','bgcolor'=>'#FFCC33'));
+        $this->_verifyCode->image(2,4,900,array('borderColor'=>'#66CCFF','bgcolor'=>'#FFCC33'));
     }
     public function actionGetSysJSON(){
         $langArray=getLangArray();
