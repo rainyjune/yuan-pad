@@ -19,4 +19,3 @@ abstract  class YDBBase {
     abstract public function table_exists($table_name);
     abstract public function close();
 }
-?>
