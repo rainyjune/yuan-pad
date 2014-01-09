@@ -1,4 +1,4 @@
-CREATE TABLE <user> (uid inc,username str,password str,email str,reg_time int)
+CREATE TABLE <sysuser> (uid inc,username str,password str,email str,reg_time int)
 CREATE TABLE <post> (pid inc,uid int,uname str DEFAULT 'anonymous',content str,post_time int,ip str)
 CREATE TABLE <reply> (rid inc,pid int,content str,r_time int)
 CREATE TABLE <badip> (ip str)

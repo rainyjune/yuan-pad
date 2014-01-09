@@ -10,7 +10,7 @@ class UserController extends BaseController{
         $current_tab='user';
         $tabs_array=array('overview','siteset','message','ban_ip','user');
         $tabs_name_array=array(t('ACP_OVERVIEW'),t('ACP_CONFSET'),t('ACP_MANAGE_POST'),t('ACP_MANAGE_IP'),  t('USER_ADMIN'));
-        $user_data=$this->_model->queryAll(parse_tbprefix("SELECT * FROM <user>"));
+        $user_data=$this->_model->queryAll(parse_tbprefix("SELECT * FROM <sysuser>"));
         $this->render('user_list',array('users'=>$user_data,'tabs_array'=>$tabs_array,'current_tab'=>$current_tab,'tabs_name_array'=>$tabs_name_array,));
     }
     public function actionCreate(){
@@ -25,9 +25,9 @@ class UserController extends BaseController{
                     $email=$_POST['email'];
                     $time=time();
                     if(is_email($email)){
-                        $user_exists=$this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <user> WHERE username='%s'"),$user));
+                        $user_exists=$this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysuser> WHERE username='%s'"),$user));
                         if(!$user_exists && $user!= ZFramework::app()->admin){
-                            if($this->_model->query(sprintf(parse_tbprefix("INSERT INTO <user> ( username , password , email , reg_time ) VALUES ( '%s' , '%s' , '%s' , %d )"),$user,$pwd,$email,$time))){
+                            if($this->_model->query(sprintf(parse_tbprefix("INSERT INTO <sysuser> ( username , password , email , reg_time ) VALUES ( '%s' , '%s' , '%s' , %d )"),$user,$pwd,$email,$time))){
                                 $_SESSION['user']=$user;
                                 $_SESSION['uid']=  $this->_model->insert_id();
                                 if(isset ($_POST['ajax'])){
@@ -78,7 +78,7 @@ class UserController extends BaseController{
                 $pwd=  $this->_model->escape_string($_POST['pwd']);
         $email=$_POST['email'];
         if(is_email($email)){
-            if($this->_model->query(sprintf(parse_tbprefix("UPDATE <user> SET password = '%s' , email = '%s' WHERE uid = %d"),$pwd,$email,$uid))){
+            if($this->_model->query(sprintf(parse_tbprefix("UPDATE <sysuser> SET password = '%s' , email = '%s' WHERE uid = %d"),$pwd,$email,$uid))){
                         if(defined('API_MODE')){
                             $json_array=array('status'=>'OK');
                             die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
@@ -102,7 +102,7 @@ class UserController extends BaseController{
                 die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
             }
     }
-        $user_data=  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <user> WHERE uid=%d"),$uid));
+        $user_data=  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysuser> WHERE uid=%d"),$uid));
     $user_data=$user_data[0];
         if(defined('API_MODE')){
             if($user_data){
@@ -121,13 +121,13 @@ class UserController extends BaseController{
         if(!$uid){
             header("Location:index.php?controller=user");exit;
         }
-        $this->_model->query(parse_tbprefix("DELETE FROM <user> WHERE uid=$uid"));
+        $this->_model->query(parse_tbprefix("DELETE FROM <sysuser> WHERE uid=$uid"));
         $this->_model->query(parse_tbprefix("UPDATE <post> SET uid=0 WHERE uid=$uid"));
         header("Location:index.php?controller=user&randomvalue=".rand());
     }
     public  function actionDeleteAll(){
         is_admin();
-        $this->_model->query(parse_tbprefix("DELETE FROM <user>"));
+        $this->_model->query(parse_tbprefix("DELETE FROM <sysuser>"));
         $this->_model->query(parse_tbprefix("UPDATE <post> SET uid = 0"));
         header("location:index.php?controller=user");
     }
@@ -136,7 +136,7 @@ class UserController extends BaseController{
         if(!isset($_POST['select_uid'])){header("location:index.php?controller=user");exit;}
     $del_ids=$_POST['select_uid'];
         foreach($del_ids as $deleted_id){
-            $this->_model->query(parse_tbprefix("DELETE FROM <user> WHERE uid=$deleted_id"));
+            $this->_model->query(parse_tbprefix("DELETE FROM <sysuser> WHERE uid=$deleted_id"));
             $this->_model->query(parse_tbprefix("UPDATE <post> SET uid=0 WHERE uid=$deleted_id"));
         }
         header("Location:index.php?controller=user&randomvalue=".rand());
@@ -173,7 +173,7 @@ class UserController extends BaseController{
         exit;
         }
         else{//common user
-                $user_result=  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <user> WHERE username='%s' AND password='%s'"),$user,$password));
+                $user_result=  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysuser> WHERE username='%s' AND password='%s'"),$user,$password));
         $user_result=@$user_result[0];
         if($user_result){
                     $_SESSION['user']=$_REQUEST['user'];

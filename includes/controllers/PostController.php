@@ -36,7 +36,7 @@ class PostController extends BaseController{
             $user=  $this->_model->escape_string($_POST['user']);
             if(!isset($_SESSION['admin']) && $_POST['user']==ZFramework::app()->admin )
                 $user='anonymous';
-            $userExists=  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <user> WHERE username='%s'"),  $this->_model->escape_string($_POST['user'])));
+            $userExists=  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysuser> WHERE username='%s'"),  $this->_model->escape_string($_POST['user'])));
             if($userExists && (@$_SESSION['user']!=$_POST['user']))
                 $user='anonymous';
             $content = $this->_model->escape_string($_POST['content']);

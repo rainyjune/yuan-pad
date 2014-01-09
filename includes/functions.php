@@ -223,7 +223,7 @@ function delete_backup_files()
 }
 
 /**
- * Finds whether an IP address is bloked by guest book
+ * Finds whether an IP address is blocked by guest book
  *
  * @global string $db_url
  * @param string $ip
@@ -269,7 +269,7 @@ function get_all_data($parse_smileys=true,$filter_words=false,$processUsername=f
     global $dom;
     $db=YDB::factory($db_url);
     $data=array();
-    $data=$db->queryAll(parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS user,p.content AS post_content,p.post_time AS time,r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <user> AS u ON p.uid=u.uid ORDER BY p.post_time DESC"));
+    $data=$db->queryAll(parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS user,p.content AS post_content,p.post_time AS time,r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <sysuser> AS u ON p.uid=u.uid ORDER BY p.post_time DESC"));
     foreach ($data as &$_data) {
         if($apply_filter && ZFramework::app()->filter_type==ConfigController::FILTER_TRIPTAGS){
             if(strstr(ZFramework::app()->allowed_tags, 'code')){
@@ -392,8 +392,8 @@ function fix_filter_string($filter_words)
 function get_supported_rdbms()
 {
     $supported_rdbms=array();
-    $rdbms_functions=array('mysql'=>'mysql_connect','mysqli'=>'mysqli_connect','sqlite'=>'sqlite_open');
-    $rdbms_names=array('mysql'=>'MySQL','mysqli'=>'MySQL Improved','sqlite'=>'SQLite');
+    $rdbms_functions=array('mysql'=>'mysql_connect','mysqli'=>'mysqli_connect','sqlite'=>'sqlite_open', 'mssql'=>'sqlsrv_connect');
+    $rdbms_names=array('mysql'=>'MySQL','mysqli'=>'MySQL Improved','sqlite'=>'SQLite', 'mssql'=>'Microsoft SQL Server');
     foreach ($rdbms_functions as $k => $v) {
         if(function_exists($v)){
             $supported_rdbms[$rdbms_names[$k]]=$k;
