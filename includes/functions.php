@@ -269,7 +269,7 @@ function get_all_data($parse_smileys=true,$filter_words=false,$processUsername=f
     global $dom;
     $db=YDB::factory($db_url);
     $data=array();
-    $data=$db->queryAll(parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS user,p.content AS post_content,p.post_time AS time,r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <sysuser> AS u ON p.uid=u.uid ORDER BY p.post_time DESC"));
+    $data=$db->queryAll(parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS uname,p.content AS post_content,p.post_time AS time,r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <sysuser> AS u ON p.uid=u.uid ORDER BY p.post_time DESC"));
     foreach ($data as &$_data) {
         if($apply_filter && ZFramework::app()->filter_type==ConfigController::FILTER_TRIPTAGS){
             if(strstr(ZFramework::app()->allowed_tags, 'code')){
@@ -306,7 +306,7 @@ function get_all_data($parse_smileys=true,$filter_words=false,$processUsername=f
         if($filter_words)
             $_data['post_content']=filter_words($_data['post_content']);
         if($processUsername)
-            $_data['user']=($_data['user']==ZFramework::app()->admin)?"<font color='red'>{$_data['user']}</font>":$_data['user'];
+            $_data['user']=($_data['uname']==ZFramework::app()->admin)?"<font color='red'>{$_data['uname']}</font>":$_data['uname'];
         if($processTime){
             $_data['time']=date('m-d H:i',$_data['time']+ZFramework::app()->timezone*60*60);
             $_data['reply_time']=date('m-d H:i',$_data['reply_time']+ZFramework::app()->timezone*60*60);
