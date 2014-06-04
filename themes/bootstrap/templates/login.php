@@ -39,5 +39,6 @@
     <div class="copyright">
 	    Powered by YuanPad <?php echo MP_VERSION;?>  Copyright &copy;2008-2014
     </div>
+    <script>window.jQuery || document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"><\/script>')</script>
 </body>
 </html>
