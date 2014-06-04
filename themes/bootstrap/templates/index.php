@@ -37,9 +37,10 @@
           <p class="navbar-text navbar-right">
             <?php if(ZFramework::app()->site_close):?><span class="notice"><?php echo t('OFF_LINE_MODE');?></span><?php endif;?>
             <?php
-            if(!isset ($_SESSION['admin']) && !isset ($_SESSION['user']))
+            if(!isset ($_SESSION['admin']) && !isset ($_SESSION['user'])) {
                 echo '<a data-toggle="modal" data-target="#myModal" href="index.php?controller=user&amp;action=create">'.t('REGISTER').'</a>&nbsp;';
                 echo '<a data-toggle="modal" data-target="#myModal" href="index.php?controller=user&amp;action=login">'.t('LOGIN').'</a>';
+            }
             if(isset ($_SESSION['user']) || isset ($_SESSION['admin']))
                 echo 'Hello, '.(isset ($_SESSION['user']) ?  $_SESSION['user'] : $_SESSION['admin']).' <a href="index.php?controller=user&amp;action=logout">'.t('LOGOUT').'</a>';
             if(isset ($_SESSION['user']))
