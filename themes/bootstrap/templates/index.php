@@ -38,7 +38,7 @@
             <?php if(ZFramework::app()->site_close):?><span class="notice"><?php echo t('OFF_LINE_MODE');?></span><?php endif;?>
             <?php
             if(!isset ($_SESSION['admin']) && !isset ($_SESSION['user']))
-                echo '<a href="index.php?controller=user&amp;action=create&amp;width=630&amp;height=45%">'.t('REGISTER').'</a>&nbsp;<a href="index.php?controller=user&amp;action=login">'.t('LOGIN').'</a>';
+                echo '<a data-toggle="modal" data-target="#myModal" id="signup" href="index.php?controller=user&amp;action=create">'.t('REGISTER').'</a>&nbsp;<a href="index.php?controller=user&amp;action=login">'.t('LOGIN').'</a>';
             if(isset ($_SESSION['user']) || isset ($_SESSION['admin']))
                 echo 'Hello, '.(isset ($_SESSION['user']) ?  $_SESSION['user'] : $_SESSION['admin']).' <a href="index.php?controller=user&amp;action=logout">'.t('LOGOUT').'</a>';
             if(isset ($_SESSION['user']))
@@ -107,7 +107,18 @@
         </form>
       </div>
       <!-- Form End-->
+
     </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content"></div><!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
+    
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <!-- Include all compiled plugins (below), or include individual files as needed -->

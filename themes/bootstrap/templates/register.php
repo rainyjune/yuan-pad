@@ -7,12 +7,6 @@
 <meta http-equiv="Cache-Control" content="no-cache,must-revalidate" />
 <meta http-equiv="expires" content="0" />
 <title><?php echo t('REGISTER');?></title>
-<link rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/';?>blueprint/screen.css" type="text/css" media="screen, projection" />
-<link rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/';?>blueprint/print.css" type="text/css" media="print" />
-<!--[if lt IE 8]><link rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/';?>blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]-->
-<script type="text/javascript" src="misc/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/register.js';?>"></script>
-<style type="text/css"> .container { width: 500px;} </style>
 </head>
 <body>
     <div class="container">
