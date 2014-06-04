@@ -7,12 +7,6 @@
 <meta http-equiv="Cache-Control" content="no-cache,must-revalidate" />
 <meta http-equiv="expires" content="0" />
 <title><?php echo t('LOGIN');?></title>
-<link rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/';?>blueprint/screen.css" type="text/css" media="screen, projection" />
-<link rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/';?>blueprint/print.css" type="text/css" media="print" />
-<!--[if lt IE 8]><link rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/';?>blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]-->
-<link rel="stylesheet" type="text/css" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/login-bp.css';?>"  />
-<script type="text/javascript" src="misc/jquery.min.js"></script>
-<script type="text/javascript" src="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/login.js';?>"></script>
 </head>
 <body>
 <div id="backtoindex"><a href="index.php" title="<?php echo t('WHERE_AM_I');?>">&larr; <?php echo t('BACK');?></a></div>
@@ -43,7 +37,7 @@
 
     </div>
     <div class="copyright">
-	    Powered by YuanPad <?php echo MP_VERSION;?>  Copyright &copy;2008-2013
+	    Powered by YuanPad <?php echo MP_VERSION;?>  Copyright &copy;2008-2014
     </div>
 </body>
 </html>
