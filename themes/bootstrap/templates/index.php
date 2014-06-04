@@ -81,15 +81,28 @@
       
       <!-- Form Start-->
       <div class="container-fluid">
-        <form role="form">
+        <form role="form" action="index.php?controller=post&amp;action=create" method="post">
+          <input id="pid" type="hidden" name="pid" value="<?php echo @$_GET['pid'];?>" />
           <div class="form-group">
-            <label for="userName">User name</label>
-            <input type="text" class="form-control" id="userName" name="userName" placeholder="Enter user name">
+            <label for="user"><?php echo t('NICKNAME');?></label>
+            <?php if($admin == true){?>
+            <input name="user" id="user" type="hidden" maxlength="10" value="<?php echo $adminName;?>" /><?php echo $adminName;?>
+            <?php }elseif(isset($_SESSION['user'])){ ?>
+            <input name="user" id="user" type="hidden" maxlength="10" value="<?php echo $_SESSION['user'];?>" /><?php echo $_SESSION['user'];?>
+            <?php }else{?>
+            <input class="form-control" name="user" id="user" type="text" maxlength="10" value="anonymous" />
+            <?php }?>
           </div>
           <div class="form-group">
-            <label for="content">Content</label>
+            <label for="content"><?php echo t('CONTENT');?></label>
             <textarea id="content" name="content" class="form-control" rows="3"></textarea>
           </div>
+          <?php if(ZFramework::app()->valid_code_open && gd_loaded()){?>
+          <div class="form-group">
+              <label for="content"><?php echo t('VALIDATE_CODE');?></label>
+              <input class="form-control" id="valid_code" type="text" name="valid_code" size="4" maxlength="4" />&nbsp;<img id="captcha_img" src="index.php?action=captcha" title="<?php echo t('CLICK_TO_REFRESH');?>" alt="<?php echo t('CAPTCHA');?>" />
+          </div>
+          <?php }?>
           <button type="submit" class="btn btn-primary">Submit</button>
         </form>
       </div>
