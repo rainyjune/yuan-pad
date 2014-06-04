@@ -25,6 +25,35 @@
   <body>
     <div class="container">
     
+      <div class="page-header">
+        <h1><?php echo t('WELCOME_POST');?></h1>
+      </div>
+      
+      <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+          <ul class="nav navbar-nav">
+            <li><a href="#postForm">Post</a></li>
+          </ul>
+          <p class="navbar-text navbar-right">
+            <?php if(ZFramework::app()->site_close):?><span class="notice"><?php echo t('OFF_LINE_MODE');?></span><?php endif;?>
+            <?php
+            if(!isset ($_SESSION['admin']) && !isset ($_SESSION['user']))
+                echo '<a href="index.php?controller=user&amp;action=create&amp;width=630&amp;height=45%">'.t('REGISTER').'</a>&nbsp;<a href="index.php?controller=user&amp;action=login">'.t('LOGIN').'</a>';
+            if(isset ($_SESSION['user']) || isset ($_SESSION['admin']))
+                echo 'Hello, '.(isset ($_SESSION['user']) ?  $_SESSION['user'] : $_SESSION['admin']).' <a href="index.php?controller=user&amp;action=logout">'.t('LOGOUT').'</a>';
+            if(isset ($_SESSION['user']))
+                echo '&nbsp;<a class="thickbox" href="index.php?controller=user&amp;action=update&amp;uid='.$_SESSION['uid'].'&amp;width=600&amp;height=50%">'.t('UPDATE').'</a>';
+            ?>
+          </p>
+          <form class="navbar-form navbar-right" role="search" id="postForm">
+            <div class="form-group">
+              <input type="text" class="form-control" placeholder="Search">
+            </div>
+            <button type="submit" class="btn btn-default">Submit</button>
+          </form>
+        </div>
+      </nav>
+      
       <!-- Main Table Start-->
       <div class="table-responsive">
         <table class="table table-bordered">
@@ -37,6 +66,19 @@
         </table>
       </div>
       <!-- Main Table End-->
+      
+      <?php if(ZFramework::app()->page_on){?>
+      <ul class="pagination">
+        <?php for($i=0;$i<$pages;$i++){?>
+          <li <?php if($i==$current_page){ echo 'class="active"';} ?>>
+            <a href='index.php?pid=<?php echo $i;?>'>
+              <?php echo $i + 1; ?>
+            </a>
+          </li>
+        <?php }?>
+      </ul>
+      <?php }?>
+      
       <!-- Form Start-->
       <div class="container-fluid">
         <form role="form">
