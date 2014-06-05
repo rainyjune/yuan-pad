@@ -228,8 +228,6 @@
         </div>
       </div>
       
-
-
       <footer>
         <p class="text-center">Powered by <a href="http://yuan-pad.googlecode.com/">YuanPad <?php echo MP_VERSION;?></a></p>
       </footer><!-- footer -->
