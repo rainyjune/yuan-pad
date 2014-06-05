@@ -44,7 +44,7 @@
             if(isset ($_SESSION['user']) || isset ($_SESSION['admin']))
                 echo 'Hello, '.(isset ($_SESSION['user']) ?  $_SESSION['user'] : $_SESSION['admin']).' <a href="index.php?controller=user&amp;action=logout">'.t('LOGOUT').'</a>';
             if(isset ($_SESSION['user']))
-                echo '&nbsp;<a class="thickbox" href="index.php?controller=user&amp;action=update&amp;uid='.$_SESSION['uid'].'&amp;width=600&amp;height=50%">'.t('UPDATE').'</a>';
+                echo '&nbsp;<a data-toggle="modal" data-target="#myModal" href="index.php?controller=user&amp;action=update&amp;uid='.$_SESSION['uid'].'&amp;width=600&amp;height=50%">'.t('UPDATE').'</a>';
             ?>
           </p>
           <form class="navbar-form navbar-right" role="search" id="postForm" action="index.php?controller=search" method="post">
