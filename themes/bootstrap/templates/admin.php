@@ -15,7 +15,7 @@
     <link href="misc/prettify.css" rel="stylesheet" />
     <script src="misc/prettify.js"></script>
     <!-- Custom styles for this template -->
-    <link href="<?php echo './themes/'.ZFramework::app()->theme.'/css/index.css';?>" rel="stylesheet">
+    <link href="<?php echo './themes/'.ZFramework::app()->theme.'/css/admin.css';?>" rel="stylesheet">
   </head>
 
   <body>
@@ -231,7 +231,7 @@
 
 
       <footer>
-      Powered by <a href="http://yuan-pad.googlecode.com/">YuanPad <?php echo MP_VERSION;?></a>
+        <p class="text-center">Powered by <a href="http://yuan-pad.googlecode.com/">YuanPad <?php echo MP_VERSION;?></a></p>
       </footer><!-- footer -->
 
     </div>
