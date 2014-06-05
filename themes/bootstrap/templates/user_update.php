@@ -18,33 +18,26 @@
     <div class="container">
     
       <?php if(@$errorMsg):?>
-      <div id="login_error" class="bg-warning"><?php echo $errorMsg;?><br /></div>
-      <?php  endif;?>
-    
-      <form action="index.php?controller=user&amp;action=update&amp;uid=<?php echo $_GET['uid'];?>" method="post">
-      <div class="inputbox">
-      <dl>
-      <dt><?php echo t('USERNAME');?></dt>
-      <dd><input type="text" readonly="readonly" value="<?php echo $user_data['username'];?>" name="user" id="user" size="20" onfocus="this.style.borderColor='#F93'" onblur="this.style.borderColor='#888'" />
-      </dd>
-      </dl>
-      <dl>
-      <dt><?php echo t('PASSWORD');?></dt>
-      <dd><input type="password" value="<?php echo $user_data['password'];?>" id="password" name="pwd" size="20" onfocus="this.style.borderColor='#F93'" onblur="this.style.borderColor='#888'" />
-      </dd>
-      </dl>
-      <dl>
-      <dt><?php echo t('EMAIL');?></dt>
-      <dd><input type="text" value="<?php echo $user_data['email'];?>" id="email" name="email" size="20" onfocus="this.style.borderColor='#F93'" onblur="this.style.borderColor='#888'" />
-      </dd>
-      </dl>
-      </div>
-      <div class="butbox">
-      <dl>
-      <dt><input id="submit_button" name="submit" type="submit" value="<?php echo t('UPDATE');?>" /></dt>
-      </dl>
-      </div>
+      <div id="login_error" class="bg-danger"><?php echo $errorMsg;?><br /></div>
+      <?php  endif;?>      
+      
+      <form role="form" action="index.php?controller=user&amp;action=update&amp;uid=<?php echo $_GET['uid'];?>" method="post">
+        <div class="form-group">
+          <label for="user"><?php echo t('USERNAME');?></label>
+          <input type="text" readonly="readonly" class="form-control" id="user" name="user" value="<?php echo $user_data['username'];?>">
+        </div>
+        <div class="form-group">
+          <label for="pwd"><?php echo t('PASSWORD');?></label>
+          <input value="<?php echo $user_data['password'];?>" type="password" class="form-control" id="pwd" name="pwd">
+        </div>
+        <div class="form-group">
+          <label for="email"><?php echo t('EMAIL');?></label>
+          <input type="email" class="form-control" id="email" name="email" value="<?php echo $user_data['email'];?>">
+        </div>
+
+        <button type="submit" class="btn btn-default"><?php echo t('UPDATE');?></button>
       </form>
+    
     </div>    
   </body>
 </html>
