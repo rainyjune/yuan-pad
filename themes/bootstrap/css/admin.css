@@ -5,3 +5,6 @@ footer {
   border-top-style: solid;
   border-top-width: 1px;
 }
+.tab-content {
+  min-height: 400px;
+}
