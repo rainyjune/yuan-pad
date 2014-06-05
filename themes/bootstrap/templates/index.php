@@ -47,9 +47,9 @@
                 echo '&nbsp;<a class="thickbox" href="index.php?controller=user&amp;action=update&amp;uid='.$_SESSION['uid'].'&amp;width=600&amp;height=50%">'.t('UPDATE').'</a>';
             ?>
           </p>
-          <form class="navbar-form navbar-right" role="search" id="postForm">
+          <form class="navbar-form navbar-right" role="search" id="postForm" action="index.php?controller=search" method="post">
             <div class="form-group">
-              <input type="text" class="form-control" placeholder="Search">
+              <input id="search" type="text" class="form-control" placeholder="Search" name="s">
             </div>
             <button type="submit" class="btn btn-default">Submit</button>
           </form>
