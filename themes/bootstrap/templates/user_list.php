@@ -67,9 +67,9 @@
         </div>
       </div>
     
-      <div class="ft">
-          Powered by <a href="http://yuan-pad.googlecode.com/">YuanPad <?php echo MP_VERSION;?></a>
-      </div><!-- footer -->
+      <footer>
+        <p class="text-center">Powered by <a href="http://yuan-pad.googlecode.com/">YuanPad <?php echo MP_VERSION;?></a></p>
+      </footer>
 
     </div>
   </body>
