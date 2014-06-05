@@ -188,8 +188,8 @@
           </div>
           </td>
           <td><a href='index.php?controller=post&amp;action=delete&amp;mid=<?php echo $m['id'];?>&amp;reply=<?php if(@$m['reply']){ echo "1";}else{ echo "0";}?>'><?php echo t('DELETE');?></a>
-          <a class="ex2trigger" href='index.php?controller=reply&amp;action=reply&amp;mid=<?php echo $m['id'];?>'><?php echo t('REPLY');?></a>
-          <a class="ex2trigger" href='index.php?controller=post&amp;action=update&amp;mid=<?php echo $m['id'];?>'><?php echo t('UPDATE');?></a>
+          <a data-toggle="modal" data-target="#myModal" href='index.php?controller=reply&amp;action=reply&amp;mid=<?php echo $m['id'];?>'><?php echo t('REPLY');?></a>
+          <a data-toggle="modal" data-target="#myModal" href='index.php?controller=post&amp;action=update&amp;mid=<?php echo $m['id'];?>'><?php echo t('UPDATE');?></a>
           <a href='index.php?controller=badip&amp;action=create&amp;ip=<?php echo $m['ip'];?>'><?php echo t('BAN');?></a></td>
           </tr>
           <?php }?>
@@ -233,6 +233,15 @@
       </footer><!-- footer -->
 
     </div>
+    
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content"></div><!-- /.modal-content -->
+      </div>
+      <!-- /.modal-dialog -->
+    </div>
+    <!-- /.modal -->
     
     <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
