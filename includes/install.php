@@ -35,7 +35,7 @@ if(!defined('IN_MP')){die('Access denied!');}
 					}
 					echo '</ol>';
 					echo "<a href='{$_SERVER["PHP_SELF"]}?action=install&l=$language&amp;s=".  rand()."'>".t('RETRY', array(), $language)."</a>&nbsp;";
-					echo "<a href='http://yuan-pad.googlecode.com/' target='_blank'>".t('INSTALL_NEED_HELP', array(), $language)."</a>";
+					echo "<a href='https://github.com/rainyjune/yuan-pad' target='_blank'>".t('INSTALL_NEED_HELP', array(), $language)."</a>";
 				}else{
 					if(@$formError){
 						echo '<p><font color="red">'.$formError.'</font></p>';

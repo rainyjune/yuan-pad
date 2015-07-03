@@ -68,7 +68,7 @@
       </div>
     
       <footer>
-        <p class="text-center">Powered by <a href="http://yuan-pad.googlecode.com/">YuanPad <?php echo MP_VERSION;?></a></p>
+        <p class="text-center">Powered by <a href="https://github.com/rainyjune/yuan-pad">YuanPad <?php echo MP_VERSION;?></a></p>
       </footer>
 
     </div>

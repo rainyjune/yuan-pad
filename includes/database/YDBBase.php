@@ -4,7 +4,7 @@
  *
  * @author rainyjune
  * @license GPL 2
- * @link http://yuan-pad.googlecode.com/
+ * @link https://github.com/rainyjune/yuan-pad 
  */
 abstract  class YDBBase {
     abstract public function query($sql);

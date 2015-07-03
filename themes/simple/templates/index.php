@@ -117,7 +117,7 @@
                     </form>
                 </div>
         </div><!-- body -->
-        <div class="clear"><?php echo htmlspecialchars_decode(ZFramework::app()->copyright_info);?> <a href="mailto:<?php echo ZFramework::app()->admin_email;?>"><?php echo t('ADMIN_EMAIL');?></a> <?php if(!isset($_SESSION['user'])): ?><a href="index.php?action=control_panel"><?php echo t('ACP');?></a><?php endif;?> Powered by <a href="http://yuan-pad.googlecode.com/" target="_blank" title="Find More">YuanPad <?php echo MP_VERSION;?></a> <a href="index.php?action=rss"><img src="misc/images/rss-icon.png" alt="rss" /></a></div><!-- footer -->
+        <div class="clear"><?php echo htmlspecialchars_decode(ZFramework::app()->copyright_info);?> <a href="mailto:<?php echo ZFramework::app()->admin_email;?>"><?php echo t('ADMIN_EMAIL');?></a> <?php if(!isset($_SESSION['user'])): ?><a href="index.php?action=control_panel"><?php echo t('ACP');?></a><?php endif;?> Powered by <a href="https://github.com/rainyjune/yuan-pad" target="_blank" title="Find More">YuanPad <?php echo MP_VERSION;?></a> <a href="index.php?action=rss"><img src="misc/images/rss-icon.png" alt="rss" /></a></div><!-- footer -->
 
 	<!-- jqModal window -->
 	<div id="modalWindow" class="jqmWindow">

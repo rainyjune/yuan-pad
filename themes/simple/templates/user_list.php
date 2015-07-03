@@ -74,7 +74,7 @@
 	    </div><!-- yui-g  -->
 	</div><!-- body -->
 	<div class="ft">
-	    Powered by <a href="http://yuan-pad.googlecode.com/">YuanPad <?php echo MP_VERSION;?></a>
+	    Powered by <a href="https://github.com/rainyjune/yuan-pad">YuanPad <?php echo MP_VERSION;?></a>
 	</div><!-- footer -->
 	<!-- jqModal window -->
 	<div class="jqmWindow" id="ex2">
