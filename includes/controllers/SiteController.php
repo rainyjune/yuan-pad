@@ -164,7 +164,7 @@ HERE;
             if((int)$m['uid']>0)
                 $output.=htmlentities ($m['b_username']);
             else
-                $output.=htmlentities ($m['user']);
+                $output.=htmlentities ($m['uname']);
             $output .= "</title><pubDate>".date("D, d M Y H:i:s T", $m['time'])."</pubDate><description><![CDATA[".$m['post_content'];
             if(@$m['reply_content'])
                 $output.="<br />".strip_tags (t('ADMIN_REPLIED',array('{admin_name}'=>ZFramework::app()->admin,'{reply_time}'=>date("D, d M Y H:i:s T",$m['reply_time']),'{reply_content}'=>$m['reply_content'])));
