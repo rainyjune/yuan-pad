@@ -1,7 +1,7 @@
 <?php
 /**
  * @author rainyjune <rainyjune@live.cn>
- * @link http://yuan-pad.googlecode.com/
+ * @link https://github.com/rainyjune/yuan-pad 
  * @copyright Copyright &copy; 2008-2011 rainyjune
  * @license GPL2
  * @version $Id$
