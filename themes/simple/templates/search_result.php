@@ -14,6 +14,8 @@
 <link type="text/css" rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/jqModal_frame.css';?>" />
 <script type="text/javascript" src="misc/jquery.min.js"></script>
 <script type="text/javascript" src="misc/jqModal.js"></script>
+<link href="misc/prettify.css" type="text/css" rel="stylesheet" />
+<script src="misc/prettify.js" type="text/javascript"></script>
 <script type="text/javascript" src="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/index.js';?>"></script>
 <title><?php echo t('WELCOME',array('{site_name}'=>ZFramework::app()->board_name));?></title>
 </head>
