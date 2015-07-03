@@ -51,7 +51,7 @@
                     </thead>
                     <?php foreach($data as $m){?>
                     <tr>
-                        <td><?php echo (int)$m['uid']?$m['b_username']:$m['user'];?></td>
+                        <td><?php echo (int)$m['uid']?$m['b_username']:$m['uname'];?></td>
                         <td><div style='word-wrap: break-word;word-break:break-all;width:450px;'><?php echo nl2br($m['post_content']);?><br />
                             <?php if(@$m['reply_content']){ echo t('ADMIN_REPLIED',array('{admin_name}'=>ZFramework::app()->admin,'{reply_time}'=>$m['reply_time'],'{reply_content}'=>$m['reply_content']));}?></div>
                         </td>
