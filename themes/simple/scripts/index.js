@@ -1,5 +1,4 @@
 $(function() {
-    var d = new Date();
     if(self.location!=parent.location){parent.location.replace(self.location);}
     getSysJSON(function(data){
       languageTips=data;
