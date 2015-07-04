@@ -3,28 +3,29 @@
 <html>
 <head>
 <meta charset="utf-8" />
-<meta http-equiv="pragma" content="no-cache" />
-<meta http-equiv="Cache-Control" content="no-cache,must-revalidate" />
-<meta http-equiv="expires" content="0" />
-<link rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/';?>blueprint/screen.css" type="text/css" media="screen, projection" />
-<link rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/';?>blueprint/print.css" type="text/css" media="print" />
-<!--[if lt IE 8]><link rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/';?>blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]-->
-<link type="text/css" rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/jqModal.css';?>" />
-<link type="text/css" rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/index.css';?>" />
-<link type="text/css" rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/jqModal_frame.css';?>" />
+<?php
+$app = ZFramework::app();
+$theme = $app->theme;
+?>
+<link rel="stylesheet" href="./themes/<?= $theme ?>/scripts/blueprint/screen.css" type="text/css" media="screen, projection" />
+<link rel="stylesheet" href="./themes/<?= $theme ?>/scripts/blueprint/print.css" type="text/css" media="print" />
+<!--[if lt IE 8]><link rel="stylesheet" href="/themes/<?= $theme ?>/scripts/blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]-->
+<link type="text/css" rel="stylesheet" href="./themes/<?= $theme ?>/scripts/jqModal.css" />
+<link type="text/css" rel="stylesheet" href="./themes/<?= $theme ?>/scripts/index.css" />
+<link type="text/css" rel="stylesheet" href="./themes/<?= $theme ?>/scripts/jqModal_frame.css" />
 <script type="text/javascript" src="misc/jquery.min.js"></script>
 <script type="text/javascript" src="misc/jqModal.js"></script>
-<script type="text/javascript" src="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/index.js';?>"></script>
+<script type="text/javascript" src="./themes/<?= $theme ?>/scripts/index.js"></script>
 <link href="misc/prettify.css" type="text/css" rel="stylesheet" />
 <script src="misc/prettify.js" type="text/javascript"></script>
-<title><?php echo t('WELCOME',array('{site_name}'=>ZFramework::app()->board_name));?></title>
+<title><?php echo t('WELCOME',array('{site_name}'=>$app->board_name));?></title>
 </head>
 
 <body>
     <div class="container">
         <div id="hd">
             <div class="right">
-                <?php if(ZFramework::app()->site_close):?><span class="notice"><?php echo t('OFF_LINE_MODE');?></span><?php endif;?>
+                <?php if($app->site_close):?><span class="notice"><?php echo t('OFF_LINE_MODE');?></span><?php endif;?>
 
                 <?php
                 if(!isset ($_SESSION['admin']) && !isset ($_SESSION['user']))
@@ -51,14 +52,14 @@
                     <tr>
                         <td><?php echo (int)$m['uid']?$m['b_username']:$m['user'];?></td>
                         <td><div style='word-wrap: break-word;word-break:break-all;width:450px;'><?php echo nl2brPre($m['post_content']);?><br />
-                            <?php if(@$m['reply_content']){ echo t('ADMIN_REPLIED',array('{admin_name}'=>ZFramework::app()->admin,'{reply_time}'=>$m['reply_time'],'{reply_content}'=>$m['reply_content']));}?></div>
+                            <?php if(@$m['reply_content']){ echo t('ADMIN_REPLIED',array('{admin_name}'=>$app->admin,'{reply_time}'=>$m['reply_time'],'{reply_content}'=>$m['reply_content']));}?></div>
                         </td>
                         <td><?php echo $m['time'];?></td>
                     </tr>
                     <?php }?>
                 </table>
             </div>
-            <?php if(ZFramework::app()->page_on){?>
+            <?php if($app->page_on){?>
             <div id="pagination">
                 <?php echo t('PAGE_NAV',array('{num_of_post}'=>$nums,'{num_of_page}'=>$pages));?>
                 <span id="pagenumString">
@@ -94,9 +95,9 @@
                     <tr>
                         <td><?php echo t('CONTENT');?></td>
                         <td><textarea id="content" name="content" cols="45" rows="8" ></textarea></td>
-                        <td><div id='smileys'><?php echo $smileys;?></div>&nbsp;<br /><p><?php if(ConfigController::FILTER_TRIPTAGS==ZFramework::app()->filter_type){ echo t('ALLOWED_TAGS', array('{allowed_tags}'=> htmlentities(ZFramework::app()->allowed_tags)));}?></p></td>
+                        <td><div id='smileys'><?php echo $smileys;?></div>&nbsp;<br /><p><?php if(ConfigController::FILTER_TRIPTAGS==$app->filter_type){ echo t('ALLOWED_TAGS', array('{allowed_tags}'=> htmlentities($app->allowed_tags)));}?></p></td>
                     </tr>
-                    <?php if(ZFramework::app()->valid_code_open && gd_loaded()){?>
+                    <?php if($app->valid_code_open && gd_loaded()){?>
                     <tr>
                         <td class="l"><?php echo t('VALIDATE_CODE');?></td>
                         <td class="left"><input id="valid_code" type="text" name="valid_code" size="4" maxlength="4" />&nbsp;<img id="captcha_img" src="index.php?action=captcha" title="<?php echo t('CLICK_TO_REFRESH');?>" alt="<?php echo t('CAPTCHA');?>" /></td>
@@ -117,7 +118,7 @@
                     </form>
                 </div>
         </div><!-- body -->
-        <div class="clear"><?php echo htmlspecialchars_decode(ZFramework::app()->copyright_info);?> <a href="mailto:<?php echo ZFramework::app()->admin_email;?>"><?php echo t('ADMIN_EMAIL');?></a> <?php if(!isset($_SESSION['user'])): ?><a href="index.php?action=control_panel"><?php echo t('ACP');?></a><?php endif;?> Powered by <a href="https://github.com/rainyjune/yuan-pad" target="_blank" title="Find More">YuanPad <?php echo MP_VERSION;?></a> <a href="index.php?action=rss"><img src="misc/images/rss-icon.png" alt="rss" /></a></div><!-- footer -->
+        <div class="clear"><?php echo htmlspecialchars_decode($app->copyright_info);?> <a href="mailto:<?php echo $app->admin_email;?>"><?php echo t('ADMIN_EMAIL');?></a> <?php if(!isset($_SESSION['user'])): ?><a href="index.php?action=control_panel"><?php echo t('ACP');?></a><?php endif;?> Powered by <a href="https://github.com/rainyjune/yuan-pad" target="_blank" title="Find More">YuanPad <?php echo MP_VERSION;?></a> <a href="index.php?action=rss"><img src="misc/images/rss-icon.png" alt="rss" /></a></div><!-- footer -->
 
 	<!-- jqModal window -->
 	<div id="modalWindow" class="jqmWindow">
