@@ -11,3 +11,15 @@ function getSysJSON(successCallback, errorCallback) {
     error: errorCallback
   });
 }
+
+function createPost(form, beforeSendCallback, successCallback, errorCallback, completeCallback) {
+  $.ajax({
+    type: "POST",
+    url: "index.php?controller=post&action=create",
+    data: form.serialize(),
+    beforeSend: beforeSendCallback,
+    success: successCallback,
+    error: errorCallback,
+    complete: completeCallback
+  });
+}
