@@ -134,6 +134,7 @@ $theme = $app->theme;
     <script src="//cdn.jsdelivr.net/jqmodal/0.1/jqModal.js"></script>
     <script src="misc/prettify.js" type="text/javascript"></script>
     <script type="text/javascript" src="./themes/<?= $theme ?>/scripts/dataProvider.js"></script>
+    <script type="text/javascript" src="./themes/<?= $theme ?>/scripts/indexModal.js"></script>
     <script type="text/javascript" src="./themes/<?= $theme ?>/scripts/index.js"></script>
   </body>
 </html>
