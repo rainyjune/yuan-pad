@@ -19,22 +19,26 @@ $theme = $app->theme;
   </head>
 
   <body>
-      <div class="container">
-          <div id="hd">
-              <div class="right">
-                  <?php if($app->site_close):?><span class="notice"><?php echo t('OFF_LINE_MODE');?></span><?php endif;?>
+    <div class="container">
+      <div id="hd">
+        <div class="right">
+          <?php if($app->site_close):?>
+          <span class="notice"><?php echo t('OFF_LINE_MODE');?></span>
+          <?php endif;?>
 
-                  <?php
-                  if(!isset ($_SESSION['admin']) && !isset ($_SESSION['user']))
-                      echo '<a class="thickbox" href="index.php?controller=user&amp;action=create&amp;width=630&amp;height=45%">'.t('REGISTER').'</a>&nbsp;<a href="index.php?controller=user&amp;action=login">'.t('LOGIN').'</a>';
-                  if(isset ($_SESSION['user']) || isset ($_SESSION['admin']))
-                      echo '<a href="index.php?controller=user&amp;action=logout">'.t('LOGOUT').'</a>';
-                  if(isset ($_SESSION['user']))
-                      echo '&nbsp;<a class="thickbox" href="index.php?controller=user&amp;action=update&amp;uid='.$_SESSION['uid'].'&amp;width=600&amp;height=50%">'.t('UPDATE').'</a>';
-                  ?>
-              </div>
-              <h1><?php echo t('WELCOME_POST');?></h1>
-          </div><!--  header  -->
+          <?php if(!isset ($_SESSION['admin']) && !isset ($_SESSION['user'])): ?>
+          <a class="thickbox" href="index.php?controller=user&amp;action=create&amp;width=630&amp;height=45%"><?= t('REGISTER') ?></a>&nbsp;
+          <a href="index.php?controller=user&amp;action=login"><?= t('LOGIN') ?></a>
+          <?php endif;?>
+          <?php if(isset ($_SESSION['user']) || isset ($_SESSION['admin'])): ?>
+          <a href="index.php?controller=user&amp;action=logout"><?= t('LOGOUT') ?></a>
+          <?php endif;?>
+          <?php if(isset ($_SESSION['user'])): ?>
+          &nbsp;<a class="thickbox" href="index.php?controller=user&amp;action=update&amp;uid=<?= $_SESSION['uid'] ?>&amp;width=600&amp;height=50%"><?= t('UPDATE') ?></a>
+          <?php endif;?>
+        </div>
+        <h1><?php echo t('WELCOME_POST');?></h1>
+      </div><!--  header  -->
           <div id="bd">
               <div class="yui-g">
                   <table id="main_table">
@@ -126,9 +130,9 @@ $theme = $app->theme;
     </div>
     <!-- end of jqModal window -->
       </div>
-  <script type="text/javascript" src="misc/jquery.min.js"></script>
-  <script type="text/javascript" src="misc/jqModal.js"></script>
-  <script src="misc/prettify.js" type="text/javascript"></script>
-  <script type="text/javascript" src="./themes/<?= $theme ?>/scripts/index.js"></script>
+    <script type="text/javascript" src="misc/jquery.min.js"></script>
+    <script type="text/javascript" src="misc/jqModal.js"></script>
+    <script src="misc/prettify.js" type="text/javascript"></script>
+    <script type="text/javascript" src="./themes/<?= $theme ?>/scripts/index.js"></script>
   </body>
 </html>
