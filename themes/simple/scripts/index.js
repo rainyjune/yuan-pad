@@ -40,7 +40,9 @@ $(function() {
                         post.message=data;
                         post.showError();
                       }
-                    }, post.error,
+                    }, function error(xhr) {
+                      alert(xhr.statusText);
+                    },
                     function complete(){
                       $('input#submit').attr('disabled','');
                     });
@@ -84,9 +86,6 @@ $(function() {
             } else {
                 return true;
             }
-        },
-        error: function (xhr) {
-            alert(xhr.statusText);
         }
     };
     post.init();
