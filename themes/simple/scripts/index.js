@@ -102,7 +102,7 @@ $(function() {
           pagenumString+="</a>&nbsp;";
         }
         $('span#pagenumString').html(pagenumString);
-      };
+      }
       prettyPrint();
     });
   }
