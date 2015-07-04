@@ -73,7 +73,7 @@ $(function() {
 
   function refreshPostList() {
     getDataByPage($('#pid').val(), function(data) {
-      $("#main_table tr:not('.header')").remove();
+      var tbodyString = [];
       $.each(data.messages,function(i,item){
         var trString="<tr>\n<td>"+ ((item.uid>0)?item.b_username:item.user) +"</td>\n<td><div style='word-wrap: break-word;word-break:break-all;width:450px;'>"+item.post_content+"<br />";
         if(item.reply){
@@ -86,8 +86,9 @@ $(function() {
           trString += _C;
         }
         trString+="</div></td>\n<td>"+item.time+"</td>\n</tr>\n";
-        $(".header").after(trString);
+        tbodyString.unshift(trString);
       });
+      $("#main_table tbody").html(tbodyString.join(''));
       if(document.getElementById('pagination')){
         $('span#totalNum').html(data.total);
         $('span#totalPages').html(data.pagenum);
