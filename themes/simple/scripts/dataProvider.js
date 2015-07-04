@@ -23,3 +23,10 @@ function createPost(form, beforeSendCallback, successCallback, errorCallback, co
     complete: completeCallback
   });
 }
+
+function getDataByPage(pageNumber, successCallback) {
+  $.getJSON('index.php',
+    {ajax:'yes',pid: pageNumber},
+    successCallback
+  );
+}
