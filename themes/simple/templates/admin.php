@@ -10,9 +10,9 @@
 <link rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/';?>blueprint/print.css" type="text/css" media="print" />
 <!--[if lt IE 8]><link rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/';?>blueprint/ie.css" type="text/css" media="screen, projection" /><![endif]-->
 <link type="text/css" rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/admin.css';?>" />
-<link type="text/css" rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/jqModal.css';?>" />
-<script type="text/javascript" src="misc/jquery.min.js"></script>
-<script type="text/javascript" src="misc/jqModal.js"></script>
+<link type="text/css" rel="stylesheet" href="//cdn.jsdelivr.net/jqmodal/0.1/jqModal.css" />
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+<script type="text/javascript" src="//cdn.jsdelivr.net/jqmodal/0.1/jqModal.js"></script>
 <script type="text/javascript" src="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/admin.js';?>"></script>
 <title><?php echo t('ACP_INDEX');?></title>
 </head>
