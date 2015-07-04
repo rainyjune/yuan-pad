@@ -6,7 +6,10 @@ $(function() {
     }, function(xhr, status, error){
       alert(error);
     });
-    $('#smileys img').click(function(){imgId=String($(this).attr('id'));$('#content').val($('#content').val()+imgId);});
+    $('#smileys img').click(function(){
+      var imgId = String($(this).attr('id'));
+      $('#content').val($('#content').val()+imgId);
+    });
     $('#captcha_img').mouseover(function(){$(this).addClass('pointer');});
     $('#captcha_img').click(function(){$(this).attr('src',$(this).attr('src')+'&id='+Math.random());});
     $('<input type="hidden" name="ajax" value="true" />').insertAfter('#pid');
