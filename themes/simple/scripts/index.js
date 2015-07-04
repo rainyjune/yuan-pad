@@ -1,7 +1,11 @@
-$(document).ready(function() {
-    var d = new Date()
+$(function() {
+    var d = new Date();
     if(self.location!=parent.location){parent.location.replace(self.location);}
-    $.ajax({type: "GET",url: 'index.php',data: {action: "getSysJSON",t:d.getTime()},dataType: 'json',cache:false,contentType: "application/json",success: function(data){languageTips=data;},error: function(xhr, status, error) {alert(error);}});
+    getSysJSON(function(data){
+      languageTips=data;
+    }, function(xhr, status, error){
+      alert(error);
+    });
     $('#smileys img').click(function(){imgId=String($(this).attr('id'));$('#content').val($('#content').val()+imgId);});
     $('#captcha_img').mouseover(function(){$(this).addClass('pointer');});
     $('#captcha_img').click(function(){$(this).attr('src',$(this).attr('src')+'&id='+Math.random());});
