@@ -83,27 +83,16 @@ $(function() {
             });
         },
         showError:function(){
-            $('#returnedError').removeClass('info');
-            $('#returnedError').fadeIn("slow");
-            $('#returnedError').addClass('error');
-            $('#returnedError').html(post.message);
+          $('#returnedError').removeClass('info').fadeIn("slow").addClass('error').html(post.message);
         },
         emptyError:function(){
-            $('#returnedError').removeClass('info');
-            $('#returnedError').removeClass('error');
-            $('#returnedError').removeClass('success');
-            $('#returnedError').html('');
+          $('#returnedError').removeClass('info').removeClass('error').removeClass('success').html('');
         },
         showSuccess:function(){
-            $('#returnedError').removeClass('info');
-            $('#returnedError').addClass('success');
-            $('#returnedError').html(languageTips.POST_OK);
-            $('#returnedError').fadeIn("slow");
-            $('#returnedError').fadeOut("slow");
+          $('#returnedError').removeClass('info').addClass('success').html(languageTips.POST_OK).fadeIn("slow").fadeOut("slow");
         },
         showInfo:function(){
-            $('#returnedError').addClass('info');
-            $('#returnedError').html(languageTips.SENDING);
+          $('#returnedError').addClass('info').html(languageTips.SENDING);
         },
         validate:function(){
             post.message='';
@@ -130,7 +119,7 @@ $(function() {
         },
         error: function (xhr) {
             alert(xhr.statusText);
-	}
+        }
     };
     post.init();
 
