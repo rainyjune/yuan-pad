@@ -27,61 +27,54 @@ $(function() {
             $('form#guestbook').submit(function(e){
                 e.preventDefault();
                 if(post.validate()){
-                    $.ajax({
-                        type: "POST",
-                        url: "index.php?controller=post&action=create",
-                        data: $(this).serialize(),
-                        beforeSend:function(xhr){
-                            post.showInfo();
-                            $('input#submit').attr('disabled','disabled');
-                        },
-                        success: function(data){
-                            $('#captcha_img').attr('src',$('#captcha_img').attr('src')+'&id='+Math.random());
-                            if(data == "OK"){
-                                document.getElementById('guestbook').reset();
-                                post.showSuccess();
-                                $.getJSON('index.php',{ajax:'yes',pid:$('#pid').val()},function(data){
-                                    $("#main_table tr:not('.header')").remove();
-                                    $.each(data.messages,function(i,item){
-                                        var trString="<tr>\n<td>"+ ((item.uid>0)?item.b_username:item.user) +"</td>\n<td><div style='word-wrap: break-word;word-break:break-all;width:450px;'>"+item.post_content+"<br />";
-                                            if(item.reply){
-                                                var _A = [languageTips.ADMIN_NAME_INDEX,item.reply.reply_time,item.reply.reply_content];
-                                                var _B = ['{admin_name}','{reply_time}','{reply_content}'];
-                                                var _C = languageTips.ADMIN_REPLIED;
-                                                for(i=0;i<_A.length;i++){
-                                                    var _C=_C.replace(_B[i],_A[i]);
-                                                }
-                                                trString += _C;
-                                            }
-                                        trString+="</div></td>\n<td>"+item.time+"</td>\n</tr>\n";
-                                        $(".header").after(trString);
-                                    });
-                                    if(document.getElementById('pagination')){
-                                        $('span#totalNum').html(data.total);
-                                        $('span#totalPages').html(data.pagenum);
-                                        var pagenumString='';
-                                        for (i=0;i<data.pagenum;i++){
-                                            pagenumString+= "<a href='index.php?pid="+i+"'>";
-                                            if(i==data.current_page){
-                                                pagenumString+= "<font size='+2'>"+ (i+1) +"</font>";
-                                            }else{
-                                                pagenumString+= (i+1);
-                                            }
-                                            pagenumString+="</a>&nbsp;";
-                                        }
-                                        $('span#pagenumString').html(pagenumString);
-                                    };
-									prettyPrint();
-                                });
-                            }else{
-                                post.message=data;
-                                post.showError();
+                    createPost($(this), function beforeSend(xhr){
+                      post.showInfo();
+                      $('input#submit').attr('disabled','disabled');
+                    }, function success(data){
+                      $('#captcha_img').attr('src',$('#captcha_img').attr('src')+'&id='+Math.random());
+                      if(data == "OK"){
+                        document.getElementById('guestbook').reset();
+                        post.showSuccess();
+                        getDataByPage($('#pid').val(), function(data) {
+                          $("#main_table tr:not('.header')").remove();
+                          $.each(data.messages,function(i,item){
+                            var trString="<tr>\n<td>"+ ((item.uid>0)?item.b_username:item.user) +"</td>\n<td><div style='word-wrap: break-word;word-break:break-all;width:450px;'>"+item.post_content+"<br />";
+                            if(item.reply){
+                              var _A = [languageTips.ADMIN_NAME_INDEX,item.reply.reply_time,item.reply.reply_content];
+                              var _B = ['{admin_name}','{reply_time}','{reply_content}'];
+                              var _C = languageTips.ADMIN_REPLIED;
+                              for(i=0;i<_A.length;i++){
+                                var _C=_C.replace(_B[i],_A[i]);
+                              }
+                              trString += _C;
                             }
-                        },
-                        error:post.error,
-                        complete:function(){
-                            $('input#submit').attr('disabled','');
-                        }
+                            trString+="</div></td>\n<td>"+item.time+"</td>\n</tr>\n";
+                            $(".header").after(trString);
+                          });
+                          if(document.getElementById('pagination')){
+                            $('span#totalNum').html(data.total);
+                            $('span#totalPages').html(data.pagenum);
+                            var pagenumString='';
+                            for (i=0;i<data.pagenum;i++){
+                              pagenumString+= "<a href='index.php?pid="+i+"'>";
+                              if(i==data.current_page){
+                                pagenumString+= "<font size='+2'>"+ (i+1) +"</font>";
+                              }else{
+                                pagenumString+= (i+1);
+                              }
+                              pagenumString+="</a>&nbsp;";
+                            }
+                            $('span#pagenumString').html(pagenumString);
+                          };
+                          prettyPrint();
+                        });
+                      }else{
+                        post.message=data;
+                        post.showError();
+                      }
+                    }, post.error,
+                    function complete(){
+                      $('input#submit').attr('disabled','');
                     });
                 }else{
                     post.emptyError();
