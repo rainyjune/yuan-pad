@@ -14,7 +14,6 @@ $theme = $app->theme;
     <link type="text/css" rel="stylesheet" href="//cdn.jsdelivr.net/jqmodal/0.1/jqModal.css" />
     <link type="text/css" rel="stylesheet" href="./themes/<?= $theme ?>/scripts/index.css" />
     <link type="text/css" rel="stylesheet" href="./themes/<?= $theme ?>/scripts/jqModal_frame.css" />
-    <link href="misc/prettify.css" type="text/css" rel="stylesheet" />
     <title><?php echo t('WELCOME',array('{site_name}'=>$app->board_name));?></title>
   </head>
 
@@ -132,7 +131,7 @@ $theme = $app->theme;
     </div>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
     <script src="//cdn.jsdelivr.net/jqmodal/0.1/jqModal.js"></script>
-    <script src="misc/prettify.js" type="text/javascript"></script>
+    <script src="//cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js" type="text/javascript"></script>
     <script type="text/javascript" src="./themes/<?= $theme ?>/scripts/dataProvider.js"></script>
     <script type="text/javascript" src="./themes/<?= $theme ?>/scripts/indexModal.js"></script>
     <script type="text/javascript" src="./themes/<?= $theme ?>/scripts/index.js"></script>

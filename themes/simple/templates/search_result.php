@@ -14,8 +14,7 @@
 <link type="text/css" rel="stylesheet" href="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/jqModal_frame.css';?>" />
 <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
 <script type="text/javascript" src="//cdn.jsdelivr.net/jqmodal/0.1/jqModal.js"></script>
-<link href="misc/prettify.css" type="text/css" rel="stylesheet" />
-<script src="misc/prettify.js" type="text/javascript"></script>
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js" type="text/javascript"></script>
 <script type="text/javascript" src="<?php echo './themes/'.ZFramework::app()->theme.'/scripts/index.js';?>"></script>
 <title><?php echo t('WELCOME',array('{site_name}'=>ZFramework::app()->board_name));?></title>
 </head>
