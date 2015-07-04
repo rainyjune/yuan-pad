@@ -104,7 +104,7 @@ $(function() {
         }
         $('span#pagenumString').html(pagenumString);
       }
-      prettyPrint();
+      window.PR.prettyPrint();
     });
   }
 
@@ -130,5 +130,4 @@ $(function() {
     });
   }
 
-  //prettyPrint();
 });
