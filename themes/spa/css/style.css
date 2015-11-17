@@ -10,3 +10,13 @@
   border: 1px solid #757575;
   padding: 4px;
 }
+
+.commentAuthor {
+  color: #C30;
+  font-size: 14px;
+  float: left;
+}
+
+.commentText {
+  clear: both;
+}
