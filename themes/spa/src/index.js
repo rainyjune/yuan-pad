@@ -64,13 +64,16 @@ var CommentList = React.createClass({
 });
 
 var Comment = React.createClass({
+  rawMarkup: function() {
+    return { __html: this.props.children };
+  },
   render: function() {
     return (
       <div className="comment">
         <h2 class="commentAuthor">
           {this.props.author}
         </h2> 
-        {this.props.children}
+        <div dangerouslySetInnerHTML={this.rawMarkup()} />
       </div>
     );
   }

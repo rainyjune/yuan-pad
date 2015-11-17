@@ -75,6 +75,9 @@ var CommentList = React.createClass({
 var Comment = React.createClass({
   displayName: "Comment",
 
+  rawMarkup: function () {
+    return { __html: this.props.children };
+  },
   render: function () {
     return React.createElement(
       "div",
@@ -84,7 +87,7 @@ var Comment = React.createClass({
         { "class": "commentAuthor" },
         this.props.author
       ),
-      this.props.children
+      React.createElement("div", { dangerouslySetInnerHTML: this.rawMarkup() })
     );
   }
 });
