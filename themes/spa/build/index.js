@@ -2,12 +2,53 @@
 var CommentBox = React.createClass({
   displayName: "CommentBox",
 
+  getInitialState: function () {
+    return { data: [] };
+  },
+  handleCommentSubmit: function (comment) {
+    comment.ajax = true;
+    yuanjs.ajax({
+      type: "POST",
+      url: "./index.php?controller=post&action=create",
+      data: comment,
+      success: (function (data) {
+        debugger;
+      }).bind(this),
+      error: (function (xhr, status, err) {
+        debugger;
+      }).bind(this)
+    });
+  },
+  loadCommentsFromServer: function () {
+    yuanjs.ajax({
+      url: this.props.url,
+      dataType: 'json',
+      method: 'GET',
+      cache: false,
+      data: { "ajax": true, pid: 1 },
+      success: (function (data) {
+        this.setState({ data: data.messages });
+      }).bind(this),
+      error: (function (xhr, status, err) {
+        debugger;
+      }).bind(this)
+    });
+  },
+  componentDidMount: function () {
+    this.loadCommentsFromServer();
+    setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+  },
   render: function () {
     return React.createElement(
       "div",
       { className: "commentBox" },
-      React.createElement(CommentList, null),
-      React.createElement(CommentForm, null)
+      React.createElement(
+        "h1",
+        null,
+        "Welcome"
+      ),
+      React.createElement(CommentList, { data: this.state.data }),
+      React.createElement(CommentForm, { onCommentSubmit: this.handleCommentSubmit })
     );
   }
 });
@@ -16,10 +57,34 @@ var CommentList = React.createClass({
   displayName: "CommentList",
 
   render: function () {
+    var commentNodes = this.props.data.map(function (comment) {
+      return React.createElement(
+        Comment,
+        { author: comment.uname, key: comment.id },
+        comment.post_content
+      );
+    });
     return React.createElement(
       "div",
       { className: "commentList" },
-      "This is a comment list."
+      commentNodes
+    );
+  }
+});
+
+var Comment = React.createClass({
+  displayName: "Comment",
+
+  render: function () {
+    return React.createElement(
+      "div",
+      { className: "comment" },
+      React.createElement(
+        "h2",
+        { "class": "commentAuthor" },
+        this.props.author
+      ),
+      this.props.children
     );
   }
 });
@@ -27,15 +92,30 @@ var CommentList = React.createClass({
 var CommentForm = React.createClass({
   displayName: "CommentForm",
 
+  handleSubmit: function (e) {
+    e.preventDefault();
+    var author = this.refs.user.value.trim();
+    var text = this.refs.content.value.trim();
+    if (!author || !text) return;
+
+    // TODO: Send request to the server.
+    this.props.onCommentSubmit({ user: author, content: text });
+
+    this.refs.user.value = '';
+    this.refs.content.value = '';
+    return false;
+  },
   render: function () {
     return React.createElement(
-      "div",
-      { className: "commentForm" },
-      "This is a comment form."
+      "form",
+      { onSubmit: this.handleSubmit, className: "commentForm" },
+      React.createElement("input", { ref: "user", type: "text", placeholder: "Your name" }),
+      React.createElement("input", { ref: "content", type: "text", placeholder: "Say something.." }),
+      React.createElement("input", { type: "submit", value: "Post" })
     );
   }
 });
 
-ReactDOM.render(React.createElement(CommentBox, null), document.getElementById('content'));
+ReactDOM.render(React.createElement(CommentBox, { url: "index.php", pollInterval: 2000 }), document.getElementById('content'));
 
 },{}]},{},[1]);
