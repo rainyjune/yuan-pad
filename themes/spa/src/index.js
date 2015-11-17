@@ -1,6 +1,11 @@
 var CommentBox = React.createClass({
   getInitialState: function() {
-    return { data: [] };
+    return { 
+      comments: [],
+      pagenum: 0,
+      total: 0,
+      current_page: 1
+    };
   },
   handleCommentSubmit: function(comment) {
     comment.ajax = true;
@@ -24,7 +29,12 @@ var CommentBox = React.createClass({
       cache: false,
       data: {"ajax": true, pid: 1},
       success: function(data) {
-        this.setState({data: data.messages});
+        this.setState({
+          comments: data.messages,
+          pagenum: data.pagenum,
+          total: data.total,
+          current_page: data.current_page 
+        });
       }.bind(this),
       error: function(xhr, status, err) {
         debugger;
@@ -39,8 +49,19 @@ var CommentBox = React.createClass({
     return (
       <div className="commentBox">
         <h1>Welcome</h1>
-        <CommentList data={this.state.data} />
+        <CommentStatistics current_page={this.state.current_page} total={this.state.total} pagenum={this.state.pagenum} /> 
+        <CommentList data={this.state.comments} />
         <CommentForm onCommentSubmit={this.handleCommentSubmit}/>
+      </div>
+    );
+  }
+});
+
+var CommentStatistics = React.createClass({
+  render: function() {
+    return (
+      <div className="statistics">
+        {this.props.total}
       </div>
     );
   }
@@ -50,7 +71,7 @@ var CommentList = React.createClass({
   render: function() {
     var commentNodes = this.props.data.map(function(comment) {
       return (
-        <Comment author={comment.uname} key={comment.id}>
+        <Comment author={comment.uname} key={comment.id} time={comment.time}>
           {comment.post_content}
         </Comment>
       );
@@ -65,14 +86,15 @@ var CommentList = React.createClass({
 
 var Comment = React.createClass({
   rawMarkup: function() {
-    return { __html: this.props.children };
+    return { __html: this.props.children.toString() };
   },
   render: function() {
     return (
       <div className="comment">
-        <h2 className="commentAuthor">
+        <span className="commentAuthor">
           {this.props.author}
-        </h2> 
+        </span> 
+        <span className="commentDate">{this.props.time}</span>
         <div className="commentText" dangerouslySetInnerHTML={this.rawMarkup()} />
       </div>
     );

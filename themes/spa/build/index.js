@@ -3,7 +3,12 @@ var CommentBox = React.createClass({
   displayName: "CommentBox",
 
   getInitialState: function () {
-    return { data: [] };
+    return {
+      comments: [],
+      pagenum: 0,
+      total: 0,
+      current_page: 1
+    };
   },
   handleCommentSubmit: function (comment) {
     comment.ajax = true;
@@ -27,7 +32,12 @@ var CommentBox = React.createClass({
       cache: false,
       data: { "ajax": true, pid: 1 },
       success: (function (data) {
-        this.setState({ data: data.messages });
+        this.setState({
+          comments: data.messages,
+          pagenum: data.pagenum,
+          total: data.total,
+          current_page: data.current_page
+        });
       }).bind(this),
       error: (function (xhr, status, err) {
         debugger;
@@ -47,8 +57,21 @@ var CommentBox = React.createClass({
         null,
         "Welcome"
       ),
-      React.createElement(CommentList, { data: this.state.data }),
+      React.createElement(CommentStatistics, { current_page: this.state.current_page, total: this.state.total, pagenum: this.state.pagenum }),
+      React.createElement(CommentList, { data: this.state.comments }),
       React.createElement(CommentForm, { onCommentSubmit: this.handleCommentSubmit })
+    );
+  }
+});
+
+var CommentStatistics = React.createClass({
+  displayName: "CommentStatistics",
+
+  render: function () {
+    return React.createElement(
+      "div",
+      { className: "statistics" },
+      this.props.total
     );
   }
 });
@@ -60,7 +83,7 @@ var CommentList = React.createClass({
     var commentNodes = this.props.data.map(function (comment) {
       return React.createElement(
         Comment,
-        { author: comment.uname, key: comment.id },
+        { author: comment.uname, key: comment.id, time: comment.time },
         comment.post_content
       );
     });
@@ -76,16 +99,21 @@ var Comment = React.createClass({
   displayName: "Comment",
 
   rawMarkup: function () {
-    return { __html: this.props.children };
+    return { __html: this.props.children.toString() };
   },
   render: function () {
     return React.createElement(
       "div",
       { className: "comment" },
       React.createElement(
-        "h2",
+        "span",
         { className: "commentAuthor" },
         this.props.author
+      ),
+      React.createElement(
+        "span",
+        { className: "commentDate" },
+        this.props.time
       ),
       React.createElement("div", { className: "commentText", dangerouslySetInnerHTML: this.rawMarkup() })
     );
