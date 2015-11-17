@@ -1,3 +1,4 @@
 .DS_Store
 sites/default/config.php
 /node_modules/
+*.swp
