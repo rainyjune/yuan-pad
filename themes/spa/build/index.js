@@ -84,10 +84,10 @@ var Comment = React.createClass({
       { className: "comment" },
       React.createElement(
         "h2",
-        { "class": "commentAuthor" },
+        { className: "commentAuthor" },
         this.props.author
       ),
-      React.createElement("div", { dangerouslySetInnerHTML: this.rawMarkup() })
+      React.createElement("div", { className: "commentText", dangerouslySetInnerHTML: this.rawMarkup() })
     );
   }
 });
