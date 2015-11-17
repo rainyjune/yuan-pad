@@ -1,6 +1,7 @@
 var CommentBox = React.createClass({
   getInitialState: function() {
     return { 
+      translations: {},
       comments: [],
       pagenum: 0,
       total: 0,
@@ -19,6 +20,21 @@ var CommentBox = React.createClass({
       error: function(xhr, status, err) {
         debugger;
       }.bind(this)
+    });
+  },
+  getAppConfig: function(successCallback) {
+    var d = new Date();
+    yuanjs.ajax({
+      type: "GET",
+      url: 'index.php',
+      data: {action: "getSysJSON",t:d.getTime()},
+      dataType: 'json',
+      cache: false,
+      dataType: "json",
+      success: successCallback.bind(this),
+      error: function(){
+        debugger;
+      }.bind(this) 
     });
   },
   loadCommentsFromServer: function() {
@@ -42,8 +58,12 @@ var CommentBox = React.createClass({
     });
   },
   componentDidMount: function() {
-    this.loadCommentsFromServer();
-    setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+    this.getAppConfig(function(data){
+      this.setState({translations: data});
+      this.loadCommentsFromServer();
+      setInterval(this.loadCommentsFromServer, this.props.pollInterval);
+      
+    });
   },
   render: function() {
     return (
