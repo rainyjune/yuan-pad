@@ -21,6 +21,7 @@ module.exports = function(grunt) {
     uglify: {
       index: {
         options: {
+          sourceMapRoot: '../src/',
           sourceMap: true
         },
         files: {
