@@ -38,6 +38,7 @@ module.exports = function(grunt) {
     }
   });
 
+  // We don't have to load babel here, because we run it at line 2.
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
 
