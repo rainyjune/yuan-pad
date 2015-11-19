@@ -61,8 +61,6 @@ var CommentBox = React.createClass({
     this.getAppConfig(function(data){
       this.setState({translations: data});
       this.loadCommentsFromServer();
-      setInterval(this.loadCommentsFromServer, this.props.pollInterval);
-      
     });
   },
   render: function() {
