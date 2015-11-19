@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 
     // https://www.npmjs.com/package/grunt-contrib-uglify
     uglify: {
-      index: {
+      devIndex: {
         options: {
           sourceMapRoot: '../src/',
           sourceMap: true
@@ -27,14 +27,46 @@ module.exports = function(grunt) {
         files: {
           'themes/spa/build/index.js' : ['themes/spa/build/index.js']
         }
+      },
+      distIndex: {
+        options: {
+          sourceMap: false 
+        },
+        files: {
+          'themes/spa/build/index.js' : ['themes/spa/build/index.js']
+        }
+      },
+    },
+
+    htmlmin: {
+      distIndex: {
+        options: {
+          removeComments: true,
+          collapseWhitespace: true
+        },
+        files: {
+          'themes/spa/templates/index.php': 'themes/spa/templates/index.html'
+        }
+      },
+      devIndex: {
+        options: {
+          collapseWhitespace: true
+        },
+        files: {
+          'themes/spa/templates/index.php': 'themes/spa/templates/index.html'
+        }
       }
     },
 
     // https://github.com/gruntjs/grunt-contrib-watch
     watch: {
-      index: {
+      indexjs: {
         files: ['themes/spa/src/index.js'],
-        tasks: ['babel', 'uglify']
+        tasks: ['babel', 'uglify:devIndex']
+      },
+      indexhtml: {
+        files: ['themes/spa/templates/index.html'],
+        tasks: ['htmlmin:devIndex']
       }
     }
   });
@@ -42,6 +74,8 @@ module.exports = function(grunt) {
   // We don't have to load babel here, because we run it at line 2.
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
+  grunt.loadNpmTasks('grunt-contrib-htmlmin');
 
   grunt.registerTask('default', ['watch']);
+  grunt.registerTask('build-dist', ['babel', 'uglify:distIndex', 'htmlmin:distIndex']);
 };
