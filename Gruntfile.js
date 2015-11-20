@@ -2,6 +2,27 @@ module.exports = function(grunt) {
   require('load-grunt-tasks')(grunt); // npm install --save-dev load-grunt-tasks 
 
   grunt.initConfig({
+    // https://github.com/gruntjs/grunt-contrib-sass
+    sass: {
+      dev: {
+        options: {
+          style: 'expanded'
+        },
+        files: {
+          'themes/spa/css/style.css': 'themes/spa/sass/style.scss'
+        }
+      },
+      dist: {
+        options: {
+          style: 'compressed',
+          sourcemap: 'none'
+        },
+        files: {
+          'themes/spa/css/style.css': 'themes/spa/sass/style.scss'
+        }
+      }
+    },
+
     // https://www.npmjs.com/package/grunt-babel
     babel: {
       // http://babeljs.io/docs/usage/options/
@@ -67,15 +88,20 @@ module.exports = function(grunt) {
       indexhtml: {
         files: ['themes/spa/templates/index.html'],
         tasks: ['htmlmin:devIndex']
+      },
+      css: {
+        files: ['themes/spa/sass/style.scss'],
+        tasks: ['sass:dev'] 
       }
     }
   });
 
   // We don't have to load babel here, because we run it at line 2.
+  grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
 
   grunt.registerTask('default', ['watch']);
-  grunt.registerTask('build-dist', ['babel', 'uglify:distIndex', 'htmlmin:distIndex']);
+  grunt.registerTask('build-dist', ['sass:dist', 'babel', 'uglify:distIndex', 'htmlmin:distIndex']);
 };
