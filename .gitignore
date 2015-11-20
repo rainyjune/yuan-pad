@@ -3,3 +3,4 @@ sites/default/config.php
 /node_modules/
 *.swp
 *.map
+.sass-cache/
