@@ -1,26 +1,14 @@
-var CommentBox = React.createClass({
+var App = React.createClass({
   getInitialState: function() {
-    return { 
+    return {
       translations: {},
-      comments: [],
-      pagenum: 0,
-      total: 0,
-      current_page: 1
+      commentsData: {
+        comments: [],
+        pagenum: 0,
+        total: 0,
+        current_page: 1
+      }
     };
-  },
-  handleCommentSubmit: function(comment) {
-    comment.ajax = true;
-    yuanjs.ajax({
-      type: "POST",
-      url: "./index.php?controller=post&action=create",
-      data: comment,
-      success: function(data) {
-        debugger;
-      }.bind(this),
-      error: function(xhr, status, err) {
-        debugger;
-      }.bind(this)
-    });
   },
   getAppConfig: function(successCallback) {
     var d = new Date();
@@ -46,10 +34,12 @@ var CommentBox = React.createClass({
       data: {"ajax": true, pid: 1},
       success: function(data) {
         this.setState({
-          comments: data.messages,
-          pagenum: data.pagenum,
-          total: data.total,
-          current_page: data.current_page 
+          commentsData: {
+            comments: data.messages,
+            pagenum: data.pagenum,
+            total: data.total,
+            current_page: data.current_page 
+          }
         });
       }.bind(this),
       error: function(xhr, status, err) {
@@ -65,10 +55,44 @@ var CommentBox = React.createClass({
   },
   render: function() {
     return (
+      <div id="appbox">
+        <CommentBox url="index.php" lang={this.state.translations} comments={this.state.commentsData}  />
+        <SearchBar />
+      </div>
+    );
+  }
+});
+
+var SearchBar = React.createClass({
+  render: function() {
+    return (
+      <div className="searchbar">
+        This is a search bar.
+      </div>
+    );
+  }
+});
+
+var CommentBox = React.createClass({
+  handleCommentSubmit: function(comment) {
+    comment.ajax = true;
+    yuanjs.ajax({
+      type: "POST",
+      url: "./index.php?controller=post&action=create",
+      data: comment,
+      success: function(data) {
+      }.bind(this),
+      error: function(xhr, status, err) {
+        debugger;
+      }.bind(this)
+    });
+  },
+  render: function() {
+    return (
       <div className="commentBox">
         <h1>Welcome</h1>
-        <CommentStatistics current_page={this.state.current_page} total={this.state.total} pagenum={this.state.pagenum} /> 
-        <CommentList data={this.state.comments} />
+        <CommentStatistics lang={this.props.lang} current_page={this.props.comments.current_page} total={this.props.comments.total} pagenum={this.props.comments.pagenum} /> 
+        <CommentList data={this.props.comments.comments} />
         <CommentForm onCommentSubmit={this.handleCommentSubmit}/>
       </div>
     );
@@ -76,10 +100,15 @@ var CommentBox = React.createClass({
 });
 
 var CommentStatistics = React.createClass({
+  rawMarkup: function() {
+    var pagenavText = this.props.lang.PAGE_NAV;
+    var text = pagenavText ? pagenavText.replace('{num_of_post}', this.props.total).replace('{num_of_page}', this.props.pagenum) : '';
+    return { __html: text };
+  },
   render: function() {
     return (
       <div className="statistics">
-        {this.props.total}
+        <p dangerouslySetInnerHTML={this.rawMarkup()} />
       </div>
     );
   }
@@ -126,7 +155,6 @@ var CommentForm = React.createClass({
     var text = this.refs.content.value.trim();
     if (!author || !text) return;
     
-    // TODO: Send request to the server.
     this.props.onCommentSubmit({ user: author, content: text}); 
     
     this.refs.user.value = ''; 
@@ -145,6 +173,6 @@ var CommentForm = React.createClass({
 });
 
 ReactDOM.render(
-  <CommentBox url="index.php" pollInterval={2000} />,
+  <App url="index.php" />,
   document.getElementById('content')
 );
