@@ -56,8 +56,19 @@ var App = React.createClass({
   render: function() {
     return (
       <div id="appbox">
+        <Header />
         <CommentBox url="index.php" lang={this.state.translations} comments={this.state.commentsData}  />
         <SearchBar />
+      </div>
+    );
+  }
+});
+
+var Header = React.createClass({
+  render: function() {
+    return (
+      <div className="header">
+        This is a header section.
       </div>
     );
   }
