@@ -1,6 +1,7 @@
 var App = React.createClass({
   getInitialState: function() {
     return {
+      currentUser: {},
       translations: {},
       commentsData: {
         comments: [],
@@ -10,12 +11,28 @@ var App = React.createClass({
       }
     };
   },
+  getUserInfo: function() {
+    yuanjs.ajax({
+      type: "GET",
+      url: 'index.php?controller=user&action=getUserInfo',
+      dataType: 'json',
+      cache: false,
+      dataType: "json",
+      success: function(data){
+        console.log('user info:', data);
+        this.setState({currentUser: data});
+        this.loadCommentsFromServer();
+      }.bind(this),
+      error: function(){
+      }.bind(this) 
+    });
+  },
   getAppConfig: function(successCallback) {
-    var d = new Date();
+    
     yuanjs.ajax({
       type: "GET",
       url: 'index.php',
-      data: {action: "getSysJSON",t:d.getTime()},
+      data: {action: "getSysJSON",t:Date.now()},
       dataType: 'json',
       cache: false,
       dataType: "json",
@@ -50,13 +67,20 @@ var App = React.createClass({
   componentDidMount: function() {
     this.getAppConfig(function(data){
       this.setState({translations: data});
-      this.loadCommentsFromServer();
+      var sessionId = Cookies.get('PHPSESSID');;
+      if (sessionId) {
+        this.getUserInfo(sessionId);
+        debugger;
+      } else {
+        debugger;
+      }
+      
     });
   },
   render: function() {
     return (
       <div id="appbox">
-        <Header />
+        <Header user={this.state.currentUser} />
         <CommentBox url="index.php" lang={this.state.translations} comments={this.state.commentsData}  />
         <SearchBar />
       </div>
@@ -66,13 +90,43 @@ var App = React.createClass({
 
 var Header = React.createClass({
   render: function() {
+    
+    var loginButton;
+    if (this.props.user.admin || this.props.user.user) {
+      loginButton = <LogoutButton />;
+    } else {
+      loginButton = <LoginButton />;
+    }
+
     return (
       <div className="header">
-        This is a header section.
+        {loginButton}
       </div>
     );
   }
 });
+
+
+var LogoutButton = React.createClass({
+  render: function() {
+    return (
+      <a href='index.php?controller=user&amp;action=logout'>LOGOUT</a>
+    );
+  }
+});
+
+
+var LoginButton = React.createClass({
+  render: function() {
+    return (
+      <div>
+        <a href='index.php?controller=user&amp;action=create&amp;width=630&amp;height=45%'>REGISTER</a>
+        <a href='index.php?controller=user&amp;action=login'>LOGIN</a>
+      </div>
+    );
+  }
+});
+
 
 var SearchBar = React.createClass({
   render: function() {
