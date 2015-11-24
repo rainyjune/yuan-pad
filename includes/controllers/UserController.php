@@ -212,5 +212,8 @@ class UserController extends BaseController{
         }
         header("Location:index.php");
     }
-
+    
+    public function actionGetUserInfo() {
+      echo json_encode($_SESSION);
+    }
 }
