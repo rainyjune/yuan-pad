@@ -13,6 +13,15 @@ module.exports = function(grunt) {
         }
       }
     },
+    
+    env: {
+      dist: {
+        NODE_ENV : 'production',
+      },
+      dev: {
+        NODE_ENV: 'development',
+      } 
+    },
 
     // https://github.com/gruntjs/grunt-contrib-sass
     sass: {
@@ -53,6 +62,15 @@ module.exports = function(grunt) {
 
     // https://www.npmjs.com/package/grunt-contrib-uglify
     uglify: {
+      options: {
+        compress:{
+          dead_code     : true,  // discard unreachable code
+          drop_debugger : true,  // discard “debugger” statements
+          global_defs   : {      // global definitions
+            "DEBUG": false,      // matters for some libraries
+          }
+        }
+      },
       devIndex: {
         options: {
           sourceMapRoot: '../src/',
@@ -96,7 +114,7 @@ module.exports = function(grunt) {
     watch: {
       indexjs: {
         files: ['themes/spa/src/index.js'],
-        tasks: ['browserify:dist', 'uglify:devIndex']
+        tasks: ['env:dist', 'browserify:dist', 'uglify:devIndex']
       },
       indexhtml: {
         files: ['themes/spa/templates/index.html'],
@@ -114,7 +132,8 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-browserify');
+  grunt.loadNpmTasks('grunt-env');
 
   grunt.registerTask('default', ['watch']);
-  grunt.registerTask('build-dist', ['sass:dist', 'browserify:dist', 'uglify:distIndex', 'htmlmin:distIndex']);
+  grunt.registerTask('build-dist', ['sass:dist', 'env:dist', 'browserify:dist', 'uglify:distIndex', 'htmlmin:distIndex']);
 };
