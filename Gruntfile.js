@@ -1,7 +1,19 @@
 module.exports = function(grunt) {
-  require('load-grunt-tasks')(grunt); // npm install --save-dev load-grunt-tasks 
 
   grunt.initConfig({
+    browserify: {
+      dist: {
+        files: {
+          'themes/spa/build/index.js': ['themes/spa/src/index.js']
+        },
+        options: {
+          transform: [
+            ['babelify', {presets: ['react']}]
+          ]
+        }
+      }
+    },
+
     // https://github.com/gruntjs/grunt-contrib-sass
     sass: {
       dev: {
@@ -22,6 +34,7 @@ module.exports = function(grunt) {
       }
     },
 
+    /*
     // https://www.npmjs.com/package/grunt-babel
     babel: {
       // http://babeljs.io/docs/usage/options/
@@ -36,6 +49,7 @@ module.exports = function(grunt) {
         }
       }
     },
+    */
 
     // https://www.npmjs.com/package/grunt-contrib-uglify
     uglify: {
@@ -82,7 +96,7 @@ module.exports = function(grunt) {
     watch: {
       indexjs: {
         files: ['themes/spa/src/index.js'],
-        tasks: ['babel', 'uglify:devIndex']
+        tasks: ['browserify:dist', 'uglify:devIndex']
       },
       indexhtml: {
         files: ['themes/spa/templates/index.html'],
@@ -95,12 +109,12 @@ module.exports = function(grunt) {
     }
   });
 
-  // We don't have to load babel here, because we run it at line 2.
   grunt.loadNpmTasks('grunt-contrib-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
+  grunt.loadNpmTasks('grunt-browserify');
 
   grunt.registerTask('default', ['watch']);
-  grunt.registerTask('build-dist', ['sass:dist', 'babel', 'uglify:distIndex', 'htmlmin:distIndex']);
+  grunt.registerTask('build-dist', ['sass:dist', 'browserify:dist', 'uglify:distIndex', 'htmlmin:distIndex']);
 };
