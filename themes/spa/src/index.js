@@ -26,6 +26,23 @@ var App = React.createClass({
       }
     };
   },
+  hangleLoginSubmit: function(loginData) {
+    console.log('Login data:',  loginData);
+    
+    loginData.ajax = true;
+    yuanjs.ajax({
+      type: "POST",
+      url: "index.php?controller=user&action=login",
+      data: loginData,
+      dataType: 'json',
+      success: function(data) {
+        console.log('data', data);
+      }.bind(this),
+      error: function(xhr, status, err) {
+        debugger;
+      }.bind(this)
+    });
+  },
   getUserInfo: function() {
     yuanjs.ajax({
       type: "GET",
@@ -88,7 +105,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div id="appbox">
-        <Header user={this.state.currentUser} />
+        <Header user={this.state.currentUser} lang={this.state.translations} onLoginSubmit={this.hangleLoginSubmit} />
         <CommentBox url="index.php" lang={this.state.translations} comments={this.state.commentsData}  />
         <SearchBar />
       </div>
@@ -100,23 +117,41 @@ var LoginModal = React.createClass({
   closeLoginModal: function() {
     this.props.onRequestClose();
   },
-  
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var user = this.refs.user.value.trim();
+    var pwd = this.refs.password.value.trim();
+    if (!user || !pwd) return;
+    
+    this.props.onLoginSubmit({ user: user, password: pwd}); 
+    
+    this.refs.user.value = ''; 
+    this.refs.password.value = ''; 
+    return false;
+  },
   render: function(){
     return (
-      <Modal
-        isOpen={this.props.loginModalIsOpen}
-        onRequestClose={this.closeLoginModal}
-        style={customStyles} >
-
-        <h2>Hello</h2>
+      <Modal isOpen={this.props.loginModalIsOpen} onRequestClose={this.closeLoginModal} style={customStyles} >
+        <h2>Login</h2>
         <button onClick={this.closeLoginModal}>close</button>
-        <div>I am a modal</div>
-        <form>
-          <input />
-          <button>tab navigation</button>
-          <button>stays</button>
-          <button>inside</button>
-          <button>the modal</button>
+        <form onSubmit={this.handleSubmit} action="index.php?controller=user&amp;action=login" method="post">
+          <table>
+            <tbody>
+              <tr>
+                <td><label>{this.props.lang.USERNAME}</label></td>
+                <td><input type="text" ref="user" size="20" /></td>
+              </tr>
+              <tr>
+                <td><label>{this.props.lang.ADMIN_PWD}</label></td>
+                <td><input type="password" ref="password" size="20" /></td>
+              </tr>
+              <tr>
+                <td colSpan="2">
+                  <input id="submit_button" name="submit" type="submit" value={this.props.lang.SUBMIT} />
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </form>
       </Modal>
     );
@@ -124,12 +159,15 @@ var LoginModal = React.createClass({
 });
 
 var Header = React.createClass({
+  hangleLoginSubmit: function(loginData) {
+    this.props.onLoginSubmit(loginData);
+  },
   render: function() {
     var loginButton;
     if (this.props.user.admin || this.props.user.user) {
-      loginButton = <LogoutButton />;
+      loginButton = <LogoutButton lang={this.props.lang} />;
     } else {
-      loginButton = <LoginButton />;
+      loginButton = <LoginButton lang={this.props.lang} onLoginSubmit={this.hangleLoginSubmit} />;
     }
 
     return (
@@ -161,12 +199,15 @@ var LoginButton = React.createClass({
   closeLoginModal: function() {
     this.setState({loginModalIsOpen: false});
   },
+  hangleLoginSubmit: function(loginData) {
+    this.props.onLoginSubmit(loginData);
+  },
   render: function() {
     return (
       <div>
-        <a href='javascript:void(0);'>REGISTER</a>
-        <a href='javascript:void(0);' onClick={this.openLoginModal}>LOGIN</a>
-        <LoginModal loginModalIsOpen={this.state.loginModalIsOpen} onRequestClose={this.closeLoginModal} />
+        <a href='javascript:void(0);'>{this.props.lang.REGISTER}</a>&nbsp;
+        <a href='javascript:void(0);' onClick={this.openLoginModal}>{this.props.lang.LOGIN}</a>
+        <LoginModal onLoginSubmit={this.hangleLoginSubmit} loginModalIsOpen={this.state.loginModalIsOpen} onRequestClose={this.closeLoginModal} lang={this.props.lang} />
       </div>
     );
   }
