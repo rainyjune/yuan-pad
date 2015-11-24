@@ -70,7 +70,7 @@ var App = React.createClass({
   componentDidMount: function() {
     this.getAppConfig(function(data){
       this.setState({translations: data});
-      this.getUserInfo(sessionId);
+      this.getUserInfo();
     });
   },
   render: function() {
@@ -86,7 +86,6 @@ var App = React.createClass({
 
 var Header = React.createClass({
   render: function() {
-    
     var loginButton;
     if (this.props.user.admin || this.props.user.user) {
       loginButton = <LogoutButton />;
@@ -109,7 +108,6 @@ var LogoutButton = React.createClass({
     );
   }
 });
-
 
 var LoginButton = React.createClass({
   render: function() {
