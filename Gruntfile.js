@@ -63,13 +63,7 @@ module.exports = function(grunt) {
     // https://www.npmjs.com/package/grunt-contrib-uglify
     uglify: {
       options: {
-        compress:{
-          dead_code     : true,  // discard unreachable code
-          drop_debugger : true,  // discard “debugger” statements
-          global_defs   : {      // global definitions
-            "DEBUG": false,      // matters for some libraries
-          }
-        }
+        
       },
       devIndex: {
         options: {
@@ -82,7 +76,14 @@ module.exports = function(grunt) {
       },
       distIndex: {
         options: {
-          sourceMap: false 
+          sourceMap: false ,
+          compress:{
+            dead_code     : true,  // discard unreachable code
+            drop_debugger : true,  // discard “debugger” statements
+            global_defs   : {      // global definitions
+              "DEBUG": false,      // matters for some libraries
+            }
+          }
         },
         files: {
           'themes/spa/build/index.js' : ['themes/spa/build/index.js']
@@ -114,7 +115,7 @@ module.exports = function(grunt) {
     watch: {
       indexjs: {
         files: ['themes/spa/src/index.js'],
-        tasks: ['env:dist', 'browserify:dist', 'uglify:devIndex']
+        tasks: ['browserify:dist', 'uglify:devIndex']
       },
       indexhtml: {
         files: ['themes/spa/templates/index.html'],
