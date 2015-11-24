@@ -1,9 +1,22 @@
 var React = require('react'),
     ReactDOM = require('react-dom');
+var Modal = require('react-modal');
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
 
 var App = React.createClass({
   getInitialState: function() {
     return {
+      loginModalIsOpen: false,
       currentUser: {},
       translations: {},
       commentsData: {
@@ -13,6 +26,13 @@ var App = React.createClass({
         current_page: 1
       }
     };
+  },
+  openLoginModal: function() {
+    this.setState({loginModalIsOpen: true});
+  },
+
+  closeLoginModal: function() {
+    this.setState({loginModalIsOpen: false});
   },
   getUserInfo: function() {
     yuanjs.ajax({
@@ -76,6 +96,23 @@ var App = React.createClass({
   render: function() {
     return (
       <div id="appbox">
+        <button onClick={this.openLoginModal}>Open Modal</button>
+        <Modal
+          isOpen={this.state.loginModalIsOpen}
+          onRequestClose={this.closeLoginModal}
+          style={customStyles} >
+
+          <h2>Hello</h2>
+          <button onClick={this.closeLoginModal}>close</button>
+          <div>I am a modal</div>
+          <form>
+            <input />
+            <button>tab navigation</button>
+            <button>stays</button>
+            <button>inside</button>
+            <button>the modal</button>
+          </form>
+        </Modal>
         <Header user={this.state.currentUser} />
         <CommentBox url="index.php" lang={this.state.translations} comments={this.state.commentsData}  />
         <SearchBar />
