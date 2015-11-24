@@ -106,7 +106,6 @@ var Header = React.createClass({
   }
 });
 
-
 var LogoutButton = React.createClass({
   render: function() {
     return (
