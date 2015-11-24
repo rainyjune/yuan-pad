@@ -16,7 +16,6 @@ const customStyles = {
 var App = React.createClass({
   getInitialState: function() {
     return {
-      loginModalIsOpen: false,
       currentUser: {},
       translations: {},
       commentsData: {
@@ -26,13 +25,6 @@ var App = React.createClass({
         current_page: 1
       }
     };
-  },
-  openLoginModal: function() {
-    this.setState({loginModalIsOpen: true});
-  },
-
-  closeLoginModal: function() {
-    this.setState({loginModalIsOpen: false});
   },
   getUserInfo: function() {
     yuanjs.ajax({
@@ -96,27 +88,37 @@ var App = React.createClass({
   render: function() {
     return (
       <div id="appbox">
-        <button onClick={this.openLoginModal}>Open Modal</button>
-        <Modal
-          isOpen={this.state.loginModalIsOpen}
-          onRequestClose={this.closeLoginModal}
-          style={customStyles} >
-
-          <h2>Hello</h2>
-          <button onClick={this.closeLoginModal}>close</button>
-          <div>I am a modal</div>
-          <form>
-            <input />
-            <button>tab navigation</button>
-            <button>stays</button>
-            <button>inside</button>
-            <button>the modal</button>
-          </form>
-        </Modal>
         <Header user={this.state.currentUser} />
         <CommentBox url="index.php" lang={this.state.translations} comments={this.state.commentsData}  />
         <SearchBar />
       </div>
+    );
+  }
+});
+
+var LoginModal = React.createClass({
+  closeLoginModal: function() {
+    this.props.onRequestClose();
+  },
+  
+  render: function(){
+    return (
+      <Modal
+        isOpen={this.props.loginModalIsOpen}
+        onRequestClose={this.closeLoginModal}
+        style={customStyles} >
+
+        <h2>Hello</h2>
+        <button onClick={this.closeLoginModal}>close</button>
+        <div>I am a modal</div>
+        <form>
+          <input />
+          <button>tab navigation</button>
+          <button>stays</button>
+          <button>inside</button>
+          <button>the modal</button>
+        </form>
+      </Modal>
     );
   }
 });
@@ -147,11 +149,24 @@ var LogoutButton = React.createClass({
 });
 
 var LoginButton = React.createClass({
+  getInitialState: function() {
+    return {
+      loginModalIsOpen: false
+    };
+  },
+  openLoginModal: function() {
+    this.setState({loginModalIsOpen: true});
+  },
+
+  closeLoginModal: function() {
+    this.setState({loginModalIsOpen: false});
+  },
   render: function() {
     return (
       <div>
-        <a href='index.php?controller=user&amp;action=create&amp;width=630&amp;height=45%'>REGISTER</a>
-        <a href='index.php?controller=user&amp;action=login'>LOGIN</a>
+        <a href='javascript:void(0);'>REGISTER</a>
+        <a href='javascript:void(0);' onClick={this.openLoginModal}>LOGIN</a>
+        <LoginModal loginModalIsOpen={this.state.loginModalIsOpen} onRequestClose={this.closeLoginModal} />
       </div>
     );
   }
