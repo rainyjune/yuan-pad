@@ -1,3 +1,6 @@
+var React = require('react'),
+    ReactDOM = require('react-dom');
+
 var App = React.createClass({
   getInitialState: function() {
     return {
@@ -67,14 +70,7 @@ var App = React.createClass({
   componentDidMount: function() {
     this.getAppConfig(function(data){
       this.setState({translations: data});
-      var sessionId = Cookies.get('PHPSESSID');;
-      if (sessionId) {
-        this.getUserInfo(sessionId);
-        debugger;
-      } else {
-        debugger;
-      }
-      
+      this.getUserInfo(sessionId);
     });
   },
   render: function() {
