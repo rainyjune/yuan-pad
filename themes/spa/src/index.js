@@ -18,6 +18,7 @@ var App = React.createClass({
     return {
       currentUser: {},
       loginErrorMsg: '',
+      userUpdateErrorMsg: '',
       translations: {},
       commentsData: {
         comments: [],
@@ -91,6 +92,25 @@ var App = React.createClass({
       }.bind(this) 
     });
   },
+  handleUserUpdate: function(userData) {
+    yuanjs.ajax({
+      type: "POST",
+      url: "api.php?controller=user&action=update&uid=" + userData.uid,
+      data: userData,
+      dataType: 'json',
+      success: function(data) {
+        console.log('update user result:', data);
+        if (data.error) {
+          this.setState({userUpdateErrorMsg: data.error_detail});
+        } else {
+          this.setState({userUpdateErrorMsg: '', currentUser: userData});
+        }
+      }.bind(this),
+      error: function(xhr, status, err) {
+        debugger;
+      }.bind(this)
+    });
+  },
   loadCommentsFromServer: function() {
     yuanjs.ajax({
       url: this.props.url,
@@ -122,7 +142,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div id="appbox">
-        <Header onUserLogout={this.handleLogout} loginErrorMsg={this.state.loginErrorMsg} user={this.state.currentUser} lang={this.state.translations} onLoginSubmit={this.hangleLoginSubmit} />
+        <Header onUserUpdate={this.handleUserUpdate} onUserLogout={this.handleLogout} loginErrorMsg={this.state.loginErrorMsg} user={this.state.currentUser} lang={this.state.translations} onLoginSubmit={this.hangleLoginSubmit} />
         <CommentBox url="index.php" lang={this.state.translations} comments={this.state.commentsData}  />
         <SearchBar />
       </div>
@@ -180,13 +200,16 @@ var Header = React.createClass({
   handleLogout: function() {
     this.props.onUserLogout();
   },
+  handleUserUpdate: function() {
+    this.props.onUserUpdate();
+  },
   hangleLoginSubmit: function(loginData) {
     this.props.onLoginSubmit(loginData);
   },
   render: function() {
     var loginButton;
     if (this.props.user.admin || this.props.user.user) {
-      loginButton = <LogoutButton lang={this.props.lang} onUserLogout={this.handleLogout} />;
+      loginButton = <LogoutButton user={this.props.user} lang={this.props.lang} onUserUpdateSubmit={this.handleUserUpdate} onUserLogout={this.handleLogout} />;
     } else {
       loginButton = <LoginButton loginErrorMsg={this.props.loginErrorMsg} lang={this.props.lang} onLoginSubmit={this.hangleLoginSubmit} />;
     }
@@ -199,7 +222,76 @@ var Header = React.createClass({
   }
 });
 
+var UserUpdateModal = React.createClass({
+  closeUserUpdateModal: function() {
+    this.props.onRequestClose();
+  },
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var uid = this.refs.uid.value.trim();
+    var user = this.refs.user.value.trim();
+    var pwd = this.refs.pwd.value.trim();
+    var email = this.refs.email.value.trim();
+    if (!uid || !user || !pwd || !email) return;
+    
+    this.props.onUserUpdateSubmit({ uid: uid, user: user, pwd: pwd, email: email}); 
+    
+    // TODO Clear the inputs.
+    //this.refs.user.value = ''; 
+    //this.refs.password.value = ''; 
+    return false;
+  },
+  render: function(){
+    return (
+      <Modal isOpen={this.props.userUpdateModalIsOpen} onRequestClose={this.closeLoginModal} style={customStyles} >
+        <h2>Update profile</h2>
+        <p>{this.props.userUpdateErrorMsg}</p>
+        <button onClick={this.closeUserUpdateModal}>close</button>
+        <form onSubmit={this.handleSubmit} action="index.php?controller=user&amp;action=update&amp" method="post">
+        <input type="hidden" ref="uid" value={this.props.user.uid} />
+        <div class="inputbox">
+              <dl>
+              <dt>{this.props.lang.USERNAME}</dt>
+              <dd><input type="text" readonly="readonly" value={this.props.user.username} ref="user" size="20" onFocus="this.style.borderColor='#F93'" onBlur="this.style.borderColor='#888'" />
+              </dd>
+              </dl>
+              <dl>
+              <dt>{this.props.lang.PASSWORD}</dt>
+              <dd><input type="password" value={this.props.user.password} ref="pwd" size="20" onFocus="this.style.borderColor='#F93'" onBlur="this.style.borderColor='#888'" />
+              </dd>
+              </dl>
+              <dl>
+              <dt>{this.props.lang.EMAIL}</dt>
+              <dd><input type="text" value={this.props.user.email} ref="email" size="20" onFocus="this.style.borderColor='#F93'" onBlur="this.style.borderColor='#888'" />
+              </dd>
+              </dl>
+          </div>
+            <div class="butbox">
+                <dl>
+                    <dt><input type="submit" value={this.props.lang.UPDATE} /></dt>
+                </dl>
+            </div>
+        </form>
+      </Modal>
+    );
+  }
+});
+
 var LogoutButton = React.createClass({
+  getInitialState: function() {
+    return {
+      userUpdateModalIsOpen: false
+    };
+  },
+  openUserUpdateModal: function() {
+    this.setState({userUpdateModalIsOpen: true});
+  },
+  closeUserUpdateModal: function() {
+    this.setState({userUpdateModalIsOpen: false});
+  },
+  handleUserUpdateSubmit: function(userData) {
+    this.props.onUserUpdateSubmit(userData);
+  },
   handleLogout: function(e) {
     e.preventDefault();
     this.props.onUserLogout();
@@ -207,6 +299,13 @@ var LogoutButton = React.createClass({
   render: function() {
     return (
       <a href='index.php?controller=user&amp;action=logout' onClick={this.handleLogout}>{this.props.lang.LOGOUT}</a>
+      <UserUpdateModal 
+        user={this.props.user}
+        userUpdateErrorMsg={this.props.userUpdateErrorMsg} 
+        onUserUpdateSubmit={this.handleUserUpdateSubmit} 
+        userUpdateModalIsOpen={this.state.userUpdateModalIsOpen} 
+        onRequestClose={this.closeUserUpdateModal} 
+        lang={this.props.lang} />
     );
   }
 });
