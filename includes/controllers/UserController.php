@@ -30,6 +30,9 @@ class UserController extends BaseController{
                             if($this->_model->query(sprintf(parse_tbprefix("INSERT INTO <sysuser> ( username , password , email , reg_time ) VALUES ( '%s' , '%s' , '%s' , %d )"),$user,$pwd,$email,$time))){
                                 $_SESSION['user']=$user;
                                 $_SESSION['uid']=  $this->_model->insert_id();
+                                if(defined('API_MODE')){
+                                  die(json_encode(array('user'=> $user, 'uid'=>$_SESSION['uid'])));
+                                }
                                 if(isset ($_POST['ajax'])){
                                     die ('OK');
                                 }
@@ -48,6 +51,9 @@ class UserController extends BaseController{
                 }
         }else{
         $errorMsg=t('FILL_NOT_COMPLETE');
+        }
+        if(defined('API_MODE')){
+          die(json_encode(array('error'=> 'Register Error', 'error_detail'=> $errorMsg)));
         }
         if(isset ($_POST['ajax'])){
         die ($errorMsg);
