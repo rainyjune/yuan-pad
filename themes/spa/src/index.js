@@ -68,10 +68,24 @@ var App = React.createClass({
       type: "GET",
       url: 'index.php',
       data: {action: "getSysJSON",t:Date.now()},
-      dataType: 'json',
       cache: false,
       dataType: "json",
       success: successCallback.bind(this),
+      error: function(){
+        debugger;
+      }.bind(this) 
+    });
+  },
+  handleLogout: function() {
+    yuanjs.ajax({
+      type: "GET",
+      url: 'api.php',
+      data: {controller: 'user', action: "logout"},
+      cache: false,
+      //dataType: "json",
+      success: function(data){
+        this.setState({ currentUser: {} });
+      }.bind(this),
       error: function(){
         debugger;
       }.bind(this) 
@@ -108,7 +122,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div id="appbox">
-        <Header loginErrorMsg={this.state.loginErrorMsg} user={this.state.currentUser} lang={this.state.translations} onLoginSubmit={this.hangleLoginSubmit} />
+        <Header onUserLogout={this.handleLogout} loginErrorMsg={this.state.loginErrorMsg} user={this.state.currentUser} lang={this.state.translations} onLoginSubmit={this.hangleLoginSubmit} />
         <CommentBox url="index.php" lang={this.state.translations} comments={this.state.commentsData}  />
         <SearchBar />
       </div>
@@ -163,13 +177,16 @@ var LoginModal = React.createClass({
 });
 
 var Header = React.createClass({
+  handleLogout: function() {
+    this.props.onUserLogout();
+  },
   hangleLoginSubmit: function(loginData) {
     this.props.onLoginSubmit(loginData);
   },
   render: function() {
     var loginButton;
     if (this.props.user.admin || this.props.user.user) {
-      loginButton = <LogoutButton lang={this.props.lang} />;
+      loginButton = <LogoutButton lang={this.props.lang} onUserLogout={this.handleLogout} />;
     } else {
       loginButton = <LoginButton loginErrorMsg={this.props.loginErrorMsg} lang={this.props.lang} onLoginSubmit={this.hangleLoginSubmit} />;
     }
@@ -183,9 +200,13 @@ var Header = React.createClass({
 });
 
 var LogoutButton = React.createClass({
+  handleLogout: function(e) {
+    e.preventDefault();
+    this.props.onUserLogout();
+  },
   render: function() {
     return (
-      <a href='index.php?controller=user&amp;action=logout'>LOGOUT</a>
+      <a href='index.php?controller=user&amp;action=logout' onClick={this.handleLogout}>{this.props.lang.LOGOUT}</a>
     );
   }
 });
