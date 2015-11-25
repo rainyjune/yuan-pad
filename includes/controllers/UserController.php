@@ -210,6 +210,9 @@ class UserController extends BaseController{
             unset($_SESSION['admin']);
             session_destroy();
         }
+        if(defined('API_MODE')){
+          die('OK');
+        }
         header("Location:index.php");
     }
     
