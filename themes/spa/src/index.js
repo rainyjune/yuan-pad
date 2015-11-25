@@ -19,6 +19,7 @@ var App = React.createClass({
       currentUser: {},
       loginErrorMsg: '',
       userUpdateErrorMsg: '',
+      registerErrorMsg: '',
       translations: {},
       commentsData: {
         comments: [],
@@ -111,6 +112,26 @@ var App = React.createClass({
       }.bind(this)
     });
   },
+  handleRegister: function(userData) {
+    userData.ajax = 1;
+    yuanjs.ajax({
+      type: "POST",
+      url: "api.php?controller=user&action=create",
+      data: userData,
+//      dataType: 'json',
+      success: function(data) {
+        console.log('create user result:', data);
+        if (data.error) {
+          this.setState({registerErrorMsg: data.error_detail});
+        } else {
+          this.setState({registerErrorMsg: '', currentUser: data});
+        }
+      }.bind(this),
+      error: function(xhr, status, err) {
+        debugger;
+      }.bind(this)
+    });
+  },
   loadCommentsFromServer: function() {
     yuanjs.ajax({
       url: this.props.url,
@@ -142,7 +163,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div id="appbox">
-        <Header onUserUpdate={this.handleUserUpdate} onUserLogout={this.handleLogout} loginErrorMsg={this.state.loginErrorMsg} user={this.state.currentUser} lang={this.state.translations} onLoginSubmit={this.hangleLoginSubmit} />
+        <Header onRegisterSubmit={this.handleRegister} onUserUpdate={this.handleUserUpdate} onUserLogout={this.handleLogout} registerErrorMsg={this.state.registerErrorMsg} loginErrorMsg={this.state.loginErrorMsg} user={this.state.currentUser} lang={this.state.translations} onLoginSubmit={this.hangleLoginSubmit} />
         <CommentBox url="index.php" lang={this.state.translations} comments={this.state.commentsData}  />
         <SearchBar />
       </div>
@@ -196,6 +217,64 @@ var LoginModal = React.createClass({
   }
 });
 
+var RegisterModal = React.createClass({
+  closeRegisterModal: function() {
+    this.props.onRequestClose();
+  },
+  handleSubmit: function(e) {
+    e.preventDefault();
+    
+    var register = this.refs.register.value;
+    var user = this.refs.user.value.trim();
+    var pwd = this.refs.pwd.value.trim();
+    var email = this.refs.email.value.trim();
+    if (!user || !pwd || !email) return;
+    
+    this.props.onRegisterSubmit({ register: register, user: user, pwd: pwd, email: email}); 
+    
+    /*
+    this.refs.user.value = ''; 
+    this.refs.password.value = ''; 
+    */
+    return false;
+  },
+  render: function(){
+    return (
+      <Modal isOpen={this.props.registerModalIsOpen} onRequestClose={this.closeRegisterModal} style={customStyles} >
+        <h2>Register</h2>
+        <p>{this.props.registerErrorMsg}</p>
+        <button onClick={this.closeRegisterModal}>close</button>
+        <form onSubmit={this.handleSubmit} action="index.php?controller=user&amp;action=create" method="post">
+                <fieldset>
+                          <legend>{this.props.lang.REGISTER}</legend>
+            <input type="hidden" ref="register" value="true" />
+          
+              <dl>
+            <dt>{this.props.lang.USERNAME}</dt>
+            <dd><input type="text" ref="user" size="20" />
+            </dd>
+              </dl>
+              <dl>
+            <dt>{this.props.lang.PASSWORD}</dt>
+            <dd><input type="password" ref="pwd" size="20" />
+            </dd>
+              </dl>
+              <dl>
+            <dt>{this.props.lang.EMAIL}</dt>
+            <dd><input type="text" ref="email" size="20" />
+            </dd>
+              </dl>
+              <dl>
+                  <dt><input type="submit" value={this.props.lang.REGISTER} /></dt>
+              </dl>
+            </fieldset>
+        </form>
+          
+      </Modal>
+    );
+  }
+});
+
 var Header = React.createClass({
   handleLogout: function() {
     this.props.onUserLogout();
@@ -206,12 +285,15 @@ var Header = React.createClass({
   hangleLoginSubmit: function(loginData) {
     this.props.onLoginSubmit(loginData);
   },
+  handleRegisterSubmit: function(data) {
+    this.props.onRegisterSubmit(data);
+  },
   render: function() {
     var loginButton;
     if (this.props.user.admin || this.props.user.user) {
       loginButton = <LogoutButton user={this.props.user} lang={this.props.lang} onUserUpdateSubmit={this.handleUserUpdate} onUserLogout={this.handleLogout} />;
     } else {
-      loginButton = <LoginButton loginErrorMsg={this.props.loginErrorMsg} lang={this.props.lang} onLoginSubmit={this.hangleLoginSubmit} />;
+      loginButton = <LoginButton registerErrorMsg={this.props.registerErrorMsg} loginErrorMsg={this.props.loginErrorMsg} lang={this.props.lang} onRegisterSubmit={this.handleRegisterSubmit} onLoginSubmit={this.hangleLoginSubmit} />;
     }
 
     return (
@@ -252,17 +334,17 @@ var UserUpdateModal = React.createClass({
         <div class="inputbox">
               <dl>
               <dt>{this.props.lang.USERNAME}</dt>
-              <dd><input type="text" readonly="readonly" value={this.props.user.username} ref="user" size="20" onFocus="this.style.borderColor='#F93'" onBlur="this.style.borderColor='#888'" />
+              <dd><input type="text" readonly="readonly" value={this.props.user.username} ref="user" size="20"  />
               </dd>
               </dl>
               <dl>
               <dt>{this.props.lang.PASSWORD}</dt>
-              <dd><input type="password" value={this.props.user.password} ref="pwd" size="20" onFocus="this.style.borderColor='#F93'" onBlur="this.style.borderColor='#888'" />
+              <dd><input type="password" value={this.props.user.password} ref="pwd" size="20"  />
               </dd>
               </dl>
               <dl>
               <dt>{this.props.lang.EMAIL}</dt>
-              <dd><input type="text" value={this.props.user.email} ref="email" size="20" onFocus="this.style.borderColor='#F93'" onBlur="this.style.borderColor='#888'" />
+              <dd><input type="text" value={this.props.user.email} ref="email" size="20"  />
               </dd>
               </dl>
           </div>
@@ -298,14 +380,16 @@ var LogoutButton = React.createClass({
   },
   render: function() {
     return (
-      <a href='index.php?controller=user&amp;action=logout' onClick={this.handleLogout}>{this.props.lang.LOGOUT}</a>
-      <UserUpdateModal 
-        user={this.props.user}
-        userUpdateErrorMsg={this.props.userUpdateErrorMsg} 
-        onUserUpdateSubmit={this.handleUserUpdateSubmit} 
-        userUpdateModalIsOpen={this.state.userUpdateModalIsOpen} 
-        onRequestClose={this.closeUserUpdateModal} 
-        lang={this.props.lang} />
+      <div>
+        <a href='index.php?controller=user&amp;action=logout' onClick={this.handleLogout}>{this.props.lang.LOGOUT}</a>
+        <UserUpdateModal 
+          user={this.props.user}
+          userUpdateErrorMsg={this.props.userUpdateErrorMsg} 
+          onUserUpdateSubmit={this.handleUserUpdateSubmit} 
+          userUpdateModalIsOpen={this.state.userUpdateModalIsOpen} 
+          onRequestClose={this.closeUserUpdateModal} 
+          lang={this.props.lang} />
+      </div>
     );
   }
 });
@@ -313,25 +397,35 @@ var LogoutButton = React.createClass({
 var LoginButton = React.createClass({
   getInitialState: function() {
     return {
+      registerModalIsOpen: false,
       loginModalIsOpen: false
     };
   },
   openLoginModal: function() {
     this.setState({loginModalIsOpen: true});
   },
-
+  openRegisterModal: function() {
+    this.setState({registerModalIsOpen: true});
+  },
   closeLoginModal: function() {
     this.setState({loginModalIsOpen: false});
+  },
+  closeRegisterModal: function() {
+    this.setState({registerModalIsOpen: false});
   },
   hangleLoginSubmit: function(loginData) {
     this.props.onLoginSubmit(loginData);
   },
+  handleRegisterSubmit: function(data) {
+    this.props.onRegisterSubmit(data);
+  },
   render: function() {
     return (
       <div>
-        <a href='javascript:void(0);'>{this.props.lang.REGISTER}</a>&nbsp;
+        <a href='javascript:void(0);' onClick={this.openRegisterModal}>{this.props.lang.REGISTER}</a>&nbsp;
         <a href='javascript:void(0);' onClick={this.openLoginModal}>{this.props.lang.LOGIN}</a>
         <LoginModal loginErrorMsg={this.props.loginErrorMsg} onLoginSubmit={this.hangleLoginSubmit} loginModalIsOpen={this.state.loginModalIsOpen} onRequestClose={this.closeLoginModal} lang={this.props.lang} />
+        <RegisterModal registerErrorMsg={this.props.registerErrorMsg} registerErrorMsg={this.props.registerErrorMsg} onRegisterSubmit={this.handleRegisterSubmit} registerModalIsOpen={this.state.registerModalIsOpen} onRequestClose={this.closeRegisterModal} lang={this.props.lang} />
       </div>
     );
   }
