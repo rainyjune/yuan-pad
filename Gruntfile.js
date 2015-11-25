@@ -43,36 +43,10 @@ module.exports = function(grunt) {
       }
     },
 
-    /*
-    // https://www.npmjs.com/package/grunt-babel
-    babel: {
-      // http://babeljs.io/docs/usage/options/
-      options: {
-        sourceMap: false,
-        compact: false,
-        presets: ['babel-preset-react']
-      },
-      dist: {
-        files: {
-          'themes/spa/build/index.js': 'themes/spa/src/index.js'
-        }
-      }
-    },
-    */
-
     // https://www.npmjs.com/package/grunt-contrib-uglify
     uglify: {
       options: {
         
-      },
-      devIndex: {
-        options: {
-          sourceMapRoot: '../src/',
-          sourceMap: true
-        },
-        files: {
-          'themes/spa/build/index.js' : ['themes/spa/build/index.js']
-        }
       },
       distIndex: {
         options: {
@@ -103,7 +77,7 @@ module.exports = function(grunt) {
       },
       devIndex: {
         options: {
-          collapseWhitespace: true
+          collapseWhitespace: false
         },
         files: {
           'themes/spa/templates/index.php': 'themes/spa/templates/index.html'
@@ -115,7 +89,7 @@ module.exports = function(grunt) {
     watch: {
       indexjs: {
         files: ['themes/spa/src/index.js'],
-        tasks: ['browserify:dist', 'uglify:devIndex']
+        tasks: ['browserify:dist']
       },
       indexhtml: {
         files: ['themes/spa/templates/index.html'],
