@@ -17,6 +17,7 @@ var App = React.createClass({
   getInitialState: function() {
     return {
       currentUser: {},
+      loginErrorMsg: '',
       translations: {},
       commentsData: {
         comments: [],
@@ -27,16 +28,19 @@ var App = React.createClass({
     };
   },
   hangleLoginSubmit: function(loginData) {
-    console.log('Login data:',  loginData);
-    
-    loginData.ajax = true;
     yuanjs.ajax({
       type: "POST",
-      url: "index.php?controller=user&action=login",
+      url: "api.php?controller=user&action=login",
       data: loginData,
       dataType: 'json',
       success: function(data) {
         console.log('data', data);
+        if (data.error) {
+          this.setState({loginErrorMsg: data.error_detail});
+        } else {
+          this.setState({loginErrorMsg: '', currentUser: data});
+          
+        }
       }.bind(this),
       error: function(xhr, status, err) {
         debugger;
@@ -60,7 +64,6 @@ var App = React.createClass({
     });
   },
   getAppConfig: function(successCallback) {
-    
     yuanjs.ajax({
       type: "GET",
       url: 'index.php',
@@ -105,7 +108,7 @@ var App = React.createClass({
   render: function() {
     return (
       <div id="appbox">
-        <Header user={this.state.currentUser} lang={this.state.translations} onLoginSubmit={this.hangleLoginSubmit} />
+        <Header loginErrorMsg={this.state.loginErrorMsg} user={this.state.currentUser} lang={this.state.translations} onLoginSubmit={this.hangleLoginSubmit} />
         <CommentBox url="index.php" lang={this.state.translations} comments={this.state.commentsData}  />
         <SearchBar />
       </div>
@@ -133,6 +136,7 @@ var LoginModal = React.createClass({
     return (
       <Modal isOpen={this.props.loginModalIsOpen} onRequestClose={this.closeLoginModal} style={customStyles} >
         <h2>Login</h2>
+        <p>{this.props.loginErrorMsg}</p>
         <button onClick={this.closeLoginModal}>close</button>
         <form onSubmit={this.handleSubmit} action="index.php?controller=user&amp;action=login" method="post">
           <table>
@@ -167,7 +171,7 @@ var Header = React.createClass({
     if (this.props.user.admin || this.props.user.user) {
       loginButton = <LogoutButton lang={this.props.lang} />;
     } else {
-      loginButton = <LoginButton lang={this.props.lang} onLoginSubmit={this.hangleLoginSubmit} />;
+      loginButton = <LoginButton loginErrorMsg={this.props.loginErrorMsg} lang={this.props.lang} onLoginSubmit={this.hangleLoginSubmit} />;
     }
 
     return (
@@ -207,7 +211,7 @@ var LoginButton = React.createClass({
       <div>
         <a href='javascript:void(0);'>{this.props.lang.REGISTER}</a>&nbsp;
         <a href='javascript:void(0);' onClick={this.openLoginModal}>{this.props.lang.LOGIN}</a>
-        <LoginModal onLoginSubmit={this.hangleLoginSubmit} loginModalIsOpen={this.state.loginModalIsOpen} onRequestClose={this.closeLoginModal} lang={this.props.lang} />
+        <LoginModal loginErrorMsg={this.props.loginErrorMsg} onLoginSubmit={this.hangleLoginSubmit} loginModalIsOpen={this.state.loginModalIsOpen} onRequestClose={this.closeLoginModal} lang={this.props.lang} />
       </div>
     );
   }
