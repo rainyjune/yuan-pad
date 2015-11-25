@@ -88,7 +88,7 @@ module.exports = function(grunt) {
     // https://github.com/gruntjs/grunt-contrib-watch
     watch: {
       indexjs: {
-        files: ['themes/spa/src/index.js'],
+        files: ['themes/spa/src/*.js'],
         tasks: ['browserify:dist']
       },
       indexhtml: {
