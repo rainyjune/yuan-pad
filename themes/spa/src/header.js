@@ -20,7 +20,7 @@ var Header = React.createClass({
   handleUserUpdate: function(userData) {
     this.props.onUserUpdate(userData);
   },
-  hangleLoginSubmit: function(loginData) {
+  handleLoginSubmit: function(loginData) {
     this.props.onLoginSubmit(loginData);
   },
   handleRegisterSubmit: function(data) {
@@ -36,7 +36,7 @@ var Header = React.createClass({
         onUserUpdateSubmit={this.handleUserUpdate} 
         onUserLogout={this.handleLogout} />;
     } else {
-      loginButton = <LoginButton registerErrorMsg={this.props.registerErrorMsg} loginErrorMsg={this.props.loginErrorMsg} lang={this.props.lang} onRegisterSubmit={this.handleRegisterSubmit} onLoginSubmit={this.hangleLoginSubmit} />;
+      loginButton = <LoginButton registerErrorMsg={this.props.registerErrorMsg} loginErrorMsg={this.props.loginErrorMsg} lang={this.props.lang} onRegisterSubmit={this.handleRegisterSubmit} onLoginSubmit={this.handleLoginSubmit} />;
     }
 
     return (
@@ -274,7 +274,7 @@ var LoginButton = React.createClass({
   closeRegisterModal: function() {
     this.setState({registerModalIsOpen: false});
   },
-  hangleLoginSubmit: function(loginData) {
+  handleLoginSubmit: function(loginData) {
     this.props.onLoginSubmit(loginData);
   },
   handleRegisterSubmit: function(data) {
@@ -285,7 +285,7 @@ var LoginButton = React.createClass({
       <div>
         <a href='javascript:void(0);' onClick={this.openRegisterModal}>{this.props.lang.REGISTER}</a>&nbsp;
         <a href='javascript:void(0);' onClick={this.openLoginModal}>{this.props.lang.LOGIN}</a>
-        <LoginModal loginErrorMsg={this.props.loginErrorMsg} onLoginSubmit={this.hangleLoginSubmit} loginModalIsOpen={this.state.loginModalIsOpen} onRequestClose={this.closeLoginModal} lang={this.props.lang} />
+        <LoginModal loginErrorMsg={this.props.loginErrorMsg} onLoginSubmit={this.handleLoginSubmit} loginModalIsOpen={this.state.loginModalIsOpen} onRequestClose={this.closeLoginModal} lang={this.props.lang} />
         <RegisterModal registerErrorMsg={this.props.registerErrorMsg} registerErrorMsg={this.props.registerErrorMsg} onRegisterSubmit={this.handleRegisterSubmit} registerModalIsOpen={this.state.registerModalIsOpen} onRequestClose={this.closeRegisterModal} lang={this.props.lang} />
       </div>
     );

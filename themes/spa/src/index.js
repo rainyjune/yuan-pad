@@ -21,7 +21,7 @@ var App = React.createClass({
       }
     };
   },
-  hangleLoginSubmit: function(loginData) {
+  handleLoginSubmit: function(loginData) {
     yuanjs.ajax({
       type: "POST",
       url: "api.php?controller=user&action=login",
@@ -176,7 +176,7 @@ var App = React.createClass({
           onRegisterSubmit={this.handleRegister} 
           onUserUpdate={this.handleUserUpdate} 
           onUserLogout={this.handleLogout} 
-          onLoginSubmit={this.hangleLoginSubmit}
+          onLoginSubmit={this.handleLoginSubmit}
           registerErrorMsg={this.state.registerErrorMsg} 
           loginErrorMsg={this.state.loginErrorMsg} 
           user={this.state.currentUser} 
