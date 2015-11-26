@@ -13,7 +13,7 @@ INSERT INTO <sysvar> VALUES ('filter_words','fuck');
 INSERT INTO <sysvar> VALUES ('valid_code_open','0');
 INSERT INTO <sysvar> VALUES ('page_on','0');
 INSERT INTO <sysvar> VALUES ('num_perpage','10');
-INSERT INTO <sysvar> VALUES ('theme','simple');
+INSERT INTO <sysvar> VALUES ('theme','spa');
 INSERT INTO <sysvar> VALUES ('admin','{admin}');
 INSERT INTO <sysvar> VALUES ('password','{adminpass}');
 INSERT INTO <sysvar> VALUES ('lang','{lang}');
