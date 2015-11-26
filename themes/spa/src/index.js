@@ -163,6 +163,29 @@ var App = React.createClass({
       }.bind(this)
     });
   },
+  handleSearch: function(keyword) {
+    yuanjs.ajax({
+      type: "POST",
+      url: "api.php?controller=search",
+      data: {s:keyword},
+      dataType: 'json',
+      success: function(data) {
+        console.log('search result:', data);
+        
+        /*
+        if (data.error) {
+          this.setState({registerErrorMsg: data.error_detail});
+        } else {
+          this.setState({registerErrorMsg: '', currentUser: data});
+          this.loadUserDataFromServer(data.uid); // Load user profile from server.
+        }
+        */
+      }.bind(this),
+      error: function(xhr, status, err) {
+        debugger;
+      }.bind(this)
+    });
+  },
   componentDidMount: function() {
     this.getAppConfig(function(data){
       this.setState({translations: data});
@@ -183,7 +206,7 @@ var App = React.createClass({
           userDetailedData = {this.state.userDetailedData}
           lang={this.state.translations} />
         <CommentBox url="index.php" lang={this.state.translations} comments={this.state.commentsData}  />
-        <SearchBar />
+        <SearchBar onSubmit={this.handleSearch} />
       </div>
     );
   }
