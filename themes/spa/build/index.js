@@ -20851,16 +20851,7 @@ var CommentBox = React.createClass({
   displayName: 'CommentBox',
 
   handleCommentSubmit: function (comment) {
-    comment.ajax = true;
-    yuanjs.ajax({
-      type: "POST",
-      url: "./index.php?controller=post&action=create",
-      data: comment,
-      success: (function (data) {}).bind(this),
-      error: (function (xhr, status, err) {
-        debugger;
-      }).bind(this)
-    });
+    this.props.onCommentSubmit(comment);
   },
   handleCloseSearch: function () {
     this.props.onCloseSearch();
@@ -21563,6 +21554,20 @@ var App = React.createClass({
       this.getUserInfo();
     });
   },
+  handleCommentSubmit: function (comment) {
+    comment.ajax = true;
+    yuanjs.ajax({
+      type: "POST",
+      url: "./index.php?controller=post&action=create",
+      data: comment,
+      success: (function (data) {
+        this.loadCommentsFromServer();
+      }).bind(this),
+      error: (function (xhr, status, err) {
+        debugger;
+      }).bind(this)
+    });
+  },
   render: function () {
     return React.createElement(
       'div',
@@ -21578,6 +21583,7 @@ var App = React.createClass({
         userDetailedData: this.state.userDetailedData,
         lang: this.state.translations }),
       React.createElement(CommentBox, {
+        onCommentSubmit: this.handleCommentSubmit,
         onCloseSearch: this.handleCloseSearch,
         url: 'index.php',
         lang: this.state.translations,

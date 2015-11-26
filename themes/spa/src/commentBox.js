@@ -104,17 +104,7 @@ var CommentForm = React.createClass({
     
 var CommentBox = React.createClass({
   handleCommentSubmit: function(comment) {
-    comment.ajax = true;
-    yuanjs.ajax({
-      type: "POST",
-      url: "./index.php?controller=post&action=create",
-      data: comment,
-      success: function(data) {
-      }.bind(this),
-      error: function(xhr, status, err) {
-        debugger;
-      }.bind(this)
-    });
+    this.props.onCommentSubmit(comment);
   },
   handleCloseSearch: function() {
     this.props.onCloseSearch();

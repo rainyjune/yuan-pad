@@ -197,6 +197,20 @@ var App = React.createClass({
       this.getUserInfo();
     });
   },
+  handleCommentSubmit: function(comment) {
+    comment.ajax = true;
+    yuanjs.ajax({
+      type: "POST",
+      url: "./index.php?controller=post&action=create",
+      data: comment,
+      success: function(data) {
+        this.loadCommentsFromServer();
+      }.bind(this),
+      error: function(xhr, status, err) {
+        debugger;
+      }.bind(this)
+    });
+  },
   render: function() {
     return (
       <div id="appbox">
@@ -211,6 +225,7 @@ var App = React.createClass({
           userDetailedData = {this.state.userDetailedData}
           lang={this.state.translations} />
         <CommentBox 
+          onCommentSubmit={this.handleCommentSubmit}
           onCloseSearch={this.handleCloseSearch}
           url="index.php" 
           lang={this.state.translations} 
