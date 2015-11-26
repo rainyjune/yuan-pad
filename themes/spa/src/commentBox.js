@@ -1,15 +1,43 @@
 var React = require('react'),
     ReactDOM = require('react-dom');
-
-var CommentStatistics = React.createClass({
-  rawMarkup: function() {
-    var pagenavText = this.props.lang.PAGE_NAV;
-    var text = pagenavText ? pagenavText.replace('{num_of_post}', this.props.total).replace('{num_of_page}', this.props.pagenum) : '';
-    return { __html: text };
+    
+var CloseSearchButton = React.createClass({
+  handleCloseSearch: function(e) {
+    e.preventDefault();
+    this.props.onCloseSearch();
   },
   render: function() {
     return (
+      <a href="javascript:void(0)" onClick={this.handleCloseSearch}>Close</a>
+    );
+  }
+});
+
+var CommentStatistics = React.createClass({
+  rawMarkup: function() {
+    var pagenavText, text;
+    if (this.props.commentsDataType === 1) {
+      pagenavText = this.props.lang.PAGE_NAV;
+      text = pagenavText ? pagenavText.replace('{num_of_post}', this.props.total).replace('{num_of_page}', this.props.pagenum) : '';
+    } else if (this.props.commentsDataType === 2) {
+      if ( this.props.total ) {
+        pagenavText = this.props.lang.SEARCH_FOUND;
+        text = pagenavText ? pagenavText.replace('{result_num}', this.props.total) : '';
+      } else {
+        text = this.props.lang.SEARCH_NOTFOUND;
+      }
+    }
+    return { __html: text };
+  },
+  handleCloseSearch: function() {
+    this.props.onCloseSearch();
+  },
+  render: function() {
+    var closeSearchBtn = (this.props.commentsDataType === 2) ? <CloseSearchButton onCloseSearch={this.handleCloseSearch} /> : '';
+    console.log('closeSearchBtn:', closeSearchBtn);
+    return (
       <div className="statistics">
+        {closeSearchBtn}
         <p dangerouslySetInnerHTML={this.rawMarkup()} />
       </div>
     );
@@ -88,16 +116,25 @@ var CommentBox = React.createClass({
       }.bind(this)
     });
   },
+  handleCloseSearch: function() {
+    this.props.onCloseSearch();
+  },
   render: function() {
+    var commentForm = this.props.commentsDataType === 1 ? <CommentForm onCommentSubmit={this.handleCommentSubmit}/> : '';
     return (
       <div className="commentBox">
         <h1>Welcome</h1>
-        <CommentStatistics lang={this.props.lang} current_page={this.props.comments.current_page} total={this.props.comments.total} pagenum={this.props.comments.pagenum} /> 
-        <CommentList data={this.props.comments.comments} />
-        <CommentForm onCommentSubmit={this.handleCommentSubmit}/>
+        <CommentStatistics 
+          onCloseSearch={this.handleCloseSearch}
+          commentsDataType={this.props.commentsDataType} 
+          lang={this.props.lang} 
+          current_page={this.props.comments.current_page} 
+          total={this.props.comments.total} 
+          pagenum={this.props.comments.pagenum} /> 
+        <CommentList commentsDataType={this.props.commentsDataType} data={this.props.comments.comments} />
+        {commentForm}
       </div>
     );
   }
 });
-
 module.exports = CommentBox;

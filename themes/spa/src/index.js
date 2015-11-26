@@ -13,6 +13,7 @@ var App = React.createClass({
       userUpdateErrorMsg: '',
       registerErrorMsg: '',
       translations: {},
+      commentsDataType: 1, // 1: Default list. 2: Search Result list
       commentsData: {
         comments: [],
         pagenum: 0,
@@ -150,6 +151,7 @@ var App = React.createClass({
       data: {"ajax": true, pid: 1},
       success: function(data) {
         this.setState({
+          commentsDataType: 1,
           commentsData: {
             comments: data.messages,
             pagenum: data.pagenum,
@@ -171,20 +173,23 @@ var App = React.createClass({
       dataType: 'json',
       success: function(data) {
         console.log('search result:', data);
-        
-        /*
-        if (data.error) {
-          this.setState({registerErrorMsg: data.error_detail});
-        } else {
-          this.setState({registerErrorMsg: '', currentUser: data});
-          this.loadUserDataFromServer(data.uid); // Load user profile from server.
-        }
-        */
+        this.setState({
+          commentsDataType: 2,
+          commentsData:{
+            comments: data.messages,
+            pagenum: 1,
+            total: data.nums,
+            current_page: 1
+          }
+        });
       }.bind(this),
       error: function(xhr, status, err) {
         debugger;
       }.bind(this)
     });
+  },
+  handleCloseSearch: function() {
+    this.loadCommentsFromServer();
   },
   componentDidMount: function() {
     this.getAppConfig(function(data){
@@ -205,7 +210,12 @@ var App = React.createClass({
           user={this.state.currentUser} 
           userDetailedData = {this.state.userDetailedData}
           lang={this.state.translations} />
-        <CommentBox url="index.php" lang={this.state.translations} comments={this.state.commentsData}  />
+        <CommentBox 
+          onCloseSearch={this.handleCloseSearch}
+          url="index.php" 
+          lang={this.state.translations} 
+          commentsDataType={this.state.commentsDataType} 
+          comments={this.state.commentsData}  />
         <SearchBar onSubmit={this.handleSearch} />
       </div>
     );
