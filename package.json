@@ -20,6 +20,8 @@
   },
   "homepage": "https://github.com/rainyjune/yuan-pad#readme",
   "devDependencies": {
+    "babel-loader": "^6.2.0",
+    "babel-plugin-transform-runtime": "^6.1.18",
     "babel-preset-react": "^6.1.18",
     "babelify": "^7.2.0",
     "grunt": "^0.4.5",
@@ -29,8 +31,14 @@
     "grunt-contrib-uglify": "^0.10.1",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-env": "^0.4.4",
+    "grunt-webpack": "^1.0.11",
+    "html-minify-loader": "^1.0.0",
+    "matchdep": "^1.0.0",
     "react": "^0.14.3",
     "react-dom": "^0.14.3",
-    "react-modal": "^0.6.1"
+    "react-modal": "^0.6.1",
+    "sass-loader": "^3.1.2",
+    "webpack": "^1.12.9",
+    "webpack-dev-server": "^1.14.0"
   }
 }
