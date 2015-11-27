@@ -1,4 +1,8 @@
 module.exports = function(grunt) {
+  
+  require("matchdep").filterAll("grunt-*").forEach(grunt.loadNpmTasks);
+  var webpack = require("webpack");
+  var webpackConfig = require("./webpack.config.js");
 
   grunt.initConfig({
     browserify: {
@@ -84,13 +88,42 @@ module.exports = function(grunt) {
         }
       }
     },
+    
+    webpack: {
+			options: webpackConfig,
+			build: {
+				plugins: webpackConfig.plugins.concat(
+					new webpack.DefinePlugin({
+						"process.env": {
+							// This has effect on the react lib size
+							"NODE_ENV": JSON.stringify("production")
+						}
+					}),
+					new webpack.optimize.DedupePlugin(),
+					new webpack.optimize.UglifyJsPlugin()
+				)
+			},
+			"build-dev": {
+				devtool: "sourcemap",
+				debug: true
+			}
+		},
 
     // https://github.com/gruntjs/grunt-contrib-watch
     watch: {
+      app: {
+        files: ["themes/spa/src/*.js"],
+				tasks: ["webpack:build-dev"],
+				options: {
+					spawn: false,
+				}
+      },
+      /*
       indexjs: {
         files: ['themes/spa/src/*.js'],
         tasks: ['browserify:dist']
       },
+      */
       indexhtml: {
         files: ['themes/spa/templates/index.html'],
         tasks: ['htmlmin:devIndex']
@@ -108,7 +141,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-htmlmin');
   grunt.loadNpmTasks('grunt-browserify');
   grunt.loadNpmTasks('grunt-env');
+  grunt.loadNpmTasks("grunt-webpack");
 
-  grunt.registerTask('default', ['watch']);
-  grunt.registerTask('build-dist', ['sass:dist', 'env:dist', 'browserify:dist', 'uglify:distIndex', 'htmlmin:distIndex']);
+  //grunt.registerTask('default', ['watch']);
+  //grunt.registerTask('build-dist', ['sass:dist', 'env:dist', 'browserify:dist', 'uglify:distIndex', 'htmlmin:distIndex']);
+  grunt.registerTask("dev", ["webpack:build-dev", "watch"]);
+  grunt.registerTask("build", ['sass:dist', "webpack:build", 'htmlmin:distIndex']);
 };
