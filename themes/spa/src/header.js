@@ -1,5 +1,4 @@
-var React = require('react'),
-    ReactDOM = require('react-dom');
+var React = require('react');
 var Modal = require('react-modal');
 
 const customStyles = {

@@ -1,5 +1,5 @@
-var React = require('react'),
-    ReactDOM = require('react-dom');
+var React = require('react');
+
 var SearchBar = React.createClass({
   handleSearch: function(e) {
     e.preventDefault();
