@@ -241,6 +241,7 @@ var App = React.createClass({
           onCloseSearch={this.handleCloseSearch}
           onPageChanged={this.handlePageChange}
           url="index.php" 
+          user={this.state.currentUser} 
           lang={this.state.translations} 
           currentPage = {this.state.currentPage}
           appConfig={this.state.appConfig}

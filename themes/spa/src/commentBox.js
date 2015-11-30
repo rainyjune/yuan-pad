@@ -163,11 +163,45 @@ var CommentForm = React.createClass({
     return false;
   },
   render: function() {
+    var userInputType = "text";
+    var userInputValue = "anonymous";
+    var labelContent = "";
+    
+    var currentUser = this.props.user;
+    console.log('currentUser:', currentUser);
+    if (currentUser) {
+      userInputType = "hidden";
+      if (currentUser.admin) {
+        userInputValue = currentUser.admin;
+        labelContent = currentUser.admin;
+      } else if (currentUser.user) {
+        userInputValue = currentUser.user;
+        labelContent = currentUser.user;
+      }
+    }
+    
     return (
       <form onSubmit={this.handleSubmit} className="commentForm">
-        <input ref="user" type="text" placeholder="Your name" /> 
-        <input ref="content" type="text" placeholder="Say something.." /> 
-        <input type="submit" value="Post" /> 
+        <table>
+          <tbody>
+            <tr>
+              <td>{this.props.lang.NICKNAME}</td>
+              <td>
+                <input ref="user" type={userInputType} maxLength="10" defaultValue={userInputValue} />
+                <label htmlFor="user">{labelContent}</label>
+              </td>
+            </tr>
+            <tr>
+              <td>{this.props.lang.CONTENT}</td>
+              <td><textarea ref="content" placeholder="Say something..."></textarea></td>
+            </tr>
+            <tr>
+              <td colSpan="2">
+                <input name="submit" type="submit" value={this.props.lang.SUBMIT} />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </form>
     );
   }
@@ -184,7 +218,7 @@ var CommentBox = React.createClass({
     this.props.onPageChanged(pageNumber);
   },
   render: function() {
-    var commentForm = this.props.commentsDataType === 1 ? <CommentForm onCommentSubmit={this.handleCommentSubmit}/> : '';
+    var commentForm = this.props.commentsDataType === 1 ? <CommentForm user={this.props.user} lang={this.props.lang} onCommentSubmit={this.handleCommentSubmit}/> : '';
     return (
       <div className="commentBox">
         <h1>{this.props.lang.WELCOME_POST}</h1>
