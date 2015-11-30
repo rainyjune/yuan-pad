@@ -249,7 +249,7 @@ var UserUpdateButton = React.createClass({
   },
   render: function() {
     return (
-      <a onClick={this.handleClick}>{this.props.lang.UPDATE}</a>
+      <a href="javascript:void(0);" onClick={this.handleClick}>{this.props.lang.UPDATE}</a>
     );
   }
 });
