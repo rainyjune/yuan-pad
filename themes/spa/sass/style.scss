@@ -18,6 +18,27 @@
 
 }
 
+.pagination {
+  .pagination-item {
+    height: 22px;
+    padding: 0 8px;
+    background-color: #fff;
+    line-height: 22px;
+    margin: 0 1px 0 2px;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    vertical-align: middle;
+    background: gray;
+    margin-right: 5px;
+    text-decoration: none;
+  }
+  
+  .pagination-item.currentPage {
+    background-color: red;
+  }
+}
+
 .statistics {
   background: #4A7DAC;
 }
