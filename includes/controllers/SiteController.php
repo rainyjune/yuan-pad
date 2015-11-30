@@ -28,6 +28,7 @@ class SiteController extends BaseController{
         if(isset ($_GET['ajax']) || defined('API_MODE')){
             $data=array_reverse($data);
             $JSONDATA=array('messages'=>$data,'current_page'=>$current_page,'total'=>$nums,'pagenum'=>$pages);
+            header("Content-type: application/json");
             die(function_exists('json_encode') ? json_encode($JSONDATA) : CJSON::encode($JSONDATA));
         }
         $admin=isset($_SESSION['admin'])?true:false;
@@ -187,6 +188,32 @@ HERE;
         $langArray['ADMIN_NAME_INDEX']=ZFramework::app()->admin;
         header("Content-type: application/json");
         echo function_exists('json_encode') ? json_encode($langArray) : CJSON::encode($langArray);
+    }
+    
+    public function actionGetAppConfig(){
+        $result = array();
+        $langArray=getLangArray();
+        $langArray['ADMIN_NAME_INDEX']=ZFramework::app()->admin;
+        
+        $result["translations"] = $langArray;
+        $result["board_name"] = ZFramework::app()->board_name;
+        $result["site_close"] = ZFramework::app()->site_close;
+        $result["close_reason"] = ZFramework::app()->close_reason;
+        $result["admin_email"] = ZFramework::app()->admin_email;
+        $result["copyright_info"] = ZFramework::app()->copyright_info;
+        $result["filter_words"] = ZFramework::app()->filter_words;
+        $result["valid_code_open"] = ZFramework::app()->valid_code_open;
+        $result["page_on"] = ZFramework::app()->page_on;
+        $result["num_perpage"] = ZFramework::app()->num_perpage;
+        $result["theme"] = ZFramework::app()->theme;
+        $result["lang"] = ZFramework::app()->lang;
+        $result["timezone"] = ZFramework::app()->timezone;
+        $result["filter_type"] = ZFramework::app()->filter_type;
+        $result["allowed_tags"] = ZFramework::app()->allowed_tags;
+        
+        
+        header("Content-type: application/json");
+        echo function_exists('json_encode') ? json_encode($result) : CJSON::encode($result);
     }
 
 }
