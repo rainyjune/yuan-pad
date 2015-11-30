@@ -45,9 +45,16 @@ var CommentStatistics = React.createClass({
 
 var CommentList = React.createClass({
   render: function() {
+    var lang = this.props.lang;
     var commentNodes = this.props.data.map(function(comment) {
       return (
-        <Comment author={comment.uname} key={comment.id} time={comment.time}>
+        <Comment 
+          author={comment.uname} 
+          key={comment.id} 
+          reply_content = {comment.reply_content}
+          reply_time = {comment.reply_time}
+          time={comment.time}
+          lang = {lang}>
           {comment.post_content}
         </Comment>
       );
@@ -60,11 +67,27 @@ var CommentList = React.createClass({
   }
 });
 
+var Reply = React.createClass({
+  rawMarkup: function() {
+    // TODO: Get the actual admini user name.
+    return { __html: this.props.lang.ADMIN_REPLIED.replace('{admin_name}', 'ADMIN')
+                      .replace('{reply_time}', this.props.date)
+                      .replace('{reply_content}', this.props.content)};
+  },
+  render: function() {
+    return (
+      <div className="replay" dangerouslySetInnerHTML={this.rawMarkup()}>
+      </div>
+    );
+  }
+});
+
 var Comment = React.createClass({
   rawMarkup: function() {
     return { __html: this.props.children.toString() };
   },
   render: function() {
+    var reply = this.props.reply_content ? <Reply lang={this.props.lang} content={this.props.reply_content} date={this.props.reply_time} /> : '';
     return (
       <div className="comment">
         <span className="commentAuthor">
@@ -72,6 +95,7 @@ var Comment = React.createClass({
         </span> 
         <span className="commentDate">{this.props.time}</span>
         <div className="commentText" dangerouslySetInnerHTML={this.rawMarkup()} />
+        {reply}
       </div>
     );
   }
@@ -120,7 +144,10 @@ var CommentBox = React.createClass({
           current_page={this.props.comments.current_page} 
           total={this.props.comments.total} 
           pagenum={this.props.comments.pagenum} /> 
-        <CommentList commentsDataType={this.props.commentsDataType} data={this.props.comments.comments} />
+        <CommentList 
+          commentsDataType={this.props.commentsDataType} 
+          lang={this.props.lang}
+          data={this.props.comments.comments} />
         {commentForm}
       </div>
     );
