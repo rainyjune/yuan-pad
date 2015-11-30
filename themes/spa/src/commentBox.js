@@ -16,23 +16,18 @@ var PaginationItem = React.createClass({
   handleClick: function(e) {
     e.preventDefault();
     var pageNumber = e.target.getAttribute("data-pagenumber");
-    if (typeof pageNumber !== "number") {
-      console.warn("Note the page number is not a number");
-      
-    }
     console.log("You chosed the page number: ", pageNumber);
-    if (parseInt(pageNumber) + 1 == this.props.currentPage) {
+    if (parseInt(pageNumber) == this.props.currentPage) {
       console.log('The same page , we do nothing...');
       return false;
     }
     this.props.onPageChanged(pageNumber);
-    
     return false;
   },
   render: function() {
     return (
       <a 
-        className={(() => { if (this.props.currentPage === this.props.pageNumber + 1) { return "pagination-item currentPage" } else { return "pagination-item"}})()} 
+        className={(() => { if (this.props.currentPage === this.props.pageNumber) { return "pagination-item currentPage" } else { return "pagination-item"}})()} 
         href="javascript:void(0);" 
         data-pagenumber={this.props.pageNumber}
         onClick = {this.handleClick}

@@ -14,7 +14,7 @@ var App = React.createClass({
       registerErrorMsg: '',
       translations: {},
       appConfig: {},
-      currentPage: 1,
+      currentPage: 0,
       commentsDataType: 1, // 1: Default list. 2: Search Result list
       commentsData: {
         comments: [],
