@@ -404,6 +404,10 @@ th {
   padding: 5px;
 }
 
+.commentBox h1 {
+  text-align: center;
+}
+
 .statistics {
   background: #4A7DAC;
 }
