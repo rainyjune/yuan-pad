@@ -217,15 +217,10 @@ var App = React.createClass({
     });
   },
   handlePageChange: function(pageNumber) {
-    // TODO validation.
     pageNumber = parseInt(pageNumber);
-    console.log("Handle page change:", pageNumber)
-    
-    this.setState({currentPage: pageNumber});
-    this.state.currentPage = pageNumber;
-    console.log('this', this.state);
-    console.log("This currentpage: ", this.state.currentPage);
-    this.loadCommentsFromServer();
+    this.setState({currentPage: pageNumber}, function(){
+      this.loadCommentsFromServer();
+    });
   },
   render: function() {
     return (
