@@ -41,7 +41,7 @@ var Pagination = React.createClass({
     this.props.onPageChanged(pageNumber);
   },
   render: function() {
-    console.log("The pagination feature was enabled, the total pages: ", this.props.total);
+    //console.log("The pagination feature was enabled, the total pages: ", this.props.total);
     var items = [];
     for (var i = 0; i < this.props.total; i++) {
       items.push(<PaginationItem onPageChanged={this.handlePageChange} currentPage={this.props.currentPage} pageNumber={i} text={i+1} key={i} />);
@@ -78,7 +78,7 @@ var CommentStatistics = React.createClass({
   },
   render: function() {
     var closeSearchBtn = (this.props.commentsDataType === 2) ? <CloseSearchButton onCloseSearch={this.handleCloseSearch} /> : '';
-    console.log('closeSearchBtn:', closeSearchBtn);
+    //console.log('closeSearchBtn:', closeSearchBtn);
     
     var pagination = (this.props.appConfig.page_on) ? <Pagination onPageChanged={this.handlePageChange} currentPage = {this.props.currentPage}  total={Math.ceil(this.props.total/this.props.appConfig.num_perpage)} /> : "";
     return (

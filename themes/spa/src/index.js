@@ -145,6 +145,7 @@ var App = React.createClass({
     });
   },
   loadCommentsFromServer: function() {
+    console.log("Ready to load data from server, page:", this.state.currentPage);
     yuanjs.ajax({
       url: this.props.url,
       dataType: 'json',
@@ -217,9 +218,13 @@ var App = React.createClass({
   },
   handlePageChange: function(pageNumber) {
     // TODO validation.
-    this.setState({
-      currentPage: pageNumber
-    });
+    pageNumber = parseInt(pageNumber);
+    console.log("Handle page change:", pageNumber)
+    
+    this.setState({currentPage: pageNumber});
+    this.state.currentPage = pageNumber;
+    console.log('this', this.state);
+    console.log("This currentpage: ", this.state.currentPage);
     this.loadCommentsFromServer();
   },
   render: function() {
