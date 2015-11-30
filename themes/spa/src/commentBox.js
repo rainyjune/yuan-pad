@@ -76,7 +76,7 @@ var Reply = React.createClass({
   },
   render: function() {
     return (
-      <div className="replay" dangerouslySetInnerHTML={this.rawMarkup()}>
+      <div className="reply" dangerouslySetInnerHTML={this.rawMarkup()}>
       </div>
     );
   }
