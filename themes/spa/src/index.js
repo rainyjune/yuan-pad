@@ -13,6 +13,8 @@ var App = React.createClass({
       userUpdateErrorMsg: '',
       registerErrorMsg: '',
       translations: {},
+      appConfig: {},
+      currentPage: 1,
       commentsDataType: 1, // 1: Default list. 2: Search Result list
       commentsData: {
         comments: [],
@@ -79,7 +81,7 @@ var App = React.createClass({
     yuanjs.ajax({
       type: "GET",
       url: 'index.php',
-      data: {action: "getSysJSON",t:Date.now()},
+      data: {action: "getAppConfig",t:Date.now()},
       cache: false,
       dataType: "json",
       success: successCallback.bind(this),
@@ -148,7 +150,7 @@ var App = React.createClass({
       dataType: 'json',
       method: 'GET',
       cache: false,
-      data: {"ajax": true, pid: 1},
+      data: {"ajax": true, pid: this.state.currentPage},
       success: function(data) {
         this.setState({
           commentsDataType: 1,
@@ -193,7 +195,9 @@ var App = React.createClass({
   },
   componentDidMount: function() {
     this.getAppConfig(function(data){
-      this.setState({translations: data});
+      this.setState({translations: data.translations});
+      // TODO Duplicate data.
+      this.setState({appConfig: data});
       this.getUserInfo();
     });
   },
@@ -211,6 +215,13 @@ var App = React.createClass({
       }.bind(this)
     });
   },
+  handlePageChange: function(pageNumber) {
+    // TODO validation.
+    this.setState({
+      currentPage: pageNumber
+    });
+    this.loadCommentsFromServer();
+  },
   render: function() {
     return (
       <div id="appbox">
@@ -223,12 +234,16 @@ var App = React.createClass({
           loginErrorMsg={this.state.loginErrorMsg} 
           user={this.state.currentUser} 
           userDetailedData = {this.state.userDetailedData}
+          appConfig={this.state.appConfig}
           lang={this.state.translations} />
         <CommentBox 
           onCommentSubmit={this.handleCommentSubmit}
           onCloseSearch={this.handleCloseSearch}
+          onPageChanged={this.handlePageChange}
           url="index.php" 
           lang={this.state.translations} 
+          currentPage = {this.state.currentPage}
+          appConfig={this.state.appConfig}
           commentsDataType={this.state.commentsDataType} 
           comments={this.state.commentsData}  />
         <SearchBar onSubmit={this.handleSearch} />

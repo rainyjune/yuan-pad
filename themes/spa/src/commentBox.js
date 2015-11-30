@@ -12,6 +12,53 @@ var CloseSearchButton = React.createClass({
   }
 });
 
+var PaginationItem = React.createClass({
+  handleClick: function(e) {
+    e.preventDefault();
+    var pageNumber = e.target.getAttribute("data-pagenumber");
+    if (typeof pageNumber !== "number") {
+      console.warn("Note the page number is not a number");
+      
+    }
+    console.log("You chosed the page number: ", pageNumber);
+    if (parseInt(pageNumber) + 1 == this.props.currentPage) {
+      console.log('The same page , we do nothing...');
+      return false;
+    }
+    this.props.onPageChanged(pageNumber);
+    
+    return false;
+  },
+  render: function() {
+    return (
+      <a 
+        className={(() => { if (this.props.currentPage === this.props.pageNumber + 1) { return "pagination-item currentPage" } else { return "pagination-item"}})()} 
+        href="javascript:void(0);" 
+        data-pagenumber={this.props.pageNumber}
+        onClick = {this.handleClick}
+        >{this.props.text}</a>
+    );
+  }
+});
+
+var Pagination = React.createClass({
+  handlePageChange: function(pageNumber) {
+    this.props.onPageChanged(pageNumber);
+  },
+  render: function() {
+    console.log("The pagination feature was enabled, the total pages: ", this.props.total);
+    var items = [];
+    for (var i = 0; i < this.props.total; i++) {
+      items.push(<PaginationItem onPageChanged={this.handlePageChange} currentPage={this.props.currentPage} pageNumber={i} text={i+1} key={i} />);
+    }
+    return (
+      <div className="pagination">
+        {items}
+      </div>
+    );
+  }
+});
+
 var CommentStatistics = React.createClass({
   rawMarkup: function() {
     var pagenavText, text;
@@ -31,13 +78,19 @@ var CommentStatistics = React.createClass({
   handleCloseSearch: function() {
     this.props.onCloseSearch();
   },
+  handlePageChange: function(pageNumber) {
+    this.props.onPageChanged(pageNumber);
+  },
   render: function() {
     var closeSearchBtn = (this.props.commentsDataType === 2) ? <CloseSearchButton onCloseSearch={this.handleCloseSearch} /> : '';
     console.log('closeSearchBtn:', closeSearchBtn);
+    
+    var pagination = (this.props.appConfig.page_on) ? <Pagination onPageChanged={this.handlePageChange} currentPage = {this.props.currentPage}  total={Math.ceil(this.props.total/this.props.appConfig.num_perpage)} /> : "";
     return (
       <div className="statistics">
         {closeSearchBtn}
         <p dangerouslySetInnerHTML={this.rawMarkup()} />
+        {pagination}
       </div>
     );
   }
@@ -132,6 +185,9 @@ var CommentBox = React.createClass({
   handleCloseSearch: function() {
     this.props.onCloseSearch();
   },
+  handlePageChange: function(pageNumber) {
+    this.props.onPageChanged(pageNumber);
+  },
   render: function() {
     var commentForm = this.props.commentsDataType === 1 ? <CommentForm onCommentSubmit={this.handleCommentSubmit}/> : '';
     return (
@@ -139,14 +195,18 @@ var CommentBox = React.createClass({
         <h1>{this.props.lang.WELCOME_POST}</h1>
         <CommentStatistics 
           onCloseSearch={this.handleCloseSearch}
+          onPageChanged={this.handlePageChange}
           commentsDataType={this.props.commentsDataType} 
           lang={this.props.lang} 
+          appConfig={this.props.appConfig}
           current_page={this.props.comments.current_page} 
           total={this.props.comments.total} 
+          currentPage = {this.props.currentPage}
           pagenum={this.props.comments.pagenum} /> 
         <CommentList 
           commentsDataType={this.props.commentsDataType} 
           lang={this.props.lang}
+          appConfig={this.props.appConfig}
           data={this.props.comments.comments} />
         {commentForm}
       </div>
