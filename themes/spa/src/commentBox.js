@@ -136,7 +136,7 @@ var CommentBox = React.createClass({
     var commentForm = this.props.commentsDataType === 1 ? <CommentForm onCommentSubmit={this.handleCommentSubmit}/> : '';
     return (
       <div className="commentBox">
-        <h1>Welcome</h1>
+        <h1>{this.props.lang.WELCOME_POST}</h1>
         <CommentStatistics 
           onCloseSearch={this.handleCloseSearch}
           commentsDataType={this.props.commentsDataType} 
