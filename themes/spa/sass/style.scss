@@ -21,6 +21,18 @@
   border: 1px solid #757575;
   padding: 4px;
   margin-bottom: 5px;
+  
+  .reply {
+    margin-left: 20px;
+    padding: 8px 19px;
+    margin-top: 10px;
+    line-height: 20px;
+    border: 1px solid #dedede;
+    
+    p {
+      margin: 0;
+    }
+  }
 }
 
 .commentAuthor {

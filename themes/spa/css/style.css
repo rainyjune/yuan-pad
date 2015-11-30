@@ -414,6 +414,16 @@ th {
   padding: 4px;
   margin-bottom: 5px;
 }
+.comment .reply {
+  margin-left: 20px;
+  padding: 8px 19px;
+  margin-top: 10px;
+  line-height: 20px;
+  border: 1px solid #dedede;
+}
+.comment .reply p {
+  margin: 0;
+}
 
 .commentAuthor {
   font-weight: bold;
