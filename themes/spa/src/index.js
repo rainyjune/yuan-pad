@@ -33,10 +33,13 @@ var App = React.createClass({
       success: function(data) {
         console.log('data', data);
         if (data.error) {
-          this.setState({loginErrorMsg: data.error_detail});
+          if (this.isMounted()) {
+            this.setState({loginErrorMsg: data.error_detail});
+          }
         } else {
-          this.setState({loginErrorMsg: '', currentUser: data});
-          
+          if (this.isMounted()) {
+            this.setState({loginErrorMsg: '', currentUser: data});
+          }
         }
       }.bind(this),
       error: function(xhr, status, err) {
@@ -52,7 +55,9 @@ var App = React.createClass({
       cache: false,
       success: function(data){
         console.log('user info from server:', data);
-        this.setState({userDetailedData: data});
+        if (this.isMounted()) {
+          this.setState({userDetailedData: data});
+        }
       }.bind(this),
       error: function(){
       }.bind(this) 
@@ -70,13 +75,14 @@ var App = React.createClass({
         if (Object.prototype.toString.call(data) === "[object Array]") {
           data = {};
         }
-        this.setState({currentUser: data}, function(){
-          this.loadCommentsFromServer();
-          if (data.uid) {
-            this.loadUserDataFromServer(data.uid);
-          }
-        });
-        
+        if (this.isMounted()) {
+          this.setState({currentUser: data}, function(){
+            this.loadCommentsFromServer();
+            if (data.uid) {
+              this.loadUserDataFromServer(data.uid);
+            }
+          });
+        }
       }.bind(this),
       error: function(){
       }.bind(this) 
@@ -103,7 +109,9 @@ var App = React.createClass({
       cache: false,
       //dataType: "json",
       success: function(data){
-        this.setState({ currentUser: {} });
+        if (this.isMounted()) {
+          this.setState({ currentUser: {} });
+        }
       }.bind(this),
       error: function(){
         debugger;
@@ -119,9 +127,13 @@ var App = React.createClass({
       success: function(data) {
         console.log('update user result:', data, userData);
         if (data.error) {
-          this.setState({userUpdateErrorMsg: data.error_detail});
+          if (this.isMounted()) {
+            this.setState({userUpdateErrorMsg: data.error_detail});
+          }
         } else {
-          this.setState({userUpdateErrorMsg: '', currentUser: userData});
+          if (this.isMounted()) {
+            this.setState({userUpdateErrorMsg: '', currentUser: userData});
+          }
         }
       }.bind(this),
       error: function(xhr, status, err) {
@@ -138,9 +150,13 @@ var App = React.createClass({
       success: function(data) {
         console.log('create user result:', data);
         if (data.error) {
-          this.setState({registerErrorMsg: data.error_detail});
+          if (this.isMounted()) {
+            this.setState({registerErrorMsg: data.error_detail});
+          }
         } else {
-          this.setState({registerErrorMsg: '', currentUser: data});
+          if (this.isMounted()) {
+            this.setState({registerErrorMsg: '', currentUser: data});
+          }
           this.loadUserDataFromServer(data.uid); // Load user profile from server.
         }
       }.bind(this),
@@ -158,15 +174,17 @@ var App = React.createClass({
       cache: false,
       data: {"ajax": true, pid: this.state.currentPage},
       success: function(data) {
-        this.setState({
-          commentsDataType: 1,
-          commentsData: {
-            comments: data.messages,
-            pagenum: data.pagenum,
-            total: data.total,
-            current_page: data.current_page 
-          }
-        });
+        if (this.isMounted()) {
+          this.setState({
+            commentsDataType: 1,
+            commentsData: {
+              comments: data.messages,
+              pagenum: data.pagenum,
+              total: data.total,
+              current_page: data.current_page 
+            }
+          });
+        }
       }.bind(this),
       error: function(xhr, status, err) {
         debugger;
@@ -181,15 +199,17 @@ var App = React.createClass({
       dataType: 'json',
       success: function(data) {
         console.log('search result:', data);
-        this.setState({
-          commentsDataType: 2,
-          commentsData:{
-            comments: data.messages,
-            pagenum: 1,
-            total: data.nums,
-            current_page: 1
-          }
-        });
+        if (this.isMounted()) {
+          this.setState({
+            commentsDataType: 2,
+            commentsData:{
+              comments: data.messages,
+              pagenum: 1,
+              total: data.nums,
+              current_page: 1
+            }
+          });
+        }
       }.bind(this),
       error: function(xhr, status, err) {
         debugger;
@@ -201,9 +221,11 @@ var App = React.createClass({
   },
   componentDidMount: function() {
     this.getAppConfig(function(data){
-      this.setState({translations: data.translations});
-      // TODO Duplicate data.
-      this.setState({appConfig: data});
+      if (this.isMounted()) {
+        this.setState({translations: data.translations});
+        // TODO Duplicate data.
+        this.setState({appConfig: data});
+      }
       this.getUserInfo();
     });
   },

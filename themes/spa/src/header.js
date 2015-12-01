@@ -13,18 +13,6 @@ const customStyles = {
 };
 
 var Header = React.createClass({
-  handleLogout: function() {
-    this.props.onUserLogout();
-  },
-  handleUserUpdate: function(userData) {
-    this.props.onUserUpdate(userData);
-  },
-  handleLoginSubmit: function(loginData) {
-    this.props.onLoginSubmit(loginData);
-  },
-  handleRegisterSubmit: function(data) {
-    this.props.onRegisterSubmit(data);
-  },
   render: function() {
     var loginButton;
     if (this.props.user.admin || this.props.user.user) {
@@ -32,10 +20,10 @@ var Header = React.createClass({
         user={this.props.user} 
         userDetailedData={this.props.userDetailedData}
         lang={this.props.lang} 
-        onUserUpdateSubmit={this.handleUserUpdate} 
-        onUserLogout={this.handleLogout} />;
+        onUserUpdateSubmit={this.props.onUserUpdate} 
+        onUserLogout={this.props.onUserLogout} />;
     } else {
-      loginButton = <LoginButton registerErrorMsg={this.props.registerErrorMsg} loginErrorMsg={this.props.loginErrorMsg} lang={this.props.lang} onRegisterSubmit={this.handleRegisterSubmit} onLoginSubmit={this.handleLoginSubmit} />;
+      loginButton = <LoginButton registerErrorMsg={this.props.registerErrorMsg} loginErrorMsg={this.props.loginErrorMsg} lang={this.props.lang} onRegisterSubmit={this.props.onRegisterSubmit} onLoginSubmit={this.props.onLoginSubmit} />;
     }
 
     return (
@@ -47,9 +35,6 @@ var Header = React.createClass({
 });
 
 var LoginModal = React.createClass({
-  closeLoginModal: function() {
-    this.props.onRequestClose();
-  },
   handleSubmit: function(e) {
     e.preventDefault();
     var user = this.refs.user.value.trim();
@@ -64,10 +49,10 @@ var LoginModal = React.createClass({
   },
   render: function(){
     return (
-      <Modal isOpen={this.props.loginModalIsOpen} onRequestClose={this.closeLoginModal} style={customStyles} >
+      <Modal isOpen={this.props.loginModalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
         <h2>Login</h2>
         <p>{this.props.loginErrorMsg}</p>
-        <button onClick={this.closeLoginModal}>close</button>
+        <button onClick={this.props.onRequestClose}>close</button>
         <form onSubmit={this.handleSubmit} action="index.php?controller=user&amp;action=login" method="post">
           <table>
             <tbody>
@@ -93,9 +78,6 @@ var LoginModal = React.createClass({
 });
 
 var RegisterModal = React.createClass({
-  closeRegisterModal: function() {
-    this.props.onRequestClose();
-  },
   handleSubmit: function(e) {
     e.preventDefault();
     
@@ -115,10 +97,10 @@ var RegisterModal = React.createClass({
   },
   render: function(){
     return (
-      <Modal isOpen={this.props.registerModalIsOpen} onRequestClose={this.closeRegisterModal} style={customStyles} >
+      <Modal isOpen={this.props.registerModalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
         <h2>Register</h2>
         <p>{this.props.registerErrorMsg}</p>
-        <button onClick={this.closeRegisterModal}>close</button>
+        <button onClick={this.props.onRequestClose}>close</button>
         <form onSubmit={this.handleSubmit} action="index.php?controller=user&amp;action=create" method="post">
                 <fieldset>
                           <legend>{this.props.lang.REGISTER}</legend>
@@ -151,9 +133,6 @@ var RegisterModal = React.createClass({
 });
 
 var UserUpdateModal = React.createClass({
-  closeUserUpdateModal: function() {
-    this.props.onRequestClose();
-  },
   handleSubmit: function(e) {
     e.preventDefault();
     var uid = this.refs.uid.value.trim();
@@ -174,7 +153,7 @@ var UserUpdateModal = React.createClass({
       <Modal isOpen={this.props.userUpdateModalIsOpen} onRequestClose={this.closeLoginModal} style={customStyles} >
         <h2>Update profile</h2>
         <p>{this.props.userUpdateErrorMsg}</p>
-        <button onClick={this.closeUserUpdateModal}>close</button>
+        <button onClick={this.props.onRequestClose}>close</button>
         <form onSubmit={this.handleSubmit} action="index.php?controller=user&amp;action=update&amp" method="post">
         <input type="hidden" ref="uid" value={this.props.userDetailedData.uid} />        
           <dl>
@@ -213,13 +192,6 @@ var LogoutButton = React.createClass({
   closeUserUpdateModal: function() {
     this.setState({userUpdateModalIsOpen: false});
   },
-  handleUserUpdateSubmit: function(userData) {
-    this.props.onUserUpdateSubmit(userData);
-  },
-  handleLogout: function(e) {
-    e.preventDefault();
-    this.props.onUserLogout();
-  },
   render: function() {
     var updateButton = ' ';
     if (this.props.user.user) {
@@ -228,12 +200,12 @@ var LogoutButton = React.createClass({
     return (
       <div>
         {updateButton}&nbsp;
-        <a href='index.php?controller=user&amp;action=logout' onClick={this.handleLogout}>{this.props.lang.LOGOUT}</a>
+        <a href='index.php?controller=user&amp;action=logout' onClick={this.props.onUserLogout}>{this.props.lang.LOGOUT}</a>
         <UserUpdateModal 
           user={this.props.user}
           userDetailedData={this.props.userDetailedData}
           userUpdateErrorMsg={this.props.userUpdateErrorMsg} 
-          onUserUpdateSubmit={this.handleUserUpdateSubmit} 
+          onUserUpdateSubmit={this.props.onUserUpdateSubmit} 
           userUpdateModalIsOpen={this.state.userUpdateModalIsOpen} 
           onRequestClose={this.closeUserUpdateModal} 
           lang={this.props.lang} />
@@ -243,13 +215,9 @@ var LogoutButton = React.createClass({
 });
 
 var UserUpdateButton = React.createClass({
-  handleClick: function(e) {
-    e.preventDefault();
-    this.props.onShowUpdateModal();
-  },
   render: function() {
     return (
-      <a href="javascript:void(0);" onClick={this.handleClick}>{this.props.lang.UPDATE}</a>
+      <a href="javascript:void(0);" onClick={this.props.onShowUpdateModal}>{this.props.lang.UPDATE}</a>
     );
   }
 });
@@ -273,19 +241,23 @@ var LoginButton = React.createClass({
   closeRegisterModal: function() {
     this.setState({registerModalIsOpen: false});
   },
-  handleLoginSubmit: function(loginData) {
-    this.props.onLoginSubmit(loginData);
-  },
-  handleRegisterSubmit: function(data) {
-    this.props.onRegisterSubmit(data);
-  },
   render: function() {
     return (
       <div>
         <a href='javascript:void(0);' onClick={this.openRegisterModal}>{this.props.lang.REGISTER}</a>&nbsp;
         <a href='javascript:void(0);' onClick={this.openLoginModal}>{this.props.lang.LOGIN}</a>
-        <LoginModal loginErrorMsg={this.props.loginErrorMsg} onLoginSubmit={this.handleLoginSubmit} loginModalIsOpen={this.state.loginModalIsOpen} onRequestClose={this.closeLoginModal} lang={this.props.lang} />
-        <RegisterModal registerErrorMsg={this.props.registerErrorMsg} registerErrorMsg={this.props.registerErrorMsg} onRegisterSubmit={this.handleRegisterSubmit} registerModalIsOpen={this.state.registerModalIsOpen} onRequestClose={this.closeRegisterModal} lang={this.props.lang} />
+        <LoginModal 
+          loginErrorMsg={this.props.loginErrorMsg} 
+          onLoginSubmit={this.props.onLoginSubmit} 
+          loginModalIsOpen={this.state.loginModalIsOpen} 
+          onRequestClose={this.closeLoginModal} 
+          lang={this.props.lang} />
+        <RegisterModal 
+          registerErrorMsg={this.props.registerErrorMsg} 
+          onRegisterSubmit={this.props.onRegisterSubmit} 
+          registerModalIsOpen={this.state.registerModalIsOpen} 
+          onRequestClose={this.closeRegisterModal} 
+          lang={this.props.lang} />
       </div>
     );
   }

@@ -1,13 +1,9 @@
 var React = require('react');
     
 var CloseSearchButton = React.createClass({
-  handleCloseSearch: function(e) {
-    e.preventDefault();
-    this.props.onCloseSearch();
-  },
   render: function() {
     return (
-      <a href="javascript:void(0)" onClick={this.handleCloseSearch}>Close</a>
+      <a href="javascript:void(0)" onClick={this.props.onCloseSearch}>Close</a>
     );
   }
 });
@@ -37,14 +33,11 @@ var PaginationItem = React.createClass({
 });
 
 var Pagination = React.createClass({
-  handlePageChange: function(pageNumber) {
-    this.props.onPageChanged(pageNumber);
-  },
   render: function() {
     //console.log("The pagination feature was enabled, the total pages: ", this.props.total);
     var items = [];
     for (var i = 0; i < this.props.total; i++) {
-      items.push(<PaginationItem onPageChanged={this.handlePageChange} currentPage={this.props.currentPage} pageNumber={i} text={i+1} key={i} />);
+      items.push(<PaginationItem onPageChanged={this.props.onPageChanged} currentPage={this.props.currentPage} pageNumber={i} text={i+1} key={i} />);
     }
     return (
       <div className="pagination">
@@ -70,17 +63,11 @@ var CommentStatistics = React.createClass({
     }
     return { __html: text };
   },
-  handleCloseSearch: function() {
-    this.props.onCloseSearch();
-  },
-  handlePageChange: function(pageNumber) {
-    this.props.onPageChanged(pageNumber);
-  },
   render: function() {
-    var closeSearchBtn = (this.props.commentsDataType === 2) ? <CloseSearchButton onCloseSearch={this.handleCloseSearch} /> : '';
+    var closeSearchBtn = (this.props.commentsDataType === 2) ? <CloseSearchButton onCloseSearch={this.props.onCloseSearch} /> : '';
     //console.log('closeSearchBtn:', closeSearchBtn);
     
-    var pagination = (this.props.appConfig.page_on) ? <Pagination onPageChanged={this.handlePageChange} currentPage = {this.props.currentPage}  total={Math.ceil(this.props.total/this.props.appConfig.num_perpage)} /> : "";
+    var pagination = (this.props.appConfig.page_on) ? <Pagination onPageChanged={this.props.onPageChanged} currentPage = {this.props.currentPage}  total={Math.ceil(this.props.total/this.props.appConfig.num_perpage)} /> : "";
     return (
       <div className="statistics">
         {closeSearchBtn}
@@ -97,8 +84,11 @@ var CommentList = React.createClass({
     var commentNodes = this.props.data.map(function(comment) {
       return (
         <Comment 
-          author={comment.uname} 
-          key={comment.id} 
+          uid={comment.uid}
+          b_username={comment.b_username}
+          user={comment.user}
+          author={comment.uname}
+          key={comment.id}
           reply_content = {comment.reply_content}
           reply_time = {comment.reply_time}
           time={comment.time}
@@ -135,11 +125,12 @@ var Comment = React.createClass({
     return { __html: this.props.children.toString() };
   },
   render: function() {
+    var author = this.props.uid ? this.props.b_username : this.props.user;
     var reply = this.props.reply_content ? <Reply lang={this.props.lang} content={this.props.reply_content} date={this.props.reply_time} /> : '';
     return (
       <div className="comment">
         <span className="commentAuthor">
-          {this.props.author}
+          {author}
         </span> 
         <span className="commentDate">{this.props.time}</span>
         <div className="commentText" dangerouslySetInnerHTML={this.rawMarkup()} />
@@ -208,23 +199,14 @@ var CommentForm = React.createClass({
 });
     
 var CommentBox = React.createClass({
-  handleCommentSubmit: function(comment) {
-    this.props.onCommentSubmit(comment);
-  },
-  handleCloseSearch: function() {
-    this.props.onCloseSearch();
-  },
-  handlePageChange: function(pageNumber) {
-    this.props.onPageChanged(pageNumber);
-  },
   render: function() {
-    var commentForm = this.props.commentsDataType === 1 ? <CommentForm user={this.props.user} lang={this.props.lang} onCommentSubmit={this.handleCommentSubmit}/> : '';
+    var commentForm = this.props.commentsDataType === 1 ? <CommentForm user={this.props.user} lang={this.props.lang} onCommentSubmit={this.props.onCommentSubmit}/> : '';
     return (
       <div className="commentBox">
         <h1>{this.props.lang.WELCOME_POST}</h1>
         <CommentStatistics 
-          onCloseSearch={this.handleCloseSearch}
-          onPageChanged={this.handlePageChange}
+          onCloseSearch={this.props.onCloseSearch}
+          onPageChanged={this.props.onPageChanged}
           commentsDataType={this.props.commentsDataType} 
           lang={this.props.lang} 
           appConfig={this.props.appConfig}
