@@ -124,14 +124,15 @@ var Comment = React.createClass({
   rawMarkup: function() {
     return { __html: this.props.children.toString() };
   },
+  rawAuthorMarkup: function() {
+    return { __html: this.props.uid ? this.props.b_username : this.props.user};
+  },
   render: function() {
-    var author = this.props.uid ? this.props.b_username : this.props.user;
+    
     var reply = this.props.reply_content ? <Reply lang={this.props.lang} content={this.props.reply_content} date={this.props.reply_time} /> : '';
     return (
       <div className="comment">
-        <span className="commentAuthor">
-          {author}
-        </span> 
+        <span className="commentAuthor" dangerouslySetInnerHTML={this.rawAuthorMarkup()}></span> 
         <span className="commentDate">{this.props.time}</span>
         <div className="commentText" dangerouslySetInnerHTML={this.rawMarkup()} />
         {reply}
