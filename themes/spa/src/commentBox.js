@@ -141,9 +141,26 @@ var Comment = React.createClass({
 });
 
 var CommentForm = React.createClass({
+  getInitialState: function() {
+    return {
+      username: 'anonymous'
+    };
+  },
+  componentWillReceiveProps: function(nextProps) {
+    var propUser = nextProps.user;
+    var usernameValue = 'anonymous';
+    if (propUser.admin) {
+      usernameValue = propUser.admin;
+    } else if (propUser.user) {
+      usernameValue = propUser.user;
+    }
+    this.setState({
+      username: usernameValue
+    });
+  },
   handleSubmit: function(e) {
     e.preventDefault();
-    var author = this.refs.user.value.trim();
+    var author = this.state.username.trim();
     var text = this.refs.content.value.trim();
     if (!author || !text) return;
     
@@ -152,6 +169,9 @@ var CommentForm = React.createClass({
     this.refs.user.value = ''; 
     this.refs.content.value = ''; 
     return false;
+  },
+  handleUsernameChange: function(e) {
+    this.setState({username: e.target.value});
   },
   render: function() {
     var userInputType = "text";
@@ -165,7 +185,7 @@ var CommentForm = React.createClass({
       if (currentUser.admin) {
         userInputValue = currentUser.admin;
         labelContent = currentUser.admin;
-      } else if (currentUser.user) {
+      } else {
         userInputValue = currentUser.user;
         labelContent = currentUser.user;
       }
@@ -178,7 +198,12 @@ var CommentForm = React.createClass({
             <tr>
               <td>{this.props.lang.NICKNAME}</td>
               <td>
-                <input ref="user" type={userInputType} maxLength="10" defaultValue={userInputValue} />
+                <input 
+                  ref="user" 
+                  type={userInputType} 
+                  maxLength="10" 
+                  value={this.state.username}
+                  onChange={this.handleUsernameChange} />
                 <label htmlFor="user">{labelContent}</label>
               </td>
             </tr>
