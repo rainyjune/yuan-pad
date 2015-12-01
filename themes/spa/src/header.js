@@ -200,7 +200,7 @@ var LogoutButton = React.createClass({
     return (
       <div>
         {updateButton}&nbsp;
-        <a href='index.php?controller=user&amp;action=logout' onClick={this.props.onUserLogout}>{this.props.lang.LOGOUT}</a>
+        <a href='javascript:void(0);' onClick={this.props.onUserLogout}>{this.props.lang.LOGOUT}</a>
         <UserUpdateModal 
           user={this.props.user}
           userDetailedData={this.props.userDetailedData}
