@@ -67,11 +67,16 @@ var App = React.createClass({
       dataType: "json",
       success: function(data){
         console.log('user info:', data);
-        this.setState({currentUser: data});
-        this.loadCommentsFromServer();
-        if (data.uid) {
-          this.loadUserDataFromServer(data.uid);
+        if (Object.prototype.toString.call(data) === "[object Array]") {
+          data = {};
         }
+        this.setState({currentUser: data}, function(){
+          this.loadCommentsFromServer();
+          if (data.uid) {
+            this.loadUserDataFromServer(data.uid);
+          }
+        });
+        
       }.bind(this),
       error: function(){
       }.bind(this) 

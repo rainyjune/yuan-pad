@@ -169,7 +169,7 @@ var CommentForm = React.createClass({
     
     var currentUser = this.props.user;
     console.log('currentUser:', currentUser);
-    if (currentUser) {
+    if (currentUser.admin || currentUser.user) {
       userInputType = "hidden";
       if (currentUser.admin) {
         userInputValue = currentUser.admin;
