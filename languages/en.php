@@ -206,7 +206,7 @@ return array(
     'DATADIR_NOT_WRITABLE'=>'Directory `data/` is not writable,please change directory permission so that it is writable by the web server',
     'DB_CONNECT_ERROR'=>'Connected to DB failed!',
     'INSTALL_NEED_HELP'=>'Need help?',
-    'INSTALL_AGREEMENT'=>'To install this software, you must agree to <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GPL 2</a>',
+    'INSTALL_AGREEMENT'=>'To install this software, you must agree to <a href="http://opensource.org/licenses/MIT" target="_blank">MIT</a>',
 
     'GD_DISABLED_NOTICE'=>'(GD not support,so you can\'t enable captcha.)',
 

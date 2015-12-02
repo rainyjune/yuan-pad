@@ -3,7 +3,7 @@
  * Abstract class for all databases
  *
  * @author rainyjune
- * @license GPL 2
+ * @license MIT
  * @link https://github.com/rainyjune/yuan-pad 
  */
 abstract  class YDBBase {

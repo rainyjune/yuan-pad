@@ -204,7 +204,7 @@ return array(
     'DATADIR_NOT_WRITABLE'=>'目录 data 不可写。请更改目录权限。',
     'DB_CONNECT_ERROR'=>'数据库连接失败!',
     'INSTALL_NEED_HELP'=>'需要帮助？',
-    'INSTALL_AGREEMENT'=>'为了安装此程序，你必须遵守 <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GPL 2 </a>',
+    'INSTALL_AGREEMENT'=>'为了安装此程序，你必须遵守 <a href="http://opensource.org/licenses/MIT" target="_blank">MIT</a>',
 
     'GD_DISABLED_NOTICE'=>'(GD 不支持，因此你无法开启验证码功能。)',
 
