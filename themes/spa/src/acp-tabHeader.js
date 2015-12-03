@@ -30,6 +30,7 @@ var ACPTabHeader = React.createClass({
           onTabSelected={onTabSelected}
           text={tab.text}
           value={tab.value}
+          key={tab.value}
           activeTab={activeTab} />
       );
     });

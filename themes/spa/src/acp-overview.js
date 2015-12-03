@@ -18,7 +18,7 @@ var ACPOverview = React.createClass({
         <table>
           <tbody>
             <tr>
-              <td colspan="2" ><b>{this.props.lang.STATS_INFO}</b></td>
+              <td colSpan="2" ><b>{this.props.lang.STATS_INFO}</b></td>
             </tr>
             <tr>
               <td >{this.props.lang.NUM_POSTS}：</td><td align="right">{this.props.acpData.nums}</td>
@@ -30,7 +30,7 @@ var ACPOverview = React.createClass({
               <td >{this.props.lang.MP_VERSION}：</td><td align="right">MP_VERSION</td>
             </tr>
             <tr>
-              <td  colspan="2"><b>{this.props.lang.SYS_INFO}</b></td>
+              <td  colSpan="2"><b>{this.props.lang.SYS_INFO}</b></td>
             </tr>
             <tr>
               <td >{this.props.lang.PHP_VERSION}：</td><td align="right">PHP_VERSION</td>
