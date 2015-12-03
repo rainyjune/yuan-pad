@@ -8,7 +8,8 @@ module.exports = function(grunt) {
     browserify: {
       dist: {
         files: {
-          'themes/spa/build/index.js': ['themes/spa/src/index.js']
+          'themes/spa/build/index.js': ['themes/spa/src/index.js'],
+          'themes/spa/build/acp.js': ['themes/spa/src/acp.js']
         },
         options: {
           transform: [
@@ -34,7 +35,8 @@ module.exports = function(grunt) {
           style: 'expanded'
         },
         files: {
-          'themes/spa/css/style.css': 'themes/spa/sass/style.scss'
+          'themes/spa/css/style.css': 'themes/spa/sass/style.scss',
+          'themes/spa/css/acp.css': 'themes/spa/sass/acp.scss'
         }
       },
       dist: {
@@ -42,7 +44,8 @@ module.exports = function(grunt) {
           style: 'compressed'
         },
         files: {
-          'themes/spa/css/style.css': 'themes/spa/sass/style.scss'
+          'themes/spa/css/style.css': 'themes/spa/sass/style.scss',
+          'themes/spa/css/acp.css': 'themes/spa/sass/acp.scss'
         }
       }
     },
@@ -64,7 +67,8 @@ module.exports = function(grunt) {
           }
         },
         files: {
-          'themes/spa/build/index.js' : ['themes/spa/build/index.js']
+          'themes/spa/build/index.js' : ['themes/spa/build/index.js'],
+          'themes/spa/build/acp.js' : ['themes/spa/build/acp.js']
         }
       },
     },
@@ -76,7 +80,8 @@ module.exports = function(grunt) {
           collapseWhitespace: true
         },
         files: {
-          'themes/spa/templates/index.php': 'themes/spa/templates/index.html'
+          'themes/spa/templates/index.php': 'themes/spa/templates/index.html',
+          'themes/spa/templates/admin.php': 'themes/spa/templates/admin.html'
         }
       },
       devIndex: {
@@ -84,7 +89,8 @@ module.exports = function(grunt) {
           collapseWhitespace: false
         },
         files: {
-          'themes/spa/templates/index.php': 'themes/spa/templates/index.html'
+          'themes/spa/templates/index.php': 'themes/spa/templates/index.html',
+          'themes/spa/templates/admin.php': 'themes/spa/templates/admin.html'
         }
       }
     },
@@ -118,18 +124,12 @@ module.exports = function(grunt) {
 					spawn: false,
 				}
       },
-      /*
-      indexjs: {
-        files: ['themes/spa/src/*.js'],
-        tasks: ['browserify:dist']
-      },
-      */
       indexhtml: {
-        files: ['themes/spa/templates/index.html'],
+        files: ['themes/spa/templates/index.html', 'themes/spa/templates/admin.html'],
         tasks: ['htmlmin:devIndex']
       },
       css: {
-        files: ['themes/spa/sass/style.scss'],
+        files: ['themes/spa/sass/style.scss', 'themes/spa/sass/acp.scss'],
         tasks: ['sass:dev'] 
       }
     }
