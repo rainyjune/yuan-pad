@@ -126,7 +126,7 @@ class SiteController extends BaseController{
         $magic_quotes_gpc=ini_get("magic_quotes_gpc") ? 'On' : 'Off';
         $languages= get_all_langs();
         $timezone_array=  get_all_timezone();
-        $this->render('admin',array(
+        $templateDataArr = array(
             'tabs_array'=>$tabs_array,
             'current_tab'=>$current_tab,
             'tabs_name_array'=>$tabs_name_array,
@@ -141,7 +141,12 @@ class SiteController extends BaseController{
             'languages'=>$languages,
             'data'=>$data,
             'ban_ip_info'=>$ban_ip_info,
-            ));
+            );
+        if (defined('API_MODE')) {
+          header("Content-type: application/json");
+          die(function_exists('json_encode') ? json_encode($templateDataArr) : CJSON::encode($templateDataArr));
+        }
+        $this->render('admin',$templateDataArr);
     }
 
     public function actionRSS(){
