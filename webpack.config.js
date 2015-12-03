@@ -1,9 +1,12 @@
 var path = require("path");
 module.exports = {
-  entry: "./themes/spa/src/index.js",
+  entry: {
+    index: "./themes/spa/src/index.js",
+    acp: "./themes/spa/src/acp.js"
+  },
   output: {
     path: './themes/spa/build/',
-    filename: "index.js"
+    filename: "[name].js"
   },
   module: {
     loaders: [
