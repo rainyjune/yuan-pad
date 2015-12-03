@@ -20,6 +20,7 @@ class ZFramework{
     protected   $allow_request_api=array(
         'SiteController/actionIndex',
         'SiteController/actionCaptcha',
+        'SiteController/actionControl_panel',
         'SiteController/actionRss',
         'PostController/actionCreate',
         'PostController/actionDelete',
