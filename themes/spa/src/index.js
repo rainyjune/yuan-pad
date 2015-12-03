@@ -275,6 +275,9 @@ var App = React.createClass({
           commentsDataType={this.state.commentsDataType} 
           comments={this.state.commentsData}  />
         <SearchBar onSubmit={this.handleSearch} />
+        <footer>
+          <p>{this.state.appConfig.copyright_info}</p>
+        </footer>
       </div>
     );
   }
