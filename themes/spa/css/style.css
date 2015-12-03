@@ -463,3 +463,8 @@ th {
 .commentText {
   clear: both;
 }
+
+footer {
+  border-top: 1px dotted blue;
+  margin-top: 15px;
+}
