@@ -19835,6 +19835,7 @@
 	        onTabSelected: onTabSelected,
 	        text: tab.text,
 	        value: tab.value,
+	        key: tab.value,
 	        activeTab: activeTab });
 	    });
 	    return React.createElement(
@@ -19946,7 +19947,7 @@
 	            null,
 	            React.createElement(
 	              "td",
-	              { colspan: "2" },
+	              { colSpan: "2" },
 	              React.createElement(
 	                "b",
 	                null,
@@ -20004,7 +20005,7 @@
 	            null,
 	            React.createElement(
 	              "td",
-	              { colspan: "2" },
+	              { colSpan: "2" },
 	              React.createElement(
 	                "b",
 	                null,
