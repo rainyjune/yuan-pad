@@ -3,6 +3,7 @@ var React = require('react'),
 var SearchBar = require('./searchBar.js');
 var CommentBox = require('./commentBox.js');
 var Header = require('./header.js');
+var AppFooter = require('./footer.js');
 
 var App = React.createClass({
   getInitialState: function() {
@@ -275,9 +276,10 @@ var App = React.createClass({
           commentsDataType={this.state.commentsDataType} 
           comments={this.state.commentsData}  />
         <SearchBar onSubmit={this.handleSearch} />
-        <footer>
-          <p>{this.state.appConfig.copyright_info}</p>
-        </footer>
+        <AppFooter
+          lang={this.state.translations} 
+          appConfig={this.state.appConfig}
+          user={this.state.currentUser} />
       </div>
     );
   }
