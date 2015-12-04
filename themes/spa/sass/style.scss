@@ -13,6 +13,10 @@
     text-align: center;
   }
   
+  .statistics {
+    padding-bottom: 5px;
+  }
+  
   .commentForm {
     width: 90%;
     margin: 20px auto 10px auto;
@@ -35,6 +39,15 @@
       width: 600px;
       height: 100px;
     }
+  }
+}
+
+.searchbar {
+  text-align: center;
+  margin-top: 15px;
+  
+  input[type=image] {
+    margin-left: 5px;
   }
 }
   
