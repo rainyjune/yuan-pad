@@ -4,6 +4,7 @@ var SearchBar = require('./searchBar.js');
 var CommentBox = require('./commentBox.js');
 var Header = require('./header.js');
 var AppFooter = require('./footer.js');
+var dataProvider = require('./dataProvider.js');
 
 var App = React.createClass({
   getInitialState: function() {
@@ -26,106 +27,60 @@ var App = React.createClass({
     };
   },
   handleLoginSubmit: function(loginData) {
-    yuanjs.ajax({
-      type: "POST",
-      url: "api.php?controller=user&action=login",
-      data: loginData,
-      dataType: 'json',
-      success: function(data) {
-        console.log('data', data);
+    dataProvider.login(loginData, function(data){
+      if (this.isMounted()) {
         if (data.error) {
-          if (this.isMounted()) {
-            this.setState({loginErrorMsg: data.error_detail});
-          }
+          this.setState({loginErrorMsg: data.error_detail});
         } else {
-          if (this.isMounted()) {
-            this.setState({loginErrorMsg: '', currentUser: data});
-          }
+          this.setState({loginErrorMsg: '', currentUser: data});
         }
-      }.bind(this),
-      error: function(xhr, status, err) {
-        debugger;
-      }.bind(this)
-    });
+      }
+    }.bind(this), function(){
+      debugger;
+    }.bind(this));
   },
   loadUserDataFromServer: function(uid) {
-    yuanjs.ajax({
-      type: "GET",
-      url: 'api.php?controller=user&action=update&uid=' + uid,
-      dataType: 'json',
-      cache: false,
-      success: function(data){
+    dataProvider.loadUserDataFromServer(uid, function(data){
         console.log('user info from server:', data);
         if (this.isMounted()) {
           this.setState({userDetailedData: data});
         }
-      }.bind(this),
-      error: function(){
-      }.bind(this) 
-    });
+      }.bind(this), function(){
+      }.bind(this));
   },
   getUserInfo: function() {
-    yuanjs.ajax({
-      type: "GET",
-      url: 'index.php?controller=user&action=getUserInfo',
-      dataType: 'json',
-      cache: false,
-      dataType: "json",
-      success: function(data){
-        console.log('user info:', data);
-        if (Object.prototype.toString.call(data) === "[object Array]") {
-          data = {};
-        }
-        if (this.isMounted()) {
-          this.setState({currentUser: data}, function(){
-            this.loadCommentsFromServer();
-            if (data.uid) {
-              this.loadUserDataFromServer(data.uid);
-            }
-          });
-        }
-      }.bind(this),
-      error: function(){
-      }.bind(this) 
-    });
+    dataProvider.getUserInfo(function(data){
+      console.log('user info:', data);
+      if (Object.prototype.toString.call(data) === "[object Array]") {
+        data = {};
+      }
+      if (this.isMounted()) {
+        this.setState({currentUser: data}, function(){
+          this.loadCommentsFromServer();
+          if (data.uid) {
+            this.loadUserDataFromServer(data.uid);
+          }
+        });
+      }
+    }.bind(this), function(){
+    }.bind(this));
   },
   getAppConfig: function(successCallback) {
-    yuanjs.ajax({
-      type: "GET",
-      url: 'index.php',
-      data: {action: "getAppConfig",t:Date.now()},
-      cache: false,
-      dataType: "json",
-      success: successCallback.bind(this),
-      error: function(){
-        debugger;
-      }.bind(this) 
-    });
+    dataProvider.getAppConfig(successCallback.bind(this), function(){
+      debugger;
+    }.bind(this));
   },
   handleLogout: function() {
-    yuanjs.ajax({
-      type: "GET",
-      url: 'api.php',
-      data: {controller: 'user', action: "logout"},
-      cache: false,
-      //dataType: "json",
-      success: function(data){
-        if (this.isMounted()) {
-          this.setState({ currentUser: {} });
-        }
-      }.bind(this),
-      error: function(){
-        debugger;
-      }.bind(this) 
-    });
+    dataProvider.logout(function(data){
+      if (this.isMounted()) {
+        this.setState({ currentUser: {} });
+      }
+    }.bind(this), function(){
+      debugger;
+    }.bind(this)); 
   },
   handleUserUpdate: function(userData) {
-    yuanjs.ajax({
-      type: "POST",
-      url: "api.php?controller=user&action=update&uid=" + userData.uid,
-      data: userData,
-      dataType: 'json',
-      success: function(data) {
+    dataProvider.updateUser(userData, function(data) {
         console.log('update user result:', data, userData);
         if (data.error) {
           if (this.isMounted()) {
@@ -137,18 +92,12 @@ var App = React.createClass({
           }
         }
       }.bind(this),
-      error: function(xhr, status, err) {
+      function(xhr, status, err) {
         debugger;
-      }.bind(this)
-    });
+      }.bind(this));
   },
   handleRegister: function(userData) {
-    yuanjs.ajax({
-      type: "POST",
-      url: "api.php?controller=user&action=create",
-      data: userData,
-      dataType: 'json',
-      success: function(data) {
+    dataProvider.signUp(function(data) {
         console.log('create user result:', data);
         if (data.error) {
           if (this.isMounted()) {
@@ -161,20 +110,13 @@ var App = React.createClass({
           this.loadUserDataFromServer(data.uid); // Load user profile from server.
         }
       }.bind(this),
-      error: function(xhr, status, err) {
+      function(xhr, status, err) {
         debugger;
       }.bind(this)
-    });
+    );
   },
   loadCommentsFromServer: function() {
-    console.log("Ready to load data from server, page:", this.state.currentPage);
-    yuanjs.ajax({
-      url: this.props.url,
-      dataType: 'json',
-      method: 'GET',
-      cache: false,
-      data: {"ajax": true, pid: this.state.currentPage},
-      success: function(data) {
+    dataProvider.loadCommentsFromServer(this.state.currentPage, function(data) {
         if (this.isMounted()) {
           this.setState({
             commentsDataType: 1,
@@ -187,18 +129,13 @@ var App = React.createClass({
           });
         }
       }.bind(this),
-      error: function(xhr, status, err) {
+      function(xhr, status, err) {
         debugger;
       }.bind(this)
-    });
+    );
   },
   handleSearch: function(keyword) {
-    yuanjs.ajax({
-      type: "POST",
-      url: "api.php?controller=search",
-      data: {s:keyword},
-      dataType: 'json',
-      success: function(data) {
+    dataProvider.search(function(data) {
         console.log('search result:', data);
         if (this.isMounted()) {
           this.setState({
@@ -212,10 +149,10 @@ var App = React.createClass({
           });
         }
       }.bind(this),
-      error: function(xhr, status, err) {
+      function(xhr, status, err) {
         debugger;
       }.bind(this)
-    });
+    );
   },
   handleCloseSearch: function() {
     this.loadCommentsFromServer();
@@ -231,18 +168,13 @@ var App = React.createClass({
     });
   },
   handleCommentSubmit: function(comment) {
-    comment.ajax = true;
-    yuanjs.ajax({
-      type: "POST",
-      url: "./index.php?controller=post&action=create",
-      data: comment,
-      success: function(data) {
+    dataProvider.createPost(comment, function(data) {
         this.loadCommentsFromServer();
       }.bind(this),
-      error: function(xhr, status, err) {
+      function(xhr, status, err) {
         debugger;
       }.bind(this)
-    });
+    );
   },
   handlePageChange: function(pageNumber) {
     pageNumber = parseInt(pageNumber);
@@ -268,7 +200,6 @@ var App = React.createClass({
           onCommentSubmit={this.handleCommentSubmit}
           onCloseSearch={this.handleCloseSearch}
           onPageChanged={this.handlePageChange}
-          url="index.php" 
           user={this.state.currentUser} 
           lang={this.state.translations} 
           currentPage = {this.state.currentPage}
@@ -286,6 +217,6 @@ var App = React.createClass({
 });
 
 ReactDOM.render(
-  <App url="index.php" />,
+  <App />,
   document.getElementById('content')
 );
