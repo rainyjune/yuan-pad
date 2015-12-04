@@ -67,7 +67,7 @@ var CommentStatistics = React.createClass({
     var closeSearchBtn = (this.props.commentsDataType === 2) ? <CloseSearchButton onCloseSearch={this.props.onCloseSearch} /> : '';
     //console.log('closeSearchBtn:', closeSearchBtn);
     
-    var pagination = (this.props.appConfig.page_on) ? <Pagination onPageChanged={this.props.onPageChanged} currentPage = {this.props.currentPage}  total={Math.ceil(this.props.total/this.props.appConfig.num_perpage)} /> : "";
+    var pagination = (this.props.appConfig.page_on && this.props.commentsDataType === 1) ? <Pagination onPageChanged={this.props.onPageChanged} currentPage = {this.props.currentPage}  total={Math.ceil(this.props.total/this.props.appConfig.num_perpage)} /> : "";
     return (
       <div className="statistics">
         {closeSearchBtn}
