@@ -98,8 +98,17 @@ class SiteController extends BaseController{
         }
     }
     public function actionControl_panel(){
-        global $gd_exist,$zip_support;
-        is_admin();
+        global $gd_exist,$zip_support, $API_CODE;
+        if (!isset($_SESSION['admin'])) {
+          if (defined('API_MODE')) {
+            header("Content-type: application/json");
+            $error_array=array('error_code'=>'401','error'=>$API_CODE['401'],'error_detail'=>'Unauthorized');
+            die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
+          } else {
+            header("Location:index.php?controller=user&action=login");exit;
+          }
+        }
+        //is_admin();
         $current_tab='overview';
         $tabs_array=array('overview','siteset','message','ban_ip');
         $tabs_name_array=array(t('ACP_OVERVIEW'),t('ACP_CONFSET'),t('ACP_MANAGE_POST'),t('ACP_MANAGE_IP'));
@@ -147,6 +156,14 @@ class SiteController extends BaseController{
           die(function_exists('json_encode') ? json_encode($templateDataArr) : CJSON::encode($templateDataArr));
         }
         $this->render('admin',$templateDataArr);
+    }
+    
+    /**
+     * Designed for the spa theme.
+     *
+     */
+    public function actionAcp() {
+      $this->render('admin');
     }
 
     public function actionRSS(){
