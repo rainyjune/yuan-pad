@@ -135,7 +135,7 @@ var App = React.createClass({
     );
   },
   handleSearch: function(keyword) {
-    dataProvider.search(function(data) {
+    dataProvider.search(keyword, function(data) {
         console.log('search result:', data);
         if (this.isMounted()) {
           this.setState({
@@ -153,9 +153,6 @@ var App = React.createClass({
         debugger;
       }.bind(this)
     );
-  },
-  handleCloseSearch: function() {
-    this.loadCommentsFromServer();
   },
   componentDidMount: function() {
     this.getAppConfig(function(data){
@@ -198,7 +195,7 @@ var App = React.createClass({
           lang={this.state.translations} />
         <CommentBox 
           onCommentSubmit={this.handleCommentSubmit}
-          onCloseSearch={this.handleCloseSearch}
+          onCloseSearch={this.loadCommentsFromServer}
           onPageChanged={this.handlePageChange}
           user={this.state.currentUser} 
           lang={this.state.translations} 
