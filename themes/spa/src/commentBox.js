@@ -201,7 +201,7 @@ var CommentForm = React.createClass({
         <table>
           <tbody>
             <tr>
-              <td>{this.props.lang.NICKNAME}</td>
+              <th>{this.props.lang.NICKNAME}</th>
               <td>
                 <input 
                   ref="user" 
@@ -213,7 +213,7 @@ var CommentForm = React.createClass({
               </td>
             </tr>
             <tr>
-              <td>{this.props.lang.CONTENT}</td>
+              <th>{this.props.lang.CONTENT}</th>
               <td><textarea ref="content" placeholder="Say something..."></textarea></td>
             </tr>
             <tr>
