@@ -408,6 +408,10 @@ th {
   text-align: center;
 }
 
+.commentList span.keyword {
+  background-color: yellow;
+}
+
 .pagination .pagination-item {
   height: 22px;
   padding: 0 8px;
