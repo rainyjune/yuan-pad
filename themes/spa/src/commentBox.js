@@ -80,8 +80,12 @@ var CommentStatistics = React.createClass({
 
 var CommentList = React.createClass({
   render: function() {
-    var lang = this.props.lang;
+    var lang = this.props.lang,
+        searchText = this.props.searchText,
+        isSearchResult = this.props.commentsDataType === 2;
+
     var commentNodes = this.props.data.map(function(comment) {
+      var text = isSearchResult ? comment.post_content.replace(searchText, "<span class='keyword'>" + searchText + "</span>") : comment.post_content;
       return (
         <Comment 
           uid={comment.uid}
@@ -93,7 +97,7 @@ var CommentList = React.createClass({
           reply_time = {comment.reply_time}
           time={comment.time}
           lang = {lang}>
-          {comment.post_content}
+          {text}
         </Comment>
       );
     });
@@ -230,6 +234,13 @@ var CommentBox = React.createClass({
     return (
       <div className="commentBox">
         <h1>{this.props.lang.WELCOME_POST}</h1>
+        <CommentList
+          commentsDataType={this.props.commentsDataType}
+          lang={this.props.lang}
+          appConfig={this.props.appConfig}
+          data={this.props.comments.comments}
+          searchText={this.props.searchText}
+        />
         <CommentStatistics 
           onCloseSearch={this.props.onCloseSearch}
           onPageChanged={this.props.onPageChanged}
@@ -240,11 +251,6 @@ var CommentBox = React.createClass({
           total={this.props.comments.total} 
           currentPage = {this.props.currentPage}
           pagenum={this.props.comments.pagenum} /> 
-        <CommentList 
-          commentsDataType={this.props.commentsDataType} 
-          lang={this.props.lang}
-          appConfig={this.props.appConfig}
-          data={this.props.comments.comments} />
         {commentForm}
       </div>
     );
