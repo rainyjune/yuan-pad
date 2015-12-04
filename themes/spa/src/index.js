@@ -3,7 +3,7 @@ var React = require('react'),
 var SearchBar = require('./searchBar.js');
 var CommentBox = require('./commentBox.js');
 var Header = require('./header.js');
-var AppFooter = require('./footer.js');
+var Footer = require('./footer.js');
 var dataProvider = require('./dataProvider.js');
 
 var App = React.createClass({
@@ -16,6 +16,7 @@ var App = React.createClass({
       registerErrorMsg: '',
       translations: {},
       appConfig: {},
+      searchText: '', // The search keyword
       currentPage: 0,
       commentsDataType: 1, // 1: Default list. 2: Search Result list
       commentsData: {
@@ -179,6 +180,11 @@ var App = React.createClass({
       this.loadCommentsFromServer();
     });
   },
+  handleKeywordInput: function(searchText) {
+    this.setState({
+      searchText: searchText
+    });
+  },
   render: function() {
     return (
       <div id="appbox">
@@ -202,9 +208,15 @@ var App = React.createClass({
           currentPage = {this.state.currentPage}
           appConfig={this.state.appConfig}
           commentsDataType={this.state.commentsDataType} 
-          comments={this.state.commentsData}  />
-        <SearchBar onSubmit={this.handleSearch} />
-        <AppFooter
+          comments={this.state.commentsData}  
+          searchText={this.state.searchText}
+        />
+        <SearchBar 
+          onSubmit={this.handleSearch} 
+          onUserInput={this.handleKeywordInput}
+          searchText={this.state.searchText}
+        />
+        <Footer
           lang={this.state.translations} 
           appConfig={this.state.appConfig}
           user={this.state.currentUser} />
