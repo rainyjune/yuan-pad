@@ -407,6 +407,25 @@ th {
 .commentBox h1 {
   text-align: center;
 }
+.commentBox .commentForm {
+  width: 90%;
+  margin: 20px auto 10px auto;
+}
+.commentBox .commentForm tr {
+  vertical-align: top;
+}
+.commentBox .commentForm tr th {
+  text-align: left;
+  font-weight: normal;
+  padding-right: 10px;
+}
+.commentBox .commentForm tr:first-child {
+  height: 35px;
+}
+.commentBox .commentForm textarea {
+  width: 600px;
+  height: 100px;
+}
 
 .commentList span.keyword {
   background-color: yellow;
