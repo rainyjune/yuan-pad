@@ -34,6 +34,9 @@ var PaginationItem = React.createClass({
 
 var Pagination = React.createClass({
   render: function() {
+    if(!this.props.appConfig.page_on || this.props.commentsDataType !== 1) {
+      return null;
+    }
     var items = [];
     for (var i = 0; i < this.props.total; i++) {
       items.push(<PaginationItem onPageChanged={this.props.onPageChanged} currentPage={this.props.currentPage} pageNumber={i} text={i+1} key={i} />);
@@ -64,12 +67,17 @@ var CommentStatistics = React.createClass({
   },
   render: function() {
     var closeSearchBtn = (this.props.commentsDataType === 2) ? <CloseSearchButton onCloseSearch={this.props.onCloseSearch} /> : '';
-    var pagination = (this.props.appConfig.page_on && this.props.commentsDataType === 1) ? <Pagination onPageChanged={this.props.onPageChanged} currentPage = {this.props.currentPage}  total={Math.ceil(this.props.total/this.props.appConfig.num_perpage)} /> : "";
     return (
       <div className="statistics">
         {closeSearchBtn}
         <p dangerouslySetInnerHTML={this.rawMarkup()} />
-        {pagination}
+        <Pagination 
+          onPageChanged={this.props.onPageChanged} 
+          currentPage = {this.props.currentPage}  
+          appConfig={this.props.appConfig}
+          commentsDataType={this.props.commentsDataType}
+          total={Math.ceil(this.props.total/this.props.appConfig.num_perpage)} 
+        />
       </div>
     );
   }

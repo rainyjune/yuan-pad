@@ -10,13 +10,11 @@ var AppFooter = React.createClass({
     };
   },
   render: function() {
-    var mail = "mailto:" + this.props.appConfig.admin_email;
-    
     return (
       <footer>
         <p>
           {this.props.appConfig.copyright_info}&nbsp;
-          <a href={mail}>{this.props.lang.ADMIN_EMAIL}</a>&nbsp;
+          <a href={"mailto:" + this.props.appConfig.admin_email}>{this.props.lang.ADMIN_EMAIL}</a>&nbsp;
           <span dangerouslySetInnerHTML={this.ACPMarkup()}></span>
         </p>
         <p>
