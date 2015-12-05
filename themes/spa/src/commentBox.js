@@ -184,6 +184,9 @@ var CommentForm = React.createClass({
     this.setState({text: e.target.value});
   },
   render: function() {
+    if(this.props.commentsDataType !== 1) {
+      return null;
+    }
     return (
       <form onSubmit={this.handleSubmit} className="commentForm">
         <table>
@@ -218,7 +221,6 @@ var CommentForm = React.createClass({
     
 var CommentBox = React.createClass({
   render: function() {
-    var commentForm = this.props.commentsDataType === 1 ? <CommentForm user={this.props.user} lang={this.props.lang} onCommentSubmit={this.props.onCommentSubmit}/> : '';
     return (
       <div className="commentBox">
         <h1>{this.props.lang.WELCOME_POST}</h1>
@@ -239,7 +241,12 @@ var CommentBox = React.createClass({
           total={this.props.comments.total} 
           currentPage = {this.props.currentPage}
           pagenum={this.props.comments.pagenum} /> 
-        {commentForm}
+        <CommentForm 
+          user={this.props.user} 
+          lang={this.props.lang} 
+          commentsDataType={this.props.commentsDataType}
+          onCommentSubmit={this.props.onCommentSubmit}
+        />
       </div>
     );
   }
