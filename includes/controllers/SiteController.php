@@ -18,7 +18,7 @@ class SiteController extends BaseController{
         $data=get_all_data(TRUE,TRUE,TRUE,TRUE);
         $current_page=isset($_GET['pid'])?(int)$_GET['pid']:0;
         $nums=count($data);
-        $pages=ceil($nums/ZFramework::app()->num_perpage);
+        $pages= ZFramework::app()->page_on ? ceil($nums/ZFramework::app()->num_perpage) : 1;
         if($current_page>=$pages)
             $current_page=$pages-1;
         if($current_page<0)
