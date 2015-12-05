@@ -133,19 +133,12 @@ var LogoutButton = React.createClass({
 var RegisterModal = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
-    
     var register = this.refs.register.value;
     var user = this.refs.user.value.trim();
     var pwd = this.refs.pwd.value.trim();
     var email = this.refs.email.value.trim();
     if (!user || !pwd || !email) return;
-    
     this.props.onRegisterSubmit({ register: register, user: user, pwd: pwd, email: email}); 
-    
-    /*
-    this.refs.user.value = ''; 
-    this.refs.password.value = ''; 
-    */
     return false;
   },
   render: function(){
@@ -201,12 +194,7 @@ var UserUpdateModal = React.createClass({
     var pwd = this.refs.pwd.value.trim();
     var email = this.refs.email.value.trim();
     if (!uid || !user || !pwd || !email) return;
-    
     this.props.onUserUpdateSubmit({ uid: uid, user: user, pwd: pwd, email: email}); 
-    
-    // TODO Clear the inputs.
-    //this.refs.user.value = ''; 
-    //this.refs.password.value = ''; 
     return false;
   },
   render: function(){
