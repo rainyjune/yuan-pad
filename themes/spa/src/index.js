@@ -170,11 +170,32 @@ var App = React.createClass({
     });
   },
   handleCommentSubmit: function(comment) {
+    var comments = this.state.commentsData;
+    var CommentData = {
+      id: Date.now(),
+      user: comment.user,
+      time: '12-05 16:50',
+      post_content: comment.content,
+    };
+
+    var commentArr = comments.comments.concat([]);
+    commentArr.unshift(CommentData);
+    if (this.state.appConfig.page_on) {
+      commentArr.pop();
+    }
+    var newComments = {
+      comments: commentArr,
+      pagenum: comments.pagenum, // TODO
+      total: comments.total + 1,
+      current_page: 0
+    };
+    this.setState({commentsData: newComments});
     dataProvider.createPost(comment, function(data) {
         this.loadCommentsFromServer();
       }.bind(this),
       function(xhr, status, err) {
-        debugger;
+        this.setState({commentsData: comments});
+        console.log("error", xhr, status, err);
       }.bind(this)
     );
   },
