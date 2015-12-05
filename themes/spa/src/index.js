@@ -98,7 +98,7 @@ var App = React.createClass({
       }.bind(this));
   },
   handleRegister: function(userData) {
-    dataProvider.signUp(function(data) {
+    dataProvider.signUp(userData,function(data) {
         console.log('create user result:', data);
         if (data.error) {
           if (this.isMounted()) {
