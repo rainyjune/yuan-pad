@@ -15,7 +15,11 @@ class SiteController extends BaseController{
     }
 
     public function actionIndex(){
-        $data=get_all_data(TRUE,TRUE,TRUE,TRUE);
+        if(isset ($_GET['ajax']) || defined('API_MODE')){ 
+          $data=get_all_data(false,TRUE,TRUE,TRUE);
+        } else {
+          $data=get_all_data(TRUE,TRUE,TRUE,TRUE);
+        }
         $current_page=isset($_GET['pid'])?(int)$_GET['pid']:0;
         $nums=count($data);
         $pages= ZFramework::app()->page_on ? ceil($nums/ZFramework::app()->num_perpage) : 1;
@@ -117,8 +121,11 @@ class SiteController extends BaseController{
             $current_tab=$_GET['subtab'];
         }
         $themes= get_all_themes();
-
-        $data=get_all_data(TRUE,false,TRUE,TRUE);
+        if(isset ($_GET['ajax']) || defined('API_MODE')){ 
+          $data=get_all_data(false, false, TRUE, TRUE);
+        } else {
+          $data=get_all_data(TRUE,false,TRUE,TRUE);
+        }
         $reply_data=  $this->_model->queryAll(parse_tbprefix("SELECT * FROM <reply>"));
         $ban_ip_info=  $this->_model->queryAll(parse_tbprefix("SELECT * FROM <badip>"));
 

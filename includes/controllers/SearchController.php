@@ -9,7 +9,11 @@ class SearchController extends BaseController{
         global $API_CODE;
         if(! empty($_REQUEST['s'])){
             $s=trim($_REQUEST['s']);
-            $data=get_all_data(true, true, false, true);
+            if(isset ($_GET['ajax']) || defined('API_MODE')){ 
+              $data=get_all_data(false, true, false, true);
+            } else {
+              $data=get_all_data(true, true, false, true);
+            }
             $result_array=array();
             foreach($data as $_data){
                 if(strpos(@$_data['user'],$s)!==false || strpos($_data['post_content'], $s)!==false || strpos($_data['reply_content'], $s)!==false || strpos($_data['b_username'], $s)!==false)
