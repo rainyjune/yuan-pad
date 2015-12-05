@@ -34,7 +34,6 @@ var PaginationItem = React.createClass({
 
 var Pagination = React.createClass({
   render: function() {
-    //console.log("The pagination feature was enabled, the total pages: ", this.props.total);
     var items = [];
     for (var i = 0; i < this.props.total; i++) {
       items.push(<PaginationItem onPageChanged={this.props.onPageChanged} currentPage={this.props.currentPage} pageNumber={i} text={i+1} key={i} />);
@@ -65,8 +64,6 @@ var CommentStatistics = React.createClass({
   },
   render: function() {
     var closeSearchBtn = (this.props.commentsDataType === 2) ? <CloseSearchButton onCloseSearch={this.props.onCloseSearch} /> : '';
-    //console.log('closeSearchBtn:', closeSearchBtn);
-    
     var pagination = (this.props.appConfig.page_on && this.props.commentsDataType === 1) ? <Pagination onPageChanged={this.props.onPageChanged} currentPage = {this.props.currentPage}  total={Math.ceil(this.props.total/this.props.appConfig.num_perpage)} /> : "";
     return (
       <div className="statistics">
@@ -131,8 +128,7 @@ var Comment = React.createClass({
   rawAuthorMarkup: function() {
     return { __html: this.props.uid ? this.props.b_username : this.props.user};
   },
-  render: function() {
-    
+  render: function() {    
     var reply = this.props.reply_content ? <Reply lang={this.props.lang} content={this.props.reply_content} date={this.props.reply_time} /> : '';
     return (
       <div className="comment">
@@ -168,9 +164,7 @@ var CommentForm = React.createClass({
     var author = this.state.username.trim();
     var text = this.refs.content.value.trim();
     if (!author || !text) return;
-    
     this.props.onCommentSubmit({ user: author, content: text}); 
-    
     this.refs.user.value = ''; 
     this.refs.content.value = ''; 
     return false;
@@ -182,7 +176,6 @@ var CommentForm = React.createClass({
     var userInputType = "text";
     var userInputValue = "anonymous";
     var labelContent = "";
-    
     var currentUser = this.props.user;
     console.log('currentUser:', currentUser);
     if (currentUser.admin || currentUser.user) {
