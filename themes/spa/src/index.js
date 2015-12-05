@@ -33,7 +33,11 @@ var App = React.createClass({
         if (data.error) {
           this.setState({loginErrorMsg: data.error_detail});
         } else {
-          this.setState({loginErrorMsg: '', currentUser: data});
+          this.setState({loginErrorMsg: '', currentUser: data}, function() {
+            if (data.uid) {
+              this.loadUserDataFromServer(data.uid);
+            }
+          });
         }
       }
     }.bind(this), function(){
