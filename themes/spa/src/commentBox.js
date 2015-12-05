@@ -84,7 +84,7 @@ var CommentList = React.createClass({
         searchText = this.props.searchText,
         isSearchResult = this.props.commentsDataType === 2;
 
-    var commentNodes = this.props.data.map(function(comment) {
+    var createCommentNodes = function(comment) {
       var text = isSearchResult ? comment.post_content.replace(searchText, "<span class='keyword'>" + searchText + "</span>") : comment.post_content;
       return (
         <Comment 
@@ -100,10 +100,10 @@ var CommentList = React.createClass({
           {text}
         </Comment>
       );
-    });
+    };
     return (
       <div className="commentList">
-        {commentNodes}
+        {this.props.data.map(createCommentNodes)}
       </div>
     );
   }
