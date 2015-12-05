@@ -93,7 +93,7 @@ return array(
     'NICKNAME'=>'NickName',
     'MESSAGE'=>'Message',
     'TIME'=>'Time',
-    'PAGE_NAV'=>'We have <span id="totalNum"> {num_of_post} </span> posts, <span id="totalPages"> {num_of_page} </span> pages',
+    'PAGE_NAV'=>'We have <span id="totalNum"> {num_of_post} </span> post(s), <span id="totalPages"> {num_of_page} </span> page(s)',
     'ADMIN_REPLIED'=>'<font color="red"> {admin_name} replied at {reply_time} :</font> {reply_content}',
     'CLICK_POST'=>'Click to post',
     'CONTENT'=>'Content',
