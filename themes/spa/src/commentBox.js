@@ -114,10 +114,7 @@ var Reply = React.createClass({
                       .replace('{reply_content}', this.props.content)};
   },
   render: function() {
-    return (
-      <div className="reply" dangerouslySetInnerHTML={this.rawMarkup()}>
-      </div>
-    );
+    return this.props.content ? (<div className="reply" dangerouslySetInnerHTML={this.rawMarkup()}></div>) : null;
   }
 });
 
@@ -129,13 +126,12 @@ var Comment = React.createClass({
     return { __html: this.props.uid ? this.props.b_username : this.props.user};
   },
   render: function() {    
-    var reply = this.props.reply_content ? <Reply lang={this.props.lang} content={this.props.reply_content} date={this.props.reply_time} /> : '';
     return (
       <div className="comment">
         <span className="commentAuthor" dangerouslySetInnerHTML={this.rawAuthorMarkup()}></span> 
         <span className="commentDate">{this.props.time}</span>
         <div className="commentText" dangerouslySetInnerHTML={this.rawMarkup()} />
-        {reply}
+        <Reply lang={this.props.lang} content={this.props.reply_content} date={this.props.reply_time} />
       </div>
     );
   }
