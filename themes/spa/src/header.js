@@ -109,13 +109,13 @@ var LogoutButton = React.createClass({
     this.setState({userUpdateModalIsOpen: false});
   },
   render: function() {
-    var updateButton = ' ';
-    if (this.props.user.user) {
-      updateButton = <UserUpdateButton lang={this.props.lang} onShowUpdateModal={this.openUserUpdateModal} />;
-    }
     return (
       <div>
-        {updateButton}&nbsp;
+        <UserUpdateButton
+          user={this.props.user}
+          lang={this.props.lang} 
+          onShowUpdateModal={this.openUserUpdateModal} 
+        />&nbsp;
         <a href='javascript:void(0);' onClick={this.props.onUserLogout}>{this.props.lang.LOGOUT}</a>
         <UserUpdateModal 
           user={this.props.user}
@@ -180,9 +180,7 @@ var RegisterModal = React.createClass({
 
 var UserUpdateButton = React.createClass({
   render: function() {
-    return (
-      <a href="javascript:void(0);" onClick={this.props.onShowUpdateModal}>{this.props.lang.UPDATE}</a>
-    );
+    return this.props.user.user ? (<a href="javascript:void(0);" onClick={this.props.onShowUpdateModal}>{this.props.lang.UPDATE}</a>) : null;
   }
 });
 
