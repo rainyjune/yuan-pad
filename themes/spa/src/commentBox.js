@@ -138,7 +138,9 @@ var Comment = React.createClass({
       <div className="comment">
         <span className="commentAuthor" dangerouslySetInnerHTML={this.rawAuthorMarkup()}></span> 
         <span className="commentDate">{this.props.time}</span>
-        <div className="commentText" dangerouslySetInnerHTML={this.rawMarkup()} />
+        <div className="commentText">
+         <p dangerouslySetInnerHTML={this.rawMarkup()} />
+        </div>
         <Reply lang={this.props.lang} content={this.props.reply_content} date={this.props.reply_time} />
       </div>
     );
