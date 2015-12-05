@@ -139,52 +139,43 @@ var Comment = React.createClass({
 
 var CommentForm = React.createClass({
   getInitialState: function() {
-    return {
-      username: 'anonymous'
-    };
+    // TODO
+    return {userInputType: 'text', labelContent: "", username: 'anonymous', text: ''};
   },
   componentWillReceiveProps: function(nextProps) {
+    var computedState = {};
     var propUser = nextProps.user;
-    var usernameValue = 'anonymous';
     if (propUser.admin) {
-      usernameValue = propUser.admin;
+      computedState.userInputType = "hidden";
+      computedState.username = propUser.admin;
+      computedState.labelContent = propUser.admin;
     } else if (propUser.user) {
-      usernameValue = propUser.user;
+      computedState.userInputType = "hidden";
+      computedState.username = propUser.user;
+      computedState.labelContent = propUser.user;
+    } else {
+      computedState.userInputType = "text";
+      computedState.username = 'anonymous';
+      computedState.labelContent = '';
     }
-    this.setState({
-      username: usernameValue
-    });
+    this.setState(computedState);
   },
   handleSubmit: function(e) {
     e.preventDefault();
     var author = this.state.username.trim();
-    var text = this.refs.content.value.trim();
+    var text = this.state.text.trim();
     if (!author || !text) return;
     this.props.onCommentSubmit({ user: author, content: text}); 
-    this.refs.user.value = ''; 
-    this.refs.content.value = ''; 
+    this.setState({text: ''});
     return false;
   },
   handleUsernameChange: function(e) {
     this.setState({username: e.target.value});
   },
+  handleTextChange: function(e) {
+    this.setState({text: e.target.value});
+  },
   render: function() {
-    var userInputType = "text";
-    var userInputValue = "anonymous";
-    var labelContent = "";
-    var currentUser = this.props.user;
-    console.log('currentUser:', currentUser);
-    if (currentUser.admin || currentUser.user) {
-      userInputType = "hidden";
-      if (currentUser.admin) {
-        userInputValue = currentUser.admin;
-        labelContent = currentUser.admin;
-      } else {
-        userInputValue = currentUser.user;
-        labelContent = currentUser.user;
-      }
-    }
-    
     return (
       <form onSubmit={this.handleSubmit} className="commentForm">
         <table>
@@ -194,16 +185,16 @@ var CommentForm = React.createClass({
               <td>
                 <input 
                   ref="user" 
-                  type={userInputType} 
+                  type={this.state.userInputType} 
                   maxLength="10" 
                   value={this.state.username}
                   onChange={this.handleUsernameChange} />
-                <label htmlFor="user">{labelContent}</label>
+                <label htmlFor="user">{this.state.labelContent}</label>
               </td>
             </tr>
             <tr>
               <th>{this.props.lang.CONTENT}</th>
-              <td><textarea ref="content" placeholder="Say something..."></textarea></td>
+              <td><textarea ref="content" onChange={this.handleTextChange} value={this.state.text}></textarea></td>
             </tr>
             <tr>
               <td colSpan="2">
