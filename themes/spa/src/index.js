@@ -27,23 +27,6 @@ var App = React.createClass({
       }
     };
   },
-  handleLoginSubmit: function(loginData) {
-    dataProvider.login(loginData, function(data){
-      if (this.isMounted()) {
-        if (data.error) {
-          this.setState({loginErrorMsg: data.error_detail});
-        } else {
-          this.setState({loginErrorMsg: '', currentUser: data}, function() {
-            if (data.uid) {
-              this.loadUserDataFromServer(data.uid);
-            }
-          });
-        }
-      }
-    }.bind(this), function(){
-      debugger;
-    }.bind(this));
-  },
   loadUserDataFromServer: function(uid) {
     dataProvider.loadUserDataFromServer(uid, function(data){
         console.log('user info from server:', data);
@@ -76,49 +59,14 @@ var App = React.createClass({
     }.bind(this));
   },
   handleLogout: function() {
-    dataProvider.logout(function(data){
-      if (this.isMounted()) {
-        this.setState({ currentUser: {} });
-      }
-    }.bind(this), function(){
-      debugger;
-    }.bind(this)); 
+    if (this.isMounted()) {
+      this.setState({ currentUser: {}, userDetailedData: {} });
+    }
   },
-  handleUserUpdate: function(userData) {
-    dataProvider.updateUser(userData, function(data) {
-        console.log('update user result:', data, userData);
-        if (data.error) {
-          if (this.isMounted()) {
-            this.setState({userUpdateErrorMsg: data.error_detail});
-          }
-        } else {
-          if (this.isMounted()) {
-            this.setState({userUpdateErrorMsg: '', currentUser: userData});
-          }
-        }
-      }.bind(this),
-      function(xhr, status, err) {
-        debugger;
-      }.bind(this));
-  },
-  handleRegister: function(userData) {
-    dataProvider.signUp(userData,function(data) {
-        console.log('create user result:', data);
-        if (data.error) {
-          if (this.isMounted()) {
-            this.setState({registerErrorMsg: data.error_detail});
-          }
-        } else {
-          if (this.isMounted()) {
-            this.setState({registerErrorMsg: '', currentUser: data});
-          }
-          this.loadUserDataFromServer(data.uid); // Load user profile from server.
-        }
-      }.bind(this),
-      function(xhr, status, err) {
-        debugger;
-      }.bind(this)
-    );
+  handleUserUpdated: function() {
+    if (this.state.currentUser && this.state.currentUser.uid) {
+      this.loadUserDataFromServer(this.state.currentUser.uid);
+    }
   },
   loadCommentsFromServer: function() {
     dataProvider.loadCommentsFromServer(this.state.currentPage, function(data) {
@@ -210,13 +158,28 @@ var App = React.createClass({
       searchText: searchText
     });
   },
+  handleUserSignedIn: function(signedInUser) {
+    this.setState({currentUser: signedInUser}, function() {
+      if (signedInUser.uid) {
+        this.loadUserDataFromServer(signedInUser.uid);
+      }
+    });
+  },
+  handleSignedUp: function(userData) {
+    this.setState({currentUser: userData}, function() {
+      if (userData.uid) {
+        this.loadUserDataFromServer(userData.uid);
+      }
+    });
+  },
   render: function() {
     return (
       <div id="appbox">
         <Header 
-          onRegisterSubmit={this.handleRegister} 
-          onUserUpdate={this.handleUserUpdate} 
+          onSignedUp={this.handleSignedUp} 
+          onUserUpdated={this.handleUserUpdated} 
           onUserLogout={this.handleLogout} 
+          onUserSignedIn={this.handleUserSignedIn}
           onLoginSubmit={this.handleLoginSubmit}
           registerErrorMsg={this.state.registerErrorMsg} 
           loginErrorMsg={this.state.loginErrorMsg} 
