@@ -12,47 +12,11 @@ const customStyles = {
   }
 };
 
-var LoginButton = React.createClass({
-  getInitialState: function() {
-    return {
-      registerModalIsOpen: false,
-      loginModalIsOpen: false
-    };
-  },
-  openLoginModal: function() {
-    this.setState({loginModalIsOpen: true});
-  },
-  openRegisterModal: function() {
-    this.setState({registerModalIsOpen: true});
-  },
-  closeLoginModal: function() {
-    this.setState({loginModalIsOpen: false});
-  },
-  closeRegisterModal: function() {
-    this.setState({registerModalIsOpen: false});
-  },
+var LoginButton = React.createClass({  
   render: function() {
-    if (this.props.user.admin || this.props.user.user) {
-      return null;
-    }
-    return (
-      <div>
-        <a href='javascript:void(0);' onClick={this.openRegisterModal}>{this.props.lang.REGISTER}</a>&nbsp;
-        <a href='javascript:void(0);' onClick={this.openLoginModal}>{this.props.lang.LOGIN}</a>
-        <LoginModal 
-          loginErrorMsg={this.props.loginErrorMsg} 
-          onLoginSubmit={this.props.onLoginSubmit} 
-          loginModalIsOpen={this.state.loginModalIsOpen} 
-          onRequestClose={this.closeLoginModal} 
-          lang={this.props.lang} />
-        <RegisterModal 
-          registerErrorMsg={this.props.registerErrorMsg} 
-          onRegisterSubmit={this.props.onRegisterSubmit} 
-          registerModalIsOpen={this.state.registerModalIsOpen} 
-          onRequestClose={this.closeRegisterModal} 
-          lang={this.props.lang} />
-      </div>
-    );
+    return (this.props.user.admin || this.props.user.user) ?
+           null : 
+           (<a href='javascript:void(0);' onClick={this.props.onOpenLoginModal}>{this.props.lang.LOGIN}</a>);
   }
 });
 
@@ -112,27 +76,17 @@ var LogoutButton = React.createClass({
     this.setState({userUpdateModalIsOpen: false});
   },
   render: function() {
-    if (!this.props.user.admin && !this.props.user.user) {
-      return null;
-    }
-    return (
-      <div>
-        <UserUpdateButton
-          user={this.props.user}
-          lang={this.props.lang} 
-          onShowUpdateModal={this.openUserUpdateModal} 
-        />&nbsp;
-        <a href='javascript:void(0);' onClick={this.props.onUserLogout}>{this.props.lang.LOGOUT}</a>
-        <UserUpdateModal 
-          user={this.props.user}
-          userDetailedData={this.props.userDetailedData}
-          userUpdateErrorMsg={this.props.userUpdateErrorMsg} 
-          onUserUpdateSubmit={this.props.onUserUpdateSubmit} 
-          userUpdateModalIsOpen={this.state.userUpdateModalIsOpen} 
-          onRequestClose={this.closeUserUpdateModal} 
-          lang={this.props.lang} />
-      </div>
-    );
+    return (!this.props.user.admin && !this.props.user.user) ?
+           null :
+           (<a href='javascript:void(0);' onClick={this.props.onUserLogout}>{this.props.lang.LOGOUT}</a>);
+  }
+});
+
+var RegisterButton = React.createClass({
+  render: function() {
+    return (this.props.user.admin || this.props.user.user) ?
+           null : 
+           (<a href='javascript:void(0);' onClick={this.props.onOpenRegisterModal}>{this.props.lang.REGISTER}</a>);
   }
 });
 
@@ -234,6 +188,24 @@ var UserUpdateModal = React.createClass({
 });
 
 var Header = React.createClass({
+  getInitialState: function() {
+    return {
+      registerModalIsOpen: false,
+      loginModalIsOpen: false
+    };
+  },
+  openLoginModal: function() {
+    this.setState({loginModalIsOpen: true});
+  },
+  openRegisterModal: function() {
+    this.setState({registerModalIsOpen: true});
+  },
+  closeLoginModal: function() {
+    this.setState({loginModalIsOpen: false});
+  },
+  closeRegisterModal: function() {
+    this.setState({registerModalIsOpen: false});
+  },
   render: function() {
     return (
       <div className="header">
@@ -243,15 +215,50 @@ var Header = React.createClass({
           user={this.props.user} 
           userDetailedData={this.props.userDetailedData}
           lang={this.props.lang} 
+          onOpenLoginModal={this.openLoginModal}
           onRegisterSubmit={this.props.onRegisterSubmit} 
           onLoginSubmit={this.props.onLoginSubmit} 
+        />
+        <LoginModal 
+          loginErrorMsg={this.props.loginErrorMsg} 
+          onLoginSubmit={this.props.onLoginSubmit} 
+          loginModalIsOpen={this.state.loginModalIsOpen} 
+          onRequestClose={this.closeLoginModal} 
+          lang={this.props.lang} 
         />
         <LogoutButton 
           user={this.props.user} 
           userDetailedData={this.props.userDetailedData}
           lang={this.props.lang} 
           onUserUpdateSubmit={this.props.onUserUpdate} 
-          onUserLogout={this.props.onUserLogout} />
+          onUserLogout={this.props.onUserLogout} 
+        />
+        <RegisterButton
+          user={this.props.user} 
+          lang={this.props.lang} 
+          onOpenRegisterModal={this.openRegisterModal}
+        />
+        <RegisterModal 
+          registerErrorMsg={this.props.registerErrorMsg} 
+          onRegisterSubmit={this.props.onRegisterSubmit} 
+          registerModalIsOpen={this.state.registerModalIsOpen} 
+          onRequestClose={this.closeRegisterModal} 
+          lang={this.props.lang} 
+        />
+        <UserUpdateButton
+          user={this.props.user}
+          lang={this.props.lang} 
+          onShowUpdateModal={this.openUserUpdateModal} 
+        />
+        <UserUpdateModal 
+          user={this.props.user}
+          userDetailedData={this.props.userDetailedData}
+          userUpdateErrorMsg={this.props.userUpdateErrorMsg} 
+          onUserUpdateSubmit={this.props.onUserUpdateSubmit} 
+          userUpdateModalIsOpen={this.state.userUpdateModalIsOpen} 
+          onRequestClose={this.closeUserUpdateModal} 
+          lang={this.props.lang} 
+        />
       </div>
     );
   }
