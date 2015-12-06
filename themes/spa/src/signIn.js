@@ -34,13 +34,6 @@ var SignIn = React.createClass({
         } else {
           this.setState({loginErrorMsg: '', loginModalIsOpen: false});
           this.props.onUserSignedIn(data);
-          /*
-          , currentUser: data}, function() {
-            if (data.uid) {
-              this.loadUserDataFromServer(data.uid);
-            }
-          });
-          */
         }
       }
     }.bind(this), function(){
