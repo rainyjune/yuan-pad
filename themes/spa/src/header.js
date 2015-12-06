@@ -32,6 +32,9 @@ var LoginButton = React.createClass({
     this.setState({registerModalIsOpen: false});
   },
   render: function() {
+    if (this.props.user.admin || this.props.user.user) {
+      return null;
+    }
     return (
       <div>
         <a href='javascript:void(0);' onClick={this.openRegisterModal}>{this.props.lang.REGISTER}</a>&nbsp;
@@ -109,6 +112,9 @@ var LogoutButton = React.createClass({
     this.setState({userUpdateModalIsOpen: false});
   },
   render: function() {
+    if (!this.props.user.admin && !this.props.user.user) {
+      return null;
+    }
     return (
       <div>
         <UserUpdateButton
@@ -229,21 +235,23 @@ var UserUpdateModal = React.createClass({
 
 var Header = React.createClass({
   render: function() {
-    var loginButton;
-    if (this.props.user.admin || this.props.user.user) {
-      loginButton = <LogoutButton 
-        user={this.props.user} 
-        userDetailedData={this.props.userDetailedData}
-        lang={this.props.lang} 
-        onUserUpdateSubmit={this.props.onUserUpdate} 
-        onUserLogout={this.props.onUserLogout} />;
-    } else {
-      loginButton = <LoginButton registerErrorMsg={this.props.registerErrorMsg} loginErrorMsg={this.props.loginErrorMsg} lang={this.props.lang} onRegisterSubmit={this.props.onRegisterSubmit} onLoginSubmit={this.props.onLoginSubmit} />;
-    }
-
     return (
       <div className="header">
-        {loginButton}
+        <LoginButton 
+          registerErrorMsg={this.props.registerErrorMsg} 
+          loginErrorMsg={this.props.loginErrorMsg} 
+          user={this.props.user} 
+          userDetailedData={this.props.userDetailedData}
+          lang={this.props.lang} 
+          onRegisterSubmit={this.props.onRegisterSubmit} 
+          onLoginSubmit={this.props.onLoginSubmit} 
+        />
+        <LogoutButton 
+          user={this.props.user} 
+          userDetailedData={this.props.userDetailedData}
+          lang={this.props.lang} 
+          onUserUpdateSubmit={this.props.onUserUpdate} 
+          onUserLogout={this.props.onUserLogout} />
       </div>
     );
   }
