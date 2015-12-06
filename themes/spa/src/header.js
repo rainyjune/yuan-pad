@@ -1,6 +1,8 @@
 var React = require('react');
 var Modal = require('react-modal');
 
+var SignIn = require('./signIn.js');
+
 const customStyles = {
   content : {
     top                   : '50%',
@@ -11,57 +13,6 @@ const customStyles = {
     transform             : 'translate(-50%, -50%)'
   }
 };
-
-var LoginButton = React.createClass({  
-  render: function() {
-    return (this.props.user.admin || this.props.user.user) ?
-           null : 
-           (<a href='javascript:void(0);' onClick={this.props.onOpenLoginModal}>{this.props.lang.LOGIN}</a>);
-  }
-});
-
-var LoginModal = React.createClass({
-  handleSubmit: function(e) {
-    e.preventDefault();
-    var user = this.refs.user.value.trim();
-    var pwd = this.refs.password.value.trim();
-    if (!user || !pwd) return;
-    
-    this.props.onLoginSubmit({ user: user, password: pwd}); 
-    
-    this.refs.user.value = ''; 
-    this.refs.password.value = ''; 
-    return false;
-  },
-  render: function(){
-    return (
-      <Modal isOpen={this.props.loginModalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
-        <h2>Login</h2>
-        <p>{this.props.loginErrorMsg}</p>
-        <button onClick={this.props.onRequestClose}>close</button>
-        <form onSubmit={this.handleSubmit} action="index.php?controller=user&amp;action=login" method="post">
-          <table>
-            <tbody>
-              <tr>
-                <td><label>{this.props.lang.USERNAME}</label></td>
-                <td><input type="text" ref="user" size="20" /></td>
-              </tr>
-              <tr>
-                <td><label>{this.props.lang.ADMIN_PWD}</label></td>
-                <td><input type="password" ref="password" size="20" /></td>
-              </tr>
-              <tr>
-                <td colSpan="2">
-                  <input id="submit_button" name="submit" type="submit" value={this.props.lang.SUBMIT} />
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </form>
-      </Modal>
-    );
-  }
-});
 
 var LogoutButton = React.createClass({
   getInitialState: function() {
@@ -194,37 +145,21 @@ var Header = React.createClass({
       loginModalIsOpen: false
     };
   },
-  openLoginModal: function() {
-    this.setState({loginModalIsOpen: true});
-  },
+  
   openRegisterModal: function() {
     this.setState({registerModalIsOpen: true});
   },
-  closeLoginModal: function() {
-    this.setState({loginModalIsOpen: false});
-  },
+  
   closeRegisterModal: function() {
     this.setState({registerModalIsOpen: false});
   },
   render: function() {
     return (
       <div className="header">
-        <LoginButton 
-          registerErrorMsg={this.props.registerErrorMsg} 
-          loginErrorMsg={this.props.loginErrorMsg} 
+        <SignIn 
           user={this.props.user} 
-          userDetailedData={this.props.userDetailedData}
           lang={this.props.lang} 
-          onOpenLoginModal={this.openLoginModal}
-          onRegisterSubmit={this.props.onRegisterSubmit} 
-          onLoginSubmit={this.props.onLoginSubmit} 
-        />
-        <LoginModal 
-          loginErrorMsg={this.props.loginErrorMsg} 
-          onLoginSubmit={this.props.onLoginSubmit} 
-          loginModalIsOpen={this.state.loginModalIsOpen} 
-          onRequestClose={this.closeLoginModal} 
-          lang={this.props.lang} 
+          onUserSignedIn={this.props.onUserSignedIn}
         />
         <LogoutButton 
           user={this.props.user} 
