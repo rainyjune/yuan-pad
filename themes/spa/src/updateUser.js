@@ -56,7 +56,6 @@ var UserUpdate = React.createClass({
                   lang={this.props.lang}
                   userUpdateModalIsOpen={this.state.userUpdateModalIsOpen}
                   userUpdateErrorMsg={this.state.userUpdateErrorMsg}
-                  userDetailedData={this.props.userDetailedData}
                   onRequestClose={this.closeUserUpdateModal}
                   onUserUpdateSubmit={this.handleUserUpdate}
                 />

@@ -22,7 +22,6 @@ var Header = React.createClass({
         />
         <UpdateUser 
           user={this.props.user}
-          userDetailedData = {this.props.userDetailedData}
           lang={this.props.lang} 
           onUserUpdated={this.props.onUserUpdated}
         />

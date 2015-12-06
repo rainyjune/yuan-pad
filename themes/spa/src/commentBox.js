@@ -34,7 +34,7 @@ var PaginationItem = React.createClass({
 
 var Pagination = React.createClass({
   render: function() {
-    if(!this.props.appConfig.page_on || this.props.commentsDataType !== 1) {
+    if(!this.props.appConfig.page_on || this.props.commentListType !== 1) {
       return null;
     }
     var items = [];
@@ -52,10 +52,10 @@ var Pagination = React.createClass({
 var CommentStatistics = React.createClass({
   rawMarkup: function() {
     var pagenavText, text;
-    if (this.props.commentsDataType === 1) {
+    if (this.props.commentListType === 1) {
       pagenavText = this.props.lang.PAGE_NAV;
       text = pagenavText ? pagenavText.replace('{num_of_post}', this.props.total).replace('{num_of_page}', this.props.pagenum) : '';
-    } else if (this.props.commentsDataType === 2) {
+    } else if (this.props.commentListType === 2) {
       if ( this.props.total ) {
         pagenavText = this.props.lang.SEARCH_FOUND;
         text = pagenavText ? pagenavText.replace('{result_num}', this.props.total) : '';
@@ -66,7 +66,7 @@ var CommentStatistics = React.createClass({
     return { __html: text };
   },
   render: function() {
-    var closeSearchBtn = (this.props.commentsDataType === 2) ? <CloseSearchButton onCloseSearch={this.props.onCloseSearch} /> : '';
+    var closeSearchBtn = (this.props.commentListType === 2) ? <CloseSearchButton onCloseSearch={this.props.onCloseSearch} /> : '';
     return (
       <div className="statistics">
         {closeSearchBtn}
@@ -75,7 +75,7 @@ var CommentStatistics = React.createClass({
           onPageChanged={this.props.onPageChanged} 
           currentPage = {this.props.currentPage}  
           appConfig={this.props.appConfig}
-          commentsDataType={this.props.commentsDataType}
+          commentListType={this.props.commentListType}
           total={Math.ceil(this.props.total/this.props.appConfig.num_perpage)} 
         />
       </div>
@@ -87,7 +87,7 @@ var CommentList = React.createClass({
   render: function() {
     var lang = this.props.lang,
         searchText = this.props.searchText,
-        isSearchResult = this.props.commentsDataType === 2;
+        isSearchResult = this.props.commentListType === 2;
 
     var createCommentNodes = function(comment) {
       var text = isSearchResult ? comment.post_content.replace(searchText, "<span class='keyword'>" + searchText + "</span>") : comment.post_content;
@@ -186,7 +186,7 @@ var CommentForm = React.createClass({
     this.setState({text: e.target.value});
   },
   render: function() {
-    if(this.props.commentsDataType !== 1) {
+    if(this.props.commentListType !== 1) {
       return null;
     }
     return (
@@ -227,26 +227,25 @@ var CommentBox = React.createClass({
       <div className="commentBox">
         <h1>{this.props.lang.WELCOME_POST}</h1>
         <CommentList
-          commentsDataType={this.props.commentsDataType}
+          commentListType={this.props.commentListType}
           lang={this.props.lang}
           appConfig={this.props.appConfig}
-          data={this.props.comments.comments}
+          data={this.props.comments}
           searchText={this.props.searchText}
         />
         <CommentStatistics 
           onCloseSearch={this.props.onCloseSearch}
           onPageChanged={this.props.onPageChanged}
-          commentsDataType={this.props.commentsDataType} 
+          commentListType={this.props.commentListType} 
           lang={this.props.lang} 
           appConfig={this.props.appConfig}
-          current_page={this.props.comments.current_page} 
-          total={this.props.comments.total} 
+          total={this.props.commentsTotalNumber} 
           currentPage = {this.props.currentPage}
-          pagenum={this.props.comments.pagenum} /> 
+          pagenum={Math.ceil(this.props.commentsTotalNumber/this.props.appConfig.num_perpage)} /> 
         <CommentForm 
           user={this.props.user} 
           lang={this.props.lang} 
-          commentsDataType={this.props.commentsDataType}
+          commentListType={this.props.commentListType}
           onCommentSubmit={this.props.onCommentSubmit}
         />
       </div>

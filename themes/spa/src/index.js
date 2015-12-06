@@ -9,29 +9,21 @@ var dataProvider = require('./dataProvider.js');
 var App = React.createClass({
   getInitialState: function() {
     return {
-      currentUser: {},
-      userDetailedData: {},
-      loginErrorMsg: '',
-      userUpdateErrorMsg: '',
-      registerErrorMsg: '',
-      translations: {},
       appConfig: {},
-      searchText: '', // The search keyword
+      comments: [],
+      commentsTotalNumber: 0, // The total number of all comments or filtered comments.
+      commentListType: 1, // 1: Default list. 2: Search Result list
       currentPage: 0,
-      commentsDataType: 1, // 1: Default list. 2: Search Result list
-      commentsData: {
-        comments: [],
-        pagenum: 0,
-        total: 0,
-        current_page: 1
-      }
+      currentUser: {},
+      searchText: '', // The search keyword
+      translations: {}
     };
   },
   loadUserDataFromServer: function(uid) {
     dataProvider.loadUserDataFromServer(uid, function(data){
         console.log('user info from server:', data);
         if (this.isMounted()) {
-          this.setState({userDetailedData: data});
+          this.setState({currentUser: data});
         }
       }.bind(this), function(){
       }.bind(this));
@@ -43,24 +35,19 @@ var App = React.createClass({
         data = {};
       }
       if (this.isMounted()) {
-        this.setState({currentUser: data}, function(){
-          this.loadCommentsFromServer();
-          if (data.uid) {
-            this.loadUserDataFromServer(data.uid);
-          }
-        });
+        if (data.uid) {
+          this.loadUserDataFromServer(data.uid)
+        } else {
+          this.setState({currentUser: data});
+        }
+        this.loadCommentsFromServer();
       }
     }.bind(this), function(){
     }.bind(this));
   },
-  getAppConfig: function(successCallback) {
-    dataProvider.getAppConfig(successCallback.bind(this), function(){
-      debugger;
-    }.bind(this));
-  },
   handleLogout: function() {
     if (this.isMounted()) {
-      this.setState({ currentUser: {}, userDetailedData: {} });
+      this.setState({ currentUser: {} });
     }
   },
   handleUserUpdated: function() {
@@ -72,13 +59,9 @@ var App = React.createClass({
     dataProvider.loadCommentsFromServer(this.state.currentPage, function(data) {
         if (this.isMounted()) {
           this.setState({
-            commentsDataType: 1,
-            commentsData: {
-              comments: data.messages,
-              pagenum: data.pagenum,
-              total: data.total,
-              current_page: data.current_page 
-            }
+            comments: data.messages,
+            commentsTotalNumber: data.total,
+            commentListType: 1
           });
         }
       }.bind(this),
@@ -92,13 +75,9 @@ var App = React.createClass({
         console.log('search result:', data);
         if (this.isMounted()) {
           this.setState({
-            commentsDataType: 2,
-            commentsData:{
-              comments: data.messages,
-              pagenum: 1,
-              total: data.nums,
-              current_page: 1
-            }
+            comments: data.messages,
+            commentsTotalNumber: data.nums,
+            commentListType: 2
           });
         }
       }.bind(this),
@@ -108,14 +87,14 @@ var App = React.createClass({
     );
   },
   componentDidMount: function() {
-    this.getAppConfig(function(data){
+    dataProvider.getAppConfig(function(data){
       if (this.isMounted()) {
         this.setState({translations: data.translations});
         // TODO Duplicate data.
         this.setState({appConfig: data});
       }
       this.getUserInfo();
-    });
+    }.bind(this));
   },
   handleCommentSubmit: function(comment) {
     var comments = this.state.commentsData;
@@ -175,18 +154,6 @@ var App = React.createClass({
   render: function() {
     return (
       <div id="appbox">
-        <Header 
-          onSignedUp={this.handleSignedUp} 
-          onUserUpdated={this.handleUserUpdated} 
-          onUserLogout={this.handleLogout} 
-          onUserSignedIn={this.handleUserSignedIn}
-          onLoginSubmit={this.handleLoginSubmit}
-          registerErrorMsg={this.state.registerErrorMsg} 
-          loginErrorMsg={this.state.loginErrorMsg} 
-          user={this.state.currentUser} 
-          userDetailedData = {this.state.userDetailedData}
-          appConfig={this.state.appConfig}
-          lang={this.state.translations} />
         <CommentBox 
           onCommentSubmit={this.handleCommentSubmit}
           onCloseSearch={this.loadCommentsFromServer}
@@ -195,8 +162,9 @@ var App = React.createClass({
           lang={this.state.translations} 
           currentPage = {this.state.currentPage}
           appConfig={this.state.appConfig}
-          commentsDataType={this.state.commentsDataType} 
-          comments={this.state.commentsData}  
+          commentListType={this.state.commentListType} 
+          comments={this.state.comments} 
+          commentsTotalNumber={this.state.commentsTotalNumber}
           searchText={this.state.searchText}
         />
         <SearchBar 
@@ -207,11 +175,29 @@ var App = React.createClass({
         <Footer
           lang={this.state.translations} 
           appConfig={this.state.appConfig}
-          user={this.state.currentUser} />
+          user={this.state.currentUser} 
+        />
       </div>
     );
   }
 });
+
+/*
+<Header 
+          onSignedUp={this.handleSignedUp} 
+          onUserUpdated={this.handleUserUpdated} 
+          onUserLogout={this.handleLogout} 
+          onUserSignedIn={this.handleUserSignedIn}
+          onLoginSubmit={this.handleLoginSubmit}
+          registerErrorMsg={this.state.registerErrorMsg} 
+          loginErrorMsg={this.state.loginErrorMsg} 
+          user={this.state.currentUser} 
+          appConfig={this.state.appConfig}
+          lang={this.state.translations} />
+        
+
+        
+          */
 
 ReactDOM.render(
   <App />,
