@@ -5,6 +5,7 @@ var ACPHeader = require('./acp-header.js');
 var ACPTabHeader = require('./acp-tabHeader.js');
 var ACPTabContent = require('./acp-tabContent.js');
 var ACPFooter = require('./acp-footer.js');
+var dataProvider = require('./dataProvider.js');
 
 var ACPBox = React.createClass({
   getInitialState: function() {
@@ -23,26 +24,13 @@ var ACPBox = React.createClass({
         this.setState({appConfig: data});
       }
       this.getUserInfo();
-      this.getACPData(function(data){
+      dataProvider.getACPData(function(data){
         this.setState({
           acpData: data
         });
-      });
+      }.bind(this));
     });
   },
-  getACPData: function(successCallback) {
-    yuanjs.ajax({
-      type: "GET",
-      url: 'api.php',
-      data: {action: "control_panel",t:Date.now()},
-      cache: false,
-      dataType: "json",
-      success: successCallback.bind(this),
-      error: function(){
-        debugger;
-      }.bind(this) 
-    });
-  },    
   // TODO Reuse
   getAppConfig: function(successCallback) {
     yuanjs.ajax({
