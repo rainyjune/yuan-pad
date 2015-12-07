@@ -110,8 +110,21 @@ function createPost(comment, successCallback, errorCallback) {
     });
 }
 
+function getACPData(successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "GET",
+    url: 'api.php',
+    data: {action: "control_panel",t:Date.now()},
+    cache: false,
+    dataType: "json",
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
 module.exports = {
   createPost: createPost,
+  getACPData: getACPData,
   login: login,
   logout: logout,
   signUp: signUp,
