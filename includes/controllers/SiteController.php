@@ -157,6 +157,8 @@ class SiteController extends BaseController{
             'languages'=>$languages,
             'data'=>$data,
             'ban_ip_info'=>$ban_ip_info,
+            'yuanpad_version'=>MP_VERSION,
+            'php_version'=>PHP_VERSION,
             );
         if (defined('API_MODE')) {
           header("Content-type: application/json");
@@ -238,6 +240,7 @@ HERE;
         $result["timezone"] = ZFramework::app()->timezone;
         $result["filter_type"] = ZFramework::app()->filter_type;
         $result["allowed_tags"] = ZFramework::app()->allowed_tags;
+        $result["admin"] = ZFramework::app()->admin;
         
         
         header("Content-type: application/json");
