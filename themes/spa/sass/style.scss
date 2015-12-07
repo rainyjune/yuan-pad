@@ -8,6 +8,19 @@
   padding: 5px;
 }
 
+.header {
+  overflow: auto;
+
+  .signIn,
+  .signUp,
+  .updateUser,
+  .signOutButton {
+    display: inline-block;
+    float: left;
+    margin-right: 5px;
+  }
+}
+
 .commentBox {
   h1 {
     text-align: center;

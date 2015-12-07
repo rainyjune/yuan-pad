@@ -404,6 +404,18 @@ th {
   padding: 5px;
 }
 
+.header {
+  overflow: auto;
+}
+.header .signIn,
+.header .signUp,
+.header .updateUser,
+.header .signOutButton {
+  display: inline-block;
+  float: left;
+  margin-right: 5px;
+}
+
 .commentBox h1 {
   text-align: center;
 }
@@ -503,3 +515,5 @@ footer {
   margin-top: 15px;
   text-align: center;
 }
+
+/*# sourceMappingURL=style.css.map */
