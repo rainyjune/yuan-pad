@@ -19,6 +19,7 @@ var App = React.createClass({
       translations: {}
     };
   },
+  // Get a regular user profile by uid.
   loadUserDataFromServer: function(uid) {
     dataProvider.loadUserDataFromServer(uid, function(data){
         console.log('user info from server:', data);
@@ -28,6 +29,7 @@ var App = React.createClass({
       }.bind(this), function(){
       }.bind(this));
   },
+  // Get current user identity from server.
   getUserInfo: function() {
     dataProvider.getUserInfo(function(data){
       console.log('user info:', data);
@@ -45,16 +47,19 @@ var App = React.createClass({
     }.bind(this), function(){
     }.bind(this));
   },
+  // Update the `currentUser` state to default value.
   handleLogout: function() {
     if (this.isMounted()) {
       this.setState({ currentUser: {} });
     }
   },
+  // Reload user profile from server by uid.
   handleUserUpdated: function() {
     if (this.state.currentUser && this.state.currentUser.uid) {
       this.loadUserDataFromServer(this.state.currentUser.uid);
     }
   },
+  // Load comments to be displayed on page by page number.
   loadCommentsFromServer: function() {
     dataProvider.loadCommentsFromServer(this.state.currentPage, function(data) {
         if (this.isMounted()) {
@@ -70,6 +75,7 @@ var App = React.createClass({
       }.bind(this)
     );
   },
+  // Get comments from server according to the keyword user has entered.
   handleSearch: function(keyword) {
     dataProvider.search(keyword, function(data) {
         console.log('search result:', data);
@@ -86,6 +92,7 @@ var App = React.createClass({
       }.bind(this)
     );
   },
+  // When the component is rendered, load the site configuration from server, and then try to indentify current user.
   componentDidMount: function() {
     dataProvider.getAppConfig(function(data){
       if (this.isMounted()) {
@@ -96,6 +103,7 @@ var App = React.createClass({
       this.getUserInfo();
     }.bind(this));
   },
+  // Save comment to the server, reload comments after saved sucessfully.
   handleCommentSubmit: function(comment) {
     var comments = this.state.comments;
     var newComment = {
@@ -124,17 +132,20 @@ var App = React.createClass({
       }.bind(this)
     );
   },
+  // Reload comments from server if the `currentPage` state changed.
   handlePageChange: function(pageNumber) {
     pageNumber = parseInt(pageNumber);
     this.setState({currentPage: pageNumber}, function(){
       this.loadCommentsFromServer();
     });
   },
+  // Update the `searchText` state.
   handleKeywordInput: function(searchText) {
     this.setState({
       searchText: searchText
     });
   },
+  // Update the `currentUser` state after a user signed in.
   handleUserSignedIn: function(signedInUser) {
     if (signedInUser.admin) {
       this.setState({currentUser: signedInUser});
@@ -142,6 +153,7 @@ var App = React.createClass({
       this.loadUserDataFromServer(signedInUser.uid);
     }
   },
+  // Reload a regular user profile from server after the user signed up successfully.
   handleSignedUp: function(userData) {
     if (userData.uid) {
       this.loadUserDataFromServer(userData.uid);
