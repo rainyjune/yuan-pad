@@ -19,9 +19,7 @@ var ACPBox = React.createClass({
   componentDidMount: function() {
     dataProvider.getAppConfig(function(data){
       if (this.isMounted()) {
-        this.setState({translations: data.translations});
-        // TODO Duplicate data.
-        this.setState({appConfig: data});
+        this.setState({translations: data.translations, appConfig: data});
       }
       this.getUserInfo();
       dataProvider.getACPData(function(data){
