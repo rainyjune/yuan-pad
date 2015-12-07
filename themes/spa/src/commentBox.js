@@ -241,7 +241,7 @@ var CommentBox = React.createClass({
           appConfig={this.props.appConfig}
           total={this.props.commentsTotalNumber} 
           currentPage = {this.props.currentPage}
-          pagenum={Math.ceil(this.props.commentsTotalNumber/this.props.appConfig.num_perpage)} /> 
+          pagenum={this.props.appConfig.page_on ? Math.ceil(this.props.commentsTotalNumber/this.props.appConfig.num_perpage) : 1} /> 
         <CommentForm 
           user={this.props.user} 
           lang={this.props.lang} 
