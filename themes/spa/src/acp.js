@@ -33,44 +33,29 @@ var ACPBox = React.createClass({
   },
   // TODO Reuse
   handleLogout: function() {
-    yuanjs.ajax({
-      type: "GET",
-      url: 'api.php',
-      data: {controller: 'user', action: "logout"},
-      cache: false,
-      //dataType: "json",
-      success: function(data){
+    dataProvider.logout(function(data){
         if (this.isMounted()) {
           this.setState({ currentUser: {} });
         }
       }.bind(this),
-      error: function(){
+      function(){
         debugger;
       }.bind(this) 
-    });
+    );
   },
-  // TODO reuse.
   getUserInfo: function() {
-    yuanjs.ajax({
-      type: "GET",
-      url: 'index.php?controller=user&action=getUserInfo',
-      dataType: 'json',
-      cache: false,
-      dataType: "json",
-      success: function(data){
+    dataProvider.getUserInfo(function(data){
         console.log('user info:', data);
         if (Object.prototype.toString.call(data) === "[object Array]") {
           data = {};
         }
         if (this.isMounted()) {
-          this.setState({currentUser: data}, function(){
-            //this.loadCommentsFromServer();
-          });
+          this.setState({currentUser: data});
         }
       }.bind(this),
-      error: function(){
+      function(){
       }.bind(this) 
-    });
+    );
   },
   updateActiveTab: function(newTabName) {
     this.setState({activeTab: newTabName});
