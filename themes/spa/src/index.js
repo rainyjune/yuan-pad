@@ -97,31 +97,29 @@ var App = React.createClass({
     }.bind(this));
   },
   handleCommentSubmit: function(comment) {
-    var comments = this.state.commentsData;
-    var CommentData = {
+    var comments = this.state.comments;
+    var newComment = {
       id: Date.now(),
       user: comment.user,
       time: '12-05 16:50',
       post_content: comment.content,
     };
 
-    var commentArr = comments.comments.concat([]);
-    commentArr.unshift(CommentData);
+    var commentArr = comments.concat([]);
+    commentArr.unshift(newComment);
     if (this.state.appConfig.page_on) {
       commentArr.pop();
     }
-    var newComments = {
+    this.setState({
       comments: commentArr,
-      pagenum: comments.pagenum, // TODO
-      total: comments.total + 1,
-      current_page: 0
-    };
-    this.setState({commentsData: newComments});
+      commentsTotalNumber: this.state.commentsTotalNumber + 1,
+      commentListType: 1
+    });
     dataProvider.createPost(comment, function(data) {
         this.loadCommentsFromServer();
       }.bind(this),
       function(xhr, status, err) {
-        this.setState({commentsData: comments});
+        this.setState({comments: comments});
         console.log("error", xhr, status, err);
       }.bind(this)
     );
