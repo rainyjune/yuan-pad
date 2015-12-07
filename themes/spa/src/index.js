@@ -136,22 +136,29 @@ var App = React.createClass({
     });
   },
   handleUserSignedIn: function(signedInUser) {
-    this.setState({currentUser: signedInUser}, function() {
-      if (signedInUser.uid) {
-        this.loadUserDataFromServer(signedInUser.uid);
-      }
-    });
+    if (signedInUser.admin) {
+      this.setState({currentUser: signedInUser});
+    } else if (signedInUser.uid) {
+      this.loadUserDataFromServer(signedInUser.uid);
+    }
   },
   handleSignedUp: function(userData) {
-    this.setState({currentUser: userData}, function() {
-      if (userData.uid) {
-        this.loadUserDataFromServer(userData.uid);
-      }
-    });
+    if (userData.uid) {
+      this.loadUserDataFromServer(userData.uid);
+    }
   },
   render: function() {
     return (
       <div id="appbox">
+        <Header 
+          onSignedUp={this.handleSignedUp} 
+          onUserUpdated={this.handleUserUpdated} 
+          onUserLogout={this.handleLogout} 
+          onUserSignedIn={this.handleUserSignedIn}
+          user={this.state.currentUser} 
+          appConfig={this.state.appConfig}
+          lang={this.state.translations}
+        />
         <CommentBox 
           onCommentSubmit={this.handleCommentSubmit}
           onCloseSearch={this.loadCommentsFromServer}
@@ -179,23 +186,6 @@ var App = React.createClass({
     );
   }
 });
-
-/*
-<Header 
-          onSignedUp={this.handleSignedUp} 
-          onUserUpdated={this.handleUserUpdated} 
-          onUserLogout={this.handleLogout} 
-          onUserSignedIn={this.handleUserSignedIn}
-          onLoginSubmit={this.handleLoginSubmit}
-          registerErrorMsg={this.state.registerErrorMsg} 
-          loginErrorMsg={this.state.loginErrorMsg} 
-          user={this.state.currentUser} 
-          appConfig={this.state.appConfig}
-          lang={this.state.translations} />
-        
-
-        
-          */
 
 ReactDOM.render(
   <App />,
