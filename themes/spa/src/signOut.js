@@ -9,7 +9,7 @@ var LogoutButton = React.createClass({
     }.bind(this));
   },
   render: function() {
-    return (!this.props.user.admin && !this.props.user.user) ?
+    return (!this.props.user.admin && !this.props.user.uid) ?
            null :
            (<a href='#' onClick={this.handleSignOut}>{this.props.lang.LOGOUT}</a>);
   }

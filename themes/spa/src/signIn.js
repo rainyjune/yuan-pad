@@ -41,7 +41,7 @@ var SignIn = React.createClass({
     }.bind(this));
   },
   render: function() {
-    return (this.props.user.admin || this.props.user.user) ?
+    return (this.props.user.admin || this.props.user.uid) ?
            null :
       (
         <div>

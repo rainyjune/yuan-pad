@@ -45,7 +45,7 @@ var UserUpdate = React.createClass({
       }.bind(this));
   },
   render: function() {
-    return this.props.user.user ?
+    return this.props.user.uid ?
             (
               <div>
                 <UserUpdateButton 
@@ -54,6 +54,7 @@ var UserUpdate = React.createClass({
                 />
                 <UserUpdateModal
                   lang={this.props.lang}
+                  user={this.props.user}
                   userUpdateModalIsOpen={this.state.userUpdateModalIsOpen}
                   userUpdateErrorMsg={this.state.userUpdateErrorMsg}
                   onRequestClose={this.closeUserUpdateModal}
@@ -90,20 +91,20 @@ var UserUpdateModal = React.createClass({
         <p>{this.props.userUpdateErrorMsg}</p>
         <button onClick={this.props.onRequestClose}>close</button>
         <form onSubmit={this.handleSubmit} action="#" method="post">
-        <input type="hidden" ref="uid" value={this.props.userDetailedData.uid} />        
+        <input type="hidden" ref="uid" value={this.props.user.uid} />        
           <dl>
           <dt>{this.props.lang.USERNAME}</dt>
-          <dd><input type="text" readOnly="readonly" defaultValue={this.props.userDetailedData.username} ref="user" size="20"  />
+          <dd><input type="text" readOnly="readonly" defaultValue={this.props.user.username} ref="user" size="20"  />
           </dd>
           </dl>
           <dl>
           <dt>{this.props.lang.PASSWORD}</dt>
-          <dd><input type="password" defaultValue={this.props.userDetailedData.password} ref="pwd" size="20"  />
+          <dd><input type="password" defaultValue={this.props.user.password} ref="pwd" size="20"  />
           </dd>
           </dl>
           <dl>
           <dt>{this.props.lang.EMAIL}</dt>
-          <dd><input type="text" defaultValue={this.props.userDetailedData.email} ref="email" size="20"  />
+          <dd><input type="text" defaultValue={this.props.user.email} ref="email" size="20"  />
           </dd>
           </dl>
           <dl>

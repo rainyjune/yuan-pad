@@ -159,10 +159,10 @@ var CommentForm = React.createClass({
       computedState.userInputType = "hidden";
       computedState.username = propUser.admin;
       computedState.labelContent = propUser.admin;
-    } else if (propUser.user) {
+    } else if (propUser.uid) {
       computedState.userInputType = "hidden";
-      computedState.username = propUser.user;
-      computedState.labelContent = propUser.user;
+      computedState.username = propUser.username;
+      computedState.labelContent = propUser.username;
     } else {
       computedState.userInputType = "text";
       computedState.username = 'anonymous';
