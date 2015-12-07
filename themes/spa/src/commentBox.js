@@ -87,12 +87,14 @@ var CommentList = React.createClass({
   render: function() {
     var lang = this.props.lang,
         searchText = this.props.searchText,
+        appConfig = this.props.appConfig,
         isSearchResult = this.props.commentListType === 2;
 
     var createCommentNodes = function(comment) {
       var text = isSearchResult ? comment.post_content.replace(searchText, "<span class='keyword'>" + searchText + "</span>") : comment.post_content;
       return (
-        <Comment 
+        <Comment
+          appConfig={appConfig}
           uid={comment.uid}
           b_username={comment.b_username}
           user={comment.user}
@@ -117,7 +119,7 @@ var CommentList = React.createClass({
 var Reply = React.createClass({
   rawMarkup: function() {
     // TODO: Get the actual admini user name.
-    return { __html: this.props.lang.ADMIN_REPLIED.replace('{admin_name}', 'ADMIN')
+    return { __html: this.props.lang.ADMIN_REPLIED.replace('{admin_name}', this.props.appConfig.admin)
                       .replace('{reply_time}', this.props.date)
                       .replace('{reply_content}', this.props.content)};
   },
@@ -141,7 +143,7 @@ var Comment = React.createClass({
         <div className="commentText">
          <p dangerouslySetInnerHTML={this.rawMarkup()} />
         </div>
-        <Reply lang={this.props.lang} content={this.props.reply_content} date={this.props.reply_time} />
+        <Reply appConfig={this.props.appConfig} lang={this.props.lang} content={this.props.reply_content} date={this.props.reply_time} />
       </div>
     );
   }
