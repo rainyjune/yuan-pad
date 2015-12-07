@@ -27,13 +27,13 @@ var ACPOverview = React.createClass({
               <td >{this.props.lang.NUM_REPLY}：</td><td align="right">{this.props.acpData.reply_num}</td>
             </tr>
             <tr>
-              <td >{this.props.lang.MP_VERSION}：</td><td align="right">MP_VERSION</td>
+              <td >{this.props.lang.MP_VERSION}：</td><td align="right">{this.props.acpData.yuanpad_version}</td>
             </tr>
             <tr>
               <td  colSpan="2"><b>{this.props.lang.SYS_INFO}</b></td>
             </tr>
             <tr>
-              <td >{this.props.lang.PHP_VERSION}：</td><td align="right">PHP_VERSION</td>
+              <td >{this.props.lang.PHP_VERSION}：</td><td align="right">{this.props.acpData.php_version}</td>
             </tr>
             <tr>
               <td >{this.props.lang.GD_VERSION}： </td><td align="right">{this.props.acpData.gd_version}</td>
