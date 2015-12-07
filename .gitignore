@@ -4,3 +4,4 @@ sites/default/config.php
 *.swp
 *.map
 .sass-cache/
+*.komodoproject
