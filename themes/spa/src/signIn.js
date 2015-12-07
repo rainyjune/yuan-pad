@@ -44,7 +44,7 @@ var SignIn = React.createClass({
     return (this.props.user.admin || this.props.user.uid) ?
            null :
       (
-        <div>
+        <div className="signIn">
           <LoginButton 
             user={this.props.user}
             lang={this.props.lang} 

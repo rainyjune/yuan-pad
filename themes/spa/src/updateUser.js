@@ -47,7 +47,7 @@ var UserUpdate = React.createClass({
   render: function() {
     return this.props.user.uid ?
             (
-              <div>
+              <div className="updateUser">
                 <UserUpdateButton 
                   lang={this.props.lang}
                   onShowUpdateModal={this.openUserUpdateModal}

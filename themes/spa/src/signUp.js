@@ -107,7 +107,7 @@ var SignUp = React.createClass({
     return (this.props.user.admin || this.props.user.uid) ?
            null :
       (
-        <div>
+        <div className="signUp">
           <RegisterButton 
             user={this.props.user}
             lang={this.props.lang} 

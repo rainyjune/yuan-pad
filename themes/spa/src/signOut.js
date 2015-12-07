@@ -11,7 +11,7 @@ var LogoutButton = React.createClass({
   render: function() {
     return (!this.props.user.admin && !this.props.user.uid) ?
            null :
-           (<a href='#' onClick={this.handleSignOut}>{this.props.lang.LOGOUT}</a>);
+           (<a className="signOutButton" href='#' onClick={this.handleSignOut}>{this.props.lang.LOGOUT}</a>);
   }
 });
 
