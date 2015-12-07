@@ -17,7 +17,7 @@ var ACPBox = React.createClass({
     };
   },
   componentDidMount: function() {
-    this.getAppConfig(function(data){
+    dataProvider.getAppConfig(function(data){
       if (this.isMounted()) {
         this.setState({translations: data.translations});
         // TODO Duplicate data.
@@ -29,21 +29,7 @@ var ACPBox = React.createClass({
           acpData: data
         });
       }.bind(this));
-    });
-  },
-  // TODO Reuse
-  getAppConfig: function(successCallback) {
-    yuanjs.ajax({
-      type: "GET",
-      url: 'index.php',
-      data: {action: "getAppConfig",t:Date.now()},
-      cache: false,
-      dataType: "json",
-      success: successCallback.bind(this),
-      error: function(){
-        debugger;
-      }.bind(this) 
-    });
+    }.bind(this));
   },
   // TODO Reuse
   handleLogout: function() {
