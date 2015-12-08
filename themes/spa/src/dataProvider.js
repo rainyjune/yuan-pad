@@ -122,6 +122,16 @@ function getACPData(successCallback, errorCallback) {
   });
 }
 
+function updateSiteConfig(configObj, successCallback, errorCallback) {
+  yuanjs.ajax({
+      type: "POST",
+      url: "index.php?controller=config&amp;action=update",
+      data: configObj,
+      success: successCallback,
+      error: errorCallback
+    });
+}
+
 module.exports = {
   createPost: createPost,
   getACPData: getACPData,
@@ -133,5 +143,6 @@ module.exports = {
   loadUserDataFromServer: loadUserDataFromServer,
   getUserInfo: getUserInfo,
   getAppConfig: getAppConfig,
-  search: search
+  search: search,
+  updateSiteConfig: updateSiteConfig
 };
