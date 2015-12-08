@@ -61,6 +61,20 @@ var ACPBox = React.createClass({
   updateActiveTab: function(newTabName) {
     this.setState({activeTab: newTabName});
   },
+  // Update the `currentUser` state after a user signed in.
+  handleUserSignedIn: function(signedInUser) {
+    if (signedInUser.admin) {
+      this.setState({currentUser: signedInUser}, function(){
+        dataProvider.getACPData(function(data){
+          this.setState({
+            acpData: data
+          });
+        }.bind(this));
+      }.bind(this));
+    } else if (signedInUser.uid) {
+      window.location = "index.php";
+    }
+  },
   render: function() {
     var tabs = [
       {text: this.state.translations.ACP_OVERVIEW,value: "overview"},
@@ -74,6 +88,7 @@ var ACPBox = React.createClass({
         <ACPLogin
           lang={this.state.translations}
           user={this.state.currentUser}
+          onUserSignedIn={this.handleUserSignedIn}
         />
         <ACPHeader
           lang={this.state.translations}
