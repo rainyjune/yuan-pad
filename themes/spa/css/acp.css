@@ -484,7 +484,7 @@ a:hover {
   width: 900px;
 }
 #content .tagContent .configContainer {
-  height: 570px;
+  height: 100%;
   overflow: auto;
 }
 #content .tagContent .ip_container {
@@ -508,3 +508,5 @@ textarea.span-9 {
 .check_span {
   display: none;
 }
+
+/*# sourceMappingURL=acp.css.map */
