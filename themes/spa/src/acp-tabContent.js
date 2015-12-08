@@ -12,19 +12,26 @@ var ACPTabContent = React.createClass({
         <ACPOverview 
           acpData={this.props.acpData}
           lang={this.props.lang}
-          activeTab={this.props.activeTab}/>
-        <ACPConfig 
+          activeTab={this.props.activeTab}
+        />
+        <ACPConfig
+          acpData={this.props.acpData}
           lang={this.props.lang}
-          activeTab={this.props.activeTab}/>
+          activeTab={this.props.activeTab}
+          appConfig={this.props.appConfig}
+        />
         <ACPMessages 
           lang={this.props.lang}
-          activeTab={this.props.activeTab}/>
+          activeTab={this.props.activeTab}
+        />
         <ACPIpConfig 
           lang={this.props.lang}
-          activeTab={this.props.activeTab}/>
+          activeTab={this.props.activeTab}
+        />
         <ACPUsers
           lang={this.props.lang}
-          activeTab={this.props.activeTab}/>
+          activeTab={this.props.activeTab}
+        />
       </div>
     );
   }
