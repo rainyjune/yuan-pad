@@ -40,7 +40,10 @@ var ACPBox = React.createClass({
   // Update the `currentUser` state to default value.
   handleLogout: function() {
     if (this.isMounted()) {
-      this.setState({ currentUser: {} });
+      // Navigates to the index.php page after signed out.
+      this.setState({ currentUser: {} }, function(){
+        window.location = "index.php";
+      });
     }
   },
   // Get current user identity from server.
