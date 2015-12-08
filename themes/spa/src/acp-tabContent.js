@@ -7,6 +7,8 @@ var ACPUsers = require('./acp-users.js');
 
 var ACPTabContent = React.createClass({
   render: function() {
+    if (!this.props.user.admin) return null;
+
     return (
       <div className="tagContent">
         <ACPOverview 

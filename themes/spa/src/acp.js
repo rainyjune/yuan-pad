@@ -1,6 +1,8 @@
 var React = require('react'),
     ReactDOM = require('react-dom');
+var Modal = require('react-modal');
 
+var ACPLogin = require('./acp-login.js');
 var ACPHeader = require('./acp-header.js');
 var ACPTabHeader = require('./acp-tabHeader.js');
 var ACPTabContent = require('./acp-tabContent.js');
@@ -17,32 +19,39 @@ var ACPBox = React.createClass({
       translations: {}
     };
   },
+  // When the component is rendered, load the site configuration from server, and then try to indentify current user.
+  // If this is not the admin user, show the login modal.
   componentDidMount: function() {
     dataProvider.getAppConfig(function(data){
       if (this.isMounted()) {
         this.setState({translations: data.translations, appConfig: data});
       }
-      this.getUserInfo();
-      dataProvider.getACPData(function(data){
-        this.setState({
-          acpData: data
-        });
+      this.getUserInfo(function() {
+        if (this.state.currentUser.admin) {
+          dataProvider.getACPData(function(data){
+            this.setState({
+              acpData: data
+            });
+          }.bind(this));
+        }
       }.bind(this));
     }.bind(this));
   },
+  // Update the `currentUser` state to default value.
   handleLogout: function() {
     if (this.isMounted()) {
       this.setState({ currentUser: {} });
     }
   },
-  getUserInfo: function() {
+  // Get current user identity from server.
+  getUserInfo: function(successCallback) {
     dataProvider.getUserInfo(function(data){
         console.log('user info:', data);
         if (Object.prototype.toString.call(data) === "[object Array]") {
           data = {};
         }
         if (this.isMounted()) {
-          this.setState({currentUser: data});
+          this.setState({currentUser: data}, successCallback);
         }
       }.bind(this),
       function(){
@@ -62,6 +71,10 @@ var ACPBox = React.createClass({
     ];
     return (
       <div id="acpBox">
+        <ACPLogin
+          lang={this.state.translations}
+          user={this.state.currentUser}
+        />
         <ACPHeader
           lang={this.state.translations}
           user={this.state.currentUser}
@@ -69,6 +82,7 @@ var ACPBox = React.createClass({
         />
         <ACPTabHeader
           activeTab={this.state.activeTab}
+          user={this.state.currentUser}
           tabs={tabs}
           onTabSelected={this.updateActiveTab}
         />
@@ -77,8 +91,11 @@ var ACPBox = React.createClass({
           activeTab={this.state.activeTab}
           acpData={this.state.acpData}
           appConfig={this.state.appConfig}
+          user={this.state.currentUser}
         />
-        <ACPFooter />
+        <ACPFooter
+          user={this.state.currentUser}
+        />
       </div>
     );
   }
