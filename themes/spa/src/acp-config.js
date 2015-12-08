@@ -4,7 +4,26 @@ var ACPConfig = React.createClass({
   render: function() {
     var cssClass = this.props.activeTab === "siteset" ? "configContainer selectTag" : "configContainer";
     var isSiteClosed = this.props.appConfig.site_close;
-debugger;
+    var themes = this.props.acpData.themes;
+    var themeOptions = [];
+    for (var i in themes) {
+      var theme = themes[i];
+      themeOptions.push(<option key={theme} value={theme}>{theme}</option>)
+    }
+
+    var timeZones = this.props.acpData.timezone_array;
+    var timeZoneOptions = [];
+    for (var i in timeZones) {
+      var timezone = timeZones[i];
+      timeZoneOptions.push(<option key={i} value={i}>{timezone}</option>);
+    }
+
+    var languages = this.props.acpData.languages;
+    var languageOptions = [];
+    for (var i in languages) {
+      var language = languages[i];
+      languageOptions.push(<option key={i} value={language}>{language}</option>);
+    }
     return (
       <div className={cssClass}>
         <form action="index.php?controller=config&amp;action=update" method="post">
@@ -25,7 +44,7 @@ debugger;
               </tr>
           <tr>
               <td>{this.props.lang.CLOSE_REASON}:</td>
-              <td><textarea  class="span-9" name="close_reason" cols="30" rows="3" value={this.props.appConfig.close_reason}></textarea></td>
+              <td><textarea name="close_reason" cols="30" rows="3" value={this.props.appConfig.close_reason}></textarea></td>
           </tr>
           <tr>
               <td>{this.props.lang.ADMIN_EMAIL}:</td>
@@ -33,13 +52,13 @@ debugger;
           </tr>
           <tr>
               <td>{this.props.lang.COPY_INFO}:</td>
-              <td><textarea class="span-9" name="copyright_info" cols="30" rows="3" value={this.props.appConfig.copyright_info} ></textarea></td>
+              <td><textarea name="copyright_info" cols="30" rows="3" value={this.props.appConfig.copyright_info} ></textarea></td>
           </tr>
           <tr>
               <td>{this.props.lang.SYS_THEME}:</td>
               <td>
                 <select name="theme" value={this.props.appConfig.theme}>
-                  <option value="">$per_theme</option>
+                  {themeOptions}
                 </select>
               </td>
           </tr>
@@ -47,7 +66,7 @@ debugger;
               <td>{this.props.lang.TIMEZONE}:</td>
               <td>
                 <select name="timezone" value={this.props.appConfig.timezone}>
-                  <option value="">$per_timezone</option>
+                  {timeZoneOptions}
                 </select>
               </td>
           </tr>
@@ -55,7 +74,7 @@ debugger;
               <td>{this.props.lang.LANG}:</td>
               <td>
                 <select name="lang" value={this.props.appConfig.lang}>
-                  <option value="">$language</option>
+                  {languageOptions}
                 </select>
               </td>
           </tr>
@@ -68,7 +87,7 @@ debugger;
             <tbody>
           <tr>
               <td>{this.props.lang.FILTER_WORDS}：</td>
-              <td><textarea class="span-9" name="filter_words" cols="20" rows="3" value={this.props.appConfig.filter_words}></textarea></td>
+              <td><textarea name="filter_words" cols="20" rows="3" value={this.props.appConfig.filter_words}></textarea></td>
           </tr>
           <tr>
               <td>{this.props.lang.ENABLE_CAPTCHA}：</td>
