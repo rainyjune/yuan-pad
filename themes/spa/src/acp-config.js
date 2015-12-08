@@ -1,9 +1,54 @@
 var React = require('react');
+var dataProvider = require('./dataProvider.js');
+var LinkedStateMixin = require('react-addons-linked-state-mixin');
 
 var ACPConfig = React.createClass({
+  getInitialState: function() {
+    return {
+      board_name: '',
+      site_close: 0,
+      close_reason: '',
+      admin_email: '',
+      copyright_info: '',
+      theme: 'spa',
+      timezone: 0,
+      lang: 'en',
+      filter_words: '',
+      valid_code_open: 0,
+      page_on: 0,
+      num_perpage: 10,
+      filter_type: 1,
+      allowed_tags: '',
+      password: ''
+    };
+  },
+  mixins: [LinkedStateMixin],
+  componentWillReceiveProps: function(nextProps) {
+    var propAppConfig = nextProps.appConfig;
+    var computedState = {};
+    for (var i in propAppConfig) {
+      if (this.state.hasOwnProperty(i)) {
+        computedState[i] = propAppConfig[i] === null ? 0 : propAppConfig[i];
+      }
+    }
+//debugger;
+    this.setState(computedState);
+  },
+  handleSubmit: function(e) {
+    e.preventDefault();
+    dataProvider.updateSiteConfig(this.state, function(data){
+debugger;
+    }.bind(this), function(){
+      debugger;
+    }.bind(this));
+  },
+  toggleSiteClose: function(e) {
+    this.setState({site_close: e.target.value});
+  },
   render: function() {
+    var appConfig = this.state;
     var cssClass = this.props.activeTab === "siteset" ? "configContainer selectTag" : "configContainer";
-    var isSiteClosed = this.props.appConfig.site_close;
+    var isSiteClosed = appConfig.site_close;
     var themes = this.props.acpData.themes;
     var themeOptions = [];
     for (var i in themes) {
@@ -26,38 +71,38 @@ var ACPConfig = React.createClass({
     }
     return (
       <div className={cssClass}>
-        <form action="index.php?controller=config&amp;action=update" method="post">
+        <form onSubmit={this.handleSubmit} action="index.php?controller=config&amp;action=update" method="post">
           <fieldset>
             <legend>{this.props.lang.SYS_CONF}</legend>
             <table>
             <tbody>
               <tr>
                 <td>{this.props.lang.BOARD_NAME}:</td>
-                <td><input name="board_name" type="text" size="20" value={this.props.appConfig.board_name} /></td>
+                <td><input ref="board_name" type="text" size="20" valueLink={this.linkState('board_name')} /></td>
               </tr>
               <tr>
                 <td>{this.props.lang.CLOSE_BOARD}:</td>
                 <td>
-                  <input name="site_close" type="radio" value="1" checked='checked' />{this.props.lang.YES}
-                  <input name="site_close" type="radio" value="0" checked='checked' />{this.props.lang.NO}
+                  <input ref="site_close" type="radio" value="1" checked={appConfig.site_close == 1} onChange={this.toggleSiteClose} />{this.props.lang.YES}
+                  <input ref="site_close" type="radio" value="0" checked={appConfig.site_close != 1} onChange={this.toggleSiteClose} />{this.props.lang.NO}
                 </td>
               </tr>
           <tr>
               <td>{this.props.lang.CLOSE_REASON}:</td>
-              <td><textarea name="close_reason" cols="30" rows="3" value={this.props.appConfig.close_reason}></textarea></td>
+              <td><textarea ref="close_reason" cols="30" rows="3" valueLink={this.linkState('close_reason')}></textarea></td>
           </tr>
           <tr>
               <td>{this.props.lang.ADMIN_EMAIL}:</td>
-              <td><input name="admin_email" type="text" size="20" value={this.props.appConfig.admin_email} /></td>
+              <td><input ref="admin_email" type="text" size="20" valueLink={this.linkState('admin_email')} /></td>
           </tr>
           <tr>
               <td>{this.props.lang.COPY_INFO}:</td>
-              <td><textarea name="copyright_info" cols="30" rows="3" value={this.props.appConfig.copyright_info} ></textarea></td>
+              <td><textarea ref="copyright_info" cols="30" rows="3" valueLink={this.linkState('copyright_info')} ></textarea></td>
           </tr>
           <tr>
               <td>{this.props.lang.SYS_THEME}:</td>
               <td>
-                <select name="theme" value={this.props.appConfig.theme}>
+                <select ref="theme" valueLink={this.linkState('theme')}>
                   {themeOptions}
                 </select>
               </td>
@@ -65,7 +110,7 @@ var ACPConfig = React.createClass({
           <tr>
               <td>{this.props.lang.TIMEZONE}:</td>
               <td>
-                <select name="timezone" value={this.props.appConfig.timezone}>
+                <select ref="timezone" valueLink={this.linkState('timezone')}>
                   {timeZoneOptions}
                 </select>
               </td>
@@ -73,7 +118,7 @@ var ACPConfig = React.createClass({
           <tr>
               <td>{this.props.lang.LANG}:</td>
               <td>
-                <select name="lang" value={this.props.appConfig.lang}>
+                <select ref="lang" valueLink={this.linkState('lang')}>
                   {languageOptions}
                 </select>
               </td>
@@ -87,35 +132,35 @@ var ACPConfig = React.createClass({
             <tbody>
           <tr>
               <td>{this.props.lang.FILTER_WORDS}：</td>
-              <td><textarea name="filter_words" cols="20" rows="3" value={this.props.appConfig.filter_words}></textarea></td>
+              <td><textarea ref="filter_words" cols="20" rows="3" valueLink={this.linkState('filter_words')}></textarea></td>
           </tr>
           <tr>
               <td>{this.props.lang.ENABLE_CAPTCHA}：</td>
               <td>
-                  <input name="valid_code_open" type="radio" value="1" checked='checked' />{this.props.lang.YES}
-                  <input name="valid_code_open" type="radio" value="0" checked='checked' />{this.props.lang.NO}
-                  <input name="valid_code_open" type="radio" value="1" />{this.props.lang.YES}
-                  <input name="valid_code_open" type="radio" value="0" checked='checked' />{this.props.lang.NO}{this.props.lang.GD_DISABLED_NOTICE}
+                  <input ref="valid_code_open" type="radio" value="1" checked='checked' />{this.props.lang.YES}
+                  <input ref="valid_code_open" type="radio" value="0" checked='checked' />{this.props.lang.NO}
+                  <input ref="valid_code_open" type="radio" value="1" />{this.props.lang.YES}
+                  <input ref="valid_code_open" type="radio" value="0" checked='checked' />{this.props.lang.NO}{this.props.lang.GD_DISABLED_NOTICE}
               </td>
           </tr>
           <tr>
               <td>{this.props.lang.ENABLE_PAGE}：</td>
-              <td><input name="page_on" type="radio" value="1" checked='checked' />{this.props.lang.YES}
-              <input name="page_on" type="radio" value="0" checked='checked' />{this.props.lang.NO}
+              <td><input ref="page_on" type="radio" value="1" checked='checked' />{this.props.lang.YES}
+              <input ref="page_on" type="radio" value="0" checked='checked' />{this.props.lang.NO}
               </td>
           </tr>
           <tr>
               <td>{this.props.lang.POST_PERPAGE}：</td>
-              <td><input name="num_perpage" type="text" value={this.props.appConfig.num_perpage} />{this.props.lang.PAGINATION_TIP}</td>
+              <td><input ref="num_perpage" type="text" valueLink={this.linkState('num_perpage')} />{this.props.lang.PAGINATION_TIP}</td>
           </tr>
                 <tr>
               <td>{this.props.lang.FILTER_HTML_TAGS}：</td>
-              <td><input name="filter_type" type="radio" value="1" checked='checked' />{this.props.lang.STRIP_DISALLOWED_TAGS}
-<input name="filter_type" type="radio" value="2" checked='checked' />{this.props.lang.ESCAPE_ALL_TAGS}</td>
+              <td><input ref="filter_type" type="radio" value="1" checked='checked' />{this.props.lang.STRIP_DISALLOWED_TAGS}
+                <input ref="filter_type" type="radio" value="2" checked='checked' />{this.props.lang.ESCAPE_ALL_TAGS}</td>
           </tr>
                 <tr>
               <td>{this.props.lang.ALLOWED_HTML_TAGS}：</td>
-              <td><input name="allowed_tags" type="text" value={this.props.appConfig.allowed_tags} /></td>
+              <td><input ref="allowed_tags" type="text" valueLink={this.linkState('allowed_tags')} /></td>
           </tr>
             </tbody>
             </table>
@@ -126,7 +171,7 @@ var ACPConfig = React.createClass({
             <tbody>
           <tr>
               <td>{this.props.lang.CHANGE_PWD}:</td>
-              <td><input name="password" type="password" />&nbsp;{this.props.lang.PWD_TIP}</td>
+              <td><input ref="password" type="password" valueLink={this.linkState('password')} />&nbsp;{this.props.lang.PWD_TIP}</td>
           </tr>
           </tbody>
             </table>
