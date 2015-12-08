@@ -10,10 +10,11 @@ var dataProvider = require('./dataProvider.js');
 var ACPBox = React.createClass({
   getInitialState: function() {
     return {
-      currentUser: {},
-      translations: {},
+      acpData: {},
       activeTab: 'overview',
-      acpData: {}
+      appConfig: {},
+      currentUser: {},
+      translations: {}
     };
   },
   componentDidMount: function() {
@@ -82,6 +83,7 @@ var ACPBox = React.createClass({
           lang={this.state.translations}
           activeTab={this.state.activeTab}
           acpData={this.state.acpData}
+          appConfig={this.state.appConfig}
         />
         <ACPFooter />
       </div>
