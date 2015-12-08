@@ -30,17 +30,10 @@ var ACPBox = React.createClass({
       }.bind(this));
     }.bind(this));
   },
-  // TODO Reuse
   handleLogout: function() {
-    dataProvider.logout(function(data){
-        if (this.isMounted()) {
-          this.setState({ currentUser: {} });
-        }
-      }.bind(this),
-      function(){
-        debugger;
-      }.bind(this) 
-    );
+    if (this.isMounted()) {
+      this.setState({ currentUser: {} });
+    }
   },
   getUserInfo: function() {
     dataProvider.getUserInfo(function(data){
@@ -72,7 +65,7 @@ var ACPBox = React.createClass({
         <ACPHeader
           lang={this.state.translations}
           user={this.state.currentUser}
-          onLogout={this.handleLogout}
+          onUserLogout={this.handleLogout}
         />
         <ACPTabHeader
           activeTab={this.state.activeTab}
