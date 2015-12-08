@@ -1,5 +1,4 @@
 var React = require('react');
-var Modal = require('react-modal');
 
 var SignIn = require('./signIn.js');
 var SignUp = require('./signUp.js');
