@@ -26,6 +26,7 @@ var ACPTabContent = React.createClass({
         <ACPMessages 
           lang={this.props.lang}
           activeTab={this.props.activeTab}
+          acpData={this.props.acpData}
         />
         <ACPIpConfig 
           lang={this.props.lang}
