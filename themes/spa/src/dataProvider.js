@@ -133,9 +133,22 @@ function updateSiteConfig(configObj, successCallback, errorCallback) {
     });
 }
 
+function getAllUsers(successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "GET",
+    url: 'api.php',
+    data: {controller: "user", action: "index",t:Date.now()},
+    cache: false,
+    dataType: "json",
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
 module.exports = {
   createPost: createPost,
   getACPData: getACPData,
+  getAllUsers: getAllUsers,
   login: login,
   logout: logout,
   signUp: signUp,
