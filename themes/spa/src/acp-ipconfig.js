@@ -20,6 +20,7 @@ var ACPIpConfig = React.createClass({
       return (
         <IPItem
           data={ip}
+          key={ip.ip}
         />
       );
     };
