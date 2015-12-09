@@ -36,6 +36,7 @@ class ZFramework{
         'UserController/actionLogout',
         'UserController/actionUpdate',
         'UserController/actionGetUserInfo',
+        'ConfigController/actionUpdate',
         );
 
     public static function app(){
