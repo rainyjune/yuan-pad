@@ -32,6 +32,7 @@ class ZFramework{
         'ReplyController/actionDeleteAll',
         'SearchController/actionIndex',
         'UserController/actionCreate',
+        'UserController/actionIndex',
         'UserController/actionLogin',
         'UserController/actionLogout',
         'UserController/actionUpdate',
