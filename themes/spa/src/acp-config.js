@@ -89,11 +89,11 @@ var ACPConfig = React.createClass({
     
     var captchaInputs = [];
     if (acpData.gd_loaded) {
-      captchaInputs.push(<label><input type="radio" value="1" checked={appConfig.valid_code_open == 1} onChange={this.toggleCaptcha} />{lang.YES}</label>);
-      captchaInputs.push(<label><input type="radio" value="0" checked={appConfig.valid_code_open != 1} onChange={this.toggleCaptcha} />{lang.NO}</label>);
+      captchaInputs.push(<label key="1"><input type="radio" value="1" checked={appConfig.valid_code_open == 1} onChange={this.toggleCaptcha} />{lang.YES}</label>);
+      captchaInputs.push(<label key="0"><input type="radio" value="0" checked={appConfig.valid_code_open != 1} onChange={this.toggleCaptcha} />{lang.NO}</label>);
     } else {
-      captchaInputs.push(<label><input type="radio" value="1" onChange={this.toggleCaptcha} />{lang.YES}</label>);
-      captchaInputs.push(<label><input type="radio" value="0" checked='checked' onChange={this.toggleCaptcha} />{lang.NO}{lang.GD_DISABLED_NOTICE}</label>);
+      captchaInputs.push(<label key="1"><input type="radio" value="1" onChange={this.toggleCaptcha} />{lang.YES}</label>);
+      captchaInputs.push(<label key="0"><input type="radio" value="0" checked='checked' onChange={this.toggleCaptcha} />{lang.NO}{lang.GD_DISABLED_NOTICE}</label>);
     }
     return (
       <div className={cssClass}>
