@@ -34,7 +34,7 @@ var ACPUser = React.createClass({
     var cssClass = this.props.activeTab === "user" ? "user_container selectTag" : "user_container";
     var createUserItem = function(user) {
       return (
-        <UserItem data={user} lang={lang} />
+        <UserItem data={user} lang={lang} key={user.uid} />
       );
     };
     return (
