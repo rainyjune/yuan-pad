@@ -479,9 +479,9 @@ a:hover {
 }
 #content .tagContent .message_container {
   padding-top: 1em;
-  height: 570px;
+  height: 100%;
   overflow: auto;
-  width: 900px;
+  width: 100%;
 }
 #content .tagContent .configContainer {
   height: 100%;
