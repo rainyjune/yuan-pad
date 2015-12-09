@@ -13,6 +13,10 @@ class UserController extends BaseController{
     $tabs_array=array('overview','siteset','message','ban_ip','user');
     $tabs_name_array=array(t('ACP_OVERVIEW'),t('ACP_CONFSET'),t('ACP_MANAGE_POST'),t('ACP_MANAGE_IP'),  t('USER_ADMIN'));
     $user_data=$this->_model->queryAll(parse_tbprefix("SELECT * FROM <sysuser>"));
+    if(defined('API_MODE')){
+      header("Content-type: application/json");
+      die (function_exists('json_encode') ? json_encode($user_data) : CJSON::encode($user_data));
+    }
     $this->render('user_list',array('users'=>$user_data,'tabs_array'=>$tabs_array,'current_tab'=>$current_tab,'tabs_name_array'=>$tabs_name_array,));
   }
   
@@ -160,6 +164,7 @@ class UserController extends BaseController{
     $session_name=session_name();
     if (isset($_SESSION['admin'])){//admin logged in
       if(defined('API_MODE')){
+        header("Content-type: application/json");
         $json_array=array('admin'=>$_SESSION['admin'],'session_name'=>$session_name,'session_value'=>session_id());
         die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
       }
@@ -178,6 +183,7 @@ class UserController extends BaseController{
       if( ($user==ZFramework::app()->admin) && ($password==ZFramework::app()->password) ){//Admin user
         $_SESSION['admin']=$_REQUEST['user'];
         if(defined('API_MODE')){
+          header("Content-type: application/json");
           $json_array=array('admin'=>$_SESSION['admin'],'session_name'=>$session_name,'session_value'=>session_id());
           die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
         }
@@ -190,6 +196,7 @@ class UserController extends BaseController{
           $_SESSION['user']=$_REQUEST['user'];
           $_SESSION['uid']=$user_result['uid'];
           if(defined('API_MODE')){
+            header("Content-type: application/json");
             $json_array=array('user'=>$_REQUEST['user'],'uid'=>$user_result['uid'],'session_name'=>$session_name,'session_value'=>session_id());
             die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
           }
