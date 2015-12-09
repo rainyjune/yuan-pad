@@ -28,7 +28,8 @@ var ACPTabContent = React.createClass({
           activeTab={this.props.activeTab}
           acpData={this.props.acpData}
         />
-        <ACPIpConfig 
+        <ACPIpConfig
+          acpData={this.props.acpData}
           lang={this.props.lang}
           activeTab={this.props.activeTab}
         />
