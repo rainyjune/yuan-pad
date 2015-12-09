@@ -19,13 +19,15 @@ var Reply = React.createClass({
 });
 
 var Comment = React.createClass({
+  checkAll: function(e) {
+    e.preventDefault();
+  },
+  clearAll: function(e) {
+    e.preventDefault();
+  },
   render: function() {
     var data = this.props.data;
     var lang = this.props.lang;
-    var replyContent = '';
-    if (data.reply_content) {
-      
-    }
     return (
       <tr>
         <td>
@@ -58,6 +60,7 @@ var ACPMessages = React.createClass({
         <Comment
           lang={lang}
           data={comment}
+          key={comment.id}
         />
       );
     };
@@ -79,9 +82,9 @@ var ACPMessages = React.createClass({
             <tfoot>
               <tr>
                 <td colSpan='4'>
-                  <span className="check_span"><a href="#" id="m_checkall">{lang.CHECK_ALL}</a> &nbsp;
-                  <a href="#" id="m_checknone">{lang.CHECK_NONE}</a> &nbsp;
-                  <a href="#" id="m_checkxor">{lang.CHECK_INVERT}</a>&nbsp;</span>
+                  <a href="#" onClick={this.checkAll} id="m_checkall">{lang.CHECK_ALL}</a> &nbsp;
+                  <a href="#" onClick={this.clearAll} id="m_checknone">{lang.CHECK_NONE}</a> &nbsp;
+                  <a href="#" onClick={this.invertCheck}>{lang.CHECK_INVERT}</a>&nbsp;
                   <input type='submit' value={lang.DELETE_CHECKED} />&nbsp;
                   <a id="deleteallLink" href="index.php?controller=post&amp;action=deleteAll">{lang.DELETE_ALL}</a>&nbsp;
                   <a id="deleteallreplyLink" href="index.php?controller=reply&amp;action=deleteAll">{lang.DELETE_ALL_REPLY}</a>
