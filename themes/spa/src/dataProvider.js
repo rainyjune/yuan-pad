@@ -125,8 +125,9 @@ function getACPData(successCallback, errorCallback) {
 function updateSiteConfig(configObj, successCallback, errorCallback) {
   yuanjs.ajax({
       type: "POST",
-      url: "index.php?controller=config&amp;action=update",
+      url: "api.php?controller=config&action=update",
       data: configObj,
+      dataType: "json",
       success: successCallback,
       error: errorCallback
     });
