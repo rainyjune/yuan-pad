@@ -37,6 +37,20 @@ var ACPBox = React.createClass({
       }.bind(this));
     }.bind(this));
   },
+  // Reload site configuration after being updated by admin user.
+  handleConfigUpdate: function() {
+    dataProvider.getAppConfig(function(data){
+      if (this.isMounted()) {
+        this.setState({translations: data.translations, appConfig: data});
+
+        dataProvider.getACPData(function(data){
+          this.setState({
+            acpData: data
+          });
+        }.bind(this));
+      }
+    }.bind(this));
+  },
   // Update the `currentUser` state to default value.
   handleLogout: function() {
     if (this.isMounted()) {
@@ -110,6 +124,7 @@ var ACPBox = React.createClass({
           acpData={this.state.acpData}
           appConfig={this.state.appConfig}
           user={this.state.currentUser}
+          onConfigUpdated={this.handleConfigUpdate}
         />
         <ACPFooter
           user={this.state.currentUser}
