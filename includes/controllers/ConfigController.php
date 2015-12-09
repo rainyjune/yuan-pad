@@ -31,6 +31,12 @@ class ConfigController extends BaseController{
         $this->set_filter_type();
         $this->set_allowed_tags();
 
+        if (defined('API_MODE')) {
+            $result = array("status"=>"OK");
+            header("Content-type: application/json");
+            die(function_exists('json_encode') ? json_encode($result) : CJSON::encode($result));
+        }
+
         header("Location:index.php?action=control_panel&subtab=siteset");
     }
     private function set_board_name(){

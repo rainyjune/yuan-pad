@@ -159,6 +159,7 @@ class SiteController extends BaseController{
             'ban_ip_info'=>$ban_ip_info,
             'yuanpad_version'=>MP_VERSION,
             'php_version'=>PHP_VERSION,
+            'gd_loaded'=>gd_loaded(),
             );
         if (defined('API_MODE')) {
           header("Content-type: application/json");
