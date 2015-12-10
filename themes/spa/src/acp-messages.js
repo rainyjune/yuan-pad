@@ -2,6 +2,12 @@ var React = require('react');
 var dataProvider = require('./dataProvider.js');
 
 var Reply = React.createClass({
+  deleteReply: function(e) {
+    e.preventDefault();
+    // TODO
+    dataProvider.deleteReply(commentId, function(response) {
+    }.bind(this));
+  },
   render: function() {
     var lang = this.props.lang,
         data = this.props.data;
@@ -12,7 +18,7 @@ var Reply = React.createClass({
     return (
       <div>
         {replyContent}
-        <span>&nbsp;<a href="index.php?controller=reply&amp;action=delete&amp;mid={data.id}">{lang.DELETE_THIS_REPLY}</a></span>
+        <span>&nbsp;<a onClick={this.deleteReply} href="#">{lang.DELETE_THIS_REPLY}</a></span>
       </div>
     );
   }
