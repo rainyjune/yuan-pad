@@ -132,12 +132,17 @@ class UserController extends BaseController{
     
   public function actionDelete(){
     is_admin();
-    $uid=isset ($_GET['uid'])?(int)$_GET['uid']:null;
+    $uid=isset ($_POST['uid'])?(int)$_POST['uid']:null;
     if(!$uid){
       header("Location:index.php?controller=user");exit;
     }
     $this->_model->query(parse_tbprefix("DELETE FROM <sysuser> WHERE uid=$uid"));
     $this->_model->query(parse_tbprefix("UPDATE <post> SET uid=0 WHERE uid=$uid"));
+    if (defined('API_MODE')) {
+      header("Content-type: application/json");
+      $result=array('status'=>'OK');
+      die(function_exists('json_encode') ? json_encode($result) : CJSON::encode($result));
+    }
     header("Location:index.php?controller=user&randomvalue=".rand());
   }
     
