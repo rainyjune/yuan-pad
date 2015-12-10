@@ -179,6 +179,16 @@ function deleteAllComments(successCallback, errorCallback) {
   });
 }
 
+function deleteAllUsers(successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "POST",
+    url: 'api.php?controller=user&action=deleteAll',
+    dataType: "json",
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
 function deleteComment(commentId, reply, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -229,6 +239,7 @@ module.exports = {
   createPost: createPost,
   deleteAllComments: deleteAllComments,
   deleteAllReplies: deleteAllReplies,
+  deleteAllUsers: deleteAllUsers,
   deleteComment: deleteComment,
   deleteMutiComments: deleteMutiComments,
   deleteReply: deleteReply,
