@@ -5,7 +5,7 @@ var Reply = React.createClass({
   render: function() {
     var lang = this.props.lang,
         data = this.props.data;
-    if (!this.props.data || !this.props.data.reply_content) {
+    if (!data || !data.reply_content) {
       return null;
     }
     var replyContent = lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content);
@@ -19,11 +19,26 @@ var Reply = React.createClass({
 });
 
 var Comment = React.createClass({
-  checkAll: function(e) {
+  banIP: function(e) {
     e.preventDefault();
+    var ip = e.targt.getAttribute('data-ip');
+    dataProvider.banIP(ip, function(){
+    }.bind(this));
   },
-  clearAll: function(e) {
+  deleteComment: function(e) {
     e.preventDefault();
+    var dom = e.target;
+    var commentId = dom.getAttribute("data-commentid");
+    var reply = dom.getAttribute("data-reply");
+    // TODO
+    dataProvider.deleteComment(commentId, reply, function(response) {
+    });
+  },
+  replyComment: function(e) {
+    e.preventDefault();
+    var dom = e.target;
+    var commentId = dom.getAttribute('data-commentid');
+    this.props.onReplyComment(commentId);
   },
   render: function() {
     var data = this.props.data;
@@ -41,16 +56,41 @@ var Comment = React.createClass({
           {data.post_content}<br />{lang.TIME}：{data.time}
           <Reply />
         </td>
-        <td><a href={'index.php?controller=post&amp;action=delete&amp;mid='+ data.id + '&amp;reply=' + (data.reply ? "1" : "0")}>{lang.DELETE}</a>
-            <a className="ex2trigger" href={'index.php?controller=reply&amp;action=reply&amp;mid=' + data.id}>{lang.REPLY}</a>
-        <a className="ex2trigger" href={'index.php?controller=post&amp;action=update&amp;mid=' + data.id}>{lang.UPDATE}</a>
-        <a href={'index.php?controller=badip&amp;action=create&amp;ip=' + data.ip}>{lang.BAN}</a></td>
+        <td>
+          <a onClick={this.deleteComment} data-commentid={data.id} data-reply={data.reply ? "1" : "0"} href='#'>{lang.DELETE}</a>
+          <a onClick={this.replyComment} data-commentid={data.id} href="#">{lang.REPLY}</a>
+          <a onClick={this.updateComment} href="#">{lang.UPDATE}</a>
+          <a onClick={this.banIP} data-ip={data.ip} href="#">{lang.BAN}</a></td>
       </tr>
     );
   }
 });
 
 var ACPMessages = React.createClass({
+  checkAll: function(e) {
+    e.preventDefault();
+  },
+  clearAll: function(e) {
+    e.preventDefault();
+  },
+  deleteAllComments: function(e) {
+    e.preventDefault();
+    // TODO
+    dataProvider.deleteAllComments();
+  },
+  deleteAllReplies: function(e) {
+    e.preventDefault();
+    // TODO
+    dataProvider.deleteAllReplies();
+  },
+  deleteSelected: function(e) {
+    e.preventDefault();
+    // TODO
+    dataProvider.deleteMutiComments();
+  },
+  invertCheck: function(e) {
+    e.preventDefault();
+  },
   render: function() {
     var lang = this.props.lang;
     var comments = this.props.acpData.data;
@@ -61,13 +101,14 @@ var ACPMessages = React.createClass({
           lang={lang}
           data={comment}
           key={comment.id}
+          onReplyComment={this.handleReplyComment}
         />
       );
     };
     return (
       <div className={cssClass}>
-        <form id="message_manage" action="index.php?controller=post&amp;action=delete_multi_messages" method="post">
-          <table width="800px">
+        <form onSubmit={this.deleteSelected} action="#" method="post">
+          <table>
             <thead>
               <tr className="header">
                 <th>{lang.SELECT}</th>
@@ -77,17 +118,17 @@ var ACPMessages = React.createClass({
               </tr>
             </thead>
             <tbody>
-              {comments && comments.map(createComment)}
+              {comments && comments.map(createComment, this)}
             </tbody>
             <tfoot>
               <tr>
                 <td colSpan='4'>
-                  <a href="#" onClick={this.checkAll} id="m_checkall">{lang.CHECK_ALL}</a> &nbsp;
-                  <a href="#" onClick={this.clearAll} id="m_checknone">{lang.CHECK_NONE}</a> &nbsp;
+                  <a href="#" onClick={this.checkAll}>{lang.CHECK_ALL}</a> &nbsp;
+                  <a href="#" onClick={this.clearAll}>{lang.CHECK_NONE}</a> &nbsp;
                   <a href="#" onClick={this.invertCheck}>{lang.CHECK_INVERT}</a>&nbsp;
                   <input type='submit' value={lang.DELETE_CHECKED} />&nbsp;
-                  <a id="deleteallLink" href="index.php?controller=post&amp;action=deleteAll">{lang.DELETE_ALL}</a>&nbsp;
-                  <a id="deleteallreplyLink" href="index.php?controller=reply&amp;action=deleteAll">{lang.DELETE_ALL_REPLY}</a>
+                  <a onClick={this.deleteAllComments}>{lang.DELETE_ALL}</a>&nbsp;
+                  <a onClick={this.deleteAllReplies}>{lang.DELETE_ALL_REPLY}</a>
                 </td>
               </tr>
             </tfoot>
