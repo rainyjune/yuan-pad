@@ -131,6 +131,7 @@ var ACPBox = React.createClass({
           acpData={this.state.acpData}
           appConfig={this.state.appConfig}
           user={this.state.currentUser}
+          onActiveTabChanged={this.updateActiveTab}
           onConfigUpdated={this.handleConfigUpdate}
           onCommentDeleted={this.handleCommentDeleted}
         />

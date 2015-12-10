@@ -56,9 +56,11 @@ var Reply = React.createClass({
 
 var Comment = React.createClass({
   banIP: function(e) {
+    var dom = e.target;
     e.preventDefault();
-    var ip = e.targt.getAttribute('data-ip');
+    var ip = dom.getAttribute('data-ip');
     dataProvider.banIP(ip, function(){
+      this.props.onActiveTabChanged('ban_ip');
     }.bind(this));
   },
   deleteComment: function(e) {
@@ -138,6 +140,7 @@ var ACPMessages = React.createClass({
           lang={lang}
           data={comment}
           key={comment.id}
+          onActiveTabChanged={this.props.onActiveTabChanged}
           onReplyComment={this.handleReplyComment}
           onCommentDeleted={this.props.onCommentDeleted}
         />

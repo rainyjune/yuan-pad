@@ -27,6 +27,7 @@ var ACPTabContent = React.createClass({
           lang={this.props.lang}
           activeTab={this.props.activeTab}
           acpData={this.props.acpData}
+          onActiveTabChanged={this.props.onActiveTabChanged}
           onCommentDeleted={this.props.onCommentDeleted}
         />
         <ACPIpConfig
