@@ -81,6 +81,14 @@ var ACPUser = React.createClass({
     }.bind(this));return;
     
   },
+  deleteAllUsers: function(e) {
+    e.preventDefault();
+    dataProvider.deleteAllUsers(function(response){
+      dataProvider.getAllUsers(function(data){
+        this.setState({users: data});
+      }.bind(this));
+    }.bind(this));
+  },
   render: function() {
     var lang = this.props.lang;
     var cssClass = this.props.activeTab === "user" ? "user_container selectTag" : "user_container";
@@ -117,7 +125,7 @@ var ACPUser = React.createClass({
                   <a href="#" id="m_checknone">{lang.CHECK_NONE}</a> &nbsp;
                   <a href="#" id="m_checkxor">{lang.CHECK_INVERT}</a>&nbsp;</span>
                   <input type='submit' value={lang.DELETE_CHECKED} />&nbsp;
-                  <a id="deleteallLink" href="index.php?controller=post&amp;action=deleteAll">{lang.DELETE_ALL}</a>&nbsp;
+                  <a onClick={this.deleteAllUsers} href="index.php?controller=post&amp;action=deleteAll">{lang.DELETE_ALL}</a>&nbsp;
                 </td>
               </tr>
             </tfoot>
