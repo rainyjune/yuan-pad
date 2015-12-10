@@ -16,7 +16,7 @@ class BadipController extends BaseController
     public function actionCreate()
 	{
         is_admin();
-        $ip=@$_GET['ip'];
+        $ip=@$_POST['ip'];
         if (valid_ip($ip)==false)
 		{
             header("Location:index.php?action=control_panel&subtab=message");exit;
@@ -26,6 +26,11 @@ class BadipController extends BaseController
             header("Location:index.php?action=control_panel&subtab=ban_ip");exit;
         }
         $this->_model->query(sprintf(parse_tbprefix("INSERT INTO <badip> ( ip ) VALUES ( '%s' )"),$ip));
+        if (defined('API_MODE')) {
+          header("Content-type: application/json");
+					$result=array('status'=>'OK');
+          die(function_exists('json_encode') ? json_encode($result) : CJSON::encode($result));
+        }
         header("Location:index.php?action=control_panel&subtab=ban_ip");
     }
     public function actionUpdate()
