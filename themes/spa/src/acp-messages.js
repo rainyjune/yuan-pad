@@ -2,22 +2,53 @@ var React = require('react');
 var dataProvider = require('./dataProvider.js');
 
 var Reply = React.createClass({
+  getInitialState: function() {
+    return {
+      b_username: null,
+      id: 0,
+      ip: "::1",
+      post_content: "",
+      reply_content: "",
+      reply_time: "",
+      time: "",
+      uid: null,
+      uname: "",
+      user: ""
+    };
+  },
+  componentWillReceiveProps: function(nextProps) {
+    var data = nextProps.data;
+    if (data) {
+      this.setState({
+        b_username: data.b_username,
+        id: data.id,
+        ip: data.ip,
+        post_content: data.post_content,
+        reply_content: data.reply_content,
+        reply_time: data.reply_time,
+        time: data.time,
+        uid: data.uid,
+        uname: data.uname,
+        user: data.user
+      });
+    }
+  },
   deleteReply: function(e) {
     e.preventDefault();
-    // TODO
-    dataProvider.deleteReply(commentId, function(response) {
+    dataProvider.deleteReply(e.target.getAttribute("data-commentid"), function(response) {
+      this.setState({reply_content: ''});
     }.bind(this));
   },
   render: function() {
     var lang = this.props.lang,
-        data = this.props.data;
+        data = this.state;
     if (!data || !data.reply_content) {
       return null;
     }
     return (
       <div>
         {lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content)}
-        <span>&nbsp;<a onClick={this.deleteReply} href="#">{lang.DELETE_THIS_REPLY}</a></span>
+        <span>&nbsp;<a onClick={this.deleteReply} data-commentid={data.id} href="#">{lang.DELETE_THIS_REPLY}</a></span>
       </div>
     );
   }
