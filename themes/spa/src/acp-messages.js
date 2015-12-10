@@ -14,10 +14,9 @@ var Reply = React.createClass({
     if (!data || !data.reply_content) {
       return null;
     }
-    var replyContent = lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content);
     return (
       <div>
-        {replyContent}
+        {lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content)}
         <span>&nbsp;<a onClick={this.deleteReply} href="#">{lang.DELETE_THIS_REPLY}</a></span>
       </div>
     );
@@ -60,7 +59,7 @@ var Comment = React.createClass({
         </td>
         <td className='admin_message'>
           {data.post_content}<br />{lang.TIME}：{data.time}
-          <Reply />
+          <Reply lang={lang} data={data} />
         </td>
         <td>
           <a onClick={this.deleteComment} data-commentid={data.id} data-reply={data.reply ? "1" : "0"} href='#'>{lang.DELETE}</a>
