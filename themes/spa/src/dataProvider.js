@@ -169,10 +169,10 @@ function deleteAllReplies(successCallback, errorCallback) {
 
 function deleteAllComments(successCallback, errorCallback) {
   yuanjs.ajax({
-    type: "GET",
+    type: "POST",
     url: 'api.php',
     data: {controller: "post", action: "deleteAll"},
-    //dataType: "json",
+    dataType: "json",
     success: successCallback,
     error: errorCallback
   });
@@ -180,10 +180,10 @@ function deleteAllComments(successCallback, errorCallback) {
 
 function deleteComment(commentId, reply, successCallback, errorCallback) {
   yuanjs.ajax({
-    type: "GET",
-    url: 'api.php',
-    data: {controller: "post", action: "delete", mid: commentId, reply: reply},
-    //dataType: "json",
+    type: "POST",
+    url: 'api.php?controller=post&action=delete',
+    data: {mid: commentId, reply: reply},
+    dataType: "json",
     success: successCallback,
     error: errorCallback
   });
