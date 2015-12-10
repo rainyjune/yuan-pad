@@ -1,3 +1,14 @@
+// TODO => POST
+function banIP(ip, successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "GET",
+    url: 'api.php?controller=badip&action=create&ip=' + ip,
+    dataType: 'json',
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
 function login(credentials, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -145,8 +156,57 @@ function getAllUsers(successCallback, errorCallback) {
   });
 }
 
+function deleteAllReplies(successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "GET",
+    url: 'api.php',
+    data: {controller: "reply", action: "reply"},
+    //dataType: "json",
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
+function deleteAllComments(successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "GET",
+    url: 'api.php',
+    data: {controller: "post", action: "deleteAll"},
+    //dataType: "json",
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
+function deleteComment(commentId, reply, successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "GET",
+    url: 'api.php',
+    data: {controller: "post", action: "delete", mid: commentId, reply: reply},
+    //dataType: "json",
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
+function deleteMutiComments(dataObj, successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "POST",
+    url: "api.php?controller=post&action=delete_multi_messages",
+    data: dataObj,
+    dataType: "json",
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
 module.exports = {
+  banIP: banIP,
   createPost: createPost,
+  deleteAllComments: deleteAllComments,
+  deleteAllReplies: deleteAllReplies,
+  deleteComment: deleteComment,
+  deleteMutiComments: deleteMutiComments,
   getACPData: getACPData,
   getAllUsers: getAllUsers,
   login: login,
