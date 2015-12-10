@@ -1,8 +1,9 @@
 // TODO => POST
 function banIP(ip, successCallback, errorCallback) {
   yuanjs.ajax({
-    type: "GET",
-    url: 'api.php?controller=badip&action=create&ip=' + ip,
+    type: "POST",
+    url: 'api.php?controller=badip&action=create',
+    data: {ip: ip},
     dataType: 'json',
     success: successCallback,
     error: errorCallback
