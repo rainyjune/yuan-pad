@@ -81,14 +81,20 @@ class PostController extends BaseController{
             'mid'=>$mid,
         ));
     }
+    // TODO GET=> POST
     public function actionDelete(){
         is_admin();
-        $mid=isset ($_GET['mid'])?(int)$_GET['mid']:null;
+        $mid=isset ($_POST['mid'])?(int)$_POST['mid']:null;
         if(!$mid){
             header("Location:index.php?action=control_panel&amp;subtab=message");exit;
         }
         $this->_model->query(parse_tbprefix("DELETE FROM <post> WHERE pid=$mid"));
         $this->_model->query(parse_tbprefix("DELETE FROM <reply> WHERE pid=$mid"));
+        if (defined('API_MODE')) {
+          header("Content-type: application/json");
+					$result=array('status'=>'OK');
+          die(function_exists('json_encode') ? json_encode($result) : CJSON::encode($result));
+        }
         header("Location:index.php?action=control_panel&subtab=message&randomvalue=".rand());
     }
     public  function actionDelete_multi_messages(){
