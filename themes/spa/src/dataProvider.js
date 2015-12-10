@@ -200,6 +200,18 @@ function deleteMutiComments(dataObj, successCallback, errorCallback) {
   });
 }
 
+// TODO
+function deleteReply(commentId, successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "POST",
+    url: "api.php?controller=reply&action=delete",
+    data: {mid: commentId},
+    dataType: "json",
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
 module.exports = {
   banIP: banIP,
   createPost: createPost,
@@ -207,6 +219,7 @@ module.exports = {
   deleteAllReplies: deleteAllReplies,
   deleteComment: deleteComment,
   deleteMutiComments: deleteMutiComments,
+  deleteReply: deleteReply,
   getACPData: getACPData,
   getAllUsers: getAllUsers,
   login: login,
