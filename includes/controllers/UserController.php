@@ -150,6 +150,10 @@ class UserController extends BaseController{
     is_admin();
     $this->_model->query(parse_tbprefix("DELETE FROM <sysuser>"));
     $this->_model->query(parse_tbprefix("UPDATE <post> SET uid = 0"));
+    if(defined('API_MODE')) {
+      $json_array=array('status'=>'OK');
+      die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
+    }
     header("location:index.php?controller=user");
   }
     

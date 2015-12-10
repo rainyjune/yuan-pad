@@ -33,6 +33,7 @@ class ZFramework{
         'SearchController/actionIndex',
         'UserController/actionCreate',
         'UserController/actionDelete',
+        'UserController/actionDeleteAll',
         'UserController/actionIndex',
         'UserController/actionLogin',
         'UserController/actionLogout',
