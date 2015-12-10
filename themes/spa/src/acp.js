@@ -92,6 +92,13 @@ var ACPBox = React.createClass({
       window.location = "index.php";
     }
   },
+  handleCommentDeleted: function() {
+    dataProvider.getACPData(function(data){
+      this.setState({
+        acpData: data
+      });
+    }.bind(this));
+  },
   render: function() {
     var tabs = [
       {text: this.state.translations.ACP_OVERVIEW,value: "overview"},
@@ -125,6 +132,7 @@ var ACPBox = React.createClass({
           appConfig={this.state.appConfig}
           user={this.state.currentUser}
           onConfigUpdated={this.handleConfigUpdate}
+          onCommentDeleted={this.handleCommentDeleted}
         />
         <ACPFooter
           user={this.state.currentUser}

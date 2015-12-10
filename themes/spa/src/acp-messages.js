@@ -68,7 +68,8 @@ var Comment = React.createClass({
     var reply = dom.getAttribute("data-reply");
     // TODO
     dataProvider.deleteComment(commentId, reply, function(response) {
-    });
+      this.props.onCommentDeleted();
+    }.bind(this));
   },
   replyComment: function(e) {
     e.preventDefault();
@@ -138,6 +139,7 @@ var ACPMessages = React.createClass({
           data={comment}
           key={comment.id}
           onReplyComment={this.handleReplyComment}
+          onCommentDeleted={this.props.onCommentDeleted}
         />
       );
     };
