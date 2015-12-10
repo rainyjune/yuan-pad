@@ -1,7 +1,21 @@
 var React = require('react');
+var UserUpdateModal = require('./acp-userUpdateModal.js');
 var dataProvider = require('./dataProvider.js');
 
 var UserItem = React.createClass({
+  deleteUser: function(e) {
+    var uid = e.target.getAttribute('data-uid');
+    e.preventDefault();
+    dataProvider.deleteUser(uid, function(response) {
+      // if OK
+      this.props.onUserDeleted();
+    }.bind(this));
+  },
+  updateUser: function(e) {
+    var uid = e.target.getAttribute('data-uid');
+    e.preventDefault();
+    this.props.onOpenUserUpdateModal(uid);
+  },
   render: function() {
     var user = this.props.data;
     var lang = this.props.lang;
@@ -10,8 +24,9 @@ var UserItem = React.createClass({
         <td><input type='checkbox' name='select_uid[]' value={user.uid} /></td>
         <td>{user.username}</td>
         <td>{user.email}</td>
-        <td><a href={'index.php?controller=user&amp;action=delete&amp;uid=' + user.uid}>{lang.DELETE}</a>
-          <a className="ex2trigger" href={'index.php?controller=user&amp;action=update&amp;uid=' + user.uid}>{lang.UPDATE}</a>
+        <td>
+          <a data-uid={user.uid} onClick={this.deleteUser} href="#">{lang.DELETE}</a>
+          <a data-uid={user.uid} onClick={this.updateUser} href={'index.php?controller=user&amp;action=update&amp;uid=' + user.uid}>{lang.UPDATE}</a>
         </td>
       </tr>
     );
@@ -21,7 +36,10 @@ var UserItem = React.createClass({
 var ACPUser = React.createClass({
   getInitialState: function() {
     return {
-      users: []
+      users: [],
+      updateErrorMsg: '',
+      updateModalIsOpen: false,
+      updatedModalUserData: null,
     };
   },
   componentDidMount: function() {
@@ -29,18 +47,58 @@ var ACPUser = React.createClass({
       this.setState({users: data});
     }.bind(this));
   },
+  handleUserDeleted: function() {
+    dataProvider.getAllUsers(function(data){
+      this.setState({users: data});
+    }.bind(this));
+  },
+  handleUpdateSubmit: function(newUserData) {
+    dataProvider.updateUser(newUserData, function(response){
+      this.setState({
+        updateErrorMsg: '',
+        updatedModalUserData: null,
+        updateModalIsOpen: false
+      });
+      dataProvider.getAllUsers(function(data){
+        this.setState({users: data});
+      }.bind(this));
+    }.bind(this));
+  },
+  closeUpdateModal: function() {
+    this.setState({
+      updateErrorMsg: '',
+      updatedModalUserData: null,
+      updateModalIsOpen: false
+    });
+  },
+  openUserUpdateModal: function(uid) {
+    dataProvider.loadUserDataFromServer(uid, function(response){
+      this.setState({
+        updateErrorMsg: '',
+        updatedModalUserData: response,
+        updateModalIsOpen: true
+      });
+    }.bind(this));return;
+    
+  },
   render: function() {
     var lang = this.props.lang;
     var cssClass = this.props.activeTab === "user" ? "user_container selectTag" : "user_container";
     var createUserItem = function(user) {
       return (
-        <UserItem data={user} lang={lang} key={user.uid} />
+        <UserItem
+          data={user}
+          lang={lang}
+          key={user.uid}
+          onOpenUserUpdateModal={this.openUserUpdateModal}
+          onUserDeleted={this.handleUserDeleted}
+        />
       );
     };
     return (
       <div className={cssClass}>
-        <form id="user_manage" action="index.php?controller=user&amp;action=delete_multi" method="post">
-          <table width="800px">
+        <form action="index.php?controller=user&amp;action=delete_multi" method="post">
+          <table>
             <thead>
               <tr className="header">
                 <th className="span-1">{lang.SELECT}</th>
@@ -50,7 +108,7 @@ var ACPUser = React.createClass({
               </tr>
             </thead>
             <tbody>
-              {this.state.users.map(createUserItem)}
+              {this.state.users.map(createUserItem, this)}
             </tbody>
             <tfoot>
               <tr>
@@ -64,6 +122,14 @@ var ACPUser = React.createClass({
               </tr>
             </tfoot>
           </table>
+          <UserUpdateModal
+            userData={this.state.updatedModalUserData}
+            errorMsg={this.state.updateErrorMsg} 
+            modalIsOpen={this.state.updateModalIsOpen} 
+            onRequestClose={this.closeUpdateModal}
+            onUpdateSubmit={this.handleUpdateSubmit}
+            lang={this.props.lang} 
+          />
         </form>
       </div>
     );
