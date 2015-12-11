@@ -23,12 +23,15 @@ class SiteController extends BaseController{
         $current_page=isset($_GET['pid'])?(int)$_GET['pid']:0;
         $nums=count($data);
         $pages= ZFramework::app()->page_on ? ceil($nums/ZFramework::app()->num_perpage) : 1;
-        if($current_page>=$pages)
+        if($current_page>=$pages) {
             $current_page=$pages-1;
-        if($current_page<0)
+        }
+        if($current_page<0) {
             $current_page=0;
-        if(ZFramework::app()->page_on)
+        }
+        if(ZFramework::app()->page_on) {
             $data=$this->page_wrapper($data, $current_page);
+        }
         if(isset ($_GET['ajax']) || defined('API_MODE')){
             $JSONDATA=array('messages'=>$data,'current_page'=>$current_page,'total'=>$nums,'pagenum'=>$pages);
             header("Content-type: application/json");
@@ -54,12 +57,14 @@ class SiteController extends BaseController{
         $language=(isset($_GET['l']) && in_array($_GET['l'],$languages))?$_GET['l']:'en';
         $installed=FALSE;
         $tips=array();
-        if(!file_exists(CONFIGFILE))        // Check the configuration file permissions
+        if(!file_exists(CONFIGFILE)) {        // Check the configuration file permissions
             $tips[]=t('CONFIG_FILE_NOTEXISTS',array('{config_file}'=>CONFIGFILE),$language);
-        elseif(!is_writable(CONFIGFILE))
+        } elseif(!is_writable(CONFIGFILE)) {
             $tips[]=t('CONFIG_FILE_NOTWRITABLE',array('{config_file}'=>CONFIGFILE),$language);
-        if(!is_writable(APPROOT.'/data/'))
+        }
+        if(!is_writable(APPROOT.'/data/')) {
             $tips[]=t('DATADIR_NOT_WRITABLE', array(), $language);
+        }
         if(isset($_POST['dbtype']))
         {
             if(!empty ($_POST['adminname']) && !empty($_POST['adminpass']) && !empty ($_POST['dbtype']) &&!empty ($_POST['dbusername']) && !empty ($_POST['dbname']) && !empty ($_POST['dbhost']) && strlen(trim($_POST['adminname']))>2 ){
@@ -117,8 +122,9 @@ class SiteController extends BaseController{
         $tabs_array=array('overview','siteset','message','ban_ip');
         $tabs_name_array=array(t('ACP_OVERVIEW'),t('ACP_CONFSET'),t('ACP_MANAGE_POST'),t('ACP_MANAGE_IP'));
         if(isset($_GET['subtab'])){
-        if(in_array($_GET['subtab'],$tabs_array))
-            $current_tab=$_GET['subtab'];
+          if(in_array($_GET['subtab'],$tabs_array)) {
+              $current_tab=$_GET['subtab'];
+          }
         }
         $themes= get_all_themes();
         if(isset ($_GET['ajax']) || defined('API_MODE')){ 
@@ -136,8 +142,9 @@ class SiteController extends BaseController{
             $gd_info=gd_version();
         $gd_version=$gd_info?$gd_info:'<font color="red">'.t('UNKNOWN').'</font>';
         }
-        else
+        else {
             $gd_version='<font color="red">GD'.t('NOT_SUPPORT').'</font>';
+        }
         $register_globals=ini_get("register_globals") ? 'On' : 'Off';
         $magic_quotes_gpc=ini_get("magic_quotes_gpc") ? 'On' : 'Off';
         $languages= get_all_langs();
@@ -193,13 +200,15 @@ class SiteController extends BaseController{
 HERE;
         foreach ($data as $m) {
             $output .= "\t<item><title>";
-            if((int)$m['uid']>0)
+            if((int)$m['uid']>0) {
                 $output.=htmlentities ($m['b_username']);
-            else
+            } else {
                 $output.=htmlentities ($m['uname']);
+            }
             $output .= "</title><pubDate>".date("D, d M Y H:i:s T", $m['time'])."</pubDate><description><![CDATA[".$m['post_content'];
-            if(@$m['reply_content'])
+            if(@$m['reply_content']) {
                 $output.="<br />".strip_tags (t('ADMIN_REPLIED',array('{admin_name}'=>ZFramework::app()->admin,'{reply_time}'=>date("D, d M Y H:i:s T",$m['reply_time']),'{reply_content}'=>$m['reply_content'])));
+            }
             $output .="]]></description></item>\n";
         }
         $output.="\t</channel>\n</rss>";

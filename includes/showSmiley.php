@@ -7,10 +7,11 @@ $smileyArray=array_chunk($smileyArray,$numPerRow,true);
 foreach ($smileyArray as $value){
     $smileyString.="<tr>\n";
     foreach ($value as $k => $v) {
-        if($v)
+        if($v) {
             $smileyString.="<td><img id='".$k."' src='".SMILEYDIR.$v[0]."' alt='$v[3]' title='$v[3]' /></td>\n";
-        else
+        } else {
             $smileyString.="<td>&nbsp;</td>";
+        }
     }
     $smileyString.="</tr>\n";
 }

@@ -16,8 +16,9 @@ class SearchController extends BaseController{
             }
             $result_array=array();
             foreach($data as $_data){
-                if(strpos(@$_data['user'],$s)!==false || strpos($_data['post_content'], $s)!==false || strpos($_data['reply_content'], $s)!==false || strpos($_data['b_username'], $s)!==false)
+                if(strpos(@$_data['user'],$s)!==false || strpos($_data['post_content'], $s)!==false || strpos($_data['reply_content'], $s)!==false || strpos($_data['b_username'], $s)!==false) {
                     $result_array[]=$_data;
+                }
             }
             if (defined('API_MODE')) {
                 $json_array=array('messages'=>$result_array,'nums'=>  count($result_array));
@@ -28,8 +29,7 @@ class SearchController extends BaseController{
             'data'=>$result_array,
             'nums'=>$nums,
             ));
-        }
-        elseif (defined('API_MODE')) {
+        } elseif (defined('API_MODE')) {
             $error_array=array('error_code'=>'400','error'=>$API_CODE['400'],'error_detail'=>t('NO_SEARCH_PARAM'));
             die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
         }else{

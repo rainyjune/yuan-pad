@@ -37,8 +37,9 @@ function gd_loaded()
 {
     if ( ! extension_loaded('gd'))
     {
-        if ( ! @dl('gd.so'))
+        if ( ! @dl('gd.so')) {
             return FALSE;
+        }
     }
     return TRUE;
 }
@@ -52,10 +53,9 @@ function gd_loaded()
 function gd_version()
 {
     $gd_version=FALSE;
-    if (defined('GD_VERSION'))
+    if (defined('GD_VERSION')) {
         $gd_version=GD_VERSION;
-    elseif(function_exists('gd_info'))
-    {
+    } elseif(function_exists('gd_info')) {
         $gd_version = @gd_info();
         $gd_version = $gd_version['GD Version'];
     }
@@ -70,10 +70,11 @@ function gd_version()
 function getIP()
 {
     $ip = $_SERVER['REMOTE_ADDR'];
-    if (!empty($_SERVER['HTTP_CLIENT_IP']))
+    if (!empty($_SERVER['HTTP_CLIENT_IP'])) {
         $ip = $_SERVER['HTTP_CLIENT_IP'];
-    elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR']))
+    } elseif (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
         $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+    }
     $ip=$ip?$ip:'127.0.0.1';
     return $ip;
 }
@@ -99,8 +100,9 @@ function is_email($value)
 function attachEvent($action,$evt)
 {
     global $actionEvent;
-    if (!@in_array($evt, $actionEvent[$action]))
+    if (!@in_array($evt, $actionEvent[$action])) {
         $actionEvent[$action][]=$evt;
+    }
 }
 /**
  * Trigger all events attached to the specified action
@@ -192,8 +194,9 @@ function conf_path($require_settings = TRUE, $reset = FALSE)
 function is_flatfile()
 {
     global $db_url;
-    if(substr($db_url, 0, 8)=='flatfile')
+    if(substr($db_url, 0, 8)=='flatfile') {
         return true;
+    }
     return false;
 }
 
@@ -235,8 +238,9 @@ function is_baned($ip)
     $all_baned_ips=array();
     $db=YDB::factory($db_url);
     $result=$db->queryAll(sprintf(parse_tbprefix("SELECT * FROM <badip> WHERE ip='%s'"),$db->escape_string($ip)));
-    if($result)
+    if($result) {
         return true;
+    }
     return false;
 }
 /**
@@ -303,10 +307,12 @@ function get_all_data($parse_smileys=true,$filter_words=false,$processUsername=f
                 $_data['reply_content']= html_entity_decode(parse_smileys ($_data['reply_content'], SMILEYDIR,  getSmileys()));
             }
         }
-        if($filter_words)
+        if($filter_words) {
             $_data['post_content']=filter_words($_data['post_content']);
-        if($processUsername)
+        }
+        if($processUsername) {
             $_data['user']=($_data['uname']==ZFramework::app()->admin)?"<font color='red'>{$_data['uname']}</font>":$_data['uname'];
+        }
         if($processTime){
             $_data['time']=date('m-d H:i',$_data['time']+ZFramework::app()->timezone*60*60);
             $_data['reply_time']=date('m-d H:i',$_data['reply_time']+ZFramework::app()->timezone*60*60);
@@ -337,10 +343,12 @@ function preg_replace_dom($regex, $replacement, DOMNode $dom, array $excludePare
 function parse_smileys($str = '', $image_url = '', $smileys = NULL)
 {
     global $dom;
-    if ($image_url == '')
+    if ($image_url == '') {
         return $str;
-    if (!is_array($smileys))
+    }
+    if (!is_array($smileys)) {
         return $str;
+    }
     // Add a trailing slash to the file path if needed
     $image_url = preg_replace("/(.+?)\/*$/", "\\1/",  $image_url);
     $patt = array();
@@ -409,8 +417,9 @@ function get_supported_rdbms()
 function is_installed()
 {
     global $db_url;
-    if($db_url=='dummydb://username:password@localhost/databasename')
+    if($db_url=='dummydb://username:password@localhost/databasename') {
         return false;
+    }
     return true;
 }
 
@@ -430,10 +439,11 @@ function getConfigVar($name)
     $db=YDB::factory($db_url);
     $result=$db->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysvar> WHERE varname='%s'"),  $db->escape_string($name)));
     $result=@$result[0]['varvalue'];
-    if($result)
+    if($result) {
         return $result;
-    else
+    } else {
         return null;
+    }
 }
 
 /**
@@ -454,8 +464,9 @@ function get_all_themes()
     $themes=array();
     $d=dir(THEMEDIR);
     while(false!==($entry=$d->read())){
-        if(substr($entry,0,1)!='.')
+        if(substr($entry,0,1)!='.') {
             $themes[$entry]=$entry;
+        }
     }
     $d->close();
     return array_filter($themes,'_removeIndex');
@@ -471,8 +482,9 @@ function get_all_langs()
     $langs=array();
     $d=dir(APPROOT.'/languages/');
     while(false!==($entry=$d->read())){
-        if(substr($entry,0,1)!='.')
+        if(substr($entry,0,1)!='.') {
             $langs[substr($entry,0,-4)]=substr($entry,0,-4);
+        }
     }
     $d->close();
     return array_filter($langs,'_removeIndex');
@@ -554,8 +566,9 @@ function get_alll_plugins($loadPlugin=FALSE)
 function t($message,$params=array(),$userSpecifiedLanguage=null)
 {
     $messages=getLangArray($userSpecifiedLanguage);
-    if(isset ($messages[$message]) && $messages[$message]!=='')
+    if(isset ($messages[$message]) && $messages[$message]!=='') {
         $message=$messages[$message];
+    }
     return $params!==array()?strtr($message, $params):$message;
 }
 
@@ -566,8 +579,9 @@ function t($message,$params=array(),$userSpecifiedLanguage=null)
 function is_closedMode()
 {
     $disabledAction=array('PostController/actionCreate','SiteController/actionIndex','UserController/actionCreate');
-    if(getConfigVar('site_close')==1 && !isset ($_SESSION['admin']) && in_array((isset($_GET['controller'])?$_GET['controller']:'SiteController').'/'.(isset($_GET['action'])?$_GET['action']:'actionIndex'), $disabledAction))
+    if(getConfigVar('site_close')==1 && !isset ($_SESSION['admin']) && in_array((isset($_GET['controller'])?$_GET['controller']:'SiteController').'/'.(isset($_GET['action'])?$_GET['action']:'actionIndex'), $disabledAction)) {
         show_message(getConfigVar('close_reason'));
+    }
 }
 
 /**
@@ -592,8 +606,9 @@ function maple_unset_globals()
         $allowed = array('_ENV' => 1, '_GET' => 1, '_POST' => 1, '_COOKIE' => 1,'_SESSION'=>1,'_FILES' => 1, '_SERVER' => 1, '_REQUEST' => 1, 'GLOBALS' => 1);
         foreach ($GLOBALS as $key => $value)
         {
-            if (!isset($allowed[$key]))
+            if (!isset($allowed[$key])) {
                 unset($GLOBALS[$key]);
+            }
         }
     }
 }

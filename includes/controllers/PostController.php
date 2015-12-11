@@ -16,37 +16,43 @@ class PostController extends BaseController{
         if(isset ($_POST['user'])){
             //Validation
             $new_data_error_msg='';
-            if ( !strlen(trim($_POST['user'])) || !strlen(trim($_POST['content'])))
+            if ( !strlen(trim($_POST['user'])) || !strlen(trim($_POST['content']))) {
                 $new_data_error_msg=t('FILL_NOT_COMPLETE');
-            elseif(strlen($_POST['content']>580))
+            } elseif(strlen($_POST['content']>580)) {
                 $new_data_error_msg=t('WORDS_TOO_LONG');
-            elseif (ZFramework::app()->valid_code_open==1 && gd_loaded() && !$this->_verifyCode->check($_POST['valid_code']))
+            } elseif (ZFramework::app()->valid_code_open==1 && gd_loaded() && !$this->_verifyCode->check($_POST['valid_code'])) {
                 $new_data_error_msg=t('CAPTCHA_WRONG');
+            }
             if($new_data_error_msg){
                 if(defined('API_MODE')){
                     $error_array=array('error_code'=>'400','error'=>$API_CODE['400'],'error_detail'=>$new_data_error_msg);
                     die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
                 }
-                if(!empty ($_POST['ajax']))
+                if(!empty ($_POST['ajax'])) {
                     die ($new_data_error_msg);
-                else
+                } else {
                     show_message ($new_data_error_msg, true, 'index.php');
+                }
             }
             // Ready to send query to database
             $user=  $this->_model->escape_string($_POST['user']);
-            if(!isset($_SESSION['admin']) && $_POST['user']==ZFramework::app()->admin )
+            if(!isset($_SESSION['admin']) && $_POST['user']==ZFramework::app()->admin ) {
                 $user='anonymous';
+            }
             $userExists=  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysuser> WHERE username='%s'"),  $this->_model->escape_string($_POST['user'])));
-            if($userExists && (@$_SESSION['user']!=$_POST['user']))
+            if($userExists && (@$_SESSION['user']!=$_POST['user'])) {
                 $user='anonymous';
+            }
             $content = $this->_model->escape_string($_POST['content']);
-            if(isset ($_SESSION['uid']))
+            if(isset ($_SESSION['uid'])) {
                 $sql_insert= sprintf (parse_tbprefix("INSERT INTO <post> ( uid , content , post_time , ip ) VALUES ( %d , '%s' , %d , '%s' )"), $_SESSION['uid'],$content,  time (),  getIp ());
-            else
+            } else {
                 $sql_insert = sprintf (parse_tbprefix("INSERT INTO <post> ( uname , content , post_time , ip ) VALUES ( '%s' ,'%s' , %d , '%s')"), $user,$content,  time (),  getIp ());
+            }
             // Send query to database
-            if(!$this->_model->query($sql_insert))
+            if(!$this->_model->query($sql_insert)) {
                 die($this->_model->error());
+            }
 			performEvent('PostController/actionCreate',array($user,$content, time()+ZFramework::app()->timezone*60*60));
             if(defined('API_MODE')){
                 $json_array=array('insert_id'=>  $this->_model->insert_id());
@@ -73,8 +79,9 @@ class PostController extends BaseController{
 	}
         $mid=(int)$_GET['mid'];
         $message_info=$this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <post> WHERE pid=%d"),$mid));
-        if(!$message_info)
+        if(!$message_info){
             show_message(t('QUERY_ERROR'),TRUE,'index.php?action=control_panel&subtab=message');
+        }
 	$message_info=$message_info[0];
         $this->render('update', array(
             'message_info'=>$message_info,

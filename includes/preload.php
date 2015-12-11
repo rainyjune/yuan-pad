@@ -48,8 +48,9 @@ $gd_exist=gd_loaded();
 $zip_support=class_exists('ZipArchive')?'On':'Off';
 
 if(is_installed()){
-    if(is_baned(getIP()))
+    if(is_baned(getIP())) {
         die('Access denied!');
+    }
 	is_closedMode();
 }
 elseif($_GET['action']!='install'){

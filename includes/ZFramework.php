@@ -1,8 +1,9 @@
 <?php
 class BaseController{
     public function render($tplFile,$vars=NULL){
-        if ($vars)
+        if ($vars) {
             extract($vars);
+        }
         $tplDir='themes/'.ZFramework::app()->theme.'/templates/';
         $file=$tplDir.$tplFile;
         include $file.'.php';
