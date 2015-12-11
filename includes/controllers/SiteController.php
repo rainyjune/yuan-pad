@@ -35,7 +35,7 @@ class SiteController extends BaseController{
         if(isset ($_GET['ajax']) || defined('API_MODE')){
             $JSONDATA=array('messages'=>$data,'current_page'=>$current_page,'total'=>$nums,'pagenum'=>$pages);
             header("Content-type: application/json");
-            die(function_exists('json_encode') ? json_encode($JSONDATA) : CJSON::encode($JSONDATA));
+            die(json_encode($JSONDATA));
         }
         $admin=isset($_SESSION['admin'])?true:false;
         $adminName=  ZFramework::app()->admin;
@@ -112,7 +112,7 @@ class SiteController extends BaseController{
           if (defined('API_MODE')) {
             header("Content-type: application/json");
             $error_array=array('error_code'=>'401','error'=>$API_CODE['401'],'error_detail'=>'Unauthorized');
-            die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
+            die(json_encode($error_array));
           } else {
             header("Location:index.php?controller=user&action=login");exit;
           }
@@ -170,7 +170,7 @@ class SiteController extends BaseController{
             );
         if (defined('API_MODE')) {
           header("Content-type: application/json");
-          die(function_exists('json_encode') ? json_encode($templateDataArr) : CJSON::encode($templateDataArr));
+          die(json_encode($templateDataArr));
         }
         $this->render('admin',$templateDataArr);
     }
@@ -227,7 +227,7 @@ HERE;
         $langArray=getLangArray();
         $langArray['ADMIN_NAME_INDEX']=ZFramework::app()->admin;
         header("Content-type: application/json");
-        echo function_exists('json_encode') ? json_encode($langArray) : CJSON::encode($langArray);
+        echo json_encode($langArray);
     }
     
     public function actionGetAppConfig(){
@@ -254,7 +254,7 @@ HERE;
         
         
         header("Content-type: application/json");
-        echo function_exists('json_encode') ? json_encode($result) : CJSON::encode($result);
+        echo json_encode($result);
     }
 
 }

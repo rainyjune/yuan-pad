@@ -22,7 +22,7 @@ class SearchController extends BaseController{
             }
             if (defined('API_MODE')) {
                 $json_array=array('messages'=>$result_array,'nums'=>  count($result_array));
-                die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
+                die (json_encode($json_array));
             }
             $nums=count($result_array);
             $this->render('search_result',array(
@@ -31,7 +31,7 @@ class SearchController extends BaseController{
             ));
         } elseif (defined('API_MODE')) {
             $error_array=array('error_code'=>'400','error'=>$API_CODE['400'],'error_detail'=>t('NO_SEARCH_PARAM'));
-            die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
+            die(json_encode($error_array));
         }else{
             header("Location:index.php");
         }

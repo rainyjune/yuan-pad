@@ -38,7 +38,6 @@ define('THEMEDIR', 'themes/');
 define('PLUGINDIR', 'plugins/');
 define('SMILEYDIR', 'misc/images/');
 
-if (!function_exists('json_encode')){ include 'CJSON.php'; }
 include_once 'Imgcode.php';
 // Load ZFramework
 require 'ZFramework.php';

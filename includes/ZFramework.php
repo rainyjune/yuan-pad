@@ -78,7 +78,7 @@ class ZFramework{
         global $API_CODE;
         if (defined('API_MODE') && !in_array($this->_controller.'/'.$this->_action, $this->allow_request_api)){
             $error_array=array('error_code'=>'403','error'=>$API_CODE['403'],'error_detail'=>t('API_REQUEST_ERROR'));
-            die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
+            die(json_encode($error_array));
         }
         try {
             if(class_exists($this->getController())){
@@ -102,7 +102,7 @@ class ZFramework{
         catch (Exception $e){
             if(defined('API_MODE')){
                 $error_array=array('error_code'=>'403','error'=>$API_CODE['403'],'error_detail'=>'Request is not allowed.');
-                die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
+                die(json_encode($error_array));
             }
             if(defined('DEBUG_MODE')){
                 echo $e->getMessage();

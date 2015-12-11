@@ -26,7 +26,7 @@ class PostController extends BaseController{
             if($new_data_error_msg){
                 if(defined('API_MODE')){
                     $error_array=array('error_code'=>'400','error'=>$API_CODE['400'],'error_detail'=>$new_data_error_msg);
-                    die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
+                    die(json_encode($error_array));
                 }
                 if(!empty ($_POST['ajax'])) {
                     die ($new_data_error_msg);
@@ -56,7 +56,7 @@ class PostController extends BaseController{
 			performEvent('PostController/actionCreate',array($user,$content, time()+ZFramework::app()->timezone*60*60));
             if(defined('API_MODE')){
                 $json_array=array('insert_id'=>  $this->_model->insert_id());
-                die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
+                die (json_encode($json_array));
             }
             if(isset($_POST['ajax'])){
                 echo 'OK';
@@ -65,7 +65,7 @@ class PostController extends BaseController{
         }
         if(defined('API_MODE')){
             $error_array=array('error_code'=>'400','error'=>$API_CODE['400'],'error_detail'=>t('ONLY_POST'));
-            die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
+            die(json_encode($error_array));
         }
         header("Location:index.php");
     }
@@ -100,7 +100,7 @@ class PostController extends BaseController{
         if (defined('API_MODE')) {
           header("Content-type: application/json");
 					$result=array('status'=>'OK');
-          die(function_exists('json_encode') ? json_encode($result) : CJSON::encode($result));
+          die(json_encode($result));
         }
         header("Location:index.php?action=control_panel&subtab=message&randomvalue=".rand());
     }

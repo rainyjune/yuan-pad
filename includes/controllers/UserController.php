@@ -15,7 +15,7 @@ class UserController extends BaseController{
     $user_data=$this->_model->queryAll(parse_tbprefix("SELECT * FROM <sysuser>"));
     if(defined('API_MODE')){
       header("Content-type: application/json");
-      die (function_exists('json_encode') ? json_encode($user_data) : CJSON::encode($user_data));
+      die (json_encode($user_data));
     }
     $this->render('user_list',array('users'=>$user_data,'tabs_array'=>$tabs_array,'current_tab'=>$current_tab,'tabs_name_array'=>$tabs_name_array,));
   }
@@ -80,7 +80,7 @@ class UserController extends BaseController{
         $error_array=array('error_code'=>'400','error'=>$API_CODE['400'],'error_detail'=>t('PARAM_ERROR'));
       }
       if(isset ($error_array)) {
-        die (function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
+        die (json_encode($error_array));
       }
     }
     if((!isset($_SESSION['admin']) && !isset($_SESSION['uid'])) || !isset($_GET['uid']) || (!isset($_SESSION['admin']) && $_GET['uid']!=$_SESSION['uid'])){
@@ -96,14 +96,14 @@ class UserController extends BaseController{
           if($this->_model->query(sprintf(parse_tbprefix("UPDATE <sysuser> SET password = '%s' , email = '%s' WHERE uid = %d"),$pwd,$email,$uid))){
             if(defined('API_MODE')) {
               $json_array=array('status'=>'OK');
-              die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
+              die (json_encode($json_array));
             }
             header("Location:index.php");exit;
           } else {
             $errorMsg=t('USERUPDATEFAILED');
             if(defined('API_MODE')){
               $error_array=array('error_code'=>'500','error'=>$API_CODE['500'],'error_detail'=>$errorMsg);
-              die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
+              die(json_encode($error_array));
             }
           }
         } else {
@@ -114,17 +114,17 @@ class UserController extends BaseController{
       }
       if(defined('API_MODE') && isset ($errorMsg)){
         $error_array=array('error_code'=>'400','error'=>$API_CODE['400'],'error_detail'=>$errorMsg);
-        die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
+        die(json_encode($error_array));
       }
     }
     $user_data=  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysuser> WHERE uid=%d"),$uid));
     $user_data=$user_data[0];
     if(defined('API_MODE')){
       if($user_data){
-        die (function_exists('json_encode') ? json_encode($user_data) : CJSON::encode($user_data));
+        die (json_encode($user_data));
       } else {
         $error_array=array('error_code'=>'404','error'=>$API_CODE['404'],'error_detail'=>t('USER_NOT_EXISTS'));
-        die(function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
+        die(json_encode($error_array));
       }
     }
     include 'themes/'.ZFramework::app()->theme.'/templates/'."user_update.php";
@@ -141,7 +141,7 @@ class UserController extends BaseController{
     if (defined('API_MODE')) {
       header("Content-type: application/json");
       $result=array('status'=>'OK');
-      die(function_exists('json_encode') ? json_encode($result) : CJSON::encode($result));
+      die(json_encode($result));
     }
     header("Location:index.php?controller=user&randomvalue=".rand());
   }
@@ -152,7 +152,7 @@ class UserController extends BaseController{
     $this->_model->query(parse_tbprefix("UPDATE <post> SET uid = 0"));
     if(defined('API_MODE')) {
       $json_array=array('status'=>'OK');
-      die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
+      die (json_encode($json_array));
     }
     header("location:index.php?controller=user");
   }
@@ -175,14 +175,14 @@ class UserController extends BaseController{
       if(defined('API_MODE')){
         header("Content-type: application/json");
         $json_array=array('admin'=>$_SESSION['admin'],'session_name'=>$session_name,'session_value'=>session_id());
-        die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
+        die (json_encode($json_array));
       }
       header("Location:index.php?action=control_panel");exit;
     }
     if (isset($_SESSION['user'])){//common user logged in
       if(defined('API_MODE')){
         $json_array=array('user'=>$_SESSION['user'],'uid'=>$_SESSION['uid'],'session_name'=>$session_name,'session_value'=>session_id());
-        die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
+        die (json_encode($json_array));
       }
       header("Location:index.php");exit;
     }
@@ -194,7 +194,7 @@ class UserController extends BaseController{
         if(defined('API_MODE')){
           header("Content-type: application/json");
           $json_array=array('admin'=>$_SESSION['admin'],'session_name'=>$session_name,'session_value'=>session_id());
-          die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
+          die (json_encode($json_array));
         }
         header("Location:index.php?action=control_panel");
         exit;
@@ -207,7 +207,7 @@ class UserController extends BaseController{
           if(defined('API_MODE')){
             header("Content-type: application/json");
             $json_array=array('user'=>$_REQUEST['user'],'uid'=>$user_result['uid'],'session_name'=>$session_name,'session_value'=>session_id());
-            die (function_exists('json_encode') ? json_encode($json_array) : CJSON::encode($json_array));
+            die (json_encode($json_array));
           }
           header("Location:index.php");exit;
         } else {
@@ -218,10 +218,10 @@ class UserController extends BaseController{
     if(defined('API_MODE')){
       if(isset ($errormsg)){
         $error_array=array('error_code'=>'403','error'=>$API_CODE['403'],'error_detail'=>$errormsg);
-        die (function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
+        die (json_encode($error_array));
       } else {
         $error_array=array('error_code'=>'401','error'=>$API_CODE['401'],'error_detail'=>t('LOGIN_REQUIRED'));
-        die (function_exists('json_encode') ? json_encode($error_array) : CJSON::encode($error_array));
+        die (json_encode($error_array));
       }
     }
     include 'themes/'.ZFramework::app()->theme.'/templates/'."login.php";

@@ -34,7 +34,7 @@ class ConfigController extends BaseController{
         if (defined('API_MODE')) {
             $result = array("status"=>"OK");
             header("Content-type: application/json");
-            die(function_exists('json_encode') ? json_encode($result) : CJSON::encode($result));
+            die(json_encode($result));
         }
 
         header("Location:index.php?action=control_panel&subtab=siteset");

@@ -47,7 +47,7 @@ class ReplyController extends BaseController{
 				if (defined('API_MODE')) {
           header("Content-type: application/json");
 					$result=array('status'=>'OK');
-          die(function_exists('json_encode') ? json_encode($result) : CJSON::encode($result));
+          die(json_encode($result));
         }
         header("Location:index.php?action=control_panel&subtab=message&randomvalue=".rand());
     }
