@@ -25,8 +25,6 @@ if(get_magic_quotes_gpc())
 
 maple_unset_globals();
 
-//load text db api
-require APPROOT.'/includes/txt-db-api/txt-db-api.php';
 //Load database library
 require APPROOT.'/includes/database/YDB.php';
 //Load the configuration file
@@ -45,7 +43,6 @@ if (!function_exists('json_encode')){ include 'CJSON.php'; }
 include_once 'Imgcode.php';
 // Load ZFramework
 require 'ZFramework.php';
-
 
 $gd_exist=gd_loaded();
 $zip_support=class_exists('ZipArchive')?'On':'Off';
