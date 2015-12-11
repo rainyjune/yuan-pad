@@ -260,7 +260,6 @@ function parse_tbprefix($str)
  *
  *
  * @global string $db_url
- * @global dom $dom
  * @param boolean $parse_smileys Defaults to TRUE
  * @param boolean $filter_words Defaults to FALSE
  * @param boolean $processUsername Defaults to FALSE
@@ -270,7 +269,6 @@ function parse_tbprefix($str)
  */
 function get_all_data($parse_smileys=true,$filter_words=false,$processUsername=false,$processTime=false,$apply_filter=true){
     global $db_url;
-    global $dom;
     $db=YDB::factory($db_url);
     $data=array();
     $data=$db->queryAll(parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS uname,p.content AS post_content,p.post_time AS time,r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <sysuser> AS u ON p.uid=u.uid ORDER BY p.post_time DESC"));
@@ -299,14 +297,6 @@ function get_all_data($parse_smileys=true,$filter_words=false,$processUsername=f
             $_data['post_content']=  htmlentities($_data['post_content'],ENT_COMPAT,'UTF-8');
             $_data['reply_content']=htmlentities($_data['reply_content'],ENT_COMPAT,'UTF-8');
         }
-        if($parse_smileys){
-            $dom->loadHTML($_data['post_content']);
-            $_data['post_content']= html_entity_decode(parse_smileys ($_data['post_content'], SMILEYDIR,  getSmileys()));
-            if ($_data['reply_content']) {
-                $dom->loadHTML($_data['reply_content']);
-                $_data['reply_content']= html_entity_decode(parse_smileys ($_data['reply_content'], SMILEYDIR,  getSmileys()));
-            }
-        }
         if($filter_words) {
             $_data['post_content']=filter_words($_data['post_content']);
         }
@@ -322,47 +312,6 @@ function get_all_data($parse_smileys=true,$filter_words=false,$processUsername=f
     return $data;
 }
 
-function preg_replace_dom($regex, $replacement, DOMNode $dom, array $excludeParents = array()) {
-    if (!empty($dom->childNodes)) {
-        foreach ($dom->childNodes as $node) {
-            if ($node instanceof DOMText && !in_array($node->parentNode->nodeName, $excludeParents)) {
-                $node->nodeValue = preg_replace($regex, $replacement, $node->nodeValue);
-            } else {
-                preg_replace_dom($regex, $replacement, $node, $excludeParents);
-            }
-        }
-    }
-}
-
-/**
- * Parse smileys
- * @param $str
- * @param $image_url
- * @param $smileys
- */
-function parse_smileys($str = '', $image_url = '', $smileys = NULL)
-{
-    global $dom;
-    if ($image_url == '') {
-        return $str;
-    }
-    if (!is_array($smileys)) {
-        return $str;
-    }
-    // Add a trailing slash to the file path if needed
-    $image_url = preg_replace("/(.+?)\/*$/", "\\1/",  $image_url);
-    $patt = array();
-    $smileIcon = array();
-    foreach ($smileys as $key => $val){
-        $icon = "<img src=\"".$image_url.$smileys[$key][0]."\" width=\"".$smileys[$key][1]."\" height=\"".$smileys[$key][2]."\" title=\"".$smileys[$key][3]."\" alt=\"".$smileys[$key][3]."\" style=\"border:0;\" />";
-        $p = '/'.preg_quote($key, '/').'/';
-        array_push($patt, $p);
-        array_push($smileIcon, $icon);
-    }
-    preg_replace_dom($patt, $smileIcon, $dom->documentElement, array('code', 'pre'));
-    $html_fragment = preg_replace('/^<!DOCTYPE.+?>/', '', str_replace( array('<html>', '</html>', '<body>', '</body>'), array('', '', '', ''), $dom->saveHTML()));
-    return trim($html_fragment);
-}
 /**
  * Filter words
  * @param array $input
