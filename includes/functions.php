@@ -27,6 +27,40 @@ function is_admin()
     }
 }
 
+
+/**
+ * Watchdog for Admin Ajax requests.
+ * @return void
+ */
+function isAdminAjaxRequest() {
+    if (!isset($_SESSION['admin'])) {
+        exitWithStatus(403);
+    } elseif (isTokenValid() == false) {
+        exitWithStatus(400);
+    }
+}
+
+/**
+ * Returns an array that represent current status.
+ * @param number $statusCode The status code.
+ * @return array 
+ */
+function getStatusArray($statusCode) {
+    global $API_CODE;
+    $status = array('statusCode'=>$statusCode, 'statusText'=>$API_CODE[$statusCode]);
+    return $status;
+}
+
+/**
+ * Returns JSON format data to the client with current status and then exit.
+ * @param number $statusCode The status code.
+ * @return void
+ */
+function exitWithStatus($statusCode) {
+    header("Content-type: application/json");
+    die(json_decode(getStatusArray($statusCode)));
+}
+
 /**
  * Is GD Installed?
  * CI 1.7.2
