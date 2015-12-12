@@ -577,5 +577,5 @@ function getToken() {
 function isTokenValid() {
     $headers = getallheaders();  
     $requestToken = $headers['RequestVerificationToken'];
-    return $requestToken === $_SESSION['token'];
+    return isset($_SESSION['token']) && ($requestToken === $_SESSION['token']);
 }
