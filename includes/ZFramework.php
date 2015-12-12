@@ -18,30 +18,6 @@ class ZFramework{
     public      $defaultController='SiteController';
     public      $defaultAction='actionIndex';
     static      $_instance;
-    protected   $allow_request_api=array(
-        'SiteController/actionIndex',
-        'SiteController/actionCaptcha',
-        'SiteController/actionControl_panel',
-        'SiteController/actionRss',
-        'PostController/actionCreate',
-        'PostController/actionDelete',
-        'PostController/actionDeleteAll',
-        'PostController/actionDelete_multi_messages',
-        'PostController/actionUpdate',
-        'ReplyController/actionReply',
-        'ReplyController/actionDelete',
-        'ReplyController/actionDeleteAll',
-        'SearchController/actionIndex',
-        'UserController/actionCreate',
-        'UserController/actionDelete',
-        'UserController/actionDeleteAll',
-        'UserController/actionIndex',
-        'UserController/actionLogin',
-        'UserController/actionLogout',
-        'UserController/actionUpdate',
-        'UserController/actionGetUserInfo',
-        'ConfigController/actionUpdate',
-        );
 
     public static function app(){
         if(!(self::$_instance instanceof  self)){
@@ -76,10 +52,6 @@ class ZFramework{
 
     public function run(){
         global $API_CODE;
-        if (defined('API_MODE') && !in_array($this->_controller.'/'.$this->_action, $this->allow_request_api)){
-            $error_array=array('error_code'=>'403','error'=>$API_CODE['403'],'error_detail'=>t('API_REQUEST_ERROR'));
-            die(json_encode($error_array));
-        }
         try {
             if(class_exists($this->getController())){
                 $rc=new ReflectionClass($this->getController());
