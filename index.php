@@ -12,5 +12,6 @@ define('IN_MP',true);
 define('APPROOT', dirname(__FILE__));
 define('DEBUG_MODE', true);
 #define('DEBUG_MODE', false);
+include APPROOT.'/includes/api_code.php';
 require_once('./includes/preload.php');
 ZFramework::app()->run();
