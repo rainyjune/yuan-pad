@@ -575,7 +575,7 @@ function getToken() {
  * @return bool Is the current token valid or not.
  */
 function isTokenValid() {
-    $headers = getallheaders();  
-    $requestToken = $headers['RequestVerificationToken'];
+    $headers = getallheaders();
+    $requestToken = array_key_exists('RequestVerificationToken', $headers) ? $headers['RequestVerificationToken'] : null;
     return isset($_SESSION['token']) && ($requestToken === $_SESSION['token']);
 }

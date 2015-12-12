@@ -98,6 +98,8 @@ class SiteController extends BaseController{
                 }
                 $installed=TRUE;
                 $_SESSION['admin']=$_POST['adminname'];
+                $_SESSION['token'] = getToken();
+                setrawcookie('CSRF-TOKEN', $_SESSION['token']);
             }
         }
         if(file_exists(dirname(dirname(__FILE__)).'/install.php')){

@@ -37,6 +37,8 @@ class UserController extends BaseController{
               if($this->_model->query(sprintf(parse_tbprefix("INSERT INTO <sysuser> ( username , password , email , reg_time ) VALUES ( '%s' , '%s' , '%s' , %d )"),$user,$pwd,$email,$time))){
                 $_SESSION['user']=$user;
                 $_SESSION['uid']=  $this->_model->insert_id();
+                $_SESSION['token'] = getToken();
+                setrawcookie('CSRF-TOKEN', $_SESSION['token']);
                 if(defined('API_MODE')){
                   die(json_encode(array('user'=> $user, 'uid'=>$_SESSION['uid'])));
                 }
@@ -191,6 +193,9 @@ class UserController extends BaseController{
       $password=$this->_model->escape_string($_REQUEST['password']);
       if( ($user==ZFramework::app()->admin) && ($password==ZFramework::app()->password) ){//Admin user
         $_SESSION['admin']=$_REQUEST['user'];
+        $_SESSION['token'] = getToken();
+        setrawcookie('CSRF-TOKEN', $_SESSION['token']);
+
         if(defined('API_MODE')){
           header("Content-type: application/json");
           $json_array=array('admin'=>$_SESSION['admin'],'session_name'=>$session_name,'session_value'=>session_id());
@@ -204,6 +209,9 @@ class UserController extends BaseController{
         if($user_result){
           $_SESSION['user']=$_REQUEST['user'];
           $_SESSION['uid']=$user_result['uid'];
+          $_SESSION['token'] = getToken();
+          setrawcookie('CSRF-TOKEN', $_SESSION['token']);
+
           if(defined('API_MODE')){
             header("Content-type: application/json");
             $json_array=array('user'=>$_REQUEST['user'],'uid'=>$user_result['uid'],'session_name'=>$session_name,'session_value'=>session_id());
@@ -228,6 +236,11 @@ class UserController extends BaseController{
   }
     
   public function actionLogout(){
+    $status = array();
+    if (isTokenValid() == FALSE) {
+      $status = array('statusCode' => 400, 'statusText'=> 'Bad Request');
+      die(json_encode($status));
+    }
     if(isset ($_SESSION['user'])){
       unset ($_SESSION['user']);
       session_destroy();
@@ -240,7 +253,8 @@ class UserController extends BaseController{
       session_destroy();
     }
     if(defined('API_MODE')){
-      die('OK');
+      $status = array('statusCode' => 200, 'statusText'=> 'OK');
+      die(json_encode($status));
     }
     header("Location:index.php");
   }
