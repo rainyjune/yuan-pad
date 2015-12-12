@@ -601,3 +601,21 @@ function nl2brPre($string)
     }
     return $output;
 }
+
+/**
+ * Generates a base64-encoded token. Requires PHP 5.3.0 + , and with OpenSSL support.
+ * @return string A base64-encoded token.
+ */
+function getToken() {
+    return base64_encode(openssl_random_pseudo_bytes(32));
+}
+
+/**
+ * Tests the token in the request header against the one that was generated.
+ * @return bool Is the current token valid or not.
+ */
+function isTokenValid() {
+    $headers = getallheaders();  
+    $requestToken = $headers['RequestVerificationToken'];
+    return $requestToken === $_SESSION['token'];
+}
