@@ -13,6 +13,9 @@ class BadipController extends BaseController
         $this->_model=  YDB::factory($db_url);
     }
 
+    /**
+     * Add an IP to the black list.
+     */
     public function actionCreate() {
         isAdminAjaxRequest();
         is_post();
@@ -27,6 +30,9 @@ class BadipController extends BaseController
         exitWithResponse(200);
     }
 
+    /**
+     * Remove one or more IP from the black list.
+     */
     public function actionUpdate() {
         isAdminAjaxRequest();
         is_post();
