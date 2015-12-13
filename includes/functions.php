@@ -27,6 +27,15 @@ function is_admin()
     }
 }
 
+/**
+ * Is this a POST request?
+ */
+function is_post() {
+    if ($_SERVER['REQUEST_METHOD'] !== "POST") {
+        exitWithResponse(405);
+    }
+}
+
 
 /**
  * Watchdog for Admin Ajax requests.
@@ -34,9 +43,9 @@ function is_admin()
  */
 function isAdminAjaxRequest() {
     if (!isset($_SESSION['admin'])) {
-        exitWithStatus(403);
+        exitWithResponse(403);
     } elseif (isTokenValid() == false) {
-        exitWithStatus(400);
+        exitWithResponse(400);
     }
 }
 
@@ -66,9 +75,42 @@ function exitWithStatus($statusCode) {
  * @param array $data The response JSON data.
  *
  */
-function exitWithResponse($statusCode, $data) {
+function exitWithResponse($statusCode, $data=array()) {
     header("Content-type: application/json");
     die(json_encode(getStatusArray($statusCode) + array('response'=>$data)));
+}
+
+/**
+ * Verify a specified paramter in the POST .
+ * @param string $param The paramter.
+ * @return void
+ */
+function issetPostParam($param) {
+    if(!isset($_POST[$param])) {
+        exitWithResponse(400);
+    }
+}
+
+/**
+ * Verify a specified paramter in the GET .
+ * @param string $param The paramter.
+ * @return void
+ */
+function issetGETParam($param) {
+    if(!isset($_GET[$param])) {
+        exitWithResponse(400);
+    }
+}
+
+/**
+ * Verify a specified paramter in the GET or POST .
+ * @param string $param The paramter.
+ * @return void
+ */
+function issetRequestParam($param) {
+    if(!isset($_REQUEST[$param])) {
+        exitWithResponse(400);
+    }
 }
 
 /**
