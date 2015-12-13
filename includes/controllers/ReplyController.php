@@ -5,31 +5,36 @@ class ReplyController extends BaseController{
         global $db_url;
         $this->_model=  YDB::factory($db_url);
     }
+    
     public function actionReply(){
-        is_admin();
-	if($_POST){
-	    $mid=(int)$_POST['mid'];
-	    $reply_content = $this->_model->escape_string(str_replace(array("\n", "\r\n", "\r"), '', nl2br($_POST['content'])));
-	    if (trim($reply_content)=='') {
-				show_message(t('REPLY_EMPTY'),true,'index.php?action=control_panel&subtab=message',3);
-			}
-	    if(isset($_POST['update'])) {
-                $this->_model->query(sprintf(parse_tbprefix("UPDATE <reply> SET content='%s' WHERE pid=%d"),$reply_content,$mid));
-	    } else {
-                $this->_model->query(sprintf(parse_tbprefix("INSERT INTO <reply> ( pid , content , r_time ) VALUES ( %d , '%s' , %d )"),$mid,$reply_content,time()));
-	    }
-	    header("Location:index.php?action=control_panel&subtab=message");exit;
-	}
-	$reply_data=$this->loadModel();
-	$mid=(int)$_GET['mid'];
-	include 'themes/'.ZFramework::app()->theme.'/templates/'."reply.php";
+        isAdminAjaxRequest();
+        is_post();
+        issetPostParam('mid');
+        issetPostParam('content');
+
+        $mid=(int)$_POST['mid'];
+        $reply_content = $this->_model->escape_string(str_replace(array("\n", "\r\n", "\r"), '', nl2br($_POST['content'])));
+        
+        if (trim($reply_content)=='') {
+            exitWithResponse(400, array('response'=>t('REPLY_EMPTY')));
+        }
+        if(isset($_POST['update'])) {
+            $this->_model->query(sprintf(parse_tbprefix("UPDATE <reply> SET content='%s' WHERE pid=%d"),$reply_content,$mid));
+        } else {
+            $this->_model->query(sprintf(parse_tbprefix("INSERT INTO <reply> ( pid , content , r_time ) VALUES ( %d , '%s' , %d )"),$mid,$reply_content,time()));
+        }
+        exitWithResponse(200);
+    }
+    
+    public function actionShow() {
+        isAdminAjaxRequest();
+        issetGETParam('mid');
+        $reply_data=$this->loadModel();
+        exitWithResponse(200, array('response'=>$reply_data));
     }
 
-    protected function loadModel(){
-	if(!isset($_GET['mid'])){
-	    header("location:index.php?action=control_panel&subtab=message");exit;
-	}
-	$mid=(int)$_GET['mid'];
+    protected function loadModel() {
+        $mid=(int)$_GET['mid'];
         $reply_data=$this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <reply> WHERE pid=%d"),$mid));
         if($reply_data) {
             $reply_data=$reply_data[0];
@@ -37,23 +42,20 @@ class ReplyController extends BaseController{
         return $reply_data;
     }
 
-		// TODO, GET=>POST
     public  function actionDelete(){
-        is_admin();
-        $mid=isset($_POST['mid'])?(int)$_POST['mid']:null;
-        if($mid!==null){
-            $this->_model->query(sprintf(parse_tbprefix("DELETE FROM <reply> WHERE pid=%d"),$mid));
-        }
-				if (defined('API_MODE')) {
-          header("Content-type: application/json");
-					$result=array('status'=>'OK');
-          die(json_encode($result));
-        }
-        header("Location:index.php?action=control_panel&subtab=message&randomvalue=".rand());
+        isAdminAjaxRequest();
+        is_post();
+        issetPostParam('mid');
+        
+        $mid = (int)$_POST['mid'];
+        $this->_model->query(sprintf(parse_tbprefix("DELETE FROM <reply> WHERE pid=%d"),$mid));
+        exitWithResponse(200);
     }
+
     public  function actionDeleteAll(){
-        is_admin();
+        isAdminAjaxRequest();
+        is_post();
         $this->_model->query(parse_tbprefix("DELETE FROM <reply>"));
-        header("location:index.php?action=control_panel&subtab=message");
+        exitWithResponse(200);
     }
 }
