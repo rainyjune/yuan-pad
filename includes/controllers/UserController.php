@@ -1,75 +1,56 @@
 <?php
 class UserController extends BaseController{
-  public $_model;
-  
-  public function  __construct(){
-    global $db_url;
-    $this->_model=  YDB::factory($db_url);
-  }
-  
-  public function actionIndex(){
-    is_admin();
-    $current_tab='user';
-    $tabs_array=array('overview','siteset','message','ban_ip','user');
-    $tabs_name_array=array(t('ACP_OVERVIEW'),t('ACP_CONFSET'),t('ACP_MANAGE_POST'),t('ACP_MANAGE_IP'),  t('USER_ADMIN'));
-    $user_data=$this->_model->queryAll(parse_tbprefix("SELECT * FROM <sysuser>"));
-    if(defined('API_MODE')){
-      header("Content-type: application/json");
-      die (json_encode($user_data));
+    public $_model;
+    
+    public function  __construct(){
+        global $db_url;
+        $this->_model=  YDB::factory($db_url);
     }
-    $this->render('user_list',array('users'=>$user_data,'tabs_array'=>$tabs_array,'current_tab'=>$current_tab,'tabs_name_array'=>$tabs_name_array,));
-  }
   
-  public function actionCreate(){
-    if(isset ($_SESSION['admin']) || isset ($_SESSION['user'])){
-      header("Location:index.php");exit;
+    /**
+     * Returns all the users.
+     * 
+     */
+    public function actionList() {
+        isAdminAjaxRequest();
+        $user_data=$this->_model->queryAll(parse_tbprefix("SELECT * FROM <sysuser>"));
+        exitWithResponse(200, $user_data);
     }
-    if(isset ($_POST['register'])){
-      if(!empty ($_POST['user']) && !empty ($_POST['pwd']) && !empty ($_POST['email'])){
-        if(strlen(trim($_POST['user']))>=2){
-          $user =  $this->_model->escape_string($_POST['user']);
-          $pwd =  $this->_model->escape_string($_POST['pwd']);
-          $email = $_POST['email'];
-          $time = time();
-          if(is_email($email)){
-            $user_exists=$this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysuser> WHERE username='%s'"),$user));
-            if(!$user_exists && $user!= ZFramework::app()->admin){
-              if($this->_model->query(sprintf(parse_tbprefix("INSERT INTO <sysuser> ( username , password , email , reg_time ) VALUES ( '%s' , '%s' , '%s' , %d )"),$user,$pwd,$email,$time))){
-                $_SESSION['user']=$user;
-                $_SESSION['uid']=  $this->_model->insert_id();
-                $_SESSION['token'] = getToken();
-                setrawcookie('CSRF-TOKEN', $_SESSION['token']);
-                if(defined('API_MODE')){
-                  die(json_encode(array('user'=> $user, 'uid'=>$_SESSION['uid'])));
-                }
-                if(isset ($_POST['ajax'])){
-                  die ('OK');
-                }
-                header("Location:index.php");exit;
-              } else {
-                die($this->_model->error());
-              }
-            } else {
-              $errorMsg=t('USERNAME_NOT_AVAILABLE');
-            }
-          } else {
-            $errorMsg=t('EMAIL_INVALID');
-          }
-        } else {
-          $errorMsg=t('USERNAME_TOO_SHORT');
+  
+    public function actionCreate(){
+        if(isset ($_SESSION['admin']) || isset ($_SESSION['user'])){
+            exitWithResponse(403);
         }
-      } else {
-        $errorMsg=t('FILL_NOT_COMPLETE');
-      }
-      if(defined('API_MODE')){
-        die(json_encode(array('error'=> 'Register Error', 'error_detail'=> $errorMsg)));
-      }
-      if(isset ($_POST['ajax'])){
-        die ($errorMsg);
-      }
+        issetPostParam(array('user', 'pwd', 'email'));
+        if(empty ($_POST['user']) || empty ($_POST['pwd']) || empty ($_POST['email'])){
+            exitWithResponse(400, t('FILL_NOT_COMPLETE'));
+        }
+        if(strlen(trim($_POST['user'])) < 2) {
+            exitWithResponse(400, t('USERNAME_TOO_SHORT'));
+        }
+        if(is_email($_POST['email']) == false){
+            exitWithResponse(400, t('EMAIL_INVALID'));
+        }
+        $user =  $this->_model->escape_string($_POST['user']);
+        $pwd =  $this->_model->escape_string($_POST['pwd']);
+        $email = $_POST['email'];
+        $time = time();
+        $user_exists=$this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysuser> WHERE username='%s'"),$user));
+        
+        if($user_exists || $user == ZFramework::app()->admin) {
+            exitWithResponse(400, t('USERNAME_NOT_AVAILABLE'));
+        }
+        
+        if($this->_model->query(sprintf(parse_tbprefix("INSERT INTO <sysuser> ( username , password , email , reg_time ) VALUES ( '%s' , '%s' , '%s' , %d )"),$user,$pwd,$email,$time))){
+            $_SESSION['user']=$user;
+            $_SESSION['uid']=  $this->_model->insert_id();
+            $_SESSION['token'] = getToken();
+            setrawcookie('CSRF-TOKEN', $_SESSION['token']);
+            exitWithResponse(200, array('user'=> $user, 'uid'=>$_SESSION['uid']));
+        } else {
+            exitWithResponse(500, $this->_model->error());
+        }
     }
-    include 'themes/'.ZFramework::app()->theme.'/templates/'."register.php";
-  }
 
   public function actionUpdate(){
     global $API_CODE;
@@ -235,6 +216,8 @@ class UserController extends BaseController{
     include 'themes/'.ZFramework::app()->theme.'/templates/'."login.php";
   }
     
+  //http://php.net/manual/en/function.session-destroy.php
+  // TODO http only cookie
   public function actionLogout(){
     $status = array();
     if (isTokenValid() == FALSE) {
