@@ -58,7 +58,17 @@ function getStatusArray($statusCode) {
  */
 function exitWithStatus($statusCode) {
     header("Content-type: application/json");
-    die(json_decode(getStatusArray($statusCode)));
+    die(json_encode(getStatusArray($statusCode)));
+}
+
+/**
+ * @param number $statusCode The status code.
+ * @param array $data The response JSON data.
+ *
+ */
+function exitWithResponse($statusCode, $data) {
+    header("Content-type: application/json");
+    die(json_encode(getStatusArray($statusCode) + array('response'=>$data)));
 }
 
 /**
