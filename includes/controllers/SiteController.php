@@ -77,80 +77,7 @@ class SiteController extends BaseController{
     }
     
     public function actionControl_panel(){
-        global $gd_exist,$zip_support, $API_CODE;
-        if (!isset($_SESSION['admin'])) {
-          if (defined('API_MODE')) {
-            header("Content-type: application/json");
-            $error_array=array('error_code'=>'401','error'=>$API_CODE['401'],'error_detail'=>'Unauthorized');
-            die(json_encode($error_array));
-          } else {
-            header("Location:index.php?controller=user&action=login");exit;
-          }
-        }
-        //is_admin();
-        $current_tab='overview';
-        $tabs_array=array('overview','siteset','message','ban_ip');
-        $tabs_name_array=array(t('ACP_OVERVIEW'),t('ACP_CONFSET'),t('ACP_MANAGE_POST'),t('ACP_MANAGE_IP'));
-        if(isset($_GET['subtab'])){
-          if(in_array($_GET['subtab'],$tabs_array)) {
-              $current_tab=$_GET['subtab'];
-          }
-        }
-        $themes= get_all_themes();
-        if(isset ($_GET['ajax']) || defined('API_MODE')){ 
-          $data=get_all_data(false, false, TRUE, TRUE);
-        } else {
-          $data=get_all_data(TRUE,false,TRUE,TRUE);
-        }
-        $reply_data=  $this->_model->queryAll(parse_tbprefix("SELECT * FROM <reply>"));
-        $ban_ip_info=  $this->_model->queryAll(parse_tbprefix("SELECT * FROM <badip>"));
-
-        $nums=count($data);
-        $reply_num=count($reply_data);
-
-        if($gd_exist){
-            $gd_info=gd_version();
-        $gd_version=$gd_info?$gd_info:'<font color="red">'.t('UNKNOWN').'</font>';
-        }
-        else {
-            $gd_version='<font color="red">GD'.t('NOT_SUPPORT').'</font>';
-        }
-        $register_globals=ini_get("register_globals") ? 'On' : 'Off';
-        $magic_quotes_gpc=ini_get("magic_quotes_gpc") ? 'On' : 'Off';
-        $languages= get_all_langs();
-        $timezone_array=  get_all_timezone();
-        $templateDataArr = array(
-            'tabs_array'=>$tabs_array,
-            'current_tab'=>$current_tab,
-            'tabs_name_array'=>$tabs_name_array,
-            'nums'=>$nums,
-            'reply_num'=>$reply_num,
-            'gd_version'=>$gd_version,
-            'register_globals'=>$register_globals,
-            'magic_quotes_gpc'=>$magic_quotes_gpc,
-            'zip_support'=>$zip_support,
-            'themes'=>$themes,
-            'timezone_array'=>$timezone_array,
-            'languages'=>$languages,
-            'data'=>$data,
-            'ban_ip_info'=>$ban_ip_info,
-            'yuanpad_version'=>MP_VERSION,
-            'php_version'=>PHP_VERSION,
-            'gd_loaded'=>gd_loaded(),
-            );
-        if (defined('API_MODE')) {
-          header("Content-type: application/json");
-          die(json_encode($templateDataArr));
-        }
-        $this->render('admin',$templateDataArr);
-    }
-    
-    /**
-     * Designed for the spa theme.
-     *
-     */
-    public function actionAcp() {
-      $this->render('admin');
+        $this->render('admin');
     }
 
     public function actionRSS(){
@@ -185,14 +112,10 @@ HERE;
         echo $output;
     }
 
-    public  function page_wrapper($data,$current_page){
-        $start=$current_page*ZFramework::app()->num_perpage;
-        $data=array_slice($data,$start,  ZFramework::app()->num_perpage);
-        return $data;
-    }
     public  function actionCaptcha(){
         $this->_verifyCode->image(2,4,900,array('borderColor'=>'#66CCFF','bgcolor'=>'#FFCC33'));
     }
+    
     public function actionGetSysJSON(){
         $langArray=getLangArray();
         $langArray['ADMIN_NAME_INDEX']=ZFramework::app()->admin;
