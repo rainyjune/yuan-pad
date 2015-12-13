@@ -68,6 +68,12 @@ class Ymysql extends YDBBase {
         }
         return array();
     }
+
+    public function queryWithLimit($sql, $offset, $row_count) {
+        $sql .= " LIMIT ".(int)$offset. " , ".(int)$row_count;
+        return $this->queryAll($sql);
+    }
+
     public function insert_id(){
         return mysql_insert_id($this->lnk);
     }

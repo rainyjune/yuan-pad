@@ -9,6 +9,7 @@
 abstract  class YDBBase {
     abstract public function query($sql);
     abstract public function queryAll($sql);
+    abstract public function queryWithLimit($sql, $offset, $row_count);
     abstract public function insert_id();
     abstract public function error();
     abstract public function server_version();

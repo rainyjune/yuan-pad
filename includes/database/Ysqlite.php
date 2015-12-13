@@ -35,6 +35,10 @@ class Ysqlite extends YDBBase {
         $result=sqlite_array_query($this->lnk,$sql,SQLITE_ASSOC);
         return $result;
     }
+    // TODO
+    public function queryWithLimit($sql, $offset, $row_count) {
+
+    }
     public function insert_id(){
         return sqlite_last_insert_rowid($this->lnk);
     }

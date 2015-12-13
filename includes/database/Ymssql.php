@@ -60,6 +60,13 @@ class Ymssql extends YDBBase {
         }
         return array();
     }
+
+
+    // TODO
+    public function queryWithLimit($sql, $offset, $row_count) {
+
+    }
+
     // Tested 1
     public function insert_id(){
         if($this->lnk){
