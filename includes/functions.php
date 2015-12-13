@@ -82,12 +82,24 @@ function exitWithResponse($statusCode, $data=array()) {
 
 /**
  * Verify a specified paramter in the POST .
- * @param string $param The paramter.
+ * @param mixed $param The paramter.
  * @return void
  */
-function issetPostParam($param) {
-    if(!isset($_POST[$param])) {
-        exitWithResponse(400);
+function issetPostParam($params, $message = null) {
+    $result = true;
+    if (is_array($params)) {
+        foreach($params as $v) {
+            if (!isset($_POST[$v])) {
+              $result = false;
+              break;
+            }
+        }
+    } elseif (is_string($params)) {
+      $result = isset($_POST[$params]);
+    }
+    if(!$result) {
+        $message = $message ? $message : array();
+        exitWithResponse(400, $message);
     }
 }
 
@@ -96,9 +108,21 @@ function issetPostParam($param) {
  * @param string $param The paramter.
  * @return void
  */
-function issetGETParam($param) {
-    if(!isset($_GET[$param])) {
-        exitWithResponse(400);
+function issetGETParam($params, $message = null) {
+    $result = true;
+    if (is_array($params)) {
+        foreach($params as $v) {
+            if (!isset($_GET[$v])) {
+              $result = false;
+              break;
+            }
+        }
+    } elseif (is_string($params)) {
+      $result = isset($_GET[$params]);
+    }
+    if(!$result) {
+        $message = $message ? $message : array();
+        exitWithResponse(400, $message);
     }
 }
 
