@@ -9,10 +9,16 @@ class ConfigController extends BaseController{
         global $db_url;
         $this->_model=  YDB::factory($db_url);
     }
+    
+    /**
+     *
+     * Update site configurations.
+     * 
+     */
     public function actionUpdate(){
-        is_admin();
-        if(!$_POST){ header ("Location:index.php?action=control_panel");exit;}
-        $this->_admin_password=  ZFramework::app()->password;
+        isAdminAjaxRequest();
+        is_post();
+        $this->_admin_password =  ZFramework::app()->password;
 
         $this->set_board_name();
         $this->set_site_close();
@@ -31,13 +37,7 @@ class ConfigController extends BaseController{
         $this->set_filter_type();
         $this->set_allowed_tags();
 
-        if (defined('API_MODE')) {
-            $result = array("status"=>"OK");
-            header("Content-type: application/json");
-            die(json_encode($result));
-        }
-
-        header("Location:index.php?action=control_panel&subtab=siteset");
+        exitWithResponse(200);
     }
     private function set_board_name(){
         $board_name=$_POST['board_name']?maple_quotes($_POST['board_name']):'YuanPad';
