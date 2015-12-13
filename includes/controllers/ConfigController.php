@@ -10,6 +10,41 @@ class ConfigController extends BaseController{
         $this->_model=  YDB::factory($db_url);
     }
     
+    
+    /**
+     * Returns all site configuration except admin password and filter words.
+     *
+     */
+    public function actionShow() {
+        $result = $this->_model->queryAll(parse_tbprefix("SELECT * FROM <sysvar> WHERE varname != 'password' AND varname != 'filter_words'"));
+        $formatedResult = array();
+        foreach($result as $v) {
+            $formatedResult[$v['varname']] = $v['varvalue'];
+        }
+        exitWithResponse(200, $formatedResult);
+    }
+    
+    /**
+     * Returns all site configuration except admin password.
+     *
+     */
+    public function actionShowAll() {
+        isAdminAjaxRequest();
+        $result = $this->_model->queryAll(parse_tbprefix("SELECT * FROM <sysvar> WHERE varname != 'password'"));
+        $formatedResult = array();
+        foreach($result as $v) {
+            $formatedResult[$v['varname']] = $v['varvalue'];
+        }
+        exitWithResponse(200, $formatedResult);
+    }
+    
+    /**
+     * Returns translations according to the site language set.
+     */
+    public function actionGetTranslations() {
+        exitWithResponse(200, getLangArray());
+    }
+    
     /**
      *
      * Update site configurations.
