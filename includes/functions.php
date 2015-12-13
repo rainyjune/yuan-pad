@@ -432,14 +432,7 @@ function filter_words($input)
     $input=str_ireplace($filter_array,'***',$input);
     return $input;
 }
-/**
- * Show all smileys
- */
-function show_smileys_table()
-{
-    $smiley=  require APPROOT.'/includes/showSmiley.php';
-    return $smiley;
-}
+
 /**
  *
  * @param array $filter_words
