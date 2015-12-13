@@ -499,16 +499,6 @@ function getConfigVar($name)
 }
 
 /**
- * Get smileys
- * @return array
- */
-function getSmileys()
-{
-    return include  dirname(__FILE__).'/smiley.php';
-}
-
-
-/**
  * Get all available themes
  */
 function get_all_themes()
