@@ -15,6 +15,9 @@ class SiteController extends BaseController{
         $this->_verifyCode=new FLEA_Helper_ImgCode();
     }
 
+    /**
+     * Show the Index page.
+     */
     public function actionIndex() {
         $this->render('index');
     }
@@ -76,6 +79,10 @@ class SiteController extends BaseController{
         }
     }
     
+    /**
+     * Show the Administration Control Panel.
+     *
+     */
     public function actionControl_panel(){
         $this->render('admin');
     }
@@ -115,38 +122,4 @@ HERE;
     public  function actionCaptcha(){
         $this->_verifyCode->image(2,4,900,array('borderColor'=>'#66CCFF','bgcolor'=>'#FFCC33'));
     }
-    
-    public function actionGetSysJSON(){
-        $langArray=getLangArray();
-        $langArray['ADMIN_NAME_INDEX']=ZFramework::app()->admin;
-        header("Content-type: application/json");
-        echo json_encode($langArray);
-    }
-    
-    public function actionGetAppConfig(){
-        $result = array();
-        $langArray=getLangArray();
-        $langArray['ADMIN_NAME_INDEX']=ZFramework::app()->admin;
-        
-        $result["translations"] = $langArray;
-        $result["board_name"] = ZFramework::app()->board_name;
-        $result["site_close"] = ZFramework::app()->site_close;
-        $result["close_reason"] = ZFramework::app()->close_reason;
-        $result["admin_email"] = ZFramework::app()->admin_email;
-        $result["copyright_info"] = ZFramework::app()->copyright_info;
-        $result["filter_words"] = ZFramework::app()->filter_words;
-        $result["valid_code_open"] = ZFramework::app()->valid_code_open;
-        $result["page_on"] = ZFramework::app()->page_on;
-        $result["num_perpage"] = ZFramework::app()->num_perpage;
-        $result["theme"] = ZFramework::app()->theme;
-        $result["lang"] = ZFramework::app()->lang;
-        $result["timezone"] = ZFramework::app()->timezone;
-        $result["filter_type"] = ZFramework::app()->filter_type;
-        $result["allowed_tags"] = ZFramework::app()->allowed_tags;
-        $result["admin"] = ZFramework::app()->admin;
-        
-        header("Content-type: application/json");
-        echo json_encode($result);
-    }
-
 }
