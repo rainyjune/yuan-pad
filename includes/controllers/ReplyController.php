@@ -6,7 +6,7 @@ class ReplyController extends BaseController{
         $this->_model=  YDB::factory($db_url);
     }
     
-    public function actionReply(){
+    public function actionCreate(){
         isAdminAjaxRequest();
         is_post();
         issetPostParam('mid');
