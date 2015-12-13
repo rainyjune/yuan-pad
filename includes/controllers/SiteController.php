@@ -2,54 +2,21 @@
 /**
  * Site Controller
  * @author rainyjune <rainyjune@live.cn>
- * @version $Id$
  */
 class SiteController extends BaseController{
     protected   $_model;
     protected   $_verifyCode;
+    
     public function  __construct(){
         global $db_url;
-        if($db_url !='dummydb://username:password@localhost/databasename')
+        if($db_url !='dummydb://username:password@localhost/databasename') {
             $this->_model=  YDB::factory($db_url);
+        }
         $this->_verifyCode=new FLEA_Helper_ImgCode();
     }
 
-    public function actionIndex(){
-        if(isset ($_GET['ajax']) || defined('API_MODE')){ 
-          $data=get_all_data(false,TRUE,TRUE,TRUE);
-        } else {
-          $data=get_all_data(TRUE,TRUE,TRUE,TRUE);
-        }
-        $current_page=isset($_GET['pid'])?(int)$_GET['pid']:0;
-        $nums=count($data);
-        $pages= ZFramework::app()->page_on ? ceil($nums/ZFramework::app()->num_perpage) : 1;
-        if($current_page>=$pages) {
-            $current_page=$pages-1;
-        }
-        if($current_page<0) {
-            $current_page=0;
-        }
-        if(ZFramework::app()->page_on) {
-            $data=$this->page_wrapper($data, $current_page);
-        }
-        if(isset ($_GET['ajax']) || defined('API_MODE')){
-            $JSONDATA=array('messages'=>$data,'current_page'=>$current_page,'total'=>$nums,'pagenum'=>$pages);
-            header("Content-type: application/json");
-            die(json_encode($JSONDATA));
-        }
-        $admin=isset($_SESSION['admin'])?true:false;
-        $adminName=  ZFramework::app()->admin;
-        $smileys=show_smileys_table();
-
-        $this->render('index',array(
-            'data'=>$data,
-            'admin'=>$admin,
-            'smileys'=>$smileys,
-            'current_page'=>$current_page,
-            'pages'=>$pages,
-            'adminName'=>$adminName,
-            'nums'=>$nums,
-            ));
+    public function actionIndex() {
+        $this->render('index');
     }
 
     public function actionInstall(){
@@ -108,6 +75,7 @@ class SiteController extends BaseController{
             die ('Access denied!');
         }
     }
+    
     public function actionControl_panel(){
         global $gd_exist,$zip_support, $API_CODE;
         if (!isset($_SESSION['admin'])) {
@@ -253,7 +221,6 @@ HERE;
         $result["filter_type"] = ZFramework::app()->filter_type;
         $result["allowed_tags"] = ZFramework::app()->allowed_tags;
         $result["admin"] = ZFramework::app()->admin;
-        
         
         header("Content-type: application/json");
         echo json_encode($result);
