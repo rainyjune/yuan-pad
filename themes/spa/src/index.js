@@ -1,5 +1,6 @@
 var React = require('react'),
     ReactDOM = require('react-dom');
+    
 var SearchBar = require('./searchBar.js');
 var CommentBox = require('./commentBox.js');
 var Header = require('./header.js');
@@ -30,6 +31,7 @@ var App = React.createClass({
       }.bind(this));
   },
   // Get current user identity from server.
+  // TODO CLEANUP
   getUserInfo: function() {
     dataProvider.getUserInfo(function(data){
       console.log('user info:', data);
@@ -59,13 +61,21 @@ var App = React.createClass({
       this.loadUserDataFromServer(this.state.currentUser.uid);
     }
   },
+  /**
+   * Test 1
+   */
   // Load comments to be displayed on page by page number.
   loadCommentsFromServer: function() {
-    dataProvider.loadCommentsFromServer(this.state.currentPage, function(data) {
+    dataProvider.loadCommentsFromServer(this.state.currentPage, function(res) {
+        if (res.statusCode === 200) {
+          //code
+        } else if (res.statusCode === 404) {
+          // No comments found.
+        }
         if (this.isMounted()) {
           this.setState({
-            comments: data.messages,
-            commentsTotalNumber: data.total,
+            comments: res.response.comments,
+            commentsTotalNumber: res.response.total,
             commentListType: 1
           });
         }
@@ -94,13 +104,20 @@ var App = React.createClass({
   },
   // When the component is rendered, load the site configuration from server, and then try to indentify current user.
   componentDidMount: function() {
-    dataProvider.getAppConfig(function(data){
-      if (this.isMounted()) {
-        this.setState({translations: data.translations});
-        // TODO Duplicate data.
-        this.setState({appConfig: data});
+    dataProvider.getAppConfig(function(res){
+      if (res.statusCode === 200) {
+        var siteConfig = res.response;
+        dataProvider.getTranslations(function(res){
+          if (this.isMounted()) {
+            this.setState({translations: res.response});
+            this.setState({appConfig: siteConfig});
+          }
+          this.getUserInfo();
+        }.bind(this));
+      } else {
+        // TODO Tell the user what's wrong.
+        alert(res.statusText);
       }
-      this.getUserInfo();
     }.bind(this));
   },
   // Save comment to the server, reload comments after saved sucessfully.
