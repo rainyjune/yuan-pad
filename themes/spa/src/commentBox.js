@@ -148,10 +148,32 @@ var Comment = React.createClass({
   }
 });
 
+var Captcha = React.createClass({
+  refreshCaptch: function(e) {
+    e.preventDefault();
+    this.refresh();
+  },
+  refresh: function() {
+    var img = this.refs.captchaImg;
+    var url = img.getAttribute('data-src');
+    img.src = url + '&v=' + Math.random();
+  },
+  render: function() {
+    return (
+      <tr>
+        <th>{this.props.lang.CAPTCHA}</th>
+        <td><input ref="captchaInput" type="text" value={this.props.valid_code} onChange={this.props.onCaptchaChange} />
+            <img ref="captchaImg" src="index.php?action=captcha" data-src="index.php?action=captcha" onClick={this.refreshCaptch} alt="Captcha" title={this.props.lang.CLICK_TO_REFRESH} />
+        </td>
+      </tr>
+    );
+  }
+});
+
 var CommentForm = React.createClass({
   getInitialState: function() {
     // TODO
-    return {userInputType: 'text', labelContent: "", username: 'anonymous', text: ''};
+    return {userInputType: 'text', labelContent: "", username: 'anonymous', text: '', valid_code: ''};
   },
   componentWillReceiveProps: function(nextProps) {
     var computedState = {};
@@ -175,9 +197,11 @@ var CommentForm = React.createClass({
     e.preventDefault();
     var author = this.state.username.trim();
     var text = this.state.text.trim();
+    var valid_code = this.state.valid_code.trim();
     if (!author || !text) return;
-    this.props.onCommentSubmit({ user: author, content: text}); 
-    this.setState({text: ''});
+    this.props.onCommentSubmit({ user: author, content: text, valid_code: valid_code}); 
+    this.setState({text: '', valid_code: ''});
+    this.refs.captcha.refresh();
     return false;
   },
   handleUsernameChange: function(e) {
@@ -186,10 +210,20 @@ var CommentForm = React.createClass({
   handleTextChange: function(e) {
     this.setState({text: e.target.value});
   },
+  handleCaptchaChange: function(e) {
+    this.setState({valid_code: e.target.value});
+  },
   render: function() {
     if(this.props.commentListType !== 1) {
       return null;
     }
+    var captcha = this.props.appConfig.valid_code_open ?
+            <Captcha
+              ref="captcha"
+              valid_code={this.state.valid_code}
+              lang={this.props.lang}
+              onCaptchaChange={this.handleCaptchaChange}
+            /> : null;
     return (
       <form onSubmit={this.handleSubmit} className="commentForm">
         <table>
@@ -210,6 +244,7 @@ var CommentForm = React.createClass({
               <th>{this.props.lang.CONTENT}</th>
               <td><textarea ref="content" onChange={this.handleTextChange} value={this.state.text}></textarea></td>
             </tr>
+            {captcha}
             <tr>
               <td colSpan="2">
                 <input name="submit" type="submit" value={this.props.lang.SUBMIT} />
@@ -243,7 +278,8 @@ var CommentBox = React.createClass({
           total={this.props.commentsTotalNumber} 
           currentPage = {this.props.currentPage}
           pagenum={this.props.appConfig.page_on ? Math.ceil(this.props.commentsTotalNumber/this.props.appConfig.num_perpage) : 1} /> 
-        <CommentForm 
+        <CommentForm
+          appConfig={this.props.appConfig}
           user={this.props.user} 
           lang={this.props.lang} 
           commentListType={this.props.commentListType}
