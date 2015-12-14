@@ -53,11 +53,10 @@ function getAppConfig(successCallback, errorCallback) {
   });
 }
 
-function logout(successCallback, errorCallback) {
+function signOut(successCallback, errorCallback) {
   yuanjs.ajax({
-    type: "GET",
-    url: 'api.php',
-    data: {controller: 'user', action: "logout"},
+    type: "POST",
+    url: 'index.php?controller=user&action=logout',
     dataType: 'json',
     headers: {
       'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
@@ -273,7 +272,7 @@ module.exports = {
   getAllUsers: getAllUsers,
   getTranslations: getTranslations,
   signIn: signIn,
-  logout: logout,
+  signOut: signOut,
   signUp: signUp,
   updateUser: updateUser,
   loadCommentsFromServer: loadCommentsFromServer,
