@@ -103,7 +103,7 @@ function loadCommentsFromServer(pageId, successCallback, errorCallback) {
 function search(keyword, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
-    url: "api.php?controller=search",
+    url: "index.php?controller=search",
     data: {s:keyword},
     dataType: 'json',
     success: successCallback,
