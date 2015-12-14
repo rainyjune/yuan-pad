@@ -30,8 +30,11 @@ var App = React.createClass({
       }.bind(this), function(){
       }.bind(this));
   },
+  /**
+   * Tested 1.
+   *
+   */
   // Get current user identity from server.
-  // TODO CLEANUP
   getUserInfo: function() {
     dataProvider.getUserInfo(function(res){
       console.log('user info:', res);
@@ -52,6 +55,9 @@ var App = React.createClass({
     }.bind(this), function(){
     }.bind(this));
   },
+  /**
+   * Tested 1.
+   */
   // Update the `currentUser` state to default value.
   handleLogout: function() {
     if (this.isMounted()) {
@@ -88,14 +94,18 @@ var App = React.createClass({
       }.bind(this)
     );
   },
+  /**
+   * Tested 1.
+   *
+   */
   // Get comments from server according to the keyword user has entered.
   handleSearch: function(keyword) {
-    dataProvider.search(keyword, function(data) {
-        console.log('search result:', data);
+    dataProvider.search(keyword, function(res) {
+        console.log('search result:', res);
         if (this.isMounted()) {
           this.setState({
-            comments: data.messages,
-            commentsTotalNumber: data.nums,
+            comments: res.response.comments,
+            commentsTotalNumber: res.response.total,
             commentListType: 2
           });
         }
@@ -105,6 +115,9 @@ var App = React.createClass({
       }.bind(this)
     );
   },
+  /**
+   * Tested 1.
+   */
   // When the component is rendered, load the site configuration from server, and then try to indentify current user.
   componentDidMount: function() {
     dataProvider.getAppConfig(function(res){
