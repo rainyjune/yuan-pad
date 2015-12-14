@@ -97,7 +97,6 @@ var CommentList = React.createClass({
           appConfig={appConfig}
           uid={comment.uid}
           b_username={comment.b_username}
-          user={comment.user}
           author={comment.uname}
           key={comment.id}
           reply_content = {comment.reply_content}
@@ -133,7 +132,7 @@ var Comment = React.createClass({
     return { __html: this.props.children.toString() };
   },
   rawAuthorMarkup: function() {
-    return { __html: this.props.uid ? this.props.b_username : this.props.user};
+    return { __html: this.props.uid ? this.props.b_username : this.props.author};
   },
   render: function() {    
     return (
