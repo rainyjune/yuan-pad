@@ -4,7 +4,7 @@ var dataProvider = require('./dataProvider.js');
 var LogoutButton = React.createClass({
   handleSignOut: function(e) {
     e.preventDefault();
-    dataProvider.logout(function(){
+    dataProvider.signOut(function(){
       this.props.onUserLogout();
     }.bind(this));
   },
