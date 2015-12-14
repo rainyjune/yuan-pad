@@ -27,7 +27,7 @@ class ZFramework{
     }
 
     public function  __get($name) {
-		return getConfigVar($name);
+        return getConfigVar($name);
     }
 
     private function  __construct(){
@@ -50,39 +50,27 @@ class ZFramework{
         $d->close();
     }
 
-    public function run(){
-        global $API_CODE;
+    public function run() {
         try {
-            if(class_exists($this->getController())){
+            if(class_exists($this->getController())) {
                 $rc=new ReflectionClass($this->getController());
-                if($rc->isSubclassOf('BaseController')){
-                    if($rc->hasMethod($this->getAction())){
-						get_alll_plugins(TRUE);
+                if($rc->isSubclassOf('BaseController')) {
+                    if($rc->hasMethod($this->getAction())) {
+                        get_alll_plugins(TRUE);
                         $controller=$rc->newInstance();
                         $method=$rc->getMethod($this->getAction());
                         $method->invoke($controller);
-                    }else{
-                        throw new Exception("Controller <font color='blue'>".$this->getController()."</font> does not have the action named <font color='red'>{$this->getAction()}</font>");
+                    } else {
+                        exitWithResponse(404);
                     }
-                }else{
-                    throw new Exception("<font color='red'>".$this->getController().'</font> is not a valid Controller');
+                } else {
+                    exitWithResponse(404);
                 }
             } else {
-                throw new Exception("Controller <font color='red'>{$this->getController()}</font> not exists!");
+                exitWithResponse(404);
             }
-        }
-        catch (Exception $e){
-            if(defined('API_MODE')){
-                $error_array=array('error_code'=>'403','error'=>$API_CODE['403'],'error_detail'=>'Request is not allowed.');
-                die(json_encode($error_array));
-            }
-            if(defined('DEBUG_MODE')){
-                echo $e->getMessage();
-                echo '<pre>';
-                debug_print_backtrace();
-            }else{
-                header("Location:index.php");
-            }
+        } catch (Exception $e) {
+            exitWithResponse(520);
         }
     }
 

@@ -56,5 +56,5 @@ if(is_installed()){
     }
     is_closedMode();
 } elseif ($_GET['action']!='install'){
-	header("Location:index.php?action=install");exit;
+    header("Location:index.php?action=install");exit;
 }
