@@ -33,16 +33,19 @@ var App = React.createClass({
   // Get current user identity from server.
   // TODO CLEANUP
   getUserInfo: function() {
-    dataProvider.getUserInfo(function(data){
-      console.log('user info:', data);
-      if (Object.prototype.toString.call(data) === "[object Array]") {
-        data = {};
+    dataProvider.getUserInfo(function(res){
+      console.log('user info:', res);
+      if (res.statusCode !== 200) {
+        return ;
+      }
+      if (Object.prototype.toString.call(res.response) === "[object Array]") {
+        res.response = {};
       }
       if (this.isMounted()) {
-        if (data.uid) {
-          this.loadUserDataFromServer(data.uid)
+        if (res.response.uid) {
+          this.loadUserDataFromServer(res.response.uid)
         } else {
-          this.setState({currentUser: data});
+          this.setState({currentUser: res.response});
         }
         this.loadCommentsFromServer();
       }
