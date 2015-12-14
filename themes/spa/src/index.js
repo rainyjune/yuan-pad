@@ -150,24 +150,6 @@ var App = React.createClass({
    */
   // Save comment to the server, reload comments after saved sucessfully.
   handleCommentSubmit: function(comment) {
-    var comments = this.state.comments;
-    var newComment = {
-      id: Date.now(),
-      user: comment.user,
-      time: '12-05 16:50',
-      post_content: comment.content,
-    };
-
-    var commentArr = comments.concat([]);
-    commentArr.unshift(newComment);
-    if (this.state.appConfig.page_on) {
-      commentArr.pop();
-    }
-    this.setState({
-      comments: commentArr,
-      commentsTotalNumber: this.state.commentsTotalNumber + 1,
-      commentListType: 1
-    });
     dataProvider.createPost(comment, function(res) {
         if (res.statusCode !== 200) {
           alert(res.response);
@@ -176,7 +158,6 @@ var App = React.createClass({
         this.loadCommentsFromServer();
       }.bind(this),
       function(xhr, status, err) {
-        this.setState({comments: comments});
         console.log("error", xhr, status, err);
       }.bind(this)
     );
