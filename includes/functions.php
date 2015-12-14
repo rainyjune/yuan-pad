@@ -16,18 +16,6 @@ function valid_ip($ip)
 }
 
 /**
- * Finds whether the user is admin or not , redirect browser to the login page if not admin.
- *
- */
-function is_admin()
-{
-    if (!isset($_SESSION['admin']))
-    {
-        header("Location:index.php?controller=user&action=login");exit;
-    }
-}
-
-/**
  * Is this a POST request?
  */
 function is_post() {
@@ -308,31 +296,6 @@ function is_flatfile()
         return true;
     }
     return false;
-}
-
-/**
- * Delete backuped data , only triggered by admin logout
- *
- * @global string $db_url
- */
-function delete_backup_files()
-{
-    global $db_url;
-    is_admin();
-    $url = parse_url($db_url);
-    $url['path'] = urldecode($url['path']);
-    $dbname=substr($url['path'], 1);
-    $dir=APPROOT.'/data/'.$dbname;
-    $d=dir($dir);
-    while(false!==($entry=$d->read()))
-    {
-        if (strlen($entry)==19)
-        {
-            $d_file=$dir.'/'.$entry;
-            unlink($d_file);
-        }
-    }
-    $d->close();
 }
 
 /**
