@@ -122,7 +122,7 @@ class PostController extends BaseController{
         } else {
             $result['comments'] = $this->_model->queryAll($sql);
         }
-        $countSql = parse_tbprefix("SELECT COUNT(1) FROM <post>");
+        $countSql = parse_tbprefix("SELECT * FROM <post>");
         $result['total'] = $this->_model->num_rows($this->_model->query($countSql));
         $statusCode = count($result['comments']) ? 200 : 404;
         exitWithResponse($statusCode, $result);
