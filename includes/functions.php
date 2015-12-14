@@ -274,21 +274,6 @@ function conf_path($require_settings = TRUE, $reset = FALSE)
 }
 
 /**
- * Finds whether the database type of guest book is flatfile (Php Textfile DB API)
- *
- * @global string $db_url
- * @return bool
- */
-function is_flatfile()
-{
-    global $db_url;
-    if(substr($db_url, 0, 8)=='flatfile') {
-        return true;
-    }
-    return false;
-}
-
-/**
  * Finds whether an IP address is blocked by guest book
  *
  * @global string $db_url
@@ -306,6 +291,7 @@ function is_baned($ip)
     }
     return false;
 }
+
 /**
  *
  *
@@ -489,27 +475,15 @@ function _removeIndex($var){
     return (!($var == 'index' || $var == 'index.php'));
 }
 
-
 /**
  * Get all time zones.
  *
  * @return array
  */
-function get_all_timezone()
-{
+function get_all_timezone() {
     $timezone=  include APPROOT.'/languages/'.getConfigVar('lang').'.php';
     return $timezone['TZ_ZONES'];
 }
-
-
-/**
- * Show message
- */
-function show_message($msg,$redirect=false,$redirect_url='index.php',$time_delay=3)
-{
-    include 'themes/'.getConfigVar('theme').'/templates/'."show_message.php"; exit;
-}
-
 
 /**
  * Get specified language
@@ -517,8 +491,7 @@ function show_message($msg,$redirect=false,$redirect_url='index.php',$time_delay
  * @param mixed $userSpecifiedLanguage
  * @return array
  */
-function getLangArray($userSpecifiedLanguage=null)
-{
+function getLangArray($userSpecifiedLanguage=null) {
     if($userSpecifiedLanguage)
     {
         if(file_exists(APPROOT.'/languages/'.$userSpecifiedLanguage.'.php'))
@@ -528,14 +501,14 @@ function getLangArray($userSpecifiedLanguage=null)
     }
     return include APPROOT.'/languages/'.getConfigVar('lang').'.php';
 }
+
 /**
  * Get all available plugins
  *
  * @param boolean $loadPlugin
  * @return array
  */
-function get_alll_plugins($loadPlugin=FALSE)
-{
+function get_alll_plugins($loadPlugin=FALSE) {
     $plugins=array();
     $d=dir(PLUGINDIR);
     while(false!==($entry=$d->read())){
@@ -558,8 +531,7 @@ function get_alll_plugins($loadPlugin=FALSE)
  * @param mixed $userSpecifiedLanguage
  * @return string
  */
-function t($message,$params=array(),$userSpecifiedLanguage=null)
-{
+function t($message,$params=array(),$userSpecifiedLanguage=null) {
     $messages=getLangArray($userSpecifiedLanguage);
     if(isset ($messages[$message]) && $messages[$message]!=='') {
         $message=$messages[$message];
@@ -569,10 +541,9 @@ function t($message,$params=array(),$userSpecifiedLanguage=null)
 
 /**
  * Determine the site is in maintenance mode or not.
- *
+ * // TODO
  */
-function is_closedMode()
-{
+function is_closedMode() {
     $disabledAction=array('PostController/actionCreate','SiteController/actionIndex','UserController/actionCreate');
     if(getConfigVar('site_close')==1 && !isset ($_SESSION['admin']) && in_array((isset($_GET['controller'])?$_GET['controller']:'SiteController').'/'.(isset($_GET['action'])?$_GET['action']:'actionIndex'), $disabledAction)) {
         show_message(getConfigVar('close_reason'));
