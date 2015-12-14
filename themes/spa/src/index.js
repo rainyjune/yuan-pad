@@ -155,6 +155,8 @@ var App = React.createClass({
           alert(res.response);
           return;
         }
+        // Clear the text in the textarea.
+        this.refs.commentBox.refs.commentForm.setState({text:''});
         this.loadCommentsFromServer();
       }.bind(this),
       function(xhr, status, err) {
@@ -213,7 +215,8 @@ var App = React.createClass({
           appConfig={this.state.appConfig}
           lang={this.state.translations}
         />
-        <CommentBox 
+        <CommentBox
+          ref="commentBox"
           onCommentSubmit={this.handleCommentSubmit}
           onCloseSearch={this.loadCommentsFromServer}
           onPageChanged={this.handlePageChange}

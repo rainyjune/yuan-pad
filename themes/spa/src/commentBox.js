@@ -200,7 +200,7 @@ var CommentForm = React.createClass({
     var valid_code = this.state.valid_code.trim();
     if (!author || !text) return;
     this.props.onCommentSubmit({ user: author, content: text, valid_code: valid_code}); 
-    this.setState({text: '', valid_code: ''});
+    this.setState({ valid_code: ''});
     this.refs.captcha.refresh();
     return false;
   },
@@ -279,6 +279,7 @@ var CommentBox = React.createClass({
           currentPage = {this.props.currentPage}
           pagenum={this.props.appConfig.page_on ? Math.ceil(this.props.commentsTotalNumber/this.props.appConfig.num_perpage) : 1} /> 
         <CommentForm
+          ref="commentForm"
           appConfig={this.props.appConfig}
           user={this.props.user} 
           lang={this.props.lang} 
