@@ -24,7 +24,7 @@ function signIn(credentials, successCallback, errorCallback) {
 function loadUserDataFromServer(uid, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "GET",
-    url: 'api.php?controller=user&action=update&uid=' + uid,
+    url: 'index.php?controller=user&action=show&uid=' + uid,
     dataType: 'json',
     cache: false,
     success: successCallback,
@@ -69,7 +69,7 @@ function signOut(successCallback, errorCallback) {
 function updateUser(userData, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
-    url: "api.php?controller=user&action=update&uid=" + userData.uid,
+    url: "index.php?controller=user&action=update",
     data: userData,
     dataType: 'json',
     success: successCallback,
@@ -80,7 +80,7 @@ function updateUser(userData, successCallback, errorCallback) {
 function signUp(userData, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
-    url: "api.php?controller=user&action=create",
+    url: "index.php?controller=user&action=create",
     data: userData,
     dataType: 'json',
     success: successCallback,
