@@ -46,9 +46,7 @@ function getUserInfo(successCallback, errorCallback) {
 function getAppConfig(successCallback, errorCallback) {
   yuanjs.ajax({
     type: "GET",
-    url: 'index.php',
-    data: {action: "getAppConfig",t:Date.now()},
-    cache: false,
+    url: 'index.php?controller=config&action=show',
     dataType: "json",
     success: successCallback,
     error:  errorCallback
@@ -60,7 +58,10 @@ function logout(successCallback, errorCallback) {
     type: "GET",
     url: 'api.php',
     data: {controller: 'user', action: "logout"},
-    cache: false,
+    dataType: 'json',
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    }, 
     success: successCallback,
     error: errorCallback
   });
@@ -94,7 +95,7 @@ function loadCommentsFromServer(pageId, successCallback, errorCallback) {
     dataType: 'json',
     method: 'GET',
     cache: false,
-    data: {"ajax": true, pid: pageId},
+    data: {controller: 'post', action: 'list', page: pageId},
     success: successCallback,
     error: errorCallback
   });
@@ -234,6 +235,30 @@ function deleteUser(uid, successCallback, errorCallback) {
   });
 }
 
+/**
+ * Get cookie value by a specific name.
+ * http://stackoverflow.com/a/15724300
+ */
+function getCookie(name) {
+  var value = "; " + document.cookie;
+  var parts = value.split("; " + name + "=");
+  if (parts.length == 2) {
+    return parts.pop().split(";").shift();
+  } else {
+    return null;
+  }
+}
+
+function getTranslations(successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "GET",
+    url: 'index.php?controller=config&action=getTranslations',
+    dataType: "json",
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
 module.exports = {
   banIP: banIP,
   createPost: createPost,
@@ -246,6 +271,7 @@ module.exports = {
   deleteUser: deleteUser,
   getACPData: getACPData,
   getAllUsers: getAllUsers,
+  getTranslations: getTranslations,
   login: login,
   logout: logout,
   signUp: signUp,
