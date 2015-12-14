@@ -1,8 +1,4 @@
 <?php
-/**
- * @version $Id$
- *
- */
 if(!defined('IN_MP')){die('Access denied!');}
 ?>
 <!DOCTYPE html>
