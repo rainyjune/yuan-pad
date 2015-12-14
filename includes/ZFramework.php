@@ -13,7 +13,6 @@ class BaseController{
 class ZFramework{
     protected   $_controller;
     protected   $_action;
-    protected   $_params;
     protected   $_controllerPath='controllers';
     public      $defaultController='SiteController';
     public      $defaultAction='actionIndex';
@@ -34,9 +33,6 @@ class ZFramework{
         $this->preloadAllControllers();
         $this->_controller=!empty ($_GET['controller'])?ucfirst($_GET['controller']).'Controller':$this->defaultController;
         $this->_action=!empty ($_GET['action'])?'action'.ucfirst($_GET['action']):$this->defaultAction;
-        foreach ($_GET as $key=>$value) {
-            $this->_params[$key]=$value;
-        }
     }
 
     protected function preloadAllControllers(){
@@ -72,10 +68,6 @@ class ZFramework{
         } catch (Exception $e) {
             exitWithResponse(520);
         }
-    }
-
-    public function getParams(){
-        return $this->_params;
     }
 
     public function getController(){
