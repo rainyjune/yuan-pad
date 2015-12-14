@@ -10,10 +10,10 @@ function banIP(ip, successCallback, errorCallback) {
   });
 }
 
-function login(credentials, successCallback, errorCallback) {
+function signIn(credentials, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
-    url: "api.php?controller=user&action=login",
+    url: "index.php?controller=user&action=login",
     data: credentials,
     dataType: 'json',
     success: successCallback,
@@ -272,7 +272,7 @@ module.exports = {
   getACPData: getACPData,
   getAllUsers: getAllUsers,
   getTranslations: getTranslations,
-  login: login,
+  signIn: signIn,
   logout: logout,
   signUp: signUp,
   updateUser: updateUser,
