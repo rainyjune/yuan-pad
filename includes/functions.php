@@ -307,56 +307,24 @@ function parse_tbprefix($str)
 
 /**
  *
- *
- * @global string $db_url
- * @param boolean $parse_smileys Defaults to TRUE
- * @param boolean $filter_words Defaults to FALSE
- * @param boolean $processUsername Defaults to FALSE
- * @param boolean $processTime Defaults to FALSE
+ * @param boolean $filter_words Defaults to TRUE
  * @param boolean $apply_filter Defaults to TRUE
  * @return array
  */
-function get_all_data($parse_smileys=true,$filter_words=false,$processUsername=false,$processTime=false,$apply_filter=true){
-    global $db_url;
-    $db=YDB::factory($db_url);
-    $data=array();
-    $data=$db->queryAll(parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS uname,p.content AS post_content,p.post_time AS time,r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <sysuser> AS u ON p.uid=u.uid ORDER BY p.post_time DESC"));
+function formatComments($data, $filter_words=true, $stripTags=true) {
     foreach ($data as &$_data) {
-        if($apply_filter && ZFramework::app()->filter_type==ConfigController::FILTER_TRIPTAGS){
-            if(strstr(ZFramework::app()->allowed_tags, 'code')){
-                $_data['post_content'] = preg_replace_callback('|<code>(.*)</code>|sU', create_function(
-                            // single quotes are essential here,
-                            // or alternative escape all $ as \$
-                            '$matches',
-                            'return "<pre class=\'prettyprint\'>".str_replace(">","&gt;",str_replace("<","&lt;",$matches[1]))."</pre>";'
-                            ),$_data['post_content']);
-                $_data['reply_content'] = preg_replace_callback('|<code>(.*)</code>|sU', create_function(
-                            // single quotes are essential here,
-                            // or alternative escape all $ as \$
-                            '$matches',
-                            'return "<pre class=\'prettyprint\'>".str_replace(">","&gt;",str_replace("<","&lt;",$matches[1]))."</pre>";'
-                            ),$_data['reply_content']);
-                if(!strstr(ZFramework::app()->allowed_tags, 'pre')){
-                    ZFramework::app()->allowed_tags .= "<pre>";
-                }
-            }
-            $_data['post_content']=strip_tags ($_data['post_content'], ZFramework::app()->allowed_tags);
-            $_data['reply_content']=strip_tags ($_data['reply_content'], ZFramework::app()->allowed_tags);
-        }  else{
-            $_data['post_content']=  htmlentities($_data['post_content'],ENT_COMPAT,'UTF-8');
-            $_data['reply_content']=htmlentities($_data['reply_content'],ENT_COMPAT,'UTF-8');
+        if ($stripTags && ZFramework::app()->filter_type == ConfigController::FILTER_TRIPTAGS) {
+            $_data['post_content'] = strip_tags($_data['post_content'], ZFramework::app()->allowed_tags);
+            $_data['reply_content'] = strip_tags($_data['reply_content'], ZFramework::app()->allowed_tags);
+        } else {
+            $_data['post_content'] =  htmlentities($_data['post_content'],ENT_COMPAT,'UTF-8');
+            $_data['reply_content'] = htmlentities($_data['reply_content'],ENT_COMPAT,'UTF-8');
         }
         if($filter_words) {
             $_data['post_content']=filter_words($_data['post_content']);
         }
-        if($processUsername) {
-            $_data['user']=($_data['uname']==ZFramework::app()->admin)?"<font color='red'>{$_data['uname']}</font>":$_data['uname'];
-        }
-        if($processTime){
-            $_data['time']=date('m-d H:i',$_data['time']+ZFramework::app()->timezone*60*60);
-            $_data['reply_time']=date('m-d H:i',$_data['reply_time']+ZFramework::app()->timezone*60*60);
-        }
-
+        $_data['time']=date('m-d H:i',$_data['time']+ZFramework::app()->timezone*60*60);
+        $_data['reply_time']=date('m-d H:i',$_data['reply_time']+ZFramework::app()->timezone*60*60);
     }
     return $data;
 }

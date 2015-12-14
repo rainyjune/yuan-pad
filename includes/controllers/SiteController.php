@@ -88,7 +88,9 @@ class SiteController extends BaseController{
     }
 
     public function actionRSS(){
-        $data=get_all_data(true, true);
+        $sql = parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS uname,p.content AS post_content,p.post_time AS time,r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <sysuser> AS u ON p.uid=u.uid ORDER BY p.pid DESC");
+        $data = formatComments($this->_model->queryAll($sql));
+        
         header('Content-Type: text/xml; charset=utf-8', true);
         $now = date("D, d M Y H:i:s T");
         $borad_name=ZFramework::app()->board_name;
@@ -109,7 +111,7 @@ HERE;
             } else {
                 $output.=htmlentities ($m['uname']);
             }
-            $output .= "</title><pubDate>".date("D, d M Y H:i:s T", $m['time'])."</pubDate><description><![CDATA[".$m['post_content'];
+            $output .= "</title><pubDate>".$m['time']."</pubDate><description><![CDATA[".$m['post_content'];
             if(@$m['reply_content']) {
                 $output.="<br />".strip_tags (t('ADMIN_REPLIED',array('{admin_name}'=>ZFramework::app()->admin,'{reply_time}'=>date("D, d M Y H:i:s T",$m['reply_time']),'{reply_content}'=>$m['reply_content'])));
             }
