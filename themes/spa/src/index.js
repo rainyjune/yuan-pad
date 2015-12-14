@@ -20,12 +20,18 @@ var App = React.createClass({
       translations: {}
     };
   },
+  /**
+   * Tested 1.
+   */
   // Get a regular user profile by uid.
   loadUserDataFromServer: function(uid) {
-    dataProvider.loadUserDataFromServer(uid, function(data){
-        console.log('user info from server:', data);
+    dataProvider.loadUserDataFromServer(uid, function(res){
+        console.log('user info from server:', res);
+        if (res.statusCode !== 200) {
+          return;
+        }
         if (this.isMounted()) {
-          this.setState({currentUser: data});
+          this.setState({currentUser: res.response});
         }
       }.bind(this), function(){
       }.bind(this));
@@ -64,6 +70,9 @@ var App = React.createClass({
       this.setState({ currentUser: {} });
     }
   },
+  /**
+   * Tested 1.
+   */
   // Reload user profile from server by uid.
   handleUserUpdated: function() {
     if (this.state.currentUser && this.state.currentUser.uid) {
@@ -136,6 +145,9 @@ var App = React.createClass({
       }
     }.bind(this));
   },
+  /**
+   * Tested 1.
+   */
   // Save comment to the server, reload comments after saved sucessfully.
   handleCommentSubmit: function(comment) {
     var comments = this.state.comments;
@@ -156,7 +168,11 @@ var App = React.createClass({
       commentsTotalNumber: this.state.commentsTotalNumber + 1,
       commentListType: 1
     });
-    dataProvider.createPost(comment, function(data) {
+    dataProvider.createPost(comment, function(res) {
+        if (res.statusCode !== 200) {
+          alert(res.response);
+          return;
+        }
         this.loadCommentsFromServer();
       }.bind(this),
       function(xhr, status, err) {
@@ -165,6 +181,9 @@ var App = React.createClass({
       }.bind(this)
     );
   },
+  /**
+   * Tested 1.
+   */
   // Reload comments from server if the `currentPage` state changed.
   handlePageChange: function(pageNumber) {
     pageNumber = parseInt(pageNumber);
@@ -172,12 +191,18 @@ var App = React.createClass({
       this.loadCommentsFromServer();
     });
   },
+  /**
+   * Tested 1.
+   */
   // Update the `searchText` state.
   handleKeywordInput: function(searchText) {
     this.setState({
       searchText: searchText
     });
   },
+  /**
+   * Tested 1.
+   */
   // Update the `currentUser` state after a user signed in.
   handleUserSignedIn: function(signedInUser) {
     if (signedInUser.admin) {
@@ -186,6 +211,9 @@ var App = React.createClass({
       this.loadUserDataFromServer(signedInUser.uid);
     }
   },
+  /**
+   * Tested 1.
+   */
   // Reload a regular user profile from server after the user signed up successfully.
   handleSignedUp: function(userData) {
     if (userData.uid) {
