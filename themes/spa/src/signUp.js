@@ -84,18 +84,17 @@ var SignUp = React.createClass({
     this.setState({registerModalIsOpen: false});
   },
   handleSignUp: function(userData) {
-    dataProvider.signUp(userData,function(data) {
-        console.log('create user result:', data);
-        if (data.error) {
+    dataProvider.signUp(userData,function(res) {
+        console.log('create user result:', res);
+        if (res.statusCode !== 200) {
           if (this.isMounted()) {
-            this.setState({registerErrorMsg: data.error_detail});
+            this.setState({registerErrorMsg: res.response});
           }
         } else {
           if (this.isMounted()) {
             this.setState({registerErrorMsg: '', registerModalIsOpen: false})//, currentUser: data});
           }
-          this.props.onSignedUp(data);
-          //this.loadUserDataFromServer(data.uid); // Load user profile from server.
+          this.props.onSignedUp(res.response);
         }
       }.bind(this),
       function(xhr, status, err) {
