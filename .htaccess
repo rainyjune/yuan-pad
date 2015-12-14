@@ -33,4 +33,5 @@ DirectoryIndex index.php
   php_value mbstring.http_output            pass
   php_value mbstring.encoding_translation   0
   php_value auto_append_file                none
+  php_flag session.cookie_httponly          on
 </IfModule>

@@ -6,6 +6,9 @@
  * @license MIT
  */
 
+// Makes the cookie only accessible through the HTTP protocal. This setting can effectively help to reduce identit theft through XSS attacks.
+// This must be set before session_start().
+ini_set('session.cookie_httponly', 1); 
 session_start();
 define('IN_MP',true);
 define('APPROOT', dirname(__FILE__));
