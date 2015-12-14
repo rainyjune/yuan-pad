@@ -1,8 +1,10 @@
 var React = require('react');
 var dataProvider = require('./dataProvider.js');
 
+/**
+ * Tested 1
+ */
 var SignInMixIn = {
-  
   openLoginModal: function() {
     this.setState({loginModalIsOpen: true});
   },
@@ -10,13 +12,15 @@ var SignInMixIn = {
     this.setState({loginModalIsOpen: false});
   },
   handleSignIn: function(loginData) {
-    dataProvider.login(loginData, function(data){
+    dataProvider.signIn(loginData, function(res){
       if (this.isMounted()) {
-        if (data.error) {
-          this.setState({loginErrorMsg: data.error_detail});
-        } else {
+        if (res.statusCode === 200) {
           this.setState({loginErrorMsg: '', loginModalIsOpen: false});
-          this.props.onUserSignedIn(data);
+          this.props.onUserSignedIn(res.response);
+        } else if (res.statusCode === 304) {
+          // The user had signed in before.
+        } else {
+          this.setState({loginErrorMsg: res.response});
         }
       }
     }.bind(this), function(){
