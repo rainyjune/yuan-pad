@@ -49,16 +49,6 @@ function getStatusArray($statusCode) {
 }
 
 /**
- * Returns JSON format data to the client with current status and then exit.
- * @param number $statusCode The status code.
- * @return void
- */
-function exitWithStatus($statusCode) {
-    header("Content-type: application/json");
-    die(json_encode(getStatusArray($statusCode)));
-}
-
-/**
  * @param number $statusCode The status code.
  * @param array $data The response JSON data.
  *
