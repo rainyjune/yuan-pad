@@ -54,7 +54,6 @@ if(is_installed()){
     if(is_baned(getIP())) {
         die('Access denied!');
     }
-    is_closedMode();
 } elseif ($_GET['action']!='install'){
     header("Location:index.php?action=install");exit;
 }

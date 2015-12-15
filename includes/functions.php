@@ -508,17 +508,6 @@ function t($message,$params=array(),$userSpecifiedLanguage=null) {
 }
 
 /**
- * Determine the site is in maintenance mode or not.
- * // TODO
- */
-function is_closedMode() {
-    $disabledAction=array('PostController/actionCreate','SiteController/actionIndex','UserController/actionCreate');
-    if(getConfigVar('site_close')==1 && !isset ($_SESSION['admin']) && in_array((isset($_GET['controller'])?$_GET['controller']:'SiteController').'/'.(isset($_GET['action'])?$_GET['action']:'actionIndex'), $disabledAction)) {
-        show_message(getConfigVar('close_reason'));
-    }
-}
-
-/**
  * Un-quotes a string or an array
  *
  * @param mixed $value

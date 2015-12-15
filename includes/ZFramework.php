@@ -13,10 +13,16 @@ class BaseController{
 class ZFramework{
     protected   $_controller;
     protected   $_action;
-    protected   $_controllerPath='controllers';
-    public      $defaultController='SiteController';
-    public      $defaultAction='actionIndex';
+    protected   $_controllerPath = 'controllers';
+    public      $defaultController = 'SiteController';
+    public      $defaultAction = 'actionIndex';
     static      $_instance;
+    private     $_maintenanceSafeAPI = array(
+                                             'SiteController/actionIndex',
+                                             'SiteController/actionControl_panel',
+                                             'ConfigController/actionShow',
+                                             'ConfigController/actionGetTranslations',
+                                             'UserController/actionLogin');
 
     public static function app(){
         if(!(self::$_instance instanceof  self)){
@@ -31,8 +37,8 @@ class ZFramework{
 
     private function  __construct(){
         $this->preloadAllControllers();
-        $this->_controller=!empty ($_GET['controller'])?ucfirst($_GET['controller']).'Controller':$this->defaultController;
-        $this->_action=!empty ($_GET['action'])?'action'.ucfirst($_GET['action']):$this->defaultAction;
+        $this->_controller = !empty($_GET['controller']) ? ucfirst(strtolower($_GET['controller'])).'Controller' : $this->defaultController;
+        $this->_action = !empty($_GET['action']) ? 'action'.ucfirst(strtolower($_GET['action'])) : $this->defaultAction;
     }
 
     protected function preloadAllControllers(){
@@ -47,14 +53,19 @@ class ZFramework{
     }
 
     public function run() {
+        $thisController = $this->_controller;
+        $thisAction = $this->_action;
+        if(getConfigVar('site_close') == 1 && !isset ($_SESSION['admin']) && !in_array($thisController.'/'.$thisAction, $this->_maintenanceSafeAPI)) {
+            exitWithResponse(503, getConfigVar('close_reason'));
+        }
         try {
-            if(class_exists($this->getController())) {
-                $rc=new ReflectionClass($this->getController());
+            if(class_exists($thisController)) {
+                $rc=new ReflectionClass($thisController);
                 if($rc->isSubclassOf('BaseController')) {
-                    if($rc->hasMethod($this->getAction())) {
+                    if($rc->hasMethod($thisAction)) {
                         get_alll_plugins(TRUE);
                         $controller=$rc->newInstance();
-                        $method=$rc->getMethod($this->getAction());
+                        $method=$rc->getMethod($thisAction);
                         $method->invoke($controller);
                     } else {
                         exitWithResponse(404);
@@ -68,13 +79,5 @@ class ZFramework{
         } catch (Exception $e) {
             exitWithResponse(520);
         }
-    }
-
-    public function getController(){
-        return $this->_controller;
-    }
-
-    public function getAction(){
-        return $this->_action;
     }
 }
