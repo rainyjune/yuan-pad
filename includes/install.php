@@ -44,9 +44,6 @@ if(!defined('IN_MP')){die('Access denied!');}
 						<td>
 							<select id="dbtype" name="dbtype">
 							<option value=""><?php echo t('DB_TYPE_SELECT',array(),$language);?></option>
-							<optgroup label="FlatFile db" >
-							<option value="flatfile">Text DB API</option>
-							</optgroup>
 							<?php $db_types=get_supported_rdbms();if($db_types):?>
 							<optgroup label="RDBMS"> <!-- -->
 							<?php foreach ($db_types as $key => $value):?>
