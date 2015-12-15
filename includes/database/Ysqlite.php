@@ -13,7 +13,7 @@ class Ysqlite extends YDBBase {
 
         $url['path'] = urldecode($url['path']);
         $dbname = substr($url['path'], 1);
-        $connection = @sqlite_open($dbdir.$dbname.'.db',0666,$sqliteerror);
+        $connection = sqlite_open($dbdir.$dbname.'.db',0666,$sqliteerror);
         if (!$connection) {
             die($sqliteerror);
         }
@@ -37,7 +37,8 @@ class Ysqlite extends YDBBase {
     }
     // TODO
     public function queryWithLimit($sql, $offset, $row_count) {
-
+        $sql .= " LIMIT ".(int)$row_count .' OFFSET '.(int)$offset;
+        return $this->queryAll($sql);
     }
     public function insert_id(){
         return sqlite_last_insert_rowid($this->lnk);
