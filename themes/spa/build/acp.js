@@ -46,129 +46,138 @@
 
 	var React = __webpack_require__(1),
 	    ReactDOM = __webpack_require__(158);
+	var Modal = __webpack_require__(159);
 	
-	var ACPHeader = __webpack_require__(159);
-	var ACPTabHeader = __webpack_require__(160);
-	var ACPTabContent = __webpack_require__(161);
-	var ACPFooter = __webpack_require__(167);
+	var ACPLogin = __webpack_require__(179);
+	var ACPHeader = __webpack_require__(183);
+	var ACPTabHeader = __webpack_require__(184);
+	var ACPTabContent = __webpack_require__(185);
+	var ACPFooter = __webpack_require__(196);
+	var dataProvider = __webpack_require__(182);
 	
 	var ACPBox = React.createClass({
 	  displayName: 'ACPBox',
 	
 	  getInitialState: function () {
 	    return {
-	      currentUser: {},
-	      translations: {},
+	      acpData: {},
 	      activeTab: 'overview',
-	      acpData: {}
+	      appConfig: {},
+	      currentUser: {},
+	      translations: {}
 	    };
 	  },
+	  // When the component is rendered, load the site configuration from server, and then try to indentify current user.
+	  // If this is not the admin user, show the login modal.
 	  componentDidMount: function () {
-	    this.getAppConfig(function (data) {
+	    dataProvider.getAppConfig((function (data) {
 	      if (this.isMounted()) {
-	        this.setState({ translations: data.translations });
-	        // TODO Duplicate data.
-	        this.setState({ appConfig: data });
+	        this.setState({ translations: data.translations, appConfig: data });
 	      }
-	      this.getUserInfo();
-	      this.getACPData(function (data) {
-	        this.setState({
-	          acpData: data
-	        });
-	      });
-	    });
-	  },
-	  getACPData: function (successCallback) {
-	    yuanjs.ajax({
-	      type: "GET",
-	      url: 'api.php',
-	      data: { action: "control_panel", t: Date.now() },
-	      cache: false,
-	      dataType: "json",
-	      success: successCallback.bind(this),
-	      error: (function () {
-	        debugger;
-	      }).bind(this)
-	    });
-	  },
-	  // TODO Reuse
-	  getAppConfig: function (successCallback) {
-	    yuanjs.ajax({
-	      type: "GET",
-	      url: 'index.php',
-	      data: { action: "getAppConfig", t: Date.now() },
-	      cache: false,
-	      dataType: "json",
-	      success: successCallback.bind(this),
-	      error: (function () {
-	        debugger;
-	      }).bind(this)
-	    });
-	  },
-	  // TODO Reuse
-	  handleLogout: function () {
-	    yuanjs.ajax({
-	      type: "GET",
-	      url: 'api.php',
-	      data: { controller: 'user', action: "logout" },
-	      cache: false,
-	      //dataType: "json",
-	      success: (function (data) {
-	        if (this.isMounted()) {
-	          this.setState({ currentUser: {} });
+	      this.getUserInfo((function () {
+	        if (this.state.currentUser.admin) {
+	          dataProvider.getACPData((function (data) {
+	            this.setState({
+	              acpData: data
+	            });
+	          }).bind(this));
 	        }
-	      }).bind(this),
-	      error: (function () {
-	        debugger;
-	      }).bind(this)
-	    });
+	      }).bind(this));
+	    }).bind(this));
 	  },
-	  // TODO reuse.
-	  getUserInfo: function () {
-	    yuanjs.ajax({
-	      type: "GET",
-	      url: 'index.php?controller=user&action=getUserInfo',
-	      dataType: 'json',
-	      cache: false,
-	      dataType: "json",
-	      success: (function (data) {
-	        console.log('user info:', data);
-	        if (Object.prototype.toString.call(data) === "[object Array]") {
-	          data = {};
-	        }
-	        if (this.isMounted()) {
-	          this.setState({ currentUser: data }, function () {
-	            //this.loadCommentsFromServer();
+	  // Reload site configuration after being updated by admin user.
+	  handleConfigUpdate: function () {
+	    dataProvider.getAppConfig((function (data) {
+	      if (this.isMounted()) {
+	        this.setState({ translations: data.translations, appConfig: data });
+	
+	        dataProvider.getACPData((function (data) {
+	          this.setState({
+	            acpData: data
 	          });
-	        }
-	      }).bind(this),
-	      error: (function () {}).bind(this)
-	    });
+	        }).bind(this));
+	      }
+	    }).bind(this));
+	  },
+	  // Update the `currentUser` state to default value.
+	  handleLogout: function () {
+	    if (this.isMounted()) {
+	      // Navigates to the index.php page after signed out.
+	      this.setState({ currentUser: {} }, function () {
+	        window.location = "index.php";
+	      });
+	    }
+	  },
+	  // Get current user identity from server.
+	  getUserInfo: function (successCallback) {
+	    dataProvider.getUserInfo((function (data) {
+	      console.log('user info:', data);
+	      if (Object.prototype.toString.call(data) === "[object Array]") {
+	        data = {};
+	      }
+	      if (this.isMounted()) {
+	        this.setState({ currentUser: data }, successCallback);
+	      }
+	    }).bind(this), (function () {}).bind(this));
 	  },
 	  updateActiveTab: function (newTabName) {
 	    this.setState({ activeTab: newTabName });
+	  },
+	  // Update the `currentUser` state after a user signed in.
+	  handleUserSignedIn: function (signedInUser) {
+	    if (signedInUser.admin) {
+	      this.setState({ currentUser: signedInUser }, (function () {
+	        dataProvider.getACPData((function (data) {
+	          this.setState({
+	            acpData: data
+	          });
+	        }).bind(this));
+	      }).bind(this));
+	    } else if (signedInUser.uid) {
+	      window.location = "index.php";
+	    }
+	  },
+	  handleCommentDeleted: function () {
+	    dataProvider.getACPData((function (data) {
+	      this.setState({
+	        acpData: data
+	      });
+	    }).bind(this));
 	  },
 	  render: function () {
 	    var tabs = [{ text: this.state.translations.ACP_OVERVIEW, value: "overview" }, { text: this.state.translations.ACP_CONFSET, value: "siteset" }, { text: this.state.translations.ACP_MANAGE_POST, value: "message" }, { text: this.state.translations.ACP_MANAGE_IP, value: "ban_ip" }, { text: this.state.translations.USER_ADMIN, value: "user" }];
 	    return React.createElement(
 	      'div',
 	      { id: 'acpBox' },
+	      React.createElement(ACPLogin, {
+	        lang: this.state.translations,
+	        user: this.state.currentUser,
+	        onUserSignedIn: this.handleUserSignedIn
+	      }),
 	      React.createElement(ACPHeader, {
 	        lang: this.state.translations,
 	        user: this.state.currentUser,
-	        onLogout: this.handleLogout
+	        onUserLogout: this.handleLogout
 	      }),
 	      React.createElement(ACPTabHeader, {
 	        activeTab: this.state.activeTab,
+	        user: this.state.currentUser,
 	        tabs: tabs,
 	        onTabSelected: this.updateActiveTab
 	      }),
 	      React.createElement(ACPTabContent, {
 	        lang: this.state.translations,
 	        activeTab: this.state.activeTab,
-	        acpData: this.state.acpData
+	        acpData: this.state.acpData,
+	        appConfig: this.state.appConfig,
+	        user: this.state.currentUser,
+	        onActiveTabChanged: this.updateActiveTab,
+	        onConfigUpdated: this.handleConfigUpdate,
+	        onCommentDeleted: this.handleCommentDeleted
 	      }),
-	      React.createElement(ACPFooter, null)
+	      React.createElement(ACPFooter, {
+	        user: this.state.currentUser
+	      })
 	    );
 	  }
 	});
@@ -19766,24 +19775,2295 @@
 /* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
+	module.exports = __webpack_require__(160);
 	
-	var ACPHeader = React.createClass({
-	  displayName: "ACPHeader",
+
+
+/***/ },
+/* 160 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {var React = __webpack_require__(1);
+	var ReactDOM = __webpack_require__(158);
+	var ExecutionEnvironment = __webpack_require__(161);
+	var ModalPortal = React.createFactory(__webpack_require__(162));
+	var ariaAppHider = __webpack_require__(177);
+	var elementClass = __webpack_require__(178);
+	var renderSubtreeIntoContainer = __webpack_require__(158).unstable_renderSubtreeIntoContainer;
+	
+	var SafeHTMLElement = ExecutionEnvironment.canUseDOM ? window.HTMLElement : {};
+	
+	var Modal = module.exports = React.createClass({
+	
+	  displayName: 'Modal',
+	  statics: {
+	    setAppElement: ariaAppHider.setElement,
+	    injectCSS: function() {
+	      "production" !== process.env.NODE_ENV
+	        && console.warn('React-Modal: injectCSS has been deprecated ' +
+	                        'and no longer has any effect. It will be removed in a later version');
+	    }
+	  },
+	
+	  propTypes: {
+	    isOpen: React.PropTypes.bool.isRequired,
+	    style: React.PropTypes.shape({
+	      content: React.PropTypes.object,
+	      overlay: React.PropTypes.object
+	    }),
+	    appElement: React.PropTypes.instanceOf(SafeHTMLElement),
+	    onRequestClose: React.PropTypes.func,
+	    closeTimeoutMS: React.PropTypes.number,
+	    ariaHideApp: React.PropTypes.bool
+	  },
+	
+	  getDefaultProps: function () {
+	    return {
+	      isOpen: false,
+	      ariaHideApp: true,
+	      closeTimeoutMS: 0
+	    };
+	  },
+	
+	  componentDidMount: function() {
+	    this.node = document.createElement('div');
+	    this.node.className = 'ReactModalPortal';
+	    document.body.appendChild(this.node);
+	    this.renderPortal(this.props);
+	  },
+	
+	  componentWillReceiveProps: function(newProps) {
+	    this.renderPortal(newProps);
+	  },
+	
+	  componentWillUnmount: function() {
+	    ReactDOM.unmountComponentAtNode(this.node);
+	    document.body.removeChild(this.node);
+	  },
+	
+	  renderPortal: function(props) {
+	    if (props.isOpen) {
+	      elementClass(document.body).add('ReactModal__Body--open');
+	    } else {
+	      elementClass(document.body).remove('ReactModal__Body--open');
+	    }
+	
+	    if (props.ariaHideApp) {
+	      ariaAppHider.toggle(props.isOpen, props.appElement);
+	    }
+	    sanitizeProps(props);
+	    this.portal = renderSubtreeIntoContainer(this, ModalPortal(props), this.node);
+	  },
 	
 	  render: function () {
+	    return React.DOM.noscript();
+	  }
+	});
+	
+	function sanitizeProps(props) {
+	  delete props.ref;
+	}
+	
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 161 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2015 Jed Watson.
+	  Based on code that is Copyright 2013-2015, Facebook, Inc.
+	  All rights reserved.
+	*/
+	
+	(function () {
+		'use strict';
+	
+		var canUseDOM = !!(
+			typeof window !== 'undefined' &&
+			window.document &&
+			window.document.createElement
+		);
+	
+		var ExecutionEnvironment = {
+	
+			canUseDOM: canUseDOM,
+	
+			canUseWorkers: typeof Worker !== 'undefined',
+	
+			canUseEventListeners:
+				canUseDOM && !!(window.addEventListener || window.attachEvent),
+	
+			canUseViewport: canUseDOM && !!window.screen
+	
+		};
+	
+		if (true) {
+			!(__WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return ExecutionEnvironment;
+			}.call(exports, __webpack_require__, exports, module), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else if (typeof module !== 'undefined' && module.exports) {
+			module.exports = ExecutionEnvironment;
+		} else {
+			window.ExecutionEnvironment = ExecutionEnvironment;
+		}
+	
+	}());
+
+
+/***/ },
+/* 162 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var div = React.DOM.div;
+	var focusManager = __webpack_require__(163);
+	var scopeTab = __webpack_require__(165);
+	var Assign = __webpack_require__(166);
+	
+	
+	// so that our CSS is statically analyzable
+	var CLASS_NAMES = {
+	  overlay: {
+	    base: 'ReactModal__Overlay',
+	    afterOpen: 'ReactModal__Overlay--after-open',
+	    beforeClose: 'ReactModal__Overlay--before-close'
+	  },
+	  content: {
+	    base: 'ReactModal__Content',
+	    afterOpen: 'ReactModal__Content--after-open',
+	    beforeClose: 'ReactModal__Content--before-close'
+	  }
+	};
+	
+	var defaultStyles = {
+	  overlay: {
+	    position        : 'fixed',
+	    top             : 0,
+	    left            : 0,
+	    right           : 0,
+	    bottom          : 0,
+	    backgroundColor : 'rgba(255, 255, 255, 0.75)'
+	  },
+	  content: {
+	    position                : 'absolute',
+	    top                     : '40px',
+	    left                    : '40px',
+	    right                   : '40px',
+	    bottom                  : '40px',
+	    border                  : '1px solid #ccc',
+	    background              : '#fff',
+	    overflow                : 'auto',
+	    WebkitOverflowScrolling : 'touch',
+	    borderRadius            : '4px',
+	    outline                 : 'none',
+	    padding                 : '20px'
+	  }
+	};
+	
+	function stopPropagation(event) {
+	  event.stopPropagation();
+	}
+	
+	var ModalPortal = module.exports = React.createClass({
+	
+	  displayName: 'ModalPortal',
+	
+	  getDefaultProps: function() {
+	    return {
+	      style: {
+	        overlay: {},
+	        content: {}
+	      }
+	    };
+	  },
+	
+	  getInitialState: function() {
+	    return {
+	      afterOpen: false,
+	      beforeClose: false
+	    };
+	  },
+	
+	  componentDidMount: function() {
+	    // Focus needs to be set when mounting and already open
+	    if (this.props.isOpen) {
+	      this.setFocusAfterRender(true);
+	      this.open();
+	    }
+	  },
+	
+	  componentWillUnmount: function() {
+	    clearTimeout(this.closeTimer);
+	  },
+	
+	  componentWillReceiveProps: function(newProps) {
+	    // Focus only needs to be set once when the modal is being opened
+	    if (!this.props.isOpen && newProps.isOpen) {
+	      this.setFocusAfterRender(true);
+	      this.open();
+	    } else if (this.props.isOpen && !newProps.isOpen) {
+	      this.close();
+	    }
+	  },
+	
+	  componentDidUpdate: function () {
+	    if (this.focusAfterRender) {
+	      this.focusContent();
+	      this.setFocusAfterRender(false);
+	    }
+	  },
+	
+	  setFocusAfterRender: function (focus) {
+	    this.focusAfterRender = focus;
+	  },
+	
+	  open: function() {
+	    focusManager.setupScopedFocus(this.node);
+	    focusManager.markForFocusLater();
+	    this.setState({isOpen: true}, function() {
+	      this.setState({afterOpen: true});
+	    }.bind(this));
+	  },
+	
+	  close: function() {
+	    if (!this.ownerHandlesClose())
+	      return;
+	    if (this.props.closeTimeoutMS > 0)
+	      this.closeWithTimeout();
+	    else
+	      this.closeWithoutTimeout();
+	  },
+	
+	  focusContent: function() {
+	    this.refs.content.focus();
+	  },
+	
+	  closeWithTimeout: function() {
+	    this.setState({beforeClose: true}, function() {
+	      this.closeTimer = setTimeout(this.closeWithoutTimeout, this.props.closeTimeoutMS);
+	    }.bind(this));
+	  },
+	
+	  closeWithoutTimeout: function() {
+	    this.setState({
+	      afterOpen: false,
+	      beforeClose: false
+	    }, this.afterClose);
+	  },
+	
+	  afterClose: function() {
+	    focusManager.returnFocus();
+	    focusManager.teardownScopedFocus();
+	  },
+	
+	  handleKeyDown: function(event) {
+	    if (event.keyCode == 9 /*tab*/) scopeTab(this.refs.content, event);
+	    if (event.keyCode == 27 /*esc*/) this.requestClose();
+	  },
+	
+	  handleOverlayClick: function() {
+	    if (this.ownerHandlesClose())
+	      this.requestClose();
+	    else
+	      this.focusContent();
+	  },
+	
+	  requestClose: function() {
+	    if (this.ownerHandlesClose())
+	      this.props.onRequestClose();
+	  },
+	
+	  ownerHandlesClose: function() {
+	    return this.props.onRequestClose;
+	  },
+	
+	  shouldBeClosed: function() {
+	    return !this.props.isOpen && !this.state.beforeClose;
+	  },
+	
+	  buildClassName: function(which, additional) {
+	    var className = CLASS_NAMES[which].base;
+	    if (this.state.afterOpen)
+	      className += ' '+CLASS_NAMES[which].afterOpen;
+	    if (this.state.beforeClose)
+	      className += ' '+CLASS_NAMES[which].beforeClose;
+	    return additional ? className + ' ' + additional : className;
+	  },
+	
+	  render: function() {
+	    return this.shouldBeClosed() ? div() : (
+	      div({
+	        ref: "overlay",
+	        className: this.buildClassName('overlay', this.props.overlayClassName),
+	        style: Assign({}, defaultStyles.overlay, this.props.style.overlay || {}),
+	        onClick: this.handleOverlayClick
+	      },
+	        div({
+	          ref: "content",
+	          style: Assign({}, defaultStyles.content, this.props.style.content || {}),
+	          className: this.buildClassName('content', this.props.className),
+	          tabIndex: "-1",
+	          onClick: stopPropagation,
+	          onKeyDown: this.handleKeyDown
+	        },
+	          this.props.children
+	        )
+	      )
+	    );
+	  }
+	});
+
+
+/***/ },
+/* 163 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var findTabbable = __webpack_require__(164);
+	var modalElement = null;
+	var focusLaterElement = null;
+	var needToFocus = false;
+	
+	function handleBlur(event) {
+	  needToFocus = true;
+	}
+	
+	function handleFocus(event) {
+	  if (needToFocus) {
+	    needToFocus = false;
+	    if (!modalElement) {
+	      return;
+	    }
+	    // need to see how jQuery shims document.on('focusin') so we don't need the
+	    // setTimeout, firefox doesn't support focusin, if it did, we could focus
+	    // the element outside of a setTimeout. Side-effect of this implementation 
+	    // is that the document.body gets focus, and then we focus our element right 
+	    // after, seems fine.
+	    setTimeout(function() {
+	      if (modalElement.contains(document.activeElement))
+	        return;
+	      var el = (findTabbable(modalElement)[0] || modalElement);
+	      el.focus();
+	    }, 0);
+	  }
+	}
+	
+	exports.markForFocusLater = function() {
+	  focusLaterElement = document.activeElement;
+	};
+	
+	exports.returnFocus = function() {
+	  try {
+	    focusLaterElement.focus();
+	  }
+	  catch (e) {
+	    console.warn('You tried to return focus to '+focusLaterElement+' but it is not in the DOM anymore');
+	  }
+	  focusLaterElement = null;
+	};
+	
+	exports.setupScopedFocus = function(element) {
+	  modalElement = element;
+	
+	  if (window.addEventListener) {
+	    window.addEventListener('blur', handleBlur, false);
+	    document.addEventListener('focus', handleFocus, true);
+	  } else {
+	    window.attachEvent('onBlur', handleBlur);
+	    document.attachEvent('onFocus', handleFocus);
+	  }
+	};
+	
+	exports.teardownScopedFocus = function() {
+	  modalElement = null;
+	
+	  if (window.addEventListener) {
+	    window.removeEventListener('blur', handleBlur);
+	    document.removeEventListener('focus', handleFocus);
+	  } else {
+	    window.detachEvent('onBlur', handleBlur);
+	    document.detachEvent('onFocus', handleFocus);
+	  }
+	};
+	
+	
+
+
+/***/ },
+/* 164 */
+/***/ function(module, exports) {
+
+	/*!
+	 * Adapted from jQuery UI core
+	 *
+	 * http://jqueryui.com
+	 *
+	 * Copyright 2014 jQuery Foundation and other contributors
+	 * Released under the MIT license.
+	 * http://jquery.org/license
+	 *
+	 * http://api.jqueryui.com/category/ui-core/
+	 */
+	
+	function focusable(element, isTabIndexNotNaN) {
+	  var nodeName = element.nodeName.toLowerCase();
+	  return (/input|select|textarea|button|object/.test(nodeName) ?
+	    !element.disabled :
+	    "a" === nodeName ?
+	      element.href || isTabIndexNotNaN :
+	      isTabIndexNotNaN) && visible(element);
+	}
+	
+	function hidden(el) {
+	  return (el.offsetWidth <= 0 && el.offsetHeight <= 0) ||
+	    el.style.display === 'none';
+	}
+	
+	function visible(element) {
+	  while (element) {
+	    if (element === document.body) break;
+	    if (hidden(element)) return false;
+	    element = element.parentNode;
+	  }
+	  return true;
+	}
+	
+	function tabbable(element) {
+	  var tabIndex = element.getAttribute('tabindex');
+	  if (tabIndex === null) tabIndex = undefined;
+	  var isTabIndexNaN = isNaN(tabIndex);
+	  return (isTabIndexNaN || tabIndex >= 0) && focusable(element, !isTabIndexNaN);
+	}
+	
+	function findTabbableDescendants(element) {
+	  return [].slice.call(element.querySelectorAll('*'), 0).filter(function(el) {
+	    return tabbable(el);
+	  });
+	}
+	
+	module.exports = findTabbableDescendants;
+	
+
+
+/***/ },
+/* 165 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var findTabbable = __webpack_require__(164);
+	
+	module.exports = function(node, event) {
+	  var tabbable = findTabbable(node);
+	  var finalTabbable = tabbable[event.shiftKey ? 0 : tabbable.length - 1];
+	  var leavingFinalTabbable = (
+	    finalTabbable === document.activeElement ||
+	    // handle immediate shift+tab after opening with mouse
+	    node === document.activeElement
+	  );
+	  if (!leavingFinalTabbable) return;
+	  event.preventDefault();
+	  var target = tabbable[event.shiftKey ? tabbable.length - 1 : 0];
+	  target.focus();
+	};
+
+
+/***/ },
+/* 166 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * lodash 3.2.0 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	var baseAssign = __webpack_require__(167),
+	    createAssigner = __webpack_require__(173),
+	    keys = __webpack_require__(169);
+	
+	/**
+	 * A specialized version of `_.assign` for customizing assigned values without
+	 * support for argument juggling, multiple sources, and `this` binding `customizer`
+	 * functions.
+	 *
+	 * @private
+	 * @param {Object} object The destination object.
+	 * @param {Object} source The source object.
+	 * @param {Function} customizer The function to customize assigned values.
+	 * @returns {Object} Returns `object`.
+	 */
+	function assignWith(object, source, customizer) {
+	  var index = -1,
+	      props = keys(source),
+	      length = props.length;
+	
+	  while (++index < length) {
+	    var key = props[index],
+	        value = object[key],
+	        result = customizer(value, source[key], key, object, source);
+	
+	    if ((result === result ? (result !== value) : (value === value)) ||
+	        (value === undefined && !(key in object))) {
+	      object[key] = result;
+	    }
+	  }
+	  return object;
+	}
+	
+	/**
+	 * Assigns own enumerable properties of source object(s) to the destination
+	 * object. Subsequent sources overwrite property assignments of previous sources.
+	 * If `customizer` is provided it is invoked to produce the assigned values.
+	 * The `customizer` is bound to `thisArg` and invoked with five arguments:
+	 * (objectValue, sourceValue, key, object, source).
+	 *
+	 * **Note:** This method mutates `object` and is based on
+	 * [`Object.assign`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-object.assign).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @alias extend
+	 * @category Object
+	 * @param {Object} object The destination object.
+	 * @param {...Object} [sources] The source objects.
+	 * @param {Function} [customizer] The function to customize assigned values.
+	 * @param {*} [thisArg] The `this` binding of `customizer`.
+	 * @returns {Object} Returns `object`.
+	 * @example
+	 *
+	 * _.assign({ 'user': 'barney' }, { 'age': 40 }, { 'user': 'fred' });
+	 * // => { 'user': 'fred', 'age': 40 }
+	 *
+	 * // using a customizer callback
+	 * var defaults = _.partialRight(_.assign, function(value, other) {
+	 *   return _.isUndefined(value) ? other : value;
+	 * });
+	 *
+	 * defaults({ 'user': 'barney' }, { 'age': 36 }, { 'user': 'fred' });
+	 * // => { 'user': 'barney', 'age': 36 }
+	 */
+	var assign = createAssigner(function(object, source, customizer) {
+	  return customizer
+	    ? assignWith(object, source, customizer)
+	    : baseAssign(object, source);
+	});
+	
+	module.exports = assign;
+
+
+/***/ },
+/* 167 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * lodash 3.2.0 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	var baseCopy = __webpack_require__(168),
+	    keys = __webpack_require__(169);
+	
+	/**
+	 * The base implementation of `_.assign` without support for argument juggling,
+	 * multiple sources, and `customizer` functions.
+	 *
+	 * @private
+	 * @param {Object} object The destination object.
+	 * @param {Object} source The source object.
+	 * @returns {Object} Returns `object`.
+	 */
+	function baseAssign(object, source) {
+	  return source == null
+	    ? object
+	    : baseCopy(source, keys(source), object);
+	}
+	
+	module.exports = baseAssign;
+
+
+/***/ },
+/* 168 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.0.1 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	
+	/**
+	 * Copies properties of `source` to `object`.
+	 *
+	 * @private
+	 * @param {Object} source The object to copy properties from.
+	 * @param {Array} props The property names to copy.
+	 * @param {Object} [object={}] The object to copy properties to.
+	 * @returns {Object} Returns `object`.
+	 */
+	function baseCopy(source, props, object) {
+	  object || (object = {});
+	
+	  var index = -1,
+	      length = props.length;
+	
+	  while (++index < length) {
+	    var key = props[index];
+	    object[key] = source[key];
+	  }
+	  return object;
+	}
+	
+	module.exports = baseCopy;
+
+
+/***/ },
+/* 169 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * lodash 3.1.2 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	var getNative = __webpack_require__(170),
+	    isArguments = __webpack_require__(171),
+	    isArray = __webpack_require__(172);
+	
+	/** Used to detect unsigned integer values. */
+	var reIsUint = /^\d+$/;
+	
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+	
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+	
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeKeys = getNative(Object, 'keys');
+	
+	/**
+	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+	 * of an array-like value.
+	 */
+	var MAX_SAFE_INTEGER = 9007199254740991;
+	
+	/**
+	 * The base implementation of `_.property` without support for deep paths.
+	 *
+	 * @private
+	 * @param {string} key The key of the property to get.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseProperty(key) {
+	  return function(object) {
+	    return object == null ? undefined : object[key];
+	  };
+	}
+	
+	/**
+	 * Gets the "length" property value of `object`.
+	 *
+	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {*} Returns the "length" value.
+	 */
+	var getLength = baseProperty('length');
+	
+	/**
+	 * Checks if `value` is array-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+	 */
+	function isArrayLike(value) {
+	  return value != null && isLength(getLength(value));
+	}
+	
+	/**
+	 * Checks if `value` is a valid array-like index.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+	 * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+	 */
+	function isIndex(value, length) {
+	  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
+	  length = length == null ? MAX_SAFE_INTEGER : length;
+	  return value > -1 && value % 1 == 0 && value < length;
+	}
+	
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 */
+	function isLength(value) {
+	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+	}
+	
+	/**
+	 * A fallback implementation of `Object.keys` which creates an array of the
+	 * own enumerable property names of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 */
+	function shimKeys(object) {
+	  var props = keysIn(object),
+	      propsLength = props.length,
+	      length = propsLength && object.length;
+	
+	  var allowIndexes = !!length && isLength(length) &&
+	    (isArray(object) || isArguments(object));
+	
+	  var index = -1,
+	      result = [];
+	
+	  while (++index < propsLength) {
+	    var key = props[index];
+	    if ((allowIndexes && isIndex(key, length)) || hasOwnProperty.call(object, key)) {
+	      result.push(key);
+	    }
+	  }
+	  return result;
+	}
+	
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject(value) {
+	  // Avoid a V8 JIT bug in Chrome 19-20.
+	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+	
+	/**
+	 * Creates an array of the own enumerable property names of `object`.
+	 *
+	 * **Note:** Non-object values are coerced to objects. See the
+	 * [ES spec](http://ecma-international.org/ecma-262/6.0/#sec-object.keys)
+	 * for more details.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 *   this.b = 2;
+	 * }
+	 *
+	 * Foo.prototype.c = 3;
+	 *
+	 * _.keys(new Foo);
+	 * // => ['a', 'b'] (iteration order is not guaranteed)
+	 *
+	 * _.keys('hi');
+	 * // => ['0', '1']
+	 */
+	var keys = !nativeKeys ? shimKeys : function(object) {
+	  var Ctor = object == null ? undefined : object.constructor;
+	  if ((typeof Ctor == 'function' && Ctor.prototype === object) ||
+	      (typeof object != 'function' && isArrayLike(object))) {
+	    return shimKeys(object);
+	  }
+	  return isObject(object) ? nativeKeys(object) : [];
+	};
+	
+	/**
+	 * Creates an array of the own and inherited enumerable property names of `object`.
+	 *
+	 * **Note:** Non-object values are coerced to objects.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Object
+	 * @param {Object} object The object to query.
+	 * @returns {Array} Returns the array of property names.
+	 * @example
+	 *
+	 * function Foo() {
+	 *   this.a = 1;
+	 *   this.b = 2;
+	 * }
+	 *
+	 * Foo.prototype.c = 3;
+	 *
+	 * _.keysIn(new Foo);
+	 * // => ['a', 'b', 'c'] (iteration order is not guaranteed)
+	 */
+	function keysIn(object) {
+	  if (object == null) {
+	    return [];
+	  }
+	  if (!isObject(object)) {
+	    object = Object(object);
+	  }
+	  var length = object.length;
+	  length = (length && isLength(length) &&
+	    (isArray(object) || isArguments(object)) && length) || 0;
+	
+	  var Ctor = object.constructor,
+	      index = -1,
+	      isProto = typeof Ctor == 'function' && Ctor.prototype === object,
+	      result = Array(length),
+	      skipIndexes = length > 0;
+	
+	  while (++index < length) {
+	    result[index] = (index + '');
+	  }
+	  for (var key in object) {
+	    if (!(skipIndexes && isIndex(key, length)) &&
+	        !(key == 'constructor' && (isProto || !hasOwnProperty.call(object, key)))) {
+	      result.push(key);
+	    }
+	  }
+	  return result;
+	}
+	
+	module.exports = keys;
+
+
+/***/ },
+/* 170 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.9.1 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	
+	/** `Object#toString` result references. */
+	var funcTag = '[object Function]';
+	
+	/** Used to detect host constructors (Safari > 5). */
+	var reIsHostCtor = /^\[object .+?Constructor\]$/;
+	
+	/**
+	 * Checks if `value` is object-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 */
+	function isObjectLike(value) {
+	  return !!value && typeof value == 'object';
+	}
+	
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+	
+	/** Used to resolve the decompiled source of functions. */
+	var fnToString = Function.prototype.toString;
+	
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+	
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto.toString;
+	
+	/** Used to detect if a method is native. */
+	var reIsNative = RegExp('^' +
+	  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+	);
+	
+	/**
+	 * Gets the native function at `key` of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {string} key The key of the method to get.
+	 * @returns {*} Returns the function if it's native, else `undefined`.
+	 */
+	function getNative(object, key) {
+	  var value = object == null ? undefined : object[key];
+	  return isNative(value) ? value : undefined;
+	}
+	
+	/**
+	 * Checks if `value` is classified as a `Function` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 *
+	 * _.isFunction(/abc/);
+	 * // => false
+	 */
+	function isFunction(value) {
+	  // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in older versions of Chrome and Safari which return 'function' for regexes
+	  // and Safari 8 equivalents which return 'object' for typed array constructors.
+	  return isObject(value) && objToString.call(value) == funcTag;
+	}
+	
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject(value) {
+	  // Avoid a V8 JIT bug in Chrome 19-20.
+	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+	
+	/**
+	 * Checks if `value` is a native function.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+	 * @example
+	 *
+	 * _.isNative(Array.prototype.push);
+	 * // => true
+	 *
+	 * _.isNative(_);
+	 * // => false
+	 */
+	function isNative(value) {
+	  if (value == null) {
+	    return false;
+	  }
+	  if (isFunction(value)) {
+	    return reIsNative.test(fnToString.call(value));
+	  }
+	  return isObjectLike(value) && reIsHostCtor.test(value);
+	}
+	
+	module.exports = getNative;
+
+
+/***/ },
+/* 171 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.0.4 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	
+	/**
+	 * Checks if `value` is object-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 */
+	function isObjectLike(value) {
+	  return !!value && typeof value == 'object';
+	}
+	
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+	
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+	
+	/** Native method references. */
+	var propertyIsEnumerable = objectProto.propertyIsEnumerable;
+	
+	/**
+	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+	 * of an array-like value.
+	 */
+	var MAX_SAFE_INTEGER = 9007199254740991;
+	
+	/**
+	 * The base implementation of `_.property` without support for deep paths.
+	 *
+	 * @private
+	 * @param {string} key The key of the property to get.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseProperty(key) {
+	  return function(object) {
+	    return object == null ? undefined : object[key];
+	  };
+	}
+	
+	/**
+	 * Gets the "length" property value of `object`.
+	 *
+	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {*} Returns the "length" value.
+	 */
+	var getLength = baseProperty('length');
+	
+	/**
+	 * Checks if `value` is array-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+	 */
+	function isArrayLike(value) {
+	  return value != null && isLength(getLength(value));
+	}
+	
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 */
+	function isLength(value) {
+	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+	}
+	
+	/**
+	 * Checks if `value` is classified as an `arguments` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isArguments(function() { return arguments; }());
+	 * // => true
+	 *
+	 * _.isArguments([1, 2, 3]);
+	 * // => false
+	 */
+	function isArguments(value) {
+	  return isObjectLike(value) && isArrayLike(value) &&
+	    hasOwnProperty.call(value, 'callee') && !propertyIsEnumerable.call(value, 'callee');
+	}
+	
+	module.exports = isArguments;
+
+
+/***/ },
+/* 172 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.0.4 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	
+	/** `Object#toString` result references. */
+	var arrayTag = '[object Array]',
+	    funcTag = '[object Function]';
+	
+	/** Used to detect host constructors (Safari > 5). */
+	var reIsHostCtor = /^\[object .+?Constructor\]$/;
+	
+	/**
+	 * Checks if `value` is object-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is object-like, else `false`.
+	 */
+	function isObjectLike(value) {
+	  return !!value && typeof value == 'object';
+	}
+	
+	/** Used for native method references. */
+	var objectProto = Object.prototype;
+	
+	/** Used to resolve the decompiled source of functions. */
+	var fnToString = Function.prototype.toString;
+	
+	/** Used to check objects for own properties. */
+	var hasOwnProperty = objectProto.hasOwnProperty;
+	
+	/**
+	 * Used to resolve the [`toStringTag`](http://ecma-international.org/ecma-262/6.0/#sec-object.prototype.tostring)
+	 * of values.
+	 */
+	var objToString = objectProto.toString;
+	
+	/** Used to detect if a method is native. */
+	var reIsNative = RegExp('^' +
+	  fnToString.call(hasOwnProperty).replace(/[\\^$.*+?()[\]{}|]/g, '\\$&')
+	  .replace(/hasOwnProperty|(function).*?(?=\\\()| for .+?(?=\\\])/g, '$1.*?') + '$'
+	);
+	
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeIsArray = getNative(Array, 'isArray');
+	
+	/**
+	 * Used as the [maximum length](http://ecma-international.org/ecma-262/6.0/#sec-number.max_safe_integer)
+	 * of an array-like value.
+	 */
+	var MAX_SAFE_INTEGER = 9007199254740991;
+	
+	/**
+	 * Gets the native function at `key` of `object`.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @param {string} key The key of the method to get.
+	 * @returns {*} Returns the function if it's native, else `undefined`.
+	 */
+	function getNative(object, key) {
+	  var value = object == null ? undefined : object[key];
+	  return isNative(value) ? value : undefined;
+	}
+	
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This function is based on [`ToLength`](http://ecma-international.org/ecma-262/6.0/#sec-tolength).
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 */
+	function isLength(value) {
+	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+	}
+	
+	/**
+	 * Checks if `value` is classified as an `Array` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isArray([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isArray(function() { return arguments; }());
+	 * // => false
+	 */
+	var isArray = nativeIsArray || function(value) {
+	  return isObjectLike(value) && isLength(value.length) && objToString.call(value) == arrayTag;
+	};
+	
+	/**
+	 * Checks if `value` is classified as a `Function` object.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is correctly classified, else `false`.
+	 * @example
+	 *
+	 * _.isFunction(_);
+	 * // => true
+	 *
+	 * _.isFunction(/abc/);
+	 * // => false
+	 */
+	function isFunction(value) {
+	  // The use of `Object#toString` avoids issues with the `typeof` operator
+	  // in older versions of Chrome and Safari which return 'function' for regexes
+	  // and Safari 8 equivalents which return 'object' for typed array constructors.
+	  return isObject(value) && objToString.call(value) == funcTag;
+	}
+	
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject(value) {
+	  // Avoid a V8 JIT bug in Chrome 19-20.
+	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+	
+	/**
+	 * Checks if `value` is a native function.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a native function, else `false`.
+	 * @example
+	 *
+	 * _.isNative(Array.prototype.push);
+	 * // => true
+	 *
+	 * _.isNative(_);
+	 * // => false
+	 */
+	function isNative(value) {
+	  if (value == null) {
+	    return false;
+	  }
+	  if (isFunction(value)) {
+	    return reIsNative.test(fnToString.call(value));
+	  }
+	  return isObjectLike(value) && reIsHostCtor.test(value);
+	}
+	
+	module.exports = isArray;
+
+
+/***/ },
+/* 173 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * lodash 3.1.1 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	var bindCallback = __webpack_require__(174),
+	    isIterateeCall = __webpack_require__(175),
+	    restParam = __webpack_require__(176);
+	
+	/**
+	 * Creates a function that assigns properties of source object(s) to a given
+	 * destination object.
+	 *
+	 * **Note:** This function is used to create `_.assign`, `_.defaults`, and `_.merge`.
+	 *
+	 * @private
+	 * @param {Function} assigner The function to assign values.
+	 * @returns {Function} Returns the new assigner function.
+	 */
+	function createAssigner(assigner) {
+	  return restParam(function(object, sources) {
+	    var index = -1,
+	        length = object == null ? 0 : sources.length,
+	        customizer = length > 2 ? sources[length - 2] : undefined,
+	        guard = length > 2 ? sources[2] : undefined,
+	        thisArg = length > 1 ? sources[length - 1] : undefined;
+	
+	    if (typeof customizer == 'function') {
+	      customizer = bindCallback(customizer, thisArg, 5);
+	      length -= 2;
+	    } else {
+	      customizer = typeof thisArg == 'function' ? thisArg : undefined;
+	      length -= (customizer ? 1 : 0);
+	    }
+	    if (guard && isIterateeCall(sources[0], sources[1], guard)) {
+	      customizer = length < 3 ? undefined : customizer;
+	      length = 1;
+	    }
+	    while (++index < length) {
+	      var source = sources[index];
+	      if (source) {
+	        assigner(object, source, customizer);
+	      }
+	    }
+	    return object;
+	  });
+	}
+	
+	module.exports = createAssigner;
+
+
+/***/ },
+/* 174 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.0.1 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	
+	/**
+	 * A specialized version of `baseCallback` which only supports `this` binding
+	 * and specifying the number of arguments to provide to `func`.
+	 *
+	 * @private
+	 * @param {Function} func The function to bind.
+	 * @param {*} thisArg The `this` binding of `func`.
+	 * @param {number} [argCount] The number of arguments to provide to `func`.
+	 * @returns {Function} Returns the callback.
+	 */
+	function bindCallback(func, thisArg, argCount) {
+	  if (typeof func != 'function') {
+	    return identity;
+	  }
+	  if (thisArg === undefined) {
+	    return func;
+	  }
+	  switch (argCount) {
+	    case 1: return function(value) {
+	      return func.call(thisArg, value);
+	    };
+	    case 3: return function(value, index, collection) {
+	      return func.call(thisArg, value, index, collection);
+	    };
+	    case 4: return function(accumulator, value, index, collection) {
+	      return func.call(thisArg, accumulator, value, index, collection);
+	    };
+	    case 5: return function(value, other, key, object, source) {
+	      return func.call(thisArg, value, other, key, object, source);
+	    };
+	  }
+	  return function() {
+	    return func.apply(thisArg, arguments);
+	  };
+	}
+	
+	/**
+	 * This method returns the first argument provided to it.
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Utility
+	 * @param {*} value Any value.
+	 * @returns {*} Returns `value`.
+	 * @example
+	 *
+	 * var object = { 'user': 'fred' };
+	 *
+	 * _.identity(object) === object;
+	 * // => true
+	 */
+	function identity(value) {
+	  return value;
+	}
+	
+	module.exports = bindCallback;
+
+
+/***/ },
+/* 175 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.0.9 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	
+	/** Used to detect unsigned integer values. */
+	var reIsUint = /^\d+$/;
+	
+	/**
+	 * Used as the [maximum length](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-number.max_safe_integer)
+	 * of an array-like value.
+	 */
+	var MAX_SAFE_INTEGER = 9007199254740991;
+	
+	/**
+	 * The base implementation of `_.property` without support for deep paths.
+	 *
+	 * @private
+	 * @param {string} key The key of the property to get.
+	 * @returns {Function} Returns the new function.
+	 */
+	function baseProperty(key) {
+	  return function(object) {
+	    return object == null ? undefined : object[key];
+	  };
+	}
+	
+	/**
+	 * Gets the "length" property value of `object`.
+	 *
+	 * **Note:** This function is used to avoid a [JIT bug](https://bugs.webkit.org/show_bug.cgi?id=142792)
+	 * that affects Safari on at least iOS 8.1-8.3 ARM64.
+	 *
+	 * @private
+	 * @param {Object} object The object to query.
+	 * @returns {*} Returns the "length" value.
+	 */
+	var getLength = baseProperty('length');
+	
+	/**
+	 * Checks if `value` is array-like.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is array-like, else `false`.
+	 */
+	function isArrayLike(value) {
+	  return value != null && isLength(getLength(value));
+	}
+	
+	/**
+	 * Checks if `value` is a valid array-like index.
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @param {number} [length=MAX_SAFE_INTEGER] The upper bounds of a valid index.
+	 * @returns {boolean} Returns `true` if `value` is a valid index, else `false`.
+	 */
+	function isIndex(value, length) {
+	  value = (typeof value == 'number' || reIsUint.test(value)) ? +value : -1;
+	  length = length == null ? MAX_SAFE_INTEGER : length;
+	  return value > -1 && value % 1 == 0 && value < length;
+	}
+	
+	/**
+	 * Checks if the provided arguments are from an iteratee call.
+	 *
+	 * @private
+	 * @param {*} value The potential iteratee value argument.
+	 * @param {*} index The potential iteratee index or key argument.
+	 * @param {*} object The potential iteratee object argument.
+	 * @returns {boolean} Returns `true` if the arguments are from an iteratee call, else `false`.
+	 */
+	function isIterateeCall(value, index, object) {
+	  if (!isObject(object)) {
+	    return false;
+	  }
+	  var type = typeof index;
+	  if (type == 'number'
+	      ? (isArrayLike(object) && isIndex(index, object.length))
+	      : (type == 'string' && index in object)) {
+	    var other = object[index];
+	    return value === value ? (value === other) : (other !== other);
+	  }
+	  return false;
+	}
+	
+	/**
+	 * Checks if `value` is a valid array-like length.
+	 *
+	 * **Note:** This function is based on [`ToLength`](https://people.mozilla.org/~jorendorff/es6-draft.html#sec-tolength).
+	 *
+	 * @private
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is a valid length, else `false`.
+	 */
+	function isLength(value) {
+	  return typeof value == 'number' && value > -1 && value % 1 == 0 && value <= MAX_SAFE_INTEGER;
+	}
+	
+	/**
+	 * Checks if `value` is the [language type](https://es5.github.io/#x8) of `Object`.
+	 * (e.g. arrays, functions, objects, regexes, `new Number(0)`, and `new String('')`)
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Lang
+	 * @param {*} value The value to check.
+	 * @returns {boolean} Returns `true` if `value` is an object, else `false`.
+	 * @example
+	 *
+	 * _.isObject({});
+	 * // => true
+	 *
+	 * _.isObject([1, 2, 3]);
+	 * // => true
+	 *
+	 * _.isObject(1);
+	 * // => false
+	 */
+	function isObject(value) {
+	  // Avoid a V8 JIT bug in Chrome 19-20.
+	  // See https://code.google.com/p/v8/issues/detail?id=2291 for more details.
+	  var type = typeof value;
+	  return !!value && (type == 'object' || type == 'function');
+	}
+	
+	module.exports = isIterateeCall;
+
+
+/***/ },
+/* 176 */
+/***/ function(module, exports) {
+
+	/**
+	 * lodash 3.6.1 (Custom Build) <https://lodash.com/>
+	 * Build: `lodash modern modularize exports="npm" -o ./`
+	 * Copyright 2012-2015 The Dojo Foundation <http://dojofoundation.org/>
+	 * Based on Underscore.js 1.8.3 <http://underscorejs.org/LICENSE>
+	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+	 * Available under MIT license <https://lodash.com/license>
+	 */
+	
+	/** Used as the `TypeError` message for "Functions" methods. */
+	var FUNC_ERROR_TEXT = 'Expected a function';
+	
+	/* Native method references for those with the same name as other `lodash` methods. */
+	var nativeMax = Math.max;
+	
+	/**
+	 * Creates a function that invokes `func` with the `this` binding of the
+	 * created function and arguments from `start` and beyond provided as an array.
+	 *
+	 * **Note:** This method is based on the [rest parameter](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/rest_parameters).
+	 *
+	 * @static
+	 * @memberOf _
+	 * @category Function
+	 * @param {Function} func The function to apply a rest parameter to.
+	 * @param {number} [start=func.length-1] The start position of the rest parameter.
+	 * @returns {Function} Returns the new function.
+	 * @example
+	 *
+	 * var say = _.restParam(function(what, names) {
+	 *   return what + ' ' + _.initial(names).join(', ') +
+	 *     (_.size(names) > 1 ? ', & ' : '') + _.last(names);
+	 * });
+	 *
+	 * say('hello', 'fred', 'barney', 'pebbles');
+	 * // => 'hello fred, barney, & pebbles'
+	 */
+	function restParam(func, start) {
+	  if (typeof func != 'function') {
+	    throw new TypeError(FUNC_ERROR_TEXT);
+	  }
+	  start = nativeMax(start === undefined ? (func.length - 1) : (+start || 0), 0);
+	  return function() {
+	    var args = arguments,
+	        index = -1,
+	        length = nativeMax(args.length - start, 0),
+	        rest = Array(length);
+	
+	    while (++index < length) {
+	      rest[index] = args[start + index];
+	    }
+	    switch (start) {
+	      case 0: return func.call(this, rest);
+	      case 1: return func.call(this, args[0], rest);
+	      case 2: return func.call(this, args[0], args[1], rest);
+	    }
+	    var otherArgs = Array(start + 1);
+	    index = -1;
+	    while (++index < start) {
+	      otherArgs[index] = args[index];
+	    }
+	    otherArgs[start] = rest;
+	    return func.apply(this, otherArgs);
+	  };
+	}
+	
+	module.exports = restParam;
+
+
+/***/ },
+/* 177 */
+/***/ function(module, exports) {
+
+	var _element = typeof document !== 'undefined' ? document.body : null;
+	
+	function setElement(element) {
+	  if (typeof element === 'string') {
+	    var el = document.querySelectorAll(element);
+	    element = 'length' in el ? el[0] : el;
+	  }
+	  _element = element || _element;
+	}
+	
+	function hide(appElement) {
+	  validateElement(appElement);
+	  (appElement || _element).setAttribute('aria-hidden', 'true');
+	}
+	
+	function show(appElement) {
+	  validateElement(appElement);
+	  (appElement || _element).removeAttribute('aria-hidden');
+	}
+	
+	function toggle(shouldHide, appElement) {
+	  if (shouldHide)
+	    hide(appElement);
+	  else
+	    show(appElement);
+	}
+	
+	function validateElement(appElement) {
+	  if (!appElement && !_element)
+	    throw new Error('react-modal: You must set an element with `Modal.setAppElement(el)` to make this accessible');
+	}
+	
+	function resetForTesting() {
+	  _element = document.body;
+	}
+	
+	exports.toggle = toggle;
+	exports.setElement = setElement;
+	exports.show = show;
+	exports.hide = hide;
+	exports.resetForTesting = resetForTesting;
+
+
+/***/ },
+/* 178 */
+/***/ function(module, exports) {
+
+	module.exports = function(opts) {
+	  return new ElementClass(opts)
+	}
+	
+	function indexOf(arr, prop) {
+	  if (arr.indexOf) return arr.indexOf(prop)
+	  for (var i = 0, len = arr.length; i < len; i++)
+	    if (arr[i] === prop) return i
+	  return -1
+	}
+	
+	function ElementClass(opts) {
+	  if (!(this instanceof ElementClass)) return new ElementClass(opts)
+	  var self = this
+	  if (!opts) opts = {}
+	
+	  // similar doing instanceof HTMLElement but works in IE8
+	  if (opts.nodeType) opts = {el: opts}
+	
+	  this.opts = opts
+	  this.el = opts.el || document.body
+	  if (typeof this.el !== 'object') this.el = document.querySelector(this.el)
+	}
+	
+	ElementClass.prototype.add = function(className) {
+	  var el = this.el
+	  if (!el) return
+	  if (el.className === "") return el.className = className
+	  var classes = el.className.split(' ')
+	  if (indexOf(classes, className) > -1) return classes
+	  classes.push(className)
+	  el.className = classes.join(' ')
+	  return classes
+	}
+	
+	ElementClass.prototype.remove = function(className) {
+	  var el = this.el
+	  if (!el) return
+	  if (el.className === "") return
+	  var classes = el.className.split(' ')
+	  var idx = indexOf(classes, className)
+	  if (idx > -1) classes.splice(idx, 1)
+	  el.className = classes.join(' ')
+	  return classes
+	}
+	
+	ElementClass.prototype.has = function(className) {
+	  var el = this.el
+	  if (!el) return
+	  var classes = el.className.split(' ')
+	  return indexOf(classes, className) > -1
+	}
+	
+	ElementClass.prototype.toggle = function(className) {
+	  var el = this.el
+	  if (!el) return
+	  if (this.has(className)) this.remove(className)
+	  else this.add(className)
+	}
+
+
+/***/ },
+/* 179 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var LoginModal = __webpack_require__(180);
+	var SignInMixIn = __webpack_require__(181);
+	
+	var ACPLogin = React.createClass({
+	  displayName: 'ACPLogin',
+	
+	  mixins: [SignInMixIn], // Use the mixin
+	  getInitialState: function () {
+	    return {
+	      loginErrorMsg: '',
+	      loginModalIsOpen: true
+	    };
+	  },
+	  render: function () {
+	    return this.props.user.admin ? null : React.createElement(
+	      'div',
+	      null,
+	      React.createElement(LoginModal, {
+	        loginErrorMsg: this.state.loginErrorMsg,
+	        onLoginSubmit: this.handleSignIn,
+	        loginModalIsOpen: this.state.loginModalIsOpen,
+	        onRequestClose: this.closeLoginModal,
+	        lang: this.props.lang
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = ACPLogin;
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Modal = __webpack_require__(159);
+	
+	const customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
+	
+	var LoginModal = React.createClass({
+	  displayName: 'LoginModal',
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    var user = this.refs.user.value.trim();
+	    var pwd = this.refs.password.value.trim();
+	    if (!user || !pwd) return;
+	    this.props.onLoginSubmit({ user: user, password: pwd });
+	    return false;
+	  },
+	  render: function () {
 	    return React.createElement(
-	      "header",
+	      Modal,
+	      { isOpen: this.props.loginModalIsOpen, onRequestClose: this.props.onRequestClose, style: customStyles },
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Login'
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        this.props.loginErrorMsg
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this.props.onRequestClose },
+	        'close'
+	      ),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit, action: '#', method: 'post' },
+	        React.createElement(
+	          'table',
+	          null,
+	          React.createElement(
+	            'tbody',
+	            null,
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'td',
+	                null,
+	                React.createElement(
+	                  'label',
+	                  null,
+	                  this.props.lang.USERNAME
+	                )
+	              ),
+	              React.createElement(
+	                'td',
+	                null,
+	                React.createElement('input', { type: 'text', ref: 'user', size: '20' })
+	              )
+	            ),
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'td',
+	                null,
+	                React.createElement(
+	                  'label',
+	                  null,
+	                  this.props.lang.ADMIN_PWD
+	                )
+	              ),
+	              React.createElement(
+	                'td',
+	                null,
+	                React.createElement('input', { type: 'password', ref: 'password', size: '20' })
+	              )
+	            ),
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'td',
+	                { colSpan: '2' },
+	                React.createElement('input', { id: 'submit_button', name: 'submit', type: 'submit', value: this.props.lang.SUBMIT })
+	              )
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = LoginModal;
+
+/***/ },
+/* 181 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var dataProvider = __webpack_require__(182);
+	
+	/**
+	 * Tested 1
+	 */
+	var SignInMixIn = {
+	  openLoginModal: function () {
+	    this.setState({ loginModalIsOpen: true });
+	  },
+	  closeLoginModal: function () {
+	    this.setState({ loginModalIsOpen: false });
+	  },
+	  handleSignIn: function (loginData) {
+	    dataProvider.signIn(loginData, (function (res) {
+	      if (this.isMounted()) {
+	        if (res.statusCode === 200) {
+	          this.setState({ loginErrorMsg: '', loginModalIsOpen: false });
+	          this.props.onUserSignedIn(res.response);
+	        } else if (res.statusCode === 304) {
+	          // The user had signed in before.
+	        } else {
+	            this.setState({ loginErrorMsg: res.response });
+	          }
+	      }
+	    }).bind(this), (function () {
+	      debugger;
+	    }).bind(this));
+	  }
+	};
+	
+	module.exports = SignInMixIn;
+
+/***/ },
+/* 182 */
+/***/ function(module, exports) {
+
+	// TODO => POST
+	function banIP(ip, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: 'api.php?controller=badip&action=create',
+	    data: { ip: ip },
+	    dataType: 'json',
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function signIn(credentials, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=user&action=login",
+	    data: credentials,
+	    dataType: 'json',
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function loadUserDataFromServer(uid, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'index.php?controller=user&action=show&uid=' + uid,
+	    dataType: 'json',
+	    cache: false,
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function getUserInfo(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'index.php?controller=user&action=getUserInfo',
+	    dataType: 'json',
+	    cache: false,
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function getAppConfig(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'index.php?controller=config&action=show',
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function signOut(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: 'index.php?controller=user&action=logout',
+	    dataType: 'json',
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function updateUser(userData, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=user&action=update",
+	    data: userData,
+	    dataType: 'json',
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function signUp(userData, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=user&action=create",
+	    data: userData,
+	    dataType: 'json',
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function loadCommentsFromServer(pageId, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    url: 'index.php',
+	    dataType: 'json',
+	    method: 'GET',
+	    cache: false,
+	    data: { controller: 'post', action: 'list', page: pageId },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function search(keyword, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=search",
+	    data: { s: keyword },
+	    dataType: 'json',
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function createPost(comment, successCallback, errorCallback) {
+	  comment.ajax = true;
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "./index.php?controller=post&action=create",
+	    data: comment,
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function getACPData(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'api.php',
+	    data: { action: "control_panel", t: Date.now() },
+	    cache: false,
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function updateSiteConfig(configObj, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "api.php?controller=config&action=update",
+	    data: configObj,
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function getAllUsers(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'api.php',
+	    data: { controller: "user", action: "index", t: Date.now() },
+	    cache: false,
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function deleteAllReplies(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'api.php',
+	    data: { controller: "reply", action: "reply" },
+	    //dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function deleteAllComments(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: 'api.php',
+	    data: { controller: "post", action: "deleteAll" },
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function deleteAllUsers(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: 'api.php?controller=user&action=deleteAll',
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function deleteComment(commentId, reply, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: 'api.php?controller=post&action=delete',
+	    data: { mid: commentId, reply: reply },
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function deleteMutiComments(dataObj, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "api.php?controller=post&action=delete_multi_messages",
+	    data: dataObj,
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	// TODO
+	function deleteReply(commentId, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "api.php?controller=reply&action=delete",
+	    data: { mid: commentId },
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function deleteUser(uid, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "api.php?controller=user&action=delete",
+	    data: { uid: uid },
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Get cookie value by a specific name.
+	 * http://stackoverflow.com/a/15724300
+	 */
+	function getCookie(name) {
+	  var value = "; " + document.cookie;
+	  var parts = value.split("; " + name + "=");
+	  if (parts.length == 2) {
+	    return parts.pop().split(";").shift();
+	  } else {
+	    return null;
+	  }
+	}
+	
+	function getTranslations(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'index.php?controller=config&action=getTranslations',
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	module.exports = {
+	  banIP: banIP,
+	  createPost: createPost,
+	  deleteAllComments: deleteAllComments,
+	  deleteAllReplies: deleteAllReplies,
+	  deleteAllUsers: deleteAllUsers,
+	  deleteComment: deleteComment,
+	  deleteMutiComments: deleteMutiComments,
+	  deleteReply: deleteReply,
+	  deleteUser: deleteUser,
+	  getACPData: getACPData,
+	  getAllUsers: getAllUsers,
+	  getTranslations: getTranslations,
+	  signIn: signIn,
+	  signOut: signOut,
+	  signUp: signUp,
+	  updateUser: updateUser,
+	  loadCommentsFromServer: loadCommentsFromServer,
+	  loadUserDataFromServer: loadUserDataFromServer,
+	  getUserInfo: getUserInfo,
+	  getAppConfig: getAppConfig,
+	  search: search,
+	  updateSiteConfig: updateSiteConfig
+	};
+
+/***/ },
+/* 183 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var dataProvider = __webpack_require__(182);
+	
+	var ACPHeader = React.createClass({
+	  displayName: 'ACPHeader',
+	
+	  handleSignOut: function (e) {
+	    e.preventDefault();
+	    dataProvider.logout((function (response) {
+	      if (response.statusCode === 200) {
+	        this.props.onUserLogout();
+	      } else {
+	        alert(response.statusText);
+	      }
+	    }).bind(this));
+	  },
+	  render: function () {
+	    if (!this.props.user.admin) return null;
+	    return React.createElement(
+	      'header',
 	      null,
 	      React.createElement(
-	        "a",
-	        { href: "index.php" },
+	        'a',
+	        { href: 'index.php' },
 	        this.props.lang.HOME
 	      ),
-	      " ",
+	      ' ',
 	      React.createElement(
-	        "a",
-	        { href: "javascript:void(0);", onClick: this.props.onLogout },
+	        'a',
+	        { href: '#', onClick: this.handleSignOut },
 	        this.props.lang.LOGOUT
 	      )
 	    );
@@ -19793,7 +22073,7 @@
 	module.exports = ACPHeader;
 
 /***/ },
-/* 160 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -19828,6 +22108,7 @@
 	  displayName: 'ACPTabHeader',
 	
 	  render: function () {
+	    if (!this.props.user.admin) return null;
 	    var activeTab = this.props.activeTab;
 	    var onTabSelected = this.props.onTabSelected;
 	    var items = this.props.tabs.map(function (tab) {
@@ -19853,39 +22134,53 @@
 	module.exports = ACPTabHeader;
 
 /***/ },
-/* 161 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var ACPOverview = __webpack_require__(162);
-	var ACPConfig = __webpack_require__(163);
-	var ACPMessages = __webpack_require__(164);
-	var ACPIpConfig = __webpack_require__(165);
-	var ACPUsers = __webpack_require__(166);
+	var ACPOverview = __webpack_require__(186);
+	var ACPConfig = __webpack_require__(187);
+	var ACPMessages = __webpack_require__(192);
+	var ACPIpConfig = __webpack_require__(193);
+	var ACPUsers = __webpack_require__(194);
 	
 	var ACPTabContent = React.createClass({
 	  displayName: 'ACPTabContent',
 	
 	  render: function () {
+	    if (!this.props.user.admin) return null;
+	
 	    return React.createElement(
 	      'div',
 	      { className: 'tagContent' },
 	      React.createElement(ACPOverview, {
 	        acpData: this.props.acpData,
 	        lang: this.props.lang,
-	        activeTab: this.props.activeTab }),
+	        activeTab: this.props.activeTab
+	      }),
 	      React.createElement(ACPConfig, {
+	        acpData: this.props.acpData,
 	        lang: this.props.lang,
-	        activeTab: this.props.activeTab }),
+	        activeTab: this.props.activeTab,
+	        appConfig: this.props.appConfig,
+	        onConfigUpdated: this.props.onConfigUpdated
+	      }),
 	      React.createElement(ACPMessages, {
 	        lang: this.props.lang,
-	        activeTab: this.props.activeTab }),
+	        activeTab: this.props.activeTab,
+	        acpData: this.props.acpData,
+	        onActiveTabChanged: this.props.onActiveTabChanged,
+	        onCommentDeleted: this.props.onCommentDeleted
+	      }),
 	      React.createElement(ACPIpConfig, {
+	        acpData: this.props.acpData,
 	        lang: this.props.lang,
-	        activeTab: this.props.activeTab }),
+	        activeTab: this.props.activeTab
+	      }),
 	      React.createElement(ACPUsers, {
 	        lang: this.props.lang,
-	        activeTab: this.props.activeTab })
+	        activeTab: this.props.activeTab
+	      })
 	    );
 	  }
 	});
@@ -19893,7 +22188,7 @@
 	module.exports = ACPTabContent;
 
 /***/ },
-/* 162 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -19997,7 +22292,7 @@
 	            React.createElement(
 	              "td",
 	              { align: "right" },
-	              "MP_VERSION"
+	              this.props.acpData.yuanpad_version
 	            )
 	          ),
 	          React.createElement(
@@ -20025,7 +22320,7 @@
 	            React.createElement(
 	              "td",
 	              { align: "right" },
-	              "PHP_VERSION"
+	              this.props.acpData.php_version
 	            )
 	          ),
 	          React.createElement(
@@ -20094,20 +22389,465 @@
 	module.exports = ACPOverview;
 
 /***/ },
-/* 163 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var dataProvider = __webpack_require__(182);
+	var LinkedStateMixin = __webpack_require__(188);
 	
 	var ACPConfig = React.createClass({
-	  displayName: "ACPConfig",
+	  displayName: 'ACPConfig',
 	
+	  getInitialState: function () {
+	    return {
+	      board_name: '',
+	      site_close: 0,
+	      close_reason: '',
+	      admin_email: '',
+	      copyright_info: '',
+	      theme: 'spa',
+	      timezone: 0,
+	      lang: 'en',
+	      filter_words: '',
+	      valid_code_open: 0,
+	      page_on: 0,
+	      num_perpage: 10,
+	      filter_type: 1,
+	      allowed_tags: '',
+	      password: ''
+	    };
+	  },
+	  mixins: [LinkedStateMixin],
+	  componentWillReceiveProps: function (nextProps) {
+	    var propAppConfig = nextProps.appConfig;
+	    var computedState = {};
+	    for (var i in propAppConfig) {
+	      if (this.state.hasOwnProperty(i)) {
+	        computedState[i] = propAppConfig[i] === null ? 0 : propAppConfig[i];
+	      }
+	    }
+	    //debugger;
+	    this.setState(computedState);
+	  },
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    dataProvider.updateSiteConfig(this.state, (function (data) {
+	      console.log('ACPConfig state:', this.state);
+	      if (data && data.status === "OK") {
+	        this.props.onConfigUpdated();
+	      } else {
+	        alert(data.error_detail);
+	      }
+	    }).bind(this), (function () {
+	      debugger;
+	    }).bind(this));
+	  },
+	  toggleSiteClose: function (e) {
+	    this.setState({ site_close: e.target.value });
+	  },
+	  toggleCaptcha: function (e) {
+	    this.setState({ valid_code_open: e.target.value });
+	  },
+	  togglePagination: function (e) {
+	    this.setState({ page_on: e.target.value });
+	  },
+	  toggleFilterType: function (e) {
+	    this.setState({ filter_type: e.target.value });
+	  },
 	  render: function () {
+	    var appConfig = this.state;
+	    var acpData = this.props.acpData;
+	    var lang = this.props.lang;
 	    var cssClass = this.props.activeTab === "siteset" ? "configContainer selectTag" : "configContainer";
+	    var isSiteClosed = appConfig.site_close;
+	    var themes = this.props.acpData.themes;
+	    var themeOptions = [];
+	    for (var i in themes) {
+	      var theme = themes[i];
+	      themeOptions.push(React.createElement(
+	        'option',
+	        { key: theme, value: theme },
+	        theme
+	      ));
+	    }
+	
+	    var timeZones = this.props.acpData.timezone_array;
+	    var timeZoneOptions = [];
+	    for (var i in timeZones) {
+	      var timezone = timeZones[i];
+	      timeZoneOptions.push(React.createElement(
+	        'option',
+	        { key: i, value: i },
+	        timezone
+	      ));
+	    }
+	
+	    var languages = this.props.acpData.languages;
+	    var languageOptions = [];
+	    for (var i in languages) {
+	      var language = languages[i];
+	      languageOptions.push(React.createElement(
+	        'option',
+	        { key: i, value: language },
+	        language
+	      ));
+	    }
+	
+	    var captchaInputs = [];
+	    if (acpData.gd_loaded) {
+	      captchaInputs.push(React.createElement(
+	        'label',
+	        { key: '1' },
+	        React.createElement('input', { type: 'radio', value: '1', checked: appConfig.valid_code_open == 1, onChange: this.toggleCaptcha }),
+	        lang.YES
+	      ));
+	      captchaInputs.push(React.createElement(
+	        'label',
+	        { key: '0' },
+	        React.createElement('input', { type: 'radio', value: '0', checked: appConfig.valid_code_open != 1, onChange: this.toggleCaptcha }),
+	        lang.NO
+	      ));
+	    } else {
+	      captchaInputs.push(React.createElement(
+	        'label',
+	        { key: '1' },
+	        React.createElement('input', { type: 'radio', value: '1', onChange: this.toggleCaptcha }),
+	        lang.YES
+	      ));
+	      captchaInputs.push(React.createElement(
+	        'label',
+	        { key: '0' },
+	        React.createElement('input', { type: 'radio', value: '0', checked: 'checked', onChange: this.toggleCaptcha }),
+	        lang.NO,
+	        lang.GD_DISABLED_NOTICE
+	      ));
+	    }
 	    return React.createElement(
-	      "div",
+	      'div',
 	      { className: cssClass },
-	      "This is the ACP config."
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit, action: 'index.php?controller=config&action=update', method: 'post' },
+	        React.createElement(
+	          'fieldset',
+	          null,
+	          React.createElement(
+	            'legend',
+	            null,
+	            this.props.lang.SYS_CONF
+	          ),
+	          React.createElement(
+	            'table',
+	            null,
+	            React.createElement(
+	              'tbody',
+	              null,
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.BOARD_NAME,
+	                  ':'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement('input', { ref: 'board_name', type: 'text', size: '20', valueLink: this.linkState('board_name') })
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.CLOSE_BOARD,
+	                  ':'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement('input', { ref: 'site_close', type: 'radio', value: '1', checked: appConfig.site_close == 1, onChange: this.toggleSiteClose }),
+	                  this.props.lang.YES,
+	                  React.createElement('input', { ref: 'site_close', type: 'radio', value: '0', checked: appConfig.site_close != 1, onChange: this.toggleSiteClose }),
+	                  this.props.lang.NO
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.CLOSE_REASON,
+	                  ':'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement('textarea', { ref: 'close_reason', cols: '30', rows: '3', valueLink: this.linkState('close_reason') })
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.ADMIN_EMAIL,
+	                  ':'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement('input', { ref: 'admin_email', type: 'text', size: '20', valueLink: this.linkState('admin_email') })
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.COPY_INFO,
+	                  ':'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement('textarea', { ref: 'copyright_info', cols: '30', rows: '3', valueLink: this.linkState('copyright_info') })
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.SYS_THEME,
+	                  ':'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement(
+	                    'select',
+	                    { ref: 'theme', valueLink: this.linkState('theme') },
+	                    themeOptions
+	                  )
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.TIMEZONE,
+	                  ':'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement(
+	                    'select',
+	                    { ref: 'timezone', valueLink: this.linkState('timezone') },
+	                    timeZoneOptions
+	                  )
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.LANG,
+	                  ':'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement(
+	                    'select',
+	                    { ref: 'lang', valueLink: this.linkState('lang') },
+	                    languageOptions
+	                  )
+	                )
+	              )
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'fieldset',
+	          null,
+	          React.createElement(
+	            'legend',
+	            null,
+	            this.props.lang.POST_CONF
+	          ),
+	          React.createElement(
+	            'table',
+	            null,
+	            React.createElement(
+	              'tbody',
+	              null,
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.FILTER_WORDS,
+	                  '：'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement('textarea', { ref: 'filter_words', cols: '20', rows: '3', valueLink: this.linkState('filter_words') })
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.ENABLE_CAPTCHA,
+	                  '：'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  captchaInputs
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.ENABLE_PAGE,
+	                  '：'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement(
+	                    'label',
+	                    null,
+	                    React.createElement('input', { ref: 'page_on', type: 'radio', value: '1', checked: appConfig.page_on == 1, onChange: this.togglePagination }),
+	                    this.props.lang.YES
+	                  ),
+	                  React.createElement(
+	                    'label',
+	                    null,
+	                    React.createElement('input', { ref: 'page_on', type: 'radio', value: '0', checked: appConfig.page_on != 1, onChange: this.togglePagination }),
+	                    this.props.lang.NO
+	                  )
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.POST_PERPAGE,
+	                  '：'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement('input', { ref: 'num_perpage', type: 'text', valueLink: this.linkState('num_perpage') }),
+	                  this.props.lang.PAGINATION_TIP
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.FILTER_HTML_TAGS,
+	                  '：'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement(
+	                    'label',
+	                    null,
+	                    React.createElement('input', { ref: 'filter_type', type: 'radio', value: '1', checked: appConfig.filter_type == 1, onChange: this.toggleFilterType }),
+	                    this.props.lang.STRIP_DISALLOWED_TAGS
+	                  ),
+	                  React.createElement(
+	                    'label',
+	                    null,
+	                    React.createElement('input', { ref: 'filter_type', type: 'radio', value: '2', checked: appConfig.filter_type == 2, onChange: this.toggleFilterType }),
+	                    this.props.lang.ESCAPE_ALL_TAGS
+	                  )
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.ALLOWED_HTML_TAGS,
+	                  '：'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement('input', { ref: 'allowed_tags', type: 'text', valueLink: this.linkState('allowed_tags') })
+	                )
+	              )
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'fieldset',
+	          null,
+	          React.createElement(
+	            'legend',
+	            null,
+	            this.props.lang.ADMIN_CONF
+	          ),
+	          React.createElement(
+	            'table',
+	            null,
+	            React.createElement(
+	              'tbody',
+	              null,
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  this.props.lang.CHANGE_PWD,
+	                  ':'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement('input', { ref: 'password', type: 'password', valueLink: this.linkState('password') }),
+	                  ' ',
+	                  this.props.lang.PWD_TIP
+	                )
+	              )
+	            )
+	          )
+	        ),
+	        React.createElement('input', { type: 'submit', value: this.props.lang.SUBMIT }),
+	        React.createElement('input', { type: 'reset', value: this.props.lang.RESET })
+	      )
 	    );
 	  }
 	});
@@ -20115,20 +22855,516 @@
 	module.exports = ACPConfig;
 
 /***/ },
-/* 164 */
+/* 188 */
+/***/ function(module, exports, __webpack_require__) {
+
+	module.exports = __webpack_require__(189);
+
+/***/ },
+/* 189 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule LinkedStateMixin
+	 * @typechecks static-only
+	 */
+	
+	'use strict';
+	
+	var ReactLink = __webpack_require__(190);
+	var ReactStateSetters = __webpack_require__(191);
+	
+	/**
+	 * A simple mixin around ReactLink.forState().
+	 */
+	var LinkedStateMixin = {
+	  /**
+	   * Create a ReactLink that's linked to part of this component's state. The
+	   * ReactLink will have the current value of this.state[key] and will call
+	   * setState() when a change is requested.
+	   *
+	   * @param {string} key state key to update. Note: you may want to use keyOf()
+	   * if you're using Google Closure Compiler advanced mode.
+	   * @return {ReactLink} ReactLink instance linking to the state.
+	   */
+	  linkState: function (key) {
+	    return new ReactLink(this.state[key], ReactStateSetters.createStateKeySetter(this, key));
+	  }
+	};
+	
+	module.exports = LinkedStateMixin;
+
+/***/ },
+/* 190 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactLink
+	 * @typechecks static-only
+	 */
+	
+	'use strict';
+	
+	/**
+	 * ReactLink encapsulates a common pattern in which a component wants to modify
+	 * a prop received from its parent. ReactLink allows the parent to pass down a
+	 * value coupled with a callback that, when invoked, expresses an intent to
+	 * modify that value. For example:
+	 *
+	 * React.createClass({
+	 *   getInitialState: function() {
+	 *     return {value: ''};
+	 *   },
+	 *   render: function() {
+	 *     var valueLink = new ReactLink(this.state.value, this._handleValueChange);
+	 *     return <input valueLink={valueLink} />;
+	 *   },
+	 *   _handleValueChange: function(newValue) {
+	 *     this.setState({value: newValue});
+	 *   }
+	 * });
+	 *
+	 * We have provided some sugary mixins to make the creation and
+	 * consumption of ReactLink easier; see LinkedValueUtils and LinkedStateMixin.
+	 */
+	
+	var React = __webpack_require__(2);
+	
+	/**
+	 * @param {*} value current value of the link
+	 * @param {function} requestChange callback to request a change
+	 */
+	function ReactLink(value, requestChange) {
+	  this.value = value;
+	  this.requestChange = requestChange;
+	}
+	
+	/**
+	 * Creates a PropType that enforces the ReactLink API and optionally checks the
+	 * type of the value being passed inside the link. Example:
+	 *
+	 * MyComponent.propTypes = {
+	 *   tabIndexLink: ReactLink.PropTypes.link(React.PropTypes.number)
+	 * }
+	 */
+	function createLinkTypeChecker(linkType) {
+	  var shapes = {
+	    value: typeof linkType === 'undefined' ? React.PropTypes.any.isRequired : linkType.isRequired,
+	    requestChange: React.PropTypes.func.isRequired
+	  };
+	  return React.PropTypes.shape(shapes);
+	}
+	
+	ReactLink.PropTypes = {
+	  link: createLinkTypeChecker
+	};
+	
+	module.exports = ReactLink;
+
+/***/ },
+/* 191 */
+/***/ function(module, exports) {
+
+	/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 *
+	 * @providesModule ReactStateSetters
+	 */
+	
+	'use strict';
+	
+	var ReactStateSetters = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (component, funcReturningState) {
+	    return function (a, b, c, d, e, f) {
+	      var partialState = funcReturningState.call(component, a, b, c, d, e, f);
+	      if (partialState) {
+	        component.setState(partialState);
+	      }
+	    };
+	  },
+	
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {ReactCompositeComponent} component
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (component, key) {
+	    // Memoize the setters.
+	    var cache = component.__keySetters || (component.__keySetters = {});
+	    return cache[key] || (cache[key] = createStateKeySetter(component, key));
+	  }
+	};
+	
+	function createStateKeySetter(component, key) {
+	  // Partial state is allocated outside of the function closure so it can be
+	  // reused with every call, avoiding memory allocation when this function
+	  // is called.
+	  var partialState = {};
+	  return function stateKeySetter(value) {
+	    partialState[key] = value;
+	    component.setState(partialState);
+	  };
+	}
+	
+	ReactStateSetters.Mixin = {
+	  /**
+	   * Returns a function that calls the provided function, and uses the result
+	   * of that to set the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateSetter(function(xValue) {
+	   *     return {x: xValue};
+	   *   })(1);
+	   *
+	   * @param {function} funcReturningState Returned callback uses this to
+	   *                                      determine how to update state.
+	   * @return {function} callback that when invoked uses funcReturningState to
+	   *                    determined the object literal to setState.
+	   */
+	  createStateSetter: function (funcReturningState) {
+	    return ReactStateSetters.createStateSetter(this, funcReturningState);
+	  },
+	
+	  /**
+	   * Returns a single-argument callback that can be used to update a single
+	   * key in the component's state.
+	   *
+	   * For example, these statements are equivalent:
+	   *
+	   *   this.setState({x: 1});
+	   *   this.createStateKeySetter('x')(1);
+	   *
+	   * Note: this is memoized function, which makes it inexpensive to call.
+	   *
+	   * @param {string} key The key in the state that you should update.
+	   * @return {function} callback of 1 argument which calls setState() with
+	   *                    the provided keyName and callback argument.
+	   */
+	  createStateKeySetter: function (key) {
+	    return ReactStateSetters.createStateKeySetter(this, key);
+	  }
+	};
+	
+	module.exports = ReactStateSetters;
+
+/***/ },
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var dataProvider = __webpack_require__(182);
+	
+	var Reply = React.createClass({
+	  displayName: 'Reply',
+	
+	  getInitialState: function () {
+	    return {
+	      b_username: null,
+	      id: 0,
+	      ip: "::1",
+	      post_content: "",
+	      reply_content: "",
+	      reply_time: "",
+	      time: "",
+	      uid: null,
+	      uname: "",
+	      user: ""
+	    };
+	  },
+	  componentWillReceiveProps: function (nextProps) {
+	    var data = nextProps.data;
+	    if (data) {
+	      this.setState({
+	        b_username: data.b_username,
+	        id: data.id,
+	        ip: data.ip,
+	        post_content: data.post_content,
+	        reply_content: data.reply_content,
+	        reply_time: data.reply_time,
+	        time: data.time,
+	        uid: data.uid,
+	        uname: data.uname,
+	        user: data.user
+	      });
+	    }
+	  },
+	  deleteReply: function (e) {
+	    e.preventDefault();
+	    dataProvider.deleteReply(e.target.getAttribute("data-commentid"), (function (response) {
+	      this.setState({ reply_content: '' });
+	    }).bind(this));
+	  },
+	  render: function () {
+	    var lang = this.props.lang,
+	        data = this.state;
+	    if (!data || !data.reply_content) {
+	      return null;
+	    }
+	    return React.createElement(
+	      'div',
+	      null,
+	      lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content),
+	      React.createElement(
+	        'span',
+	        null,
+	        ' ',
+	        React.createElement(
+	          'a',
+	          { onClick: this.deleteReply, 'data-commentid': data.id, href: '#' },
+	          lang.DELETE_THIS_REPLY
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	var Comment = React.createClass({
+	  displayName: 'Comment',
+	
+	  banIP: function (e) {
+	    var dom = e.target;
+	    e.preventDefault();
+	    var ip = dom.getAttribute('data-ip');
+	    dataProvider.banIP(ip, (function () {
+	      this.props.onActiveTabChanged('ban_ip');
+	    }).bind(this));
+	  },
+	  deleteComment: function (e) {
+	    e.preventDefault();
+	    var dom = e.target;
+	    var commentId = dom.getAttribute("data-commentid");
+	    var reply = dom.getAttribute("data-reply");
+	    // TODO
+	    dataProvider.deleteComment(commentId, reply, (function (response) {
+	      this.props.onCommentDeleted();
+	    }).bind(this));
+	  },
+	  replyComment: function (e) {
+	    e.preventDefault();
+	    var dom = e.target;
+	    var commentId = dom.getAttribute('data-commentid');
+	    this.props.onReplyComment(commentId);
+	  },
+	  render: function () {
+	    var data = this.props.data;
+	    var lang = this.props.lang;
+	    return React.createElement(
+	      'tr',
+	      null,
+	      React.createElement(
+	        'td',
+	        null,
+	        React.createElement('input', { type: 'checkbox', name: 'select_mid[]', value: data.id }),
+	        React.createElement('input', { type: 'hidden', name: this.props.data.id, value: data.reply ? 1 : 0 })
+	      ),
+	      React.createElement(
+	        'td',
+	        null,
+	        data.uid ? data.b_username : data.user
+	      ),
+	      React.createElement(
+	        'td',
+	        { className: 'admin_message' },
+	        data.post_content,
+	        React.createElement('br', null),
+	        lang.TIME,
+	        '：',
+	        data.time,
+	        React.createElement(Reply, { lang: lang, data: data })
+	      ),
+	      React.createElement(
+	        'td',
+	        null,
+	        React.createElement(
+	          'a',
+	          { onClick: this.deleteComment, 'data-commentid': data.id, 'data-reply': data.reply ? "1" : "0", href: '#' },
+	          lang.DELETE
+	        ),
+	        React.createElement(
+	          'a',
+	          { onClick: this.replyComment, 'data-commentid': data.id, href: '#' },
+	          lang.REPLY
+	        ),
+	        React.createElement(
+	          'a',
+	          { onClick: this.updateComment, href: '#' },
+	          lang.UPDATE
+	        ),
+	        React.createElement(
+	          'a',
+	          { onClick: this.banIP, 'data-ip': data.ip, href: '#' },
+	          lang.BAN
+	        )
+	      )
+	    );
+	  }
+	});
 	
 	var ACPMessages = React.createClass({
-	  displayName: "ACPMessages",
+	  displayName: 'ACPMessages',
 	
+	  checkAll: function (e) {
+	    e.preventDefault();
+	  },
+	  clearAll: function (e) {
+	    e.preventDefault();
+	  },
+	  deleteAllComments: function (e) {
+	    e.preventDefault();
+	    // TODO
+	    dataProvider.deleteAllComments();
+	  },
+	  deleteAllReplies: function (e) {
+	    e.preventDefault();
+	    // TODO
+	    dataProvider.deleteAllReplies();
+	  },
+	  deleteSelected: function (e) {
+	    e.preventDefault();
+	    // TODO
+	    dataProvider.deleteMutiComments();
+	  },
+	  invertCheck: function (e) {
+	    e.preventDefault();
+	  },
 	  render: function () {
+	    var lang = this.props.lang;
+	    var comments = this.props.acpData.data;
 	    var cssClass = this.props.activeTab === "message" ? "message_container selectTag" : "message_container";
+	    var createComment = function (comment) {
+	      return React.createElement(Comment, {
+	        lang: lang,
+	        data: comment,
+	        key: comment.id,
+	        onActiveTabChanged: this.props.onActiveTabChanged,
+	        onReplyComment: this.handleReplyComment,
+	        onCommentDeleted: this.props.onCommentDeleted
+	      });
+	    };
 	    return React.createElement(
-	      "div",
+	      'div',
 	      { className: cssClass },
-	      "This is the ACP messages."
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.deleteSelected, action: '#', method: 'post' },
+	        React.createElement(
+	          'table',
+	          null,
+	          React.createElement(
+	            'thead',
+	            null,
+	            React.createElement(
+	              'tr',
+	              { className: 'header' },
+	              React.createElement(
+	                'th',
+	                null,
+	                lang.SELECT
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                lang.NICKNAME
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                lang.MESSAGE
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                lang.OPERATION
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'tbody',
+	            null,
+	            comments && comments.map(createComment, this)
+	          ),
+	          React.createElement(
+	            'tfoot',
+	            null,
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'td',
+	                { colSpan: '4' },
+	                React.createElement(
+	                  'a',
+	                  { href: '#', onClick: this.checkAll },
+	                  lang.CHECK_ALL
+	                ),
+	                '  ',
+	                React.createElement(
+	                  'a',
+	                  { href: '#', onClick: this.clearAll },
+	                  lang.CHECK_NONE
+	                ),
+	                '  ',
+	                React.createElement(
+	                  'a',
+	                  { href: '#', onClick: this.invertCheck },
+	                  lang.CHECK_INVERT
+	                ),
+	                ' ',
+	                React.createElement('input', { type: 'submit', value: lang.DELETE_CHECKED }),
+	                ' ',
+	                React.createElement(
+	                  'a',
+	                  { onClick: this.deleteAllComments },
+	                  lang.DELETE_ALL
+	                ),
+	                ' ',
+	                React.createElement(
+	                  'a',
+	                  { onClick: this.deleteAllReplies },
+	                  lang.DELETE_ALL_REPLY
+	                )
+	              )
+	            )
+	          )
+	        )
+	      )
 	    );
 	  }
 	});
@@ -20136,20 +23372,110 @@
 	module.exports = ACPMessages;
 
 /***/ },
-/* 165 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var ACPIpConfig = React.createClass({
-	  displayName: "ACPIpConfig",
+	var IPItem = React.createClass({
+	  displayName: 'IPItem',
 	
 	  render: function () {
-	    var cssClass = this.props.activeTab === "ban_ip" ? "ip_container selectTag" : "ip_container";
 	    return React.createElement(
-	      "div",
+	      'tr',
+	      { className: 'admin_message' },
+	      React.createElement(
+	        'td',
+	        null,
+	        React.createElement('input', { type: 'checkbox', name: 'select_ip[]', value: this.props.data.ip })
+	      ),
+	      React.createElement(
+	        'td',
+	        null,
+	        this.props.data.ip
+	      )
+	    );
+	  }
+	});
+	
+	var ACPIpConfig = React.createClass({
+	  displayName: 'ACPIpConfig',
+	
+	  render: function () {
+	    var IPList = this.props.acpData.ban_ip_info;
+	    var lang = this.props.lang;
+	    var cssClass = this.props.activeTab === "ban_ip" ? "ip_container selectTag" : "ip_container";
+	    var createIPItem = function (ip) {
+	      return React.createElement(IPItem, {
+	        data: ip,
+	        key: ip.ip
+	      });
+	    };
+	    return React.createElement(
+	      'div',
 	      { className: cssClass },
-	      "This is the ACP IP Config."
+	      React.createElement(
+	        'form',
+	        { id: 'banip_manage', action: 'index.php?controller=badip&action=update', method: 'post' },
+	        React.createElement(
+	          'table',
+	          { className: 'table2' },
+	          React.createElement(
+	            'thead',
+	            null,
+	            React.createElement(
+	              'tr',
+	              { className: 'header' },
+	              React.createElement(
+	                'th',
+	                null,
+	                lang.SELECT
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                lang.BAD_IP
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'tbody',
+	            null,
+	            IPList && IPList.map(createIPItem),
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'td',
+	                { colSpan: '2', align: 'left' },
+	                React.createElement(
+	                  'span',
+	                  null,
+	                  React.createElement(
+	                    'a',
+	                    { href: '#', id: 'ip_checkall' },
+	                    lang.CHECK_ALL
+	                  ),
+	                  '  ',
+	                  React.createElement(
+	                    'a',
+	                    { href: '#', id: 'ip_checknone' },
+	                    lang.CHECK_NONE
+	                  ),
+	                  '  ',
+	                  React.createElement(
+	                    'a',
+	                    { href: '#', id: 'ip_checkxor' },
+	                    lang.CHECK_INVERT
+	                  ),
+	                  ' '
+	                ),
+	                React.createElement('input', { type: 'submit', value: lang.DELETE_CHECKED })
+	              )
+	            )
+	          )
+	        )
+	      )
 	    );
 	  }
 	});
@@ -20157,20 +23483,231 @@
 	module.exports = ACPIpConfig;
 
 /***/ },
-/* 166 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var UserUpdateModal = __webpack_require__(195);
+	var dataProvider = __webpack_require__(182);
+	
+	var UserItem = React.createClass({
+	  displayName: 'UserItem',
+	
+	  deleteUser: function (e) {
+	    var uid = e.target.getAttribute('data-uid');
+	    e.preventDefault();
+	    dataProvider.deleteUser(uid, (function (response) {
+	      // if OK
+	      this.props.onUserDeleted();
+	    }).bind(this));
+	  },
+	  updateUser: function (e) {
+	    var uid = e.target.getAttribute('data-uid');
+	    e.preventDefault();
+	    this.props.onOpenUserUpdateModal(uid);
+	  },
+	  render: function () {
+	    var user = this.props.data;
+	    var lang = this.props.lang;
+	    return React.createElement(
+	      'tr',
+	      null,
+	      React.createElement(
+	        'td',
+	        null,
+	        React.createElement('input', { type: 'checkbox', name: 'select_uid[]', value: user.uid })
+	      ),
+	      React.createElement(
+	        'td',
+	        null,
+	        user.username
+	      ),
+	      React.createElement(
+	        'td',
+	        null,
+	        user.email
+	      ),
+	      React.createElement(
+	        'td',
+	        null,
+	        React.createElement(
+	          'a',
+	          { 'data-uid': user.uid, onClick: this.deleteUser, href: '#' },
+	          lang.DELETE
+	        ),
+	        React.createElement(
+	          'a',
+	          { 'data-uid': user.uid, onClick: this.updateUser, href: 'index.php?controller=user&amp;action=update&amp;uid=' + user.uid },
+	          lang.UPDATE
+	        )
+	      )
+	    );
+	  }
+	});
 	
 	var ACPUser = React.createClass({
-	  displayName: "ACPUser",
+	  displayName: 'ACPUser',
 	
+	  getInitialState: function () {
+	    return {
+	      users: [],
+	      updateErrorMsg: '',
+	      updateModalIsOpen: false,
+	      updatedModalUserData: null
+	    };
+	  },
+	  componentDidMount: function () {
+	    dataProvider.getAllUsers((function (data) {
+	      this.setState({ users: data });
+	    }).bind(this));
+	  },
+	  handleUserDeleted: function () {
+	    dataProvider.getAllUsers((function (data) {
+	      this.setState({ users: data });
+	    }).bind(this));
+	  },
+	  handleUpdateSubmit: function (newUserData) {
+	    dataProvider.updateUser(newUserData, (function (response) {
+	      this.setState({
+	        updateErrorMsg: '',
+	        updatedModalUserData: null,
+	        updateModalIsOpen: false
+	      });
+	      dataProvider.getAllUsers((function (data) {
+	        this.setState({ users: data });
+	      }).bind(this));
+	    }).bind(this));
+	  },
+	  closeUpdateModal: function () {
+	    this.setState({
+	      updateErrorMsg: '',
+	      updatedModalUserData: null,
+	      updateModalIsOpen: false
+	    });
+	  },
+	  openUserUpdateModal: function (uid) {
+	    dataProvider.loadUserDataFromServer(uid, (function (response) {
+	      this.setState({
+	        updateErrorMsg: '',
+	        updatedModalUserData: response,
+	        updateModalIsOpen: true
+	      });
+	    }).bind(this));return;
+	  },
+	  deleteAllUsers: function (e) {
+	    e.preventDefault();
+	    dataProvider.deleteAllUsers((function (response) {
+	      dataProvider.getAllUsers((function (data) {
+	        this.setState({ users: data });
+	      }).bind(this));
+	    }).bind(this));
+	  },
 	  render: function () {
+	    var lang = this.props.lang;
 	    var cssClass = this.props.activeTab === "user" ? "user_container selectTag" : "user_container";
+	    var createUserItem = function (user) {
+	      return React.createElement(UserItem, {
+	        data: user,
+	        lang: lang,
+	        key: user.uid,
+	        onOpenUserUpdateModal: this.openUserUpdateModal,
+	        onUserDeleted: this.handleUserDeleted
+	      });
+	    };
 	    return React.createElement(
-	      "div",
+	      'div',
 	      { className: cssClass },
-	      "This is the users component."
+	      React.createElement(
+	        'form',
+	        { action: 'index.php?controller=user&action=delete_multi', method: 'post' },
+	        React.createElement(
+	          'table',
+	          null,
+	          React.createElement(
+	            'thead',
+	            null,
+	            React.createElement(
+	              'tr',
+	              { className: 'header' },
+	              React.createElement(
+	                'th',
+	                { className: 'span-1' },
+	                lang.SELECT
+	              ),
+	              React.createElement(
+	                'th',
+	                { className: 'span-3' },
+	                lang.NICKNAME
+	              ),
+	              React.createElement(
+	                'th',
+	                { className: 'span-6' },
+	                lang.EMAIL
+	              ),
+	              React.createElement(
+	                'th',
+	                null,
+	                lang.OPERATION
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            'tbody',
+	            null,
+	            this.state.users.map(createUserItem, this)
+	          ),
+	          React.createElement(
+	            'tfoot',
+	            null,
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'td',
+	                { colSpan: '4' },
+	                React.createElement(
+	                  'span',
+	                  { className: 'check_span' },
+	                  React.createElement(
+	                    'a',
+	                    { href: '#', id: 'm_checkall' },
+	                    lang.CHECK_ALL
+	                  ),
+	                  '  ',
+	                  React.createElement(
+	                    'a',
+	                    { href: '#', id: 'm_checknone' },
+	                    lang.CHECK_NONE
+	                  ),
+	                  '  ',
+	                  React.createElement(
+	                    'a',
+	                    { href: '#', id: 'm_checkxor' },
+	                    lang.CHECK_INVERT
+	                  ),
+	                  ' '
+	                ),
+	                React.createElement('input', { type: 'submit', value: lang.DELETE_CHECKED }),
+	                ' ',
+	                React.createElement(
+	                  'a',
+	                  { onClick: this.deleteAllUsers, href: 'index.php?controller=post&action=deleteAll' },
+	                  lang.DELETE_ALL
+	                ),
+	                ' '
+	              )
+	            )
+	          )
+	        ),
+	        React.createElement(UserUpdateModal, {
+	          userData: this.state.updatedModalUserData,
+	          errorMsg: this.state.updateErrorMsg,
+	          modalIsOpen: this.state.updateModalIsOpen,
+	          onRequestClose: this.closeUpdateModal,
+	          onUpdateSubmit: this.handleUpdateSubmit,
+	          lang: this.props.lang
+	        })
+	      )
 	    );
 	  }
 	});
@@ -20178,7 +23715,146 @@
 	module.exports = ACPUser;
 
 /***/ },
-/* 167 */
+/* 195 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Modal = __webpack_require__(159);
+	var dataProvider = __webpack_require__(182);
+	
+	const customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
+	
+	var UserUpdateModal = React.createClass({
+	  displayName: 'UserUpdateModal',
+	
+	  getInitialState: function () {
+	    return {
+	      uid: '',
+	      user: '',
+	      pwd: '',
+	      email: ''
+	    };
+	  },
+	  componentWillReceiveProps: function (nextProps) {
+	    if (nextProps.userData) {
+	      var userData = nextProps.userData;
+	      this.setState({
+	        uid: userData.uid,
+	        user: userData.username,
+	        pwd: userData.password,
+	        email: userData.email
+	      });
+	    }
+	  },
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    var user = this.state.user.trim();
+	    var pwd = this.state.pwd.trim();
+	    var email = this.state.email.trim();
+	    if (!user || !pwd || !email) return;
+	    this.props.onUpdateSubmit(this.state);
+	    return false;
+	  },
+	  updatePassword: function (e) {
+	    this.setState({
+	      pwd: e.target.value
+	    });
+	  },
+	  updateEmail: function (e) {
+	    this.setState({
+	      email: e.target.value
+	    });
+	  },
+	  render: function () {
+	    var lang = this.props.lang;
+	    return React.createElement(
+	      Modal,
+	      { isOpen: this.props.modalIsOpen, onRequestClose: this.props.onRequestClose, style: customStyles },
+	      React.createElement(
+	        'div',
+	        null,
+	        this.props.errorMsg
+	      ),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit, action: 'index.php?controller=user&action=update&uid=<?php echo $_GET[\'uid\'];?>', method: 'post' },
+	        React.createElement(
+	          'div',
+	          { className: 'inputbox' },
+	          React.createElement(
+	            'dl',
+	            null,
+	            React.createElement(
+	              'dt',
+	              null,
+	              lang.USERNAME
+	            ),
+	            React.createElement(
+	              'dd',
+	              null,
+	              React.createElement('input', { type: 'text', readonly: 'readonly', value: this.state.user, name: 'user', size: '20' })
+	            )
+	          ),
+	          React.createElement(
+	            'dl',
+	            null,
+	            React.createElement(
+	              'dt',
+	              null,
+	              lang.PASSWORD
+	            ),
+	            React.createElement(
+	              'dd',
+	              null,
+	              React.createElement('input', { type: 'password', value: this.state.pwd, onChange: this.updatePassword, name: 'pwd', size: '20' })
+	            )
+	          ),
+	          React.createElement(
+	            'dl',
+	            null,
+	            React.createElement(
+	              'dt',
+	              null,
+	              lang.EMAIL
+	            ),
+	            React.createElement(
+	              'dd',
+	              null,
+	              React.createElement('input', { type: 'text', value: this.state.email, onChange: this.updateEmail, name: 'email', size: '20' })
+	            )
+	          )
+	        ),
+	        React.createElement(
+	          'div',
+	          { className: 'butbox' },
+	          React.createElement(
+	            'dl',
+	            null,
+	            React.createElement(
+	              'dt',
+	              null,
+	              React.createElement('input', { type: 'submit', value: lang.UPDATE })
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = UserUpdateModal;
+
+/***/ },
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -20187,6 +23863,7 @@
 	  displayName: "ACPFooter",
 	
 	  render: function () {
+	    if (!this.props.user.admin) return null;
 	    return React.createElement(
 	      "footer",
 	      null,

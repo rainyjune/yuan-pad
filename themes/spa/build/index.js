@@ -46,292 +46,245 @@
 
 	var React = __webpack_require__(1),
 	    ReactDOM = __webpack_require__(158);
-	var SearchBar = __webpack_require__(168);
-	var CommentBox = __webpack_require__(169);
-	var Header = __webpack_require__(170);
-	var AppFooter = __webpack_require__(191);
+	
+	var SearchBar = __webpack_require__(197);
+	var CommentBox = __webpack_require__(198);
+	var Header = __webpack_require__(199);
+	var Footer = __webpack_require__(204);
+	var dataProvider = __webpack_require__(182);
 	
 	var App = React.createClass({
 	  displayName: 'App',
 	
 	  getInitialState: function () {
 	    return {
-	      currentUser: {},
-	      userDetailedData: {},
-	      loginErrorMsg: '',
-	      userUpdateErrorMsg: '',
-	      registerErrorMsg: '',
-	      translations: {},
 	      appConfig: {},
+	      comments: [],
+	      commentsTotalNumber: 0, // The total number of all comments or filtered comments.
+	      commentListType: 1, // 1: Default list. 2: Search Result list
 	      currentPage: 0,
-	      commentsDataType: 1, // 1: Default list. 2: Search Result list
-	      commentsData: {
-	        comments: [],
-	        pagenum: 0,
-	        total: 0,
-	        current_page: 1
-	      }
+	      currentUser: {},
+	      searchText: '', // The search keyword
+	      translations: {}
 	    };
 	  },
-	  handleLoginSubmit: function (loginData) {
-	    yuanjs.ajax({
-	      type: "POST",
-	      url: "api.php?controller=user&action=login",
-	      data: loginData,
-	      dataType: 'json',
-	      success: (function (data) {
-	        console.log('data', data);
-	        if (data.error) {
-	          if (this.isMounted()) {
-	            this.setState({ loginErrorMsg: data.error_detail });
-	          }
-	        } else {
-	          if (this.isMounted()) {
-	            this.setState({ loginErrorMsg: '', currentUser: data });
-	          }
-	        }
-	      }).bind(this),
-	      error: (function (xhr, status, err) {
-	        debugger;
-	      }).bind(this)
-	    });
-	  },
+	  /**
+	   * Tested 1.
+	   */
+	  // Get a regular user profile by uid.
 	  loadUserDataFromServer: function (uid) {
-	    yuanjs.ajax({
-	      type: "GET",
-	      url: 'api.php?controller=user&action=update&uid=' + uid,
-	      dataType: 'json',
-	      cache: false,
-	      success: (function (data) {
-	        console.log('user info from server:', data);
-	        if (this.isMounted()) {
-	          this.setState({ userDetailedData: data });
-	        }
-	      }).bind(this),
-	      error: (function () {}).bind(this)
-	    });
-	  },
-	  getUserInfo: function () {
-	    yuanjs.ajax({
-	      type: "GET",
-	      url: 'index.php?controller=user&action=getUserInfo',
-	      dataType: 'json',
-	      cache: false,
-	      dataType: "json",
-	      success: (function (data) {
-	        console.log('user info:', data);
-	        if (Object.prototype.toString.call(data) === "[object Array]") {
-	          data = {};
-	        }
-	        if (this.isMounted()) {
-	          this.setState({ currentUser: data }, function () {
-	            this.loadCommentsFromServer();
-	            if (data.uid) {
-	              this.loadUserDataFromServer(data.uid);
-	            }
-	          });
-	        }
-	      }).bind(this),
-	      error: (function () {}).bind(this)
-	    });
-	  },
-	  getAppConfig: function (successCallback) {
-	    yuanjs.ajax({
-	      type: "GET",
-	      url: 'index.php',
-	      data: { action: "getAppConfig", t: Date.now() },
-	      cache: false,
-	      dataType: "json",
-	      success: successCallback.bind(this),
-	      error: (function () {
-	        debugger;
-	      }).bind(this)
-	    });
-	  },
-	  handleLogout: function () {
-	    yuanjs.ajax({
-	      type: "GET",
-	      url: 'api.php',
-	      data: { controller: 'user', action: "logout" },
-	      cache: false,
-	      //dataType: "json",
-	      success: (function (data) {
-	        if (this.isMounted()) {
-	          this.setState({ currentUser: {} });
-	        }
-	      }).bind(this),
-	      error: (function () {
-	        debugger;
-	      }).bind(this)
-	    });
-	  },
-	  handleUserUpdate: function (userData) {
-	    yuanjs.ajax({
-	      type: "POST",
-	      url: "api.php?controller=user&action=update&uid=" + userData.uid,
-	      data: userData,
-	      dataType: 'json',
-	      success: (function (data) {
-	        console.log('update user result:', data, userData);
-	        if (data.error) {
-	          if (this.isMounted()) {
-	            this.setState({ userUpdateErrorMsg: data.error_detail });
-	          }
-	        } else {
-	          if (this.isMounted()) {
-	            this.setState({ userUpdateErrorMsg: '', currentUser: userData });
-	          }
-	        }
-	      }).bind(this),
-	      error: (function (xhr, status, err) {
-	        debugger;
-	      }).bind(this)
-	    });
-	  },
-	  handleRegister: function (userData) {
-	    yuanjs.ajax({
-	      type: "POST",
-	      url: "api.php?controller=user&action=create",
-	      data: userData,
-	      dataType: 'json',
-	      success: (function (data) {
-	        console.log('create user result:', data);
-	        if (data.error) {
-	          if (this.isMounted()) {
-	            this.setState({ registerErrorMsg: data.error_detail });
-	          }
-	        } else {
-	          if (this.isMounted()) {
-	            this.setState({ registerErrorMsg: '', currentUser: data });
-	          }
-	          this.loadUserDataFromServer(data.uid); // Load user profile from server.
-	        }
-	      }).bind(this),
-	      error: (function (xhr, status, err) {
-	        debugger;
-	      }).bind(this)
-	    });
-	  },
-	  loadCommentsFromServer: function () {
-	    console.log("Ready to load data from server, page:", this.state.currentPage);
-	    yuanjs.ajax({
-	      url: this.props.url,
-	      dataType: 'json',
-	      method: 'GET',
-	      cache: false,
-	      data: { "ajax": true, pid: this.state.currentPage },
-	      success: (function (data) {
-	        if (this.isMounted()) {
-	          this.setState({
-	            commentsDataType: 1,
-	            commentsData: {
-	              comments: data.messages,
-	              pagenum: data.pagenum,
-	              total: data.total,
-	              current_page: data.current_page
-	            }
-	          });
-	        }
-	      }).bind(this),
-	      error: (function (xhr, status, err) {
-	        debugger;
-	      }).bind(this)
-	    });
-	  },
-	  handleSearch: function (keyword) {
-	    yuanjs.ajax({
-	      type: "POST",
-	      url: "api.php?controller=search",
-	      data: { s: keyword },
-	      dataType: 'json',
-	      success: (function (data) {
-	        console.log('search result:', data);
-	        if (this.isMounted()) {
-	          this.setState({
-	            commentsDataType: 2,
-	            commentsData: {
-	              comments: data.messages,
-	              pagenum: 1,
-	              total: data.nums,
-	              current_page: 1
-	            }
-	          });
-	        }
-	      }).bind(this),
-	      error: (function (xhr, status, err) {
-	        debugger;
-	      }).bind(this)
-	    });
-	  },
-	  handleCloseSearch: function () {
-	    this.loadCommentsFromServer();
-	  },
-	  componentDidMount: function () {
-	    this.getAppConfig(function (data) {
-	      if (this.isMounted()) {
-	        this.setState({ translations: data.translations });
-	        // TODO Duplicate data.
-	        this.setState({ appConfig: data });
+	    dataProvider.loadUserDataFromServer(uid, (function (res) {
+	      console.log('user info from server:', res);
+	      if (res.statusCode !== 200) {
+	        return;
 	      }
-	      this.getUserInfo();
-	    });
+	      if (this.isMounted()) {
+	        this.setState({ currentUser: res.response });
+	      }
+	    }).bind(this), (function () {}).bind(this));
 	  },
-	  handleCommentSubmit: function (comment) {
-	    comment.ajax = true;
-	    yuanjs.ajax({
-	      type: "POST",
-	      url: "./index.php?controller=post&action=create",
-	      data: comment,
-	      success: (function (data) {
+	  /**
+	   * Tested 1.
+	   *
+	   */
+	  // Get current user identity from server.
+	  getUserInfo: function () {
+	    dataProvider.getUserInfo((function (res) {
+	      console.log('user info:', res);
+	      if (res.statusCode !== 200) {
+	        return;
+	      }
+	      if (Object.prototype.toString.call(res.response) === "[object Array]") {
+	        res.response = {};
+	      }
+	      if (this.isMounted()) {
+	        if (res.response.uid) {
+	          this.loadUserDataFromServer(res.response.uid);
+	        } else {
+	          this.setState({ currentUser: res.response });
+	        }
 	        this.loadCommentsFromServer();
-	      }).bind(this),
-	      error: (function (xhr, status, err) {
-	        debugger;
-	      }).bind(this)
-	    });
+	      }
+	    }).bind(this), (function () {}).bind(this));
 	  },
+	  /**
+	   * Tested 1.
+	   */
+	  // Update the `currentUser` state to default value.
+	  handleLogout: function () {
+	    if (this.isMounted()) {
+	      this.setState({ currentUser: {} });
+	    }
+	  },
+	  /**
+	   * Tested 1.
+	   */
+	  // Reload user profile from server by uid.
+	  handleUserUpdated: function () {
+	    if (this.state.currentUser && this.state.currentUser.uid) {
+	      this.loadUserDataFromServer(this.state.currentUser.uid);
+	    }
+	  },
+	  /**
+	   * Test 1
+	   */
+	  // Load comments to be displayed on page by page number.
+	  loadCommentsFromServer: function () {
+	    dataProvider.loadCommentsFromServer(this.state.currentPage, (function (res) {
+	      if (res.statusCode === 200) {
+	        //code
+	      } else if (res.statusCode === 404) {
+	          // No comments found.
+	        }
+	      if (this.isMounted()) {
+	        this.setState({
+	          comments: res.response.comments,
+	          commentsTotalNumber: res.response.total,
+	          commentListType: 1
+	        });
+	      }
+	    }).bind(this), (function (xhr, status, err) {
+	      debugger;
+	    }).bind(this));
+	  },
+	  /**
+	   * Tested 1.
+	   *
+	   */
+	  // Get comments from server according to the keyword user has entered.
+	  handleSearch: function (keyword) {
+	    dataProvider.search(keyword, (function (res) {
+	      console.log('search result:', res);
+	      if (this.isMounted()) {
+	        this.setState({
+	          comments: res.response.comments,
+	          commentsTotalNumber: res.response.total,
+	          commentListType: 2
+	        });
+	      }
+	    }).bind(this), (function (xhr, status, err) {
+	      debugger;
+	    }).bind(this));
+	  },
+	  /**
+	   * Tested 1.
+	   */
+	  // When the component is rendered, load the site configuration from server, and then try to indentify current user.
+	  componentDidMount: function () {
+	    dataProvider.getAppConfig((function (res) {
+	      if (res.statusCode === 200) {
+	        var siteConfig = res.response;
+	        dataProvider.getTranslations((function (res) {
+	          if (this.isMounted()) {
+	            this.setState({ translations: res.response });
+	            this.setState({ appConfig: siteConfig });
+	          }
+	          this.getUserInfo();
+	        }).bind(this));
+	      } else {
+	        // TODO Tell the user what's wrong.
+	        alert(res.statusText);
+	      }
+	    }).bind(this));
+	  },
+	  /**
+	   * Tested 1.
+	   */
+	  // Save comment to the server, reload comments after saved sucessfully.
+	  handleCommentSubmit: function (comment) {
+	    dataProvider.createPost(comment, (function (res) {
+	      if (res.statusCode !== 200) {
+	        alert(res.response);
+	        return;
+	      }
+	      // Clear the text in the textarea.
+	      this.refs.commentBox.refs.commentForm.setState({ text: '' });
+	      this.loadCommentsFromServer();
+	    }).bind(this), (function (xhr, status, err) {
+	      console.log("error", xhr, status, err);
+	    }).bind(this));
+	  },
+	  /**
+	   * Tested 1.
+	   */
+	  // Reload comments from server if the `currentPage` state changed.
 	  handlePageChange: function (pageNumber) {
 	    pageNumber = parseInt(pageNumber);
 	    this.setState({ currentPage: pageNumber }, function () {
 	      this.loadCommentsFromServer();
 	    });
 	  },
+	  /**
+	   * Tested 1.
+	   */
+	  // Update the `searchText` state.
+	  handleKeywordInput: function (searchText) {
+	    this.setState({
+	      searchText: searchText
+	    });
+	  },
+	  /**
+	   * Tested 1.
+	   */
+	  // Update the `currentUser` state after a user signed in.
+	  handleUserSignedIn: function (signedInUser) {
+	    if (signedInUser.admin) {
+	      this.setState({ currentUser: signedInUser });
+	    } else if (signedInUser.uid) {
+	      this.loadUserDataFromServer(signedInUser.uid);
+	    }
+	  },
+	  /**
+	   * Tested 1.
+	   */
+	  // Reload a regular user profile from server after the user signed up successfully.
+	  handleSignedUp: function (userData) {
+	    if (userData.uid) {
+	      this.loadUserDataFromServer(userData.uid);
+	    }
+	  },
 	  render: function () {
 	    return React.createElement(
 	      'div',
 	      { id: 'appbox' },
 	      React.createElement(Header, {
-	        onRegisterSubmit: this.handleRegister,
-	        onUserUpdate: this.handleUserUpdate,
+	        onSignedUp: this.handleSignedUp,
+	        onUserUpdated: this.handleUserUpdated,
 	        onUserLogout: this.handleLogout,
-	        onLoginSubmit: this.handleLoginSubmit,
-	        registerErrorMsg: this.state.registerErrorMsg,
-	        loginErrorMsg: this.state.loginErrorMsg,
+	        onUserSignedIn: this.handleUserSignedIn,
 	        user: this.state.currentUser,
-	        userDetailedData: this.state.userDetailedData,
 	        appConfig: this.state.appConfig,
-	        lang: this.state.translations }),
+	        lang: this.state.translations
+	      }),
 	      React.createElement(CommentBox, {
+	        ref: 'commentBox',
 	        onCommentSubmit: this.handleCommentSubmit,
-	        onCloseSearch: this.handleCloseSearch,
+	        onCloseSearch: this.loadCommentsFromServer,
 	        onPageChanged: this.handlePageChange,
-	        url: 'index.php',
 	        user: this.state.currentUser,
 	        lang: this.state.translations,
 	        currentPage: this.state.currentPage,
 	        appConfig: this.state.appConfig,
-	        commentsDataType: this.state.commentsDataType,
-	        comments: this.state.commentsData }),
-	      React.createElement(SearchBar, { onSubmit: this.handleSearch }),
-	      React.createElement(AppFooter, {
+	        commentListType: this.state.commentListType,
+	        comments: this.state.comments,
+	        commentsTotalNumber: this.state.commentsTotalNumber,
+	        searchText: this.state.searchText
+	      }),
+	      React.createElement(SearchBar, {
+	        onSubmit: this.handleSearch,
+	        onUserInput: this.handleKeywordInput,
+	        searchText: this.state.searchText
+	      }),
+	      React.createElement(Footer, {
 	        lang: this.state.translations,
 	        appConfig: this.state.appConfig,
-	        user: this.state.currentUser })
+	        user: this.state.currentUser
+	      })
 	    );
 	  }
 	});
 	
-	ReactDOM.render(React.createElement(App, { url: 'index.php' }), document.getElementById('content'));
+	ReactDOM.render(React.createElement(App, null), document.getElementById('content'));
 
 /***/ },
 /* 1 */
@@ -19921,832 +19874,23 @@
 
 
 /***/ },
-/* 159 */,
-/* 160 */,
-/* 161 */,
-/* 162 */,
-/* 163 */,
-/* 164 */,
-/* 165 */,
-/* 166 */,
-/* 167 */,
-/* 168 */
+/* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var React = __webpack_require__(1);
-	
-	var SearchBar = React.createClass({
-	  displayName: "SearchBar",
-	
-	  handleSearch: function (e) {
-	    e.preventDefault();
-	    var keyword = this.refs.s.value.trim();
-	    if (!keyword) return;
-	    this.props.onSubmit(keyword);
-	    return false;
-	  },
-	  render: function () {
-	    return React.createElement(
-	      "div",
-	      { className: "searchbar" },
-	      React.createElement(
-	        "form",
-	        { action: "index.php?controller=search", method: "post", onSubmit: this.handleSearch },
-	        React.createElement("input", { type: "text", size: "10", placeholder: "Search", ref: "s" }),
-	        React.createElement("input", { type: "image", src: "misc/images/search.gif", alt: "Search", ref: "searchImg" })
-	      )
-	    );
-	  }
-	});
-	
-	module.exports = SearchBar;
-
-/***/ },
-/* 169 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	var CloseSearchButton = React.createClass({
-	  displayName: "CloseSearchButton",
-	
-	  render: function () {
-	    return React.createElement(
-	      "a",
-	      { href: "javascript:void(0)", onClick: this.props.onCloseSearch },
-	      "Close"
-	    );
-	  }
-	});
-	
-	var PaginationItem = React.createClass({
-	  displayName: "PaginationItem",
-	
-	  handleClick: function (e) {
-	    e.preventDefault();
-	    var pageNumber = e.target.getAttribute("data-pagenumber");
-	    console.log("You chosed the page number: ", pageNumber);
-	    if (parseInt(pageNumber) == this.props.currentPage) {
-	      console.log('The same page , we do nothing...');
-	      return false;
-	    }
-	    this.props.onPageChanged(pageNumber);
-	    return false;
-	  },
-	  render: function () {
-	    return React.createElement(
-	      "a",
-	      {
-	        className: (() => {
-	          if (this.props.currentPage === this.props.pageNumber) {
-	            return "pagination-item currentPage";
-	          } else {
-	            return "pagination-item";
-	          }
-	        })(),
-	        href: "javascript:void(0);",
-	        "data-pagenumber": this.props.pageNumber,
-	        onClick: this.handleClick
-	      },
-	      this.props.text
-	    );
-	  }
-	});
-	
-	var Pagination = React.createClass({
-	  displayName: "Pagination",
-	
-	  render: function () {
-	    //console.log("The pagination feature was enabled, the total pages: ", this.props.total);
-	    var items = [];
-	    for (var i = 0; i < this.props.total; i++) {
-	      items.push(React.createElement(PaginationItem, { onPageChanged: this.props.onPageChanged, currentPage: this.props.currentPage, pageNumber: i, text: i + 1, key: i }));
-	    }
-	    return React.createElement(
-	      "div",
-	      { className: "pagination" },
-	      items
-	    );
-	  }
-	});
-	
-	var CommentStatistics = React.createClass({
-	  displayName: "CommentStatistics",
-	
-	  rawMarkup: function () {
-	    var pagenavText, text;
-	    if (this.props.commentsDataType === 1) {
-	      pagenavText = this.props.lang.PAGE_NAV;
-	      text = pagenavText ? pagenavText.replace('{num_of_post}', this.props.total).replace('{num_of_page}', this.props.pagenum) : '';
-	    } else if (this.props.commentsDataType === 2) {
-	      if (this.props.total) {
-	        pagenavText = this.props.lang.SEARCH_FOUND;
-	        text = pagenavText ? pagenavText.replace('{result_num}', this.props.total) : '';
-	      } else {
-	        text = this.props.lang.SEARCH_NOTFOUND;
-	      }
-	    }
-	    return { __html: text };
-	  },
-	  render: function () {
-	    var closeSearchBtn = this.props.commentsDataType === 2 ? React.createElement(CloseSearchButton, { onCloseSearch: this.props.onCloseSearch }) : '';
-	    //console.log('closeSearchBtn:', closeSearchBtn);
-	
-	    var pagination = this.props.appConfig.page_on ? React.createElement(Pagination, { onPageChanged: this.props.onPageChanged, currentPage: this.props.currentPage, total: Math.ceil(this.props.total / this.props.appConfig.num_perpage) }) : "";
-	    return React.createElement(
-	      "div",
-	      { className: "statistics" },
-	      closeSearchBtn,
-	      React.createElement("p", { dangerouslySetInnerHTML: this.rawMarkup() }),
-	      pagination
-	    );
-	  }
-	});
-	
-	var CommentList = React.createClass({
-	  displayName: "CommentList",
-	
-	  render: function () {
-	    var lang = this.props.lang;
-	    var commentNodes = this.props.data.map(function (comment) {
-	      return React.createElement(
-	        Comment,
-	        {
-	          uid: comment.uid,
-	          b_username: comment.b_username,
-	          user: comment.user,
-	          author: comment.uname,
-	          key: comment.id,
-	          reply_content: comment.reply_content,
-	          reply_time: comment.reply_time,
-	          time: comment.time,
-	          lang: lang },
-	        comment.post_content
-	      );
-	    });
-	    return React.createElement(
-	      "div",
-	      { className: "commentList" },
-	      commentNodes
-	    );
-	  }
-	});
-	
-	var Reply = React.createClass({
-	  displayName: "Reply",
-	
-	  rawMarkup: function () {
-	    // TODO: Get the actual admini user name.
-	    return { __html: this.props.lang.ADMIN_REPLIED.replace('{admin_name}', 'ADMIN').replace('{reply_time}', this.props.date).replace('{reply_content}', this.props.content) };
-	  },
-	  render: function () {
-	    return React.createElement("div", { className: "reply", dangerouslySetInnerHTML: this.rawMarkup() });
-	  }
-	});
-	
-	var Comment = React.createClass({
-	  displayName: "Comment",
-	
-	  rawMarkup: function () {
-	    return { __html: this.props.children.toString() };
-	  },
-	  rawAuthorMarkup: function () {
-	    return { __html: this.props.uid ? this.props.b_username : this.props.user };
-	  },
-	  render: function () {
-	
-	    var reply = this.props.reply_content ? React.createElement(Reply, { lang: this.props.lang, content: this.props.reply_content, date: this.props.reply_time }) : '';
-	    return React.createElement(
-	      "div",
-	      { className: "comment" },
-	      React.createElement("span", { className: "commentAuthor", dangerouslySetInnerHTML: this.rawAuthorMarkup() }),
-	      React.createElement(
-	        "span",
-	        { className: "commentDate" },
-	        this.props.time
-	      ),
-	      React.createElement("div", { className: "commentText", dangerouslySetInnerHTML: this.rawMarkup() }),
-	      reply
-	    );
-	  }
-	});
-	
-	var CommentForm = React.createClass({
-	  displayName: "CommentForm",
-	
-	  getInitialState: function () {
-	    return {
-	      username: 'anonymous'
-	    };
-	  },
-	  componentWillReceiveProps: function (nextProps) {
-	    var propUser = nextProps.user;
-	    var usernameValue = 'anonymous';
-	    if (propUser.admin) {
-	      usernameValue = propUser.admin;
-	    } else if (propUser.user) {
-	      usernameValue = propUser.user;
-	    }
-	    this.setState({
-	      username: usernameValue
-	    });
-	  },
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-	    var author = this.state.username.trim();
-	    var text = this.refs.content.value.trim();
-	    if (!author || !text) return;
-	
-	    this.props.onCommentSubmit({ user: author, content: text });
-	
-	    this.refs.user.value = '';
-	    this.refs.content.value = '';
-	    return false;
-	  },
-	  handleUsernameChange: function (e) {
-	    this.setState({ username: e.target.value });
-	  },
-	  render: function () {
-	    var userInputType = "text";
-	    var userInputValue = "anonymous";
-	    var labelContent = "";
-	
-	    var currentUser = this.props.user;
-	    console.log('currentUser:', currentUser);
-	    if (currentUser.admin || currentUser.user) {
-	      userInputType = "hidden";
-	      if (currentUser.admin) {
-	        userInputValue = currentUser.admin;
-	        labelContent = currentUser.admin;
-	      } else {
-	        userInputValue = currentUser.user;
-	        labelContent = currentUser.user;
-	      }
-	    }
-	
-	    return React.createElement(
-	      "form",
-	      { onSubmit: this.handleSubmit, className: "commentForm" },
-	      React.createElement(
-	        "table",
-	        null,
-	        React.createElement(
-	          "tbody",
-	          null,
-	          React.createElement(
-	            "tr",
-	            null,
-	            React.createElement(
-	              "td",
-	              null,
-	              this.props.lang.NICKNAME
-	            ),
-	            React.createElement(
-	              "td",
-	              null,
-	              React.createElement("input", {
-	                ref: "user",
-	                type: userInputType,
-	                maxLength: "10",
-	                value: this.state.username,
-	                onChange: this.handleUsernameChange }),
-	              React.createElement(
-	                "label",
-	                { htmlFor: "user" },
-	                labelContent
-	              )
-	            )
-	          ),
-	          React.createElement(
-	            "tr",
-	            null,
-	            React.createElement(
-	              "td",
-	              null,
-	              this.props.lang.CONTENT
-	            ),
-	            React.createElement(
-	              "td",
-	              null,
-	              React.createElement("textarea", { ref: "content", placeholder: "Say something..." })
-	            )
-	          ),
-	          React.createElement(
-	            "tr",
-	            null,
-	            React.createElement(
-	              "td",
-	              { colSpan: "2" },
-	              React.createElement("input", { name: "submit", type: "submit", value: this.props.lang.SUBMIT })
-	            )
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	var CommentBox = React.createClass({
-	  displayName: "CommentBox",
-	
-	  render: function () {
-	    var commentForm = this.props.commentsDataType === 1 ? React.createElement(CommentForm, { user: this.props.user, lang: this.props.lang, onCommentSubmit: this.props.onCommentSubmit }) : '';
-	    return React.createElement(
-	      "div",
-	      { className: "commentBox" },
-	      React.createElement(
-	        "h1",
-	        null,
-	        this.props.lang.WELCOME_POST
-	      ),
-	      React.createElement(CommentStatistics, {
-	        onCloseSearch: this.props.onCloseSearch,
-	        onPageChanged: this.props.onPageChanged,
-	        commentsDataType: this.props.commentsDataType,
-	        lang: this.props.lang,
-	        appConfig: this.props.appConfig,
-	        current_page: this.props.comments.current_page,
-	        total: this.props.comments.total,
-	        currentPage: this.props.currentPage,
-	        pagenum: this.props.comments.pagenum }),
-	      React.createElement(CommentList, {
-	        commentsDataType: this.props.commentsDataType,
-	        lang: this.props.lang,
-	        appConfig: this.props.appConfig,
-	        data: this.props.comments.comments }),
-	      commentForm
-	    );
-	  }
-	});
-	module.exports = CommentBox;
-
-/***/ },
-/* 170 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	var Modal = __webpack_require__(171);
-	
-	const customStyles = {
-	  content: {
-	    top: '50%',
-	    left: '50%',
-	    right: 'auto',
-	    bottom: 'auto',
-	    marginRight: '-50%',
-	    transform: 'translate(-50%, -50%)'
-	  }
-	};
-	
-	var Header = React.createClass({
-	  displayName: 'Header',
-	
-	  render: function () {
-	    var loginButton;
-	    if (this.props.user.admin || this.props.user.user) {
-	      loginButton = React.createElement(LogoutButton, {
-	        user: this.props.user,
-	        userDetailedData: this.props.userDetailedData,
-	        lang: this.props.lang,
-	        onUserUpdateSubmit: this.props.onUserUpdate,
-	        onUserLogout: this.props.onUserLogout });
-	    } else {
-	      loginButton = React.createElement(LoginButton, { registerErrorMsg: this.props.registerErrorMsg, loginErrorMsg: this.props.loginErrorMsg, lang: this.props.lang, onRegisterSubmit: this.props.onRegisterSubmit, onLoginSubmit: this.props.onLoginSubmit });
-	    }
-	
-	    return React.createElement(
-	      'div',
-	      { className: 'header' },
-	      loginButton
-	    );
-	  }
-	});
-	
-	var LoginModal = React.createClass({
-	  displayName: 'LoginModal',
-	
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-	    var user = this.refs.user.value.trim();
-	    var pwd = this.refs.password.value.trim();
-	    if (!user || !pwd) return;
-	
-	    this.props.onLoginSubmit({ user: user, password: pwd });
-	
-	    this.refs.user.value = '';
-	    this.refs.password.value = '';
-	    return false;
-	  },
-	  render: function () {
-	    return React.createElement(
-	      Modal,
-	      { isOpen: this.props.loginModalIsOpen, onRequestClose: this.props.onRequestClose, style: customStyles },
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Login'
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        this.props.loginErrorMsg
-	      ),
-	      React.createElement(
-	        'button',
-	        { onClick: this.props.onRequestClose },
-	        'close'
-	      ),
-	      React.createElement(
-	        'form',
-	        { onSubmit: this.handleSubmit, action: 'index.php?controller=user&action=login', method: 'post' },
-	        React.createElement(
-	          'table',
-	          null,
-	          React.createElement(
-	            'tbody',
-	            null,
-	            React.createElement(
-	              'tr',
-	              null,
-	              React.createElement(
-	                'td',
-	                null,
-	                React.createElement(
-	                  'label',
-	                  null,
-	                  this.props.lang.USERNAME
-	                )
-	              ),
-	              React.createElement(
-	                'td',
-	                null,
-	                React.createElement('input', { type: 'text', ref: 'user', size: '20' })
-	              )
-	            ),
-	            React.createElement(
-	              'tr',
-	              null,
-	              React.createElement(
-	                'td',
-	                null,
-	                React.createElement(
-	                  'label',
-	                  null,
-	                  this.props.lang.ADMIN_PWD
-	                )
-	              ),
-	              React.createElement(
-	                'td',
-	                null,
-	                React.createElement('input', { type: 'password', ref: 'password', size: '20' })
-	              )
-	            ),
-	            React.createElement(
-	              'tr',
-	              null,
-	              React.createElement(
-	                'td',
-	                { colSpan: '2' },
-	                React.createElement('input', { id: 'submit_button', name: 'submit', type: 'submit', value: this.props.lang.SUBMIT })
-	              )
-	            )
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	var RegisterModal = React.createClass({
-	  displayName: 'RegisterModal',
-	
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-	
-	    var register = this.refs.register.value;
-	    var user = this.refs.user.value.trim();
-	    var pwd = this.refs.pwd.value.trim();
-	    var email = this.refs.email.value.trim();
-	    if (!user || !pwd || !email) return;
-	
-	    this.props.onRegisterSubmit({ register: register, user: user, pwd: pwd, email: email });
-	
-	    /*
-	    this.refs.user.value = ''; 
-	    this.refs.password.value = ''; 
-	    */
-	    return false;
-	  },
-	  render: function () {
-	    return React.createElement(
-	      Modal,
-	      { isOpen: this.props.registerModalIsOpen, onRequestClose: this.props.onRequestClose, style: customStyles },
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Register'
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        this.props.registerErrorMsg
-	      ),
-	      React.createElement(
-	        'button',
-	        { onClick: this.props.onRequestClose },
-	        'close'
-	      ),
-	      React.createElement(
-	        'form',
-	        { onSubmit: this.handleSubmit, action: 'index.php?controller=user&action=create', method: 'post' },
-	        React.createElement(
-	          'fieldset',
-	          null,
-	          React.createElement(
-	            'legend',
-	            null,
-	            this.props.lang.REGISTER
-	          ),
-	          React.createElement('input', { type: 'hidden', ref: 'register', value: 'true' }),
-	          React.createElement(
-	            'dl',
-	            null,
-	            React.createElement(
-	              'dt',
-	              null,
-	              this.props.lang.USERNAME
-	            ),
-	            React.createElement(
-	              'dd',
-	              null,
-	              React.createElement('input', { type: 'text', ref: 'user', size: '20' })
-	            )
-	          ),
-	          React.createElement(
-	            'dl',
-	            null,
-	            React.createElement(
-	              'dt',
-	              null,
-	              this.props.lang.PASSWORD
-	            ),
-	            React.createElement(
-	              'dd',
-	              null,
-	              React.createElement('input', { type: 'password', ref: 'pwd', size: '20' })
-	            )
-	          ),
-	          React.createElement(
-	            'dl',
-	            null,
-	            React.createElement(
-	              'dt',
-	              null,
-	              this.props.lang.EMAIL
-	            ),
-	            React.createElement(
-	              'dd',
-	              null,
-	              React.createElement('input', { type: 'text', ref: 'email', size: '20' })
-	            )
-	          ),
-	          React.createElement(
-	            'dl',
-	            null,
-	            React.createElement(
-	              'dt',
-	              null,
-	              React.createElement('input', { type: 'submit', value: this.props.lang.REGISTER })
-	            )
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	var UserUpdateModal = React.createClass({
-	  displayName: 'UserUpdateModal',
-	
-	  handleSubmit: function (e) {
-	    e.preventDefault();
-	    var uid = this.refs.uid.value.trim();
-	    var user = this.refs.user.value.trim();
-	    var pwd = this.refs.pwd.value.trim();
-	    var email = this.refs.email.value.trim();
-	    if (!uid || !user || !pwd || !email) return;
-	
-	    this.props.onUserUpdateSubmit({ uid: uid, user: user, pwd: pwd, email: email });
-	
-	    // TODO Clear the inputs.
-	    //this.refs.user.value = '';
-	    //this.refs.password.value = '';
-	    return false;
-	  },
-	  render: function () {
-	    return React.createElement(
-	      Modal,
-	      { isOpen: this.props.userUpdateModalIsOpen, onRequestClose: this.closeLoginModal, style: customStyles },
-	      React.createElement(
-	        'h2',
-	        null,
-	        'Update profile'
-	      ),
-	      React.createElement(
-	        'p',
-	        null,
-	        this.props.userUpdateErrorMsg
-	      ),
-	      React.createElement(
-	        'button',
-	        { onClick: this.props.onRequestClose },
-	        'close'
-	      ),
-	      React.createElement(
-	        'form',
-	        { onSubmit: this.handleSubmit, action: 'index.php?controller=user&action=update&amp', method: 'post' },
-	        React.createElement('input', { type: 'hidden', ref: 'uid', value: this.props.userDetailedData.uid }),
-	        React.createElement(
-	          'dl',
-	          null,
-	          React.createElement(
-	            'dt',
-	            null,
-	            this.props.lang.USERNAME
-	          ),
-	          React.createElement(
-	            'dd',
-	            null,
-	            React.createElement('input', { type: 'text', readOnly: 'readonly', defaultValue: this.props.userDetailedData.username, ref: 'user', size: '20' })
-	          )
-	        ),
-	        React.createElement(
-	          'dl',
-	          null,
-	          React.createElement(
-	            'dt',
-	            null,
-	            this.props.lang.PASSWORD
-	          ),
-	          React.createElement(
-	            'dd',
-	            null,
-	            React.createElement('input', { type: 'password', defaultValue: this.props.userDetailedData.password, ref: 'pwd', size: '20' })
-	          )
-	        ),
-	        React.createElement(
-	          'dl',
-	          null,
-	          React.createElement(
-	            'dt',
-	            null,
-	            this.props.lang.EMAIL
-	          ),
-	          React.createElement(
-	            'dd',
-	            null,
-	            React.createElement('input', { type: 'text', defaultValue: this.props.userDetailedData.email, ref: 'email', size: '20' })
-	          )
-	        ),
-	        React.createElement(
-	          'dl',
-	          null,
-	          React.createElement(
-	            'dt',
-	            null,
-	            React.createElement('input', { type: 'submit', value: this.props.lang.UPDATE })
-	          )
-	        )
-	      )
-	    );
-	  }
-	});
-	
-	var LogoutButton = React.createClass({
-	  displayName: 'LogoutButton',
-	
-	  getInitialState: function () {
-	    return {
-	      userUpdateModalIsOpen: false
-	    };
-	  },
-	  openUserUpdateModal: function () {
-	    this.setState({ userUpdateModalIsOpen: true });
-	  },
-	  closeUserUpdateModal: function () {
-	    this.setState({ userUpdateModalIsOpen: false });
-	  },
-	  render: function () {
-	    var updateButton = ' ';
-	    if (this.props.user.user) {
-	      updateButton = React.createElement(UserUpdateButton, { lang: this.props.lang, onShowUpdateModal: this.openUserUpdateModal });
-	    }
-	    return React.createElement(
-	      'div',
-	      null,
-	      updateButton,
-	      ' ',
-	      React.createElement(
-	        'a',
-	        { href: 'javascript:void(0);', onClick: this.props.onUserLogout },
-	        this.props.lang.LOGOUT
-	      ),
-	      React.createElement(UserUpdateModal, {
-	        user: this.props.user,
-	        userDetailedData: this.props.userDetailedData,
-	        userUpdateErrorMsg: this.props.userUpdateErrorMsg,
-	        onUserUpdateSubmit: this.props.onUserUpdateSubmit,
-	        userUpdateModalIsOpen: this.state.userUpdateModalIsOpen,
-	        onRequestClose: this.closeUserUpdateModal,
-	        lang: this.props.lang })
-	    );
-	  }
-	});
-	
-	var UserUpdateButton = React.createClass({
-	  displayName: 'UserUpdateButton',
-	
-	  render: function () {
-	    return React.createElement(
-	      'a',
-	      { href: 'javascript:void(0);', onClick: this.props.onShowUpdateModal },
-	      this.props.lang.UPDATE
-	    );
-	  }
-	});
-	
-	var LoginButton = React.createClass({
-	  displayName: 'LoginButton',
-	
-	  getInitialState: function () {
-	    return {
-	      registerModalIsOpen: false,
-	      loginModalIsOpen: false
-	    };
-	  },
-	  openLoginModal: function () {
-	    this.setState({ loginModalIsOpen: true });
-	  },
-	  openRegisterModal: function () {
-	    this.setState({ registerModalIsOpen: true });
-	  },
-	  closeLoginModal: function () {
-	    this.setState({ loginModalIsOpen: false });
-	  },
-	  closeRegisterModal: function () {
-	    this.setState({ registerModalIsOpen: false });
-	  },
-	  render: function () {
-	    return React.createElement(
-	      'div',
-	      null,
-	      React.createElement(
-	        'a',
-	        { href: 'javascript:void(0);', onClick: this.openRegisterModal },
-	        this.props.lang.REGISTER
-	      ),
-	      ' ',
-	      React.createElement(
-	        'a',
-	        { href: 'javascript:void(0);', onClick: this.openLoginModal },
-	        this.props.lang.LOGIN
-	      ),
-	      React.createElement(LoginModal, {
-	        loginErrorMsg: this.props.loginErrorMsg,
-	        onLoginSubmit: this.props.onLoginSubmit,
-	        loginModalIsOpen: this.state.loginModalIsOpen,
-	        onRequestClose: this.closeLoginModal,
-	        lang: this.props.lang }),
-	      React.createElement(RegisterModal, {
-	        registerErrorMsg: this.props.registerErrorMsg,
-	        onRegisterSubmit: this.props.onRegisterSubmit,
-	        registerModalIsOpen: this.state.registerModalIsOpen,
-	        onRequestClose: this.closeRegisterModal,
-	        lang: this.props.lang })
-	    );
-	  }
-	});
-	
-	module.exports = Header;
-
-/***/ },
-/* 171 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__(172);
+	module.exports = __webpack_require__(160);
 	
 
 
 /***/ },
-/* 172 */
+/* 160 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(158);
-	var ExecutionEnvironment = __webpack_require__(173);
-	var ModalPortal = React.createFactory(__webpack_require__(174));
-	var ariaAppHider = __webpack_require__(189);
-	var elementClass = __webpack_require__(190);
+	var ExecutionEnvironment = __webpack_require__(161);
+	var ModalPortal = React.createFactory(__webpack_require__(162));
+	var ariaAppHider = __webpack_require__(177);
+	var elementClass = __webpack_require__(178);
 	var renderSubtreeIntoContainer = __webpack_require__(158).unstable_renderSubtreeIntoContainer;
 	
 	var SafeHTMLElement = ExecutionEnvironment.canUseDOM ? window.HTMLElement : {};
@@ -20825,7 +19969,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
 
 /***/ },
-/* 173 */
+/* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -20870,14 +20014,14 @@
 
 
 /***/ },
-/* 174 */
+/* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var div = React.DOM.div;
-	var focusManager = __webpack_require__(175);
-	var scopeTab = __webpack_require__(177);
-	var Assign = __webpack_require__(178);
+	var focusManager = __webpack_require__(163);
+	var scopeTab = __webpack_require__(165);
+	var Assign = __webpack_require__(166);
 	
 	
 	// so that our CSS is statically analyzable
@@ -21074,10 +20218,10 @@
 
 
 /***/ },
-/* 175 */
+/* 163 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var findTabbable = __webpack_require__(176);
+	var findTabbable = __webpack_require__(164);
 	var modalElement = null;
 	var focusLaterElement = null;
 	var needToFocus = false;
@@ -21148,7 +20292,7 @@
 
 
 /***/ },
-/* 176 */
+/* 164 */
 /***/ function(module, exports) {
 
 	/*!
@@ -21204,10 +20348,10 @@
 
 
 /***/ },
-/* 177 */
+/* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var findTabbable = __webpack_require__(176);
+	var findTabbable = __webpack_require__(164);
 	
 	module.exports = function(node, event) {
 	  var tabbable = findTabbable(node);
@@ -21225,7 +20369,7 @@
 
 
 /***/ },
-/* 178 */
+/* 166 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21236,9 +20380,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseAssign = __webpack_require__(179),
-	    createAssigner = __webpack_require__(185),
-	    keys = __webpack_require__(181);
+	var baseAssign = __webpack_require__(167),
+	    createAssigner = __webpack_require__(173),
+	    keys = __webpack_require__(169);
 	
 	/**
 	 * A specialized version of `_.assign` for customizing assigned values without
@@ -21311,7 +20455,7 @@
 
 
 /***/ },
-/* 179 */
+/* 167 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21322,8 +20466,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseCopy = __webpack_require__(180),
-	    keys = __webpack_require__(181);
+	var baseCopy = __webpack_require__(168),
+	    keys = __webpack_require__(169);
 	
 	/**
 	 * The base implementation of `_.assign` without support for argument juggling,
@@ -21344,7 +20488,7 @@
 
 
 /***/ },
-/* 180 */
+/* 168 */
 /***/ function(module, exports) {
 
 	/**
@@ -21382,7 +20526,7 @@
 
 
 /***/ },
-/* 181 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -21393,9 +20537,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var getNative = __webpack_require__(182),
-	    isArguments = __webpack_require__(183),
-	    isArray = __webpack_require__(184);
+	var getNative = __webpack_require__(170),
+	    isArguments = __webpack_require__(171),
+	    isArray = __webpack_require__(172);
 	
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -21624,7 +20768,7 @@
 
 
 /***/ },
-/* 182 */
+/* 170 */
 /***/ function(module, exports) {
 
 	/**
@@ -21767,7 +20911,7 @@
 
 
 /***/ },
-/* 183 */
+/* 171 */
 /***/ function(module, exports) {
 
 	/**
@@ -21879,7 +21023,7 @@
 
 
 /***/ },
-/* 184 */
+/* 172 */
 /***/ function(module, exports) {
 
 	/**
@@ -22065,7 +21209,7 @@
 
 
 /***/ },
-/* 185 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -22076,9 +21220,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var bindCallback = __webpack_require__(186),
-	    isIterateeCall = __webpack_require__(187),
-	    restParam = __webpack_require__(188);
+	var bindCallback = __webpack_require__(174),
+	    isIterateeCall = __webpack_require__(175),
+	    restParam = __webpack_require__(176);
 	
 	/**
 	 * Creates a function that assigns properties of source object(s) to a given
@@ -22123,7 +21267,7 @@
 
 
 /***/ },
-/* 186 */
+/* 174 */
 /***/ function(module, exports) {
 
 	/**
@@ -22194,7 +21338,7 @@
 
 
 /***/ },
-/* 187 */
+/* 175 */
 /***/ function(module, exports) {
 
 	/**
@@ -22332,7 +21476,7 @@
 
 
 /***/ },
-/* 188 */
+/* 176 */
 /***/ function(module, exports) {
 
 	/**
@@ -22405,7 +21549,7 @@
 
 
 /***/ },
-/* 189 */
+/* 177 */
 /***/ function(module, exports) {
 
 	var _element = typeof document !== 'undefined' ? document.body : null;
@@ -22452,7 +21596,7 @@
 
 
 /***/ },
-/* 190 */
+/* 178 */
 /***/ function(module, exports) {
 
 	module.exports = function(opts) {
@@ -22517,7 +21661,1360 @@
 
 
 /***/ },
-/* 191 */
+/* 179 */,
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Modal = __webpack_require__(159);
+	
+	const customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
+	
+	var LoginModal = React.createClass({
+	  displayName: 'LoginModal',
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    var user = this.refs.user.value.trim();
+	    var pwd = this.refs.password.value.trim();
+	    if (!user || !pwd) return;
+	    this.props.onLoginSubmit({ user: user, password: pwd });
+	    return false;
+	  },
+	  render: function () {
+	    return React.createElement(
+	      Modal,
+	      { isOpen: this.props.loginModalIsOpen, onRequestClose: this.props.onRequestClose, style: customStyles },
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Login'
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        this.props.loginErrorMsg
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this.props.onRequestClose },
+	        'close'
+	      ),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit, action: '#', method: 'post' },
+	        React.createElement(
+	          'table',
+	          null,
+	          React.createElement(
+	            'tbody',
+	            null,
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'td',
+	                null,
+	                React.createElement(
+	                  'label',
+	                  null,
+	                  this.props.lang.USERNAME
+	                )
+	              ),
+	              React.createElement(
+	                'td',
+	                null,
+	                React.createElement('input', { type: 'text', ref: 'user', size: '20' })
+	              )
+	            ),
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'td',
+	                null,
+	                React.createElement(
+	                  'label',
+	                  null,
+	                  this.props.lang.ADMIN_PWD
+	                )
+	              ),
+	              React.createElement(
+	                'td',
+	                null,
+	                React.createElement('input', { type: 'password', ref: 'password', size: '20' })
+	              )
+	            ),
+	            React.createElement(
+	              'tr',
+	              null,
+	              React.createElement(
+	                'td',
+	                { colSpan: '2' },
+	                React.createElement('input', { id: 'submit_button', name: 'submit', type: 'submit', value: this.props.lang.SUBMIT })
+	              )
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = LoginModal;
+
+/***/ },
+/* 181 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var dataProvider = __webpack_require__(182);
+	
+	/**
+	 * Tested 1
+	 */
+	var SignInMixIn = {
+	  openLoginModal: function () {
+	    this.setState({ loginModalIsOpen: true });
+	  },
+	  closeLoginModal: function () {
+	    this.setState({ loginModalIsOpen: false });
+	  },
+	  handleSignIn: function (loginData) {
+	    dataProvider.signIn(loginData, (function (res) {
+	      if (this.isMounted()) {
+	        if (res.statusCode === 200) {
+	          this.setState({ loginErrorMsg: '', loginModalIsOpen: false });
+	          this.props.onUserSignedIn(res.response);
+	        } else if (res.statusCode === 304) {
+	          // The user had signed in before.
+	        } else {
+	            this.setState({ loginErrorMsg: res.response });
+	          }
+	      }
+	    }).bind(this), (function () {
+	      debugger;
+	    }).bind(this));
+	  }
+	};
+	
+	module.exports = SignInMixIn;
+
+/***/ },
+/* 182 */
+/***/ function(module, exports) {
+
+	// TODO => POST
+	function banIP(ip, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: 'api.php?controller=badip&action=create',
+	    data: { ip: ip },
+	    dataType: 'json',
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function signIn(credentials, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=user&action=login",
+	    data: credentials,
+	    dataType: 'json',
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function loadUserDataFromServer(uid, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'index.php?controller=user&action=show&uid=' + uid,
+	    dataType: 'json',
+	    cache: false,
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function getUserInfo(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'index.php?controller=user&action=getUserInfo',
+	    dataType: 'json',
+	    cache: false,
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function getAppConfig(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'index.php?controller=config&action=show',
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function signOut(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: 'index.php?controller=user&action=logout',
+	    dataType: 'json',
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function updateUser(userData, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=user&action=update",
+	    data: userData,
+	    dataType: 'json',
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function signUp(userData, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=user&action=create",
+	    data: userData,
+	    dataType: 'json',
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function loadCommentsFromServer(pageId, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    url: 'index.php',
+	    dataType: 'json',
+	    method: 'GET',
+	    cache: false,
+	    data: { controller: 'post', action: 'list', page: pageId },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function search(keyword, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=search",
+	    data: { s: keyword },
+	    dataType: 'json',
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function createPost(comment, successCallback, errorCallback) {
+	  comment.ajax = true;
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "./index.php?controller=post&action=create",
+	    data: comment,
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function getACPData(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'api.php',
+	    data: { action: "control_panel", t: Date.now() },
+	    cache: false,
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function updateSiteConfig(configObj, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "api.php?controller=config&action=update",
+	    data: configObj,
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function getAllUsers(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'api.php',
+	    data: { controller: "user", action: "index", t: Date.now() },
+	    cache: false,
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function deleteAllReplies(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'api.php',
+	    data: { controller: "reply", action: "reply" },
+	    //dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function deleteAllComments(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: 'api.php',
+	    data: { controller: "post", action: "deleteAll" },
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function deleteAllUsers(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: 'api.php?controller=user&action=deleteAll',
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function deleteComment(commentId, reply, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: 'api.php?controller=post&action=delete',
+	    data: { mid: commentId, reply: reply },
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function deleteMutiComments(dataObj, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "api.php?controller=post&action=delete_multi_messages",
+	    data: dataObj,
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	// TODO
+	function deleteReply(commentId, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "api.php?controller=reply&action=delete",
+	    data: { mid: commentId },
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	function deleteUser(uid, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "api.php?controller=user&action=delete",
+	    data: { uid: uid },
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Get cookie value by a specific name.
+	 * http://stackoverflow.com/a/15724300
+	 */
+	function getCookie(name) {
+	  var value = "; " + document.cookie;
+	  var parts = value.split("; " + name + "=");
+	  if (parts.length == 2) {
+	    return parts.pop().split(";").shift();
+	  } else {
+	    return null;
+	  }
+	}
+	
+	function getTranslations(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'index.php?controller=config&action=getTranslations',
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	module.exports = {
+	  banIP: banIP,
+	  createPost: createPost,
+	  deleteAllComments: deleteAllComments,
+	  deleteAllReplies: deleteAllReplies,
+	  deleteAllUsers: deleteAllUsers,
+	  deleteComment: deleteComment,
+	  deleteMutiComments: deleteMutiComments,
+	  deleteReply: deleteReply,
+	  deleteUser: deleteUser,
+	  getACPData: getACPData,
+	  getAllUsers: getAllUsers,
+	  getTranslations: getTranslations,
+	  signIn: signIn,
+	  signOut: signOut,
+	  signUp: signUp,
+	  updateUser: updateUser,
+	  loadCommentsFromServer: loadCommentsFromServer,
+	  loadUserDataFromServer: loadUserDataFromServer,
+	  getUserInfo: getUserInfo,
+	  getAppConfig: getAppConfig,
+	  search: search,
+	  updateSiteConfig: updateSiteConfig
+	};
+
+/***/ },
+/* 183 */,
+/* 184 */,
+/* 185 */,
+/* 186 */,
+/* 187 */,
+/* 188 */,
+/* 189 */,
+/* 190 */,
+/* 191 */,
+/* 192 */,
+/* 193 */,
+/* 194 */,
+/* 195 */,
+/* 196 */,
+/* 197 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var SearchBar = React.createClass({
+	  displayName: "SearchBar",
+	
+	  handleSearch: function (e) {
+	    e.preventDefault();
+	    var keyword = this.refs.s.value.trim();
+	    if (!keyword) return;
+	    this.props.onSubmit(keyword);
+	    return false;
+	  },
+	  handleChange: function () {
+	    this.props.onUserInput(this.refs.s.value.trim());
+	  },
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      { className: "searchbar" },
+	      React.createElement(
+	        "form",
+	        { onSubmit: this.handleSearch },
+	        React.createElement("input", {
+	          type: "text",
+	          size: "10",
+	          placeholder: "Search",
+	          ref: "s",
+	          value: this.props.searchText,
+	          onChange: this.handleChange
+	        }),
+	        React.createElement("input", { type: "image", src: "misc/images/search.gif", alt: "Search", ref: "searchImg" })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = SearchBar;
+
+/***/ },
+/* 198 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var CloseSearchButton = React.createClass({
+	  displayName: "CloseSearchButton",
+	
+	  render: function () {
+	    return React.createElement(
+	      "a",
+	      { href: "javascript:void(0)", onClick: this.props.onCloseSearch },
+	      "Close"
+	    );
+	  }
+	});
+	
+	var PaginationItem = React.createClass({
+	  displayName: "PaginationItem",
+	
+	  handleClick: function (e) {
+	    e.preventDefault();
+	    var pageNumber = e.target.getAttribute("data-pagenumber");
+	    console.log("You chosed the page number: ", pageNumber);
+	    if (parseInt(pageNumber) == this.props.currentPage) {
+	      console.log('The same page , we do nothing...');
+	      return false;
+	    }
+	    this.props.onPageChanged(pageNumber);
+	    return false;
+	  },
+	  render: function () {
+	    return React.createElement(
+	      "a",
+	      {
+	        className: (() => {
+	          if (this.props.currentPage === this.props.pageNumber) {
+	            return "pagination-item currentPage";
+	          } else {
+	            return "pagination-item";
+	          }
+	        })(),
+	        href: "javascript:void(0);",
+	        "data-pagenumber": this.props.pageNumber,
+	        onClick: this.handleClick
+	      },
+	      this.props.text
+	    );
+	  }
+	});
+	
+	var Pagination = React.createClass({
+	  displayName: "Pagination",
+	
+	  render: function () {
+	    if (!this.props.appConfig.page_on || this.props.commentListType !== 1) {
+	      return null;
+	    }
+	    var items = [];
+	    for (var i = 0; i < this.props.total; i++) {
+	      items.push(React.createElement(PaginationItem, { onPageChanged: this.props.onPageChanged, currentPage: this.props.currentPage, pageNumber: i, text: i + 1, key: i }));
+	    }
+	    return React.createElement(
+	      "div",
+	      { className: "pagination" },
+	      items
+	    );
+	  }
+	});
+	
+	var CommentStatistics = React.createClass({
+	  displayName: "CommentStatistics",
+	
+	  rawMarkup: function () {
+	    var pagenavText, text;
+	    if (this.props.commentListType === 1) {
+	      pagenavText = this.props.lang.PAGE_NAV;
+	      text = pagenavText ? pagenavText.replace('{num_of_post}', this.props.total).replace('{num_of_page}', this.props.pagenum) : '';
+	    } else if (this.props.commentListType === 2) {
+	      if (this.props.total) {
+	        pagenavText = this.props.lang.SEARCH_FOUND;
+	        text = pagenavText ? pagenavText.replace('{result_num}', this.props.total) : '';
+	      } else {
+	        text = this.props.lang.SEARCH_NOTFOUND;
+	      }
+	    }
+	    return { __html: text };
+	  },
+	  render: function () {
+	    var closeSearchBtn = this.props.commentListType === 2 ? React.createElement(CloseSearchButton, { onCloseSearch: this.props.onCloseSearch }) : '';
+	    return React.createElement(
+	      "div",
+	      { className: "statistics" },
+	      closeSearchBtn,
+	      React.createElement("p", { dangerouslySetInnerHTML: this.rawMarkup() }),
+	      React.createElement(Pagination, {
+	        onPageChanged: this.props.onPageChanged,
+	        currentPage: this.props.currentPage,
+	        appConfig: this.props.appConfig,
+	        commentListType: this.props.commentListType,
+	        total: Math.ceil(this.props.total / this.props.appConfig.num_perpage)
+	      })
+	    );
+	  }
+	});
+	
+	var CommentList = React.createClass({
+	  displayName: "CommentList",
+	
+	  render: function () {
+	    var lang = this.props.lang,
+	        searchText = this.props.searchText,
+	        appConfig = this.props.appConfig,
+	        isSearchResult = this.props.commentListType === 2;
+	
+	    var createCommentNodes = function (comment) {
+	      var text = isSearchResult ? comment.post_content.replace(searchText, "<span class='keyword'>" + searchText + "</span>") : comment.post_content;
+	      return React.createElement(
+	        Comment,
+	        {
+	          appConfig: appConfig,
+	          uid: comment.uid,
+	          b_username: comment.b_username,
+	          author: comment.uname,
+	          key: comment.id,
+	          reply_content: comment.reply_content,
+	          reply_time: comment.reply_time,
+	          time: comment.time,
+	          lang: lang },
+	        text
+	      );
+	    };
+	    return React.createElement(
+	      "div",
+	      { className: "commentList" },
+	      this.props.data.map(createCommentNodes)
+	    );
+	  }
+	});
+	
+	var Reply = React.createClass({
+	  displayName: "Reply",
+	
+	  rawMarkup: function () {
+	    // TODO: Get the actual admini user name.
+	    return { __html: this.props.lang.ADMIN_REPLIED.replace('{admin_name}', this.props.appConfig.admin).replace('{reply_time}', this.props.date).replace('{reply_content}', this.props.content) };
+	  },
+	  render: function () {
+	    return this.props.content ? React.createElement("div", { className: "reply", dangerouslySetInnerHTML: this.rawMarkup() }) : null;
+	  }
+	});
+	
+	var Comment = React.createClass({
+	  displayName: "Comment",
+	
+	  rawMarkup: function () {
+	    return { __html: this.props.children.toString() };
+	  },
+	  rawAuthorMarkup: function () {
+	    return { __html: this.props.uid ? this.props.b_username : this.props.author };
+	  },
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      { className: "comment" },
+	      React.createElement("span", { className: "commentAuthor", dangerouslySetInnerHTML: this.rawAuthorMarkup() }),
+	      React.createElement(
+	        "span",
+	        { className: "commentDate" },
+	        this.props.time
+	      ),
+	      React.createElement(
+	        "div",
+	        { className: "commentText" },
+	        React.createElement("p", { dangerouslySetInnerHTML: this.rawMarkup() })
+	      ),
+	      React.createElement(Reply, { appConfig: this.props.appConfig, lang: this.props.lang, content: this.props.reply_content, date: this.props.reply_time })
+	    );
+	  }
+	});
+	
+	var Captcha = React.createClass({
+	  displayName: "Captcha",
+	
+	  refreshCaptch: function (e) {
+	    e.preventDefault();
+	    this.refresh();
+	  },
+	  refresh: function () {
+	    var img = this.refs.captchaImg;
+	    var url = img.getAttribute('data-src');
+	    img.src = url + '&v=' + Math.random();
+	  },
+	  render: function () {
+	    return React.createElement(
+	      "tr",
+	      null,
+	      React.createElement(
+	        "th",
+	        null,
+	        this.props.lang.CAPTCHA
+	      ),
+	      React.createElement(
+	        "td",
+	        null,
+	        React.createElement("input", { ref: "captchaInput", type: "text", value: this.props.valid_code, onChange: this.props.onCaptchaChange }),
+	        React.createElement("img", { ref: "captchaImg", src: "index.php?action=captcha", "data-src": "index.php?action=captcha", onClick: this.refreshCaptch, alt: "Captcha", title: this.props.lang.CLICK_TO_REFRESH })
+	      )
+	    );
+	  }
+	});
+	
+	var CommentForm = React.createClass({
+	  displayName: "CommentForm",
+	
+	  getInitialState: function () {
+	    // TODO
+	    return { userInputType: 'text', labelContent: "", username: 'anonymous', text: '', valid_code: '' };
+	  },
+	  componentWillReceiveProps: function (nextProps) {
+	    var computedState = {};
+	    var propUser = nextProps.user;
+	    if (propUser.admin) {
+	      computedState.userInputType = "hidden";
+	      computedState.username = propUser.admin;
+	      computedState.labelContent = propUser.admin;
+	    } else if (propUser.uid) {
+	      computedState.userInputType = "hidden";
+	      computedState.username = propUser.username;
+	      computedState.labelContent = propUser.username;
+	    } else {
+	      computedState.userInputType = "text";
+	      computedState.username = 'anonymous';
+	      computedState.labelContent = '';
+	    }
+	    this.setState(computedState);
+	  },
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    var author = this.state.username.trim();
+	    var text = this.state.text.trim();
+	    var valid_code = this.state.valid_code.trim();
+	    if (!author || !text) return;
+	    this.props.onCommentSubmit({ user: author, content: text, valid_code: valid_code });
+	    this.setState({ valid_code: '' });
+	    this.refs.captcha.refresh();
+	    return false;
+	  },
+	  handleUsernameChange: function (e) {
+	    this.setState({ username: e.target.value });
+	  },
+	  handleTextChange: function (e) {
+	    this.setState({ text: e.target.value });
+	  },
+	  handleCaptchaChange: function (e) {
+	    this.setState({ valid_code: e.target.value });
+	  },
+	  render: function () {
+	    if (this.props.commentListType !== 1) {
+	      return null;
+	    }
+	    var captcha = this.props.appConfig.valid_code_open ? React.createElement(Captcha, {
+	      ref: "captcha",
+	      valid_code: this.state.valid_code,
+	      lang: this.props.lang,
+	      onCaptchaChange: this.handleCaptchaChange
+	    }) : null;
+	    return React.createElement(
+	      "form",
+	      { onSubmit: this.handleSubmit, className: "commentForm" },
+	      React.createElement(
+	        "table",
+	        null,
+	        React.createElement(
+	          "tbody",
+	          null,
+	          React.createElement(
+	            "tr",
+	            null,
+	            React.createElement(
+	              "th",
+	              null,
+	              this.props.lang.NICKNAME
+	            ),
+	            React.createElement(
+	              "td",
+	              null,
+	              React.createElement("input", {
+	                ref: "user",
+	                type: this.state.userInputType,
+	                maxLength: "10",
+	                value: this.state.username,
+	                onChange: this.handleUsernameChange }),
+	              React.createElement(
+	                "label",
+	                { htmlFor: "user" },
+	                this.state.labelContent
+	              )
+	            )
+	          ),
+	          React.createElement(
+	            "tr",
+	            null,
+	            React.createElement(
+	              "th",
+	              null,
+	              this.props.lang.CONTENT
+	            ),
+	            React.createElement(
+	              "td",
+	              null,
+	              React.createElement("textarea", { ref: "content", onChange: this.handleTextChange, value: this.state.text })
+	            )
+	          ),
+	          captcha,
+	          React.createElement(
+	            "tr",
+	            null,
+	            React.createElement(
+	              "td",
+	              { colSpan: "2" },
+	              React.createElement("input", { name: "submit", type: "submit", value: this.props.lang.SUBMIT })
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	var CommentBox = React.createClass({
+	  displayName: "CommentBox",
+	
+	  render: function () {
+	    return React.createElement(
+	      "div",
+	      { className: "commentBox" },
+	      React.createElement(
+	        "h1",
+	        null,
+	        this.props.lang.WELCOME_POST
+	      ),
+	      React.createElement(CommentList, {
+	        commentListType: this.props.commentListType,
+	        lang: this.props.lang,
+	        appConfig: this.props.appConfig,
+	        data: this.props.comments,
+	        searchText: this.props.searchText
+	      }),
+	      React.createElement(CommentStatistics, {
+	        onCloseSearch: this.props.onCloseSearch,
+	        onPageChanged: this.props.onPageChanged,
+	        commentListType: this.props.commentListType,
+	        lang: this.props.lang,
+	        appConfig: this.props.appConfig,
+	        total: this.props.commentsTotalNumber,
+	        currentPage: this.props.currentPage,
+	        pagenum: this.props.appConfig.page_on ? Math.ceil(this.props.commentsTotalNumber / this.props.appConfig.num_perpage) : 1 }),
+	      React.createElement(CommentForm, {
+	        ref: "commentForm",
+	        appConfig: this.props.appConfig,
+	        user: this.props.user,
+	        lang: this.props.lang,
+	        commentListType: this.props.commentListType,
+	        onCommentSubmit: this.props.onCommentSubmit
+	      })
+	    );
+	  }
+	});
+	module.exports = CommentBox;
+
+/***/ },
+/* 199 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var SignIn = __webpack_require__(200);
+	var SignUp = __webpack_require__(201);
+	var UpdateUser = __webpack_require__(202);
+	var SignOutButton = __webpack_require__(203);
+	
+	var Header = React.createClass({
+	  displayName: 'Header',
+	
+	  render: function () {
+	    return React.createElement(
+	      'div',
+	      { className: 'header' },
+	      React.createElement(SignIn, {
+	        user: this.props.user,
+	        lang: this.props.lang,
+	        onUserSignedIn: this.props.onUserSignedIn
+	      }),
+	      React.createElement(SignUp, {
+	        user: this.props.user,
+	        lang: this.props.lang,
+	        onSignedUp: this.props.onSignedUp
+	      }),
+	      React.createElement(UpdateUser, {
+	        user: this.props.user,
+	        lang: this.props.lang,
+	        onUserUpdated: this.props.onUserUpdated
+	      }),
+	      React.createElement(SignOutButton, {
+	        user: this.props.user,
+	        lang: this.props.lang,
+	        onUserLogout: this.props.onUserLogout
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = Header;
+
+/***/ },
+/* 200 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var dataProvider = __webpack_require__(182);
+	var LoginModal = __webpack_require__(180);
+	var SignInMixIn = __webpack_require__(181);
+	
+	var SignIn = React.createClass({
+	  displayName: 'SignIn',
+	
+	  mixins: [SignInMixIn], // Use the mixin
+	  getInitialState: function () {
+	    return {
+	      loginErrorMsg: '',
+	      loginModalIsOpen: false
+	    };
+	  },
+	  render: function () {
+	    return this.props.user.admin || this.props.user.uid ? null : React.createElement(
+	      'div',
+	      { className: 'signIn' },
+	      React.createElement(LoginButton, {
+	        user: this.props.user,
+	        lang: this.props.lang,
+	        onOpenLoginModal: this.openLoginModal
+	      }),
+	      React.createElement(LoginModal, {
+	        loginErrorMsg: this.state.loginErrorMsg,
+	        onLoginSubmit: this.handleSignIn,
+	        loginModalIsOpen: this.state.loginModalIsOpen,
+	        onRequestClose: this.closeLoginModal,
+	        lang: this.props.lang
+	      })
+	    );
+	  }
+	});
+	
+	var LoginButton = React.createClass({
+	  displayName: 'LoginButton',
+	
+	  render: function () {
+	    return React.createElement(
+	      'a',
+	      { href: 'javascript:void(0);', onClick: this.props.onOpenLoginModal },
+	      this.props.lang.LOGIN
+	    );
+	  }
+	});
+	
+	module.exports = SignIn;
+
+/***/ },
+/* 201 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Modal = __webpack_require__(159);
+	var dataProvider = __webpack_require__(182);
+	
+	const customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
+	
+	var RegisterButton = React.createClass({
+	  displayName: 'RegisterButton',
+	
+	  render: function () {
+	    return this.props.user.admin || this.props.user.uid ? null : React.createElement(
+	      'a',
+	      { href: 'javascript:void(0);', onClick: this.props.onOpenRegisterModal },
+	      this.props.lang.REGISTER
+	    );
+	  }
+	});
+	
+	var RegisterModal = React.createClass({
+	  displayName: 'RegisterModal',
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    var register = this.refs.register.value;
+	    var user = this.refs.user.value.trim();
+	    var pwd = this.refs.pwd.value.trim();
+	    var email = this.refs.email.value.trim();
+	    if (!user || !pwd || !email) return;
+	    this.props.onRegisterSubmit({ register: register, user: user, pwd: pwd, email: email });
+	    return false;
+	  },
+	  render: function () {
+	    return React.createElement(
+	      Modal,
+	      { isOpen: this.props.registerModalIsOpen, onRequestClose: this.props.onRequestClose, style: customStyles },
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Register'
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        this.props.registerErrorMsg
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this.props.onRequestClose },
+	        'close'
+	      ),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit, action: 'index.php?controller=user&action=create', method: 'post' },
+	        React.createElement(
+	          'fieldset',
+	          null,
+	          React.createElement(
+	            'legend',
+	            null,
+	            this.props.lang.REGISTER
+	          ),
+	          React.createElement('input', { type: 'hidden', ref: 'register', value: 'true' }),
+	          React.createElement(
+	            'dl',
+	            null,
+	            React.createElement(
+	              'dt',
+	              null,
+	              this.props.lang.USERNAME
+	            ),
+	            React.createElement(
+	              'dd',
+	              null,
+	              React.createElement('input', { type: 'text', ref: 'user', size: '20' })
+	            )
+	          ),
+	          React.createElement(
+	            'dl',
+	            null,
+	            React.createElement(
+	              'dt',
+	              null,
+	              this.props.lang.PASSWORD
+	            ),
+	            React.createElement(
+	              'dd',
+	              null,
+	              React.createElement('input', { type: 'password', ref: 'pwd', size: '20' })
+	            )
+	          ),
+	          React.createElement(
+	            'dl',
+	            null,
+	            React.createElement(
+	              'dt',
+	              null,
+	              this.props.lang.EMAIL
+	            ),
+	            React.createElement(
+	              'dd',
+	              null,
+	              React.createElement('input', { type: 'text', ref: 'email', size: '20' })
+	            )
+	          ),
+	          React.createElement(
+	            'dl',
+	            null,
+	            React.createElement(
+	              'dt',
+	              null,
+	              React.createElement('input', { type: 'submit', value: this.props.lang.REGISTER })
+	            )
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	var SignUp = React.createClass({
+	  displayName: 'SignUp',
+	
+	  getInitialState: function () {
+	    return {
+	      registerErrorMsg: '',
+	      registerModalIsOpen: false
+	    };
+	  },
+	  openRegisterModal: function () {
+	    this.setState({ registerModalIsOpen: true });
+	  },
+	  closeRegisterModal: function () {
+	    this.setState({ registerModalIsOpen: false });
+	  },
+	  handleSignUp: function (userData) {
+	    dataProvider.signUp(userData, (function (res) {
+	      console.log('create user result:', res);
+	      if (res.statusCode !== 200) {
+	        if (this.isMounted()) {
+	          this.setState({ registerErrorMsg: res.response });
+	        }
+	      } else {
+	        if (this.isMounted()) {
+	          this.setState({ registerErrorMsg: '', registerModalIsOpen: false }); //, currentUser: data});
+	        }
+	        this.props.onSignedUp(res.response);
+	      }
+	    }).bind(this), (function (xhr, status, err) {
+	      debugger;
+	    }).bind(this));
+	  },
+	  render: function () {
+	    return this.props.user.admin || this.props.user.uid ? null : React.createElement(
+	      'div',
+	      { className: 'signUp' },
+	      React.createElement(RegisterButton, {
+	        user: this.props.user,
+	        lang: this.props.lang,
+	        onOpenRegisterModal: this.openRegisterModal
+	      }),
+	      React.createElement(RegisterModal, {
+	        registerErrorMsg: this.state.registerErrorMsg,
+	        onRegisterSubmit: this.handleSignUp,
+	        registerModalIsOpen: this.state.registerModalIsOpen,
+	        onRequestClose: this.closeRegisterModal,
+	        lang: this.props.lang
+	      })
+	    );
+	  }
+	});
+	
+	module.exports = SignUp;
+
+/***/ },
+/* 202 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Modal = __webpack_require__(159);
+	var dataProvider = __webpack_require__(182);
+	
+	const customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
+	
+	var UserUpdate = React.createClass({
+	  displayName: 'UserUpdate',
+	
+	  getInitialState: function () {
+	    return {
+	      userUpdateErrorMsg: '',
+	      userUpdateModalIsOpen: false
+	    };
+	  },
+	  openUserUpdateModal: function () {
+	    this.setState({ userUpdateModalIsOpen: true });
+	  },
+	  closeUserUpdateModal: function () {
+	    this.setState({ userUpdateModalIsOpen: false });
+	  },
+	  handleUserUpdate: function (userData) {
+	    dataProvider.updateUser(userData, (function (data) {
+	      console.log('update user result:', data, userData);
+	      if (data.error) {
+	        if (this.isMounted()) {
+	          this.setState({ userUpdateErrorMsg: data.error_detail });
+	        }
+	      } else {
+	        if (this.isMounted()) {
+	          this.setState({ userUpdateErrorMsg: '', userUpdateModalIsOpen: false });
+	          this.props.onUserUpdated();
+	        }
+	      }
+	    }).bind(this), (function (xhr, status, err) {
+	      debugger;
+	    }).bind(this));
+	  },
+	  render: function () {
+	    return this.props.user.uid ? React.createElement(
+	      'div',
+	      { className: 'updateUser' },
+	      React.createElement(UserUpdateButton, {
+	        lang: this.props.lang,
+	        onShowUpdateModal: this.openUserUpdateModal
+	      }),
+	      React.createElement(UserUpdateModal, {
+	        lang: this.props.lang,
+	        user: this.props.user,
+	        userUpdateModalIsOpen: this.state.userUpdateModalIsOpen,
+	        userUpdateErrorMsg: this.state.userUpdateErrorMsg,
+	        onRequestClose: this.closeUserUpdateModal,
+	        onUserUpdateSubmit: this.handleUserUpdate
+	      })
+	    ) : null;
+	  }
+	});
+	
+	var UserUpdateButton = React.createClass({
+	  displayName: 'UserUpdateButton',
+	
+	  render: function () {
+	    return React.createElement(
+	      'a',
+	      { href: 'javascript:void(0);', onClick: this.props.onShowUpdateModal },
+	      this.props.lang.UPDATE
+	    );
+	  }
+	});
+	
+	var UserUpdateModal = React.createClass({
+	  displayName: 'UserUpdateModal',
+	
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    var uid = this.refs.uid.value.trim();
+	    var user = this.refs.user.value.trim();
+	    var pwd = this.refs.pwd.value.trim();
+	    var email = this.refs.email.value.trim();
+	    if (!uid || !user || !pwd || !email) return;
+	    this.props.onUserUpdateSubmit({ uid: uid, user: user, pwd: pwd, email: email });
+	    return false;
+	  },
+	  render: function () {
+	    return React.createElement(
+	      Modal,
+	      { isOpen: this.props.userUpdateModalIsOpen, onRequestClose: this.props.onRequestClose, style: customStyles },
+	      React.createElement(
+	        'h2',
+	        null,
+	        'Update profile'
+	      ),
+	      React.createElement(
+	        'p',
+	        null,
+	        this.props.userUpdateErrorMsg
+	      ),
+	      React.createElement(
+	        'button',
+	        { onClick: this.props.onRequestClose },
+	        'close'
+	      ),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit, action: '#', method: 'post' },
+	        React.createElement('input', { type: 'hidden', ref: 'uid', value: this.props.user.uid }),
+	        React.createElement(
+	          'dl',
+	          null,
+	          React.createElement(
+	            'dt',
+	            null,
+	            this.props.lang.USERNAME
+	          ),
+	          React.createElement(
+	            'dd',
+	            null,
+	            React.createElement('input', { type: 'text', readOnly: 'readonly', defaultValue: this.props.user.username, ref: 'user', size: '20' })
+	          )
+	        ),
+	        React.createElement(
+	          'dl',
+	          null,
+	          React.createElement(
+	            'dt',
+	            null,
+	            this.props.lang.PASSWORD
+	          ),
+	          React.createElement(
+	            'dd',
+	            null,
+	            React.createElement('input', { type: 'password', defaultValue: this.props.user.password, ref: 'pwd', size: '20' })
+	          )
+	        ),
+	        React.createElement(
+	          'dl',
+	          null,
+	          React.createElement(
+	            'dt',
+	            null,
+	            this.props.lang.EMAIL
+	          ),
+	          React.createElement(
+	            'dd',
+	            null,
+	            React.createElement('input', { type: 'text', defaultValue: this.props.user.email, ref: 'email', size: '20' })
+	          )
+	        ),
+	        React.createElement(
+	          'dl',
+	          null,
+	          React.createElement(
+	            'dt',
+	            null,
+	            React.createElement('input', { type: 'submit', value: this.props.lang.UPDATE })
+	          )
+	        )
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = UserUpdate;
+
+/***/ },
+/* 203 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var dataProvider = __webpack_require__(182);
+	
+	var LogoutButton = React.createClass({
+	  displayName: 'LogoutButton',
+	
+	  handleSignOut: function (e) {
+	    e.preventDefault();
+	    dataProvider.signOut((function () {
+	      this.props.onUserLogout();
+	    }).bind(this));
+	  },
+	  render: function () {
+	    return !this.props.user.admin && !this.props.user.uid ? null : React.createElement(
+	      'a',
+	      { className: 'signOutButton', href: '#', onClick: this.handleSignOut },
+	      this.props.lang.LOGOUT
+	    );
+	  }
+	});
+	
+	module.exports = LogoutButton;
+
+/***/ },
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -22526,14 +23023,12 @@
 	  displayName: "AppFooter",
 	
 	  ACPMarkup: function () {
-	    var ACP = this.props.user && this.props.user.admin ? "<a href='index.php?action=control_panel'>" + this.props.lang.ACP + "</a>" : '';
+	    var ACP = this.props.user && this.props.user.admin ? "<a href='index.php?action=acp'>" + this.props.lang.ACP + "</a>" : '';
 	    return {
 	      __html: ACP
 	    };
 	  },
 	  render: function () {
-	    var mail = "mailto:" + this.props.appConfig.admin_email;
-	
 	    return React.createElement(
 	      "footer",
 	      null,
@@ -22544,7 +23039,7 @@
 	        " ",
 	        React.createElement(
 	          "a",
-	          { href: mail },
+	          { href: "mailto:" + this.props.appConfig.admin_email },
 	          this.props.lang.ADMIN_EMAIL
 	        ),
 	        " ",
