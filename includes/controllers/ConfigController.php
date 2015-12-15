@@ -134,7 +134,7 @@ class ConfigController extends BaseController{
 
     private function set_admin_password(){
         $password=isset($_POST['password']) && !empty($_POST['password'])?maple_quotes($_POST['password']):$this->_admin_password;
-        $this->_model->query(sprintf(parse_tbprefix("UPDATE <sysvar> SET varvalue='%s' WHERE varname='password'"),$password));
+        $this->_model->query(sprintf(parse_tbprefix("UPDATE <sysvar> SET varvalue='%s' WHERE varname='password'"), hashPassword($password)));
     }
 
     private function set_filter_type(){

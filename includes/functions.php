@@ -553,3 +553,48 @@ function isTokenValid() {
     $requestToken = array_key_exists('RequestVerificationToken', $headers) ? $headers['RequestVerificationToken'] : null;
     return isset($_SESSION['token']) && ($requestToken === $_SESSION['token']);
 }
+
+/**
+ * Hash the password.
+ * @param string $password The password string provided by user.
+ * @return string The hashed password string.
+ */
+function hashPassword($password) {
+    $cost = 10;
+    $salt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_RANDOM)), '+', '.');
+    $salt = sprintf("$2a$%02d$", $cost).$salt;
+    $hash = crypt($password, $salt);
+    return $hash;
+}
+
+/**
+ * The hash_equals() function polyfill.
+ * The hash_equals() function was introduced in PHP 5.6, if you are using older PHP versions, the following polyfill is required.
+ * @param string $str1 The string to compare against.
+ * @param string $str2 The user-supplied string
+ * @return bool Returns TRUE if the two strings are equal, FALSE otherwise.
+ */
+if(!function_exists('hash_equals')) {
+    function hash_equals($str1, $str2) {
+        if(strlen($str1) != strlen($str2)) {
+            return false;
+        } else {
+            $res = $str1 ^ $str2;
+            $ret = 0;
+            for($i = strlen($res) - 1; $i >= 0; $i--) {
+                $ret |= ord($res[$i]);
+            }
+            return !$ret;
+        }
+    }
+}
+
+/**
+ * This is a thin wrap of the hash_equals function to verify user password.
+ * @param string $password The user-supplied password
+ * @param string $hashStr The hashed string stored in database
+ * @return bool Returns TRUE if the password is correct, FALSE otherwise.
+ */
+function verifyPassword($password, $hashStr) {
+    return hash_equals($hashStr, crypt($password, $hashStr));
+}
