@@ -1,4 +1,4 @@
-CREATE TABLE <sysuser> (uid INTEGER PRIMARY KEY,username VARCHAR(30) NOT NULL,password CHAR(32) NOT NULL,email varchar(70) NOT NULL,reg_time INT(11) NOT NULL)
+CREATE TABLE <sysuser> (uid INTEGER PRIMARY KEY,username VARCHAR(30) NOT NULL,password CHAR(123) NOT NULL,email varchar(70) NOT NULL,reg_time INT(11) NOT NULL)
 CREATE TABLE <post> (pid INTEGER PRIMARY KEY,uid INT(4),uname VARCHAR(30) DEFAULT 'anonymous',content TEXT NOT NULL,post_time INT(11),ip CHAR(15) NOT NULL)
 CREATE TABLE <reply> (rid INTEGER PRIMARY KEY,pid INT(10) NOT NULL,content TEXT NOT NULL,r_time INT(11) NOT NULL)
 CREATE TABLE <badip> (ip CHAR(15) NOT NULL)
