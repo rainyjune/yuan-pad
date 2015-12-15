@@ -1,7 +1,7 @@
 <?php
 /**
  * We use HTTP status code to tell client side the response status.
- * For more, visit https://en.wikipedia.org/wiki/List_of_HTTP_status_code.
+ * For more, visit https://en.wikipedia.org/wiki/List_of_HTTP_status_codes.
  */
 $API_CODE=array(
     '200'=>'OK', // tandard response for successful HTTP requests.
