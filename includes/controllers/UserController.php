@@ -180,8 +180,6 @@ class UserController extends BaseController{
         }
     }
     
-    //http://php.net/manual/en/function.session-destroy.php
-    // TODO http only cookie
     /**
      * Sign out.
      *
