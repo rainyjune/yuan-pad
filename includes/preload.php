@@ -57,6 +57,6 @@ if(is_installed()){
     if(is_baned(getIP())) {
         die('Access denied!');
     }
-} elseif ($_GET['action']!='install'){
+} elseif (@$_GET['action']!='install'){
     header("Location:index.php?action=install");exit;
 }
