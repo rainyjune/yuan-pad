@@ -43,6 +43,9 @@ define('MP_VERSION','1.2');
 define('THEMEDIR', 'themes/');
 define('PLUGINDIR', 'plugins/');
 
+define('FILTER_TRIPTAGS', 1);
+define('FILTER_ESCAPE', 2);
+
 include_once 'Imgcode.php';
 // Load ZFramework
 require 'ZFramework.php';

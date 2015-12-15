@@ -2,8 +2,6 @@
 class ConfigController extends BaseController{
     private $_admin_password;
     public $_model;
-    const FILTER_TRIPTAGS=1;
-    const FILTER_ESCAPE=2;
 
     public function  __construct(){
         global $db_url;

@@ -313,7 +313,7 @@ function parse_tbprefix($str)
  */
 function formatComments($data, $filter_words=true, $stripTags=true) {
     foreach ($data as &$_data) {
-        if ($stripTags && ZFramework::app()->filter_type == ConfigController::FILTER_TRIPTAGS) {
+        if ($stripTags && ZFramework::app()->filter_type == constant('FILTER_TRIPTAGS')) {
             $_data['post_content'] = strip_tags($_data['post_content'], ZFramework::app()->allowed_tags);
             $_data['reply_content'] = strip_tags($_data['reply_content'], ZFramework::app()->allowed_tags);
         } else {
