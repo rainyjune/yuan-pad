@@ -36,20 +36,8 @@ class ZFramework{
     }
 
     private function  __construct(){
-        $this->preloadAllControllers();
         $this->_controller = !empty($_GET['controller']) ? ucfirst(strtolower($_GET['controller'])).'Controller' : $this->defaultController;
         $this->_action = !empty($_GET['action']) ? 'action'.ucfirst(strtolower($_GET['action'])) : $this->defaultAction;
-    }
-
-    protected function preloadAllControllers(){
-        $dir=dirname(__FILE__).'/'.$this->_controllerPath;
-        $d=dir($dir);
-        while(false !==($entry=$d->read())){
-            if(substr($entry, 0, 1)!='.'){
-                include_once $dir.'/'.$entry;
-            }
-        }
-        $d->close();
     }
 
     public function run() {
@@ -59,6 +47,7 @@ class ZFramework{
             exitWithResponse(503, getConfigVar('close_reason'));
         }
         try {
+            @include_once dirname(__FILE__).'/'.$this->_controllerPath.'/'.$thisController.'.php';
             if(class_exists($thisController)) {
                 $rc=new ReflectionClass($thisController);
                 if($rc->isSubclassOf('BaseController')) {
