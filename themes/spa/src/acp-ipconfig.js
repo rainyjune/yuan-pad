@@ -13,7 +13,7 @@ var IPItem = React.createClass({
 
 var ACPIpConfig = React.createClass({
   render: function() {
-    var IPList = this.props.acpData.ban_ip_info;
+    var IPList = this.props.systemInformation.ban_ip_info;
     var lang = this.props.lang;
     var cssClass = this.props.activeTab === "ban_ip" ? "ip_container selectTag" : "ip_container";
     var createIPItem = function(ip) {

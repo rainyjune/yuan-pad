@@ -132,7 +132,7 @@ var ACPMessages = React.createClass({
   },
   render: function() {
     var lang = this.props.lang;
-    var comments = this.props.acpData.data;
+    var comments = this.props.systemInformation.data;
     var cssClass = this.props.activeTab === "message" ? "message_container selectTag" : "message_container";
     var createComment = function(comment) {
       return (

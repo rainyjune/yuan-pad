@@ -12,12 +12,12 @@ var ACPTabContent = React.createClass({
     return (
       <div className="tagContent">
         <ACPOverview 
-          acpData={this.props.acpData}
+          systemInformation={this.props.systemInformation}
           lang={this.props.lang}
           activeTab={this.props.activeTab}
         />
         <ACPConfig
-          acpData={this.props.acpData}
+          systemInformation={this.props.systemInformation}
           lang={this.props.lang}
           activeTab={this.props.activeTab}
           appConfig={this.props.appConfig}
@@ -26,12 +26,12 @@ var ACPTabContent = React.createClass({
         <ACPMessages 
           lang={this.props.lang}
           activeTab={this.props.activeTab}
-          acpData={this.props.acpData}
+          systemInformation={this.props.systemInformation}
           onActiveTabChanged={this.props.onActiveTabChanged}
           onCommentDeleted={this.props.onCommentDeleted}
         />
         <ACPIpConfig
-          acpData={this.props.acpData}
+          systemInformation={this.props.systemInformation}
           lang={this.props.lang}
           activeTab={this.props.activeTab}
         />

@@ -12,9 +12,9 @@ var dataProvider = require('./dataProvider.js');
 var ACPBox = React.createClass({
   getInitialState: function() {
     return {
-      acpData: {},
+      systemInformation: {}, // System information
       activeTab: 'overview',
-      appConfig: {},
+      appConfig: {}, // App config, including filter words.
       currentUser: {},
       translations: {}
     };
@@ -25,7 +25,7 @@ var ACPBox = React.createClass({
   // When the component is rendered, load the site configuration from server, and then try to indentify current user.
   // If this is not the admin user, show the login modal.
   componentDidMount: function() {
-    dataProvider.getAppConfig(function(res){
+    dataProvider.getAppConfigACP(function(res){
       if (res.statusCode === 200) {
         var siteConfig = res.response;
         dataProvider.getTranslations(function(res){
@@ -34,7 +34,7 @@ var ACPBox = React.createClass({
           }
           this.getUserInfo(function(){
             if (this.state.currentUser.admin) {
-              this.loadACPData();
+              this.loadSystemInformation();
             }
           }.bind(this));
         }.bind(this));
@@ -47,25 +47,26 @@ var ACPBox = React.createClass({
   /**
    * Tested 1.
    */
-  loadACPData: function() {
-    dataProvider.getACPData(function(res){
+  loadSystemInformation: function() {
+    dataProvider.getSystemInformation(function(res){
         if (res.statusCode !== 200) {
           return;
         }
         this.setState({
-          acpData: res.response
+          systemInformation: res.response
         });
       }.bind(this));
   },
+  // TODO
   // Reload site configuration after being updated by admin user.
   handleConfigUpdate: function() {
-    dataProvider.getAppConfig(function(data){
+    dataProvider.getAppConfigACP(function(data){
       if (this.isMounted()) {
         this.setState({translations: data.translations, appConfig: data});
 
         dataProvider.getACPData(function(data){
           this.setState({
-            acpData: data
+            systemInformation: data
           });
         }.bind(this));
       }
@@ -111,9 +112,9 @@ var ACPBox = React.createClass({
   handleUserSignedIn: function(signedInUser) {
     if (signedInUser.admin) {
       this.setState({currentUser: signedInUser}, function(){
-        dataProvider.getACPData(function(data){
+        dataProvider.getSystemInformation(function(res){
           this.setState({
-            acpData: data
+            systemInformation: res.response
           });
         }.bind(this));
       }.bind(this));
@@ -124,7 +125,7 @@ var ACPBox = React.createClass({
   handleCommentDeleted: function() {
     dataProvider.getACPData(function(data){
       this.setState({
-        acpData: data
+        systemInformation: data
       });
     }.bind(this));
   },
@@ -157,7 +158,7 @@ var ACPBox = React.createClass({
         <ACPTabContent
           lang={this.state.translations}
           activeTab={this.state.activeTab}
-          acpData={this.state.acpData}
+          systemInformation={this.state.systemInformation}
           appConfig={this.state.appConfig}
           user={this.state.currentUser}
           onActiveTabChanged={this.updateActiveTab}

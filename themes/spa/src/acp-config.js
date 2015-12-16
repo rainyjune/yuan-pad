@@ -61,25 +61,25 @@ var ACPConfig = React.createClass({
   },
   render: function() {
     var appConfig = this.state;
-    var acpData = this.props.acpData;
+    var acpData = this.props.systemInformation;
     var lang = this.props.lang;
     var cssClass = this.props.activeTab === "siteset" ? "configContainer selectTag" : "configContainer";
     var isSiteClosed = appConfig.site_close;
-    var themes = this.props.acpData.themes;
+    var themes = acpData.themes;
     var themeOptions = [];
     for (var i in themes) {
       var theme = themes[i];
       themeOptions.push(<option key={theme} value={theme}>{theme}</option>)
     }
 
-    var timeZones = this.props.acpData.timezone_array;
+    var timeZones = acpData.timezones;
     var timeZoneOptions = [];
     for (var i in timeZones) {
       var timezone = timeZones[i];
       timeZoneOptions.push(<option key={i} value={i}>{timezone}</option>);
     }
 
-    var languages = this.props.acpData.languages;
+    var languages = acpData.languages;
     var languageOptions = [];
     for (var i in languages) {
       var language = languages[i];
