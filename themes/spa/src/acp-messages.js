@@ -197,7 +197,7 @@ var ACPMessages = React.createClass({
   },
   loadCommentsFromServer: function() {
     dataProvider.loadAllCommentsFromServer(function(res){
-      if (res.statusCode === 200) {
+      if (res.statusCode === 200 || res.statusCode === 404) {
         this.setState({comments: res.response.comments});
       } else {
         // TODO .
