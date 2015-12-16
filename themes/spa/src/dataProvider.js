@@ -182,7 +182,7 @@ function createPost(comment, successCallback, errorCallback) {
  *
  *
  */
-function getACPData(successCallback, errorCallback) {
+function getAppConfigACP(successCallback, errorCallback) {
   yuanjs.ajax({
     type: "GET",
     url: 'index.php?controller=config&action=showAll',
@@ -333,10 +333,10 @@ function getTranslations(successCallback, errorCallback) {
  *
  *
  */
-function getAppOverviewInfo(successCallback, errorCallback) {
+function getSystemInformation(successCallback, errorCallback) {
   yuanjs.ajax({
     type: "GET",
-    url: 'index.php?controller=site&action=getOverviewInfo',
+    url: 'index.php?controller=site&action=getSystemInformation',
     dataType: "json",
     success: successCallback,
     error: errorCallback
@@ -353,9 +353,10 @@ module.exports = {
   deleteMutiComments: deleteMutiComments,
   deleteReply: deleteReply,
   deleteUser: deleteUser,
-  getACPData: getACPData,
+  getAppConfig: getAppConfig,
+  getAppConfigACP: getAppConfigACP,
   getAllUsers: getAllUsers,
-  getAppOverviewInfo: getAppOverviewInfo,
+  getSystemInformation: getSystemInformation,
   getTranslations: getTranslations,
   signIn: signIn,
   signOut: signOut,
@@ -364,7 +365,6 @@ module.exports = {
   loadCommentsFromServer: loadCommentsFromServer,
   loadUserDataFromServer: loadUserDataFromServer,
   getUserInfo: getUserInfo,
-  getAppConfig: getAppConfig,
   search: search,
   updateSiteConfig: updateSiteConfig
 };
