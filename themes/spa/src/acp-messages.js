@@ -2,6 +2,7 @@ var React = require('react');
 var dataProvider = require('./dataProvider.js');
 
 var ReplyModal = require('./acp-replyModal.js');
+var CommentUpdateModal = require('./acp-updateCommentModal.js');
 
 var Reply = React.createClass({
   getInitialState: function() {
@@ -81,6 +82,10 @@ var Comment = React.createClass({
     var commentId = dom.getAttribute('data-commentid');
     this.props.onReplyComment(this.props.data);
   },
+  updateComment: function(e) {
+    e.preventDefault();
+    this.props.onUpdateComment(this.props.data);
+  },
   render: function() {
     var data = this.props.data;
     var lang = this.props.lang;
@@ -113,7 +118,10 @@ var ACPMessages = React.createClass({
       comments: [],
       replyModalIsOpen: false,
       replyErrorMsg: '',
-      commentTobeReplied: null
+      commentTobeReplied: null,
+      commentTobeUpdated: null,
+      commentModalIsOpen: false,
+      commentErrorMsg: ''
     };
   },
   checkAll: function(e) {
@@ -144,7 +152,11 @@ var ACPMessages = React.createClass({
     this.setState({
       replyModalIsOpen: true,
       replyErrorMsg: '',
-      commentTobeReplied: commentTobeReplied
+      commentTobeReplied: commentTobeReplied,
+      
+      commentTobeUpdated: null,
+      commentModalIsOpen: false,
+      commentErrorMsg: ''
     });
   },
   closeReplyModal: function() {
@@ -153,12 +165,34 @@ var ACPMessages = React.createClass({
       replyErrorMsg: ''
     });
   },
+  closeCommentUpdateModal: function() {
+    this.setState({
+      commentTobeUpdated: null,
+      commentModalIsOpen: false,
+      commentErrorMsg: ''
+    });
+  },
   handleReplyFormSubmitted: function() {
     this.setState({
       replyModalIsOpen: false,
       replyErrorMsg: '',
       commentTobeReplied: null
     });
+    this.loadCommentsFromServer();
+  },
+  handleUpdateComment: function(commentTobeUpdated) {
+    this.setState({
+      replyModalIsOpen: false,
+      replyErrorMsg: '',
+      commentTobeReplied: null,
+      
+      commentTobeUpdated: commentTobeUpdated,
+      commentModalIsOpen: true,
+      commentErrorMsg: ''
+    });
+  },
+  handleCommentUpdated: function() {
+    this.closeCommentUpdateModal();
     this.loadCommentsFromServer();
   },
   loadCommentsFromServer: function() {
@@ -187,6 +221,7 @@ var ACPMessages = React.createClass({
           onActiveTabChanged={this.props.onActiveTabChanged}
           onReplyComment={this.handleReplyComment}
           onCommentDeleted={this.props.onCommentDeleted}
+          onUpdateComment={this.handleUpdateComment}
         />
       );
     };
@@ -225,6 +260,13 @@ var ACPMessages = React.createClass({
           replyModalIsOpen={this.state.replyModalIsOpen}
           onRequestClose={this.closeReplyModal}
           onReplySubmit={this.handleReplyFormSubmitted}
+        />
+        <CommentUpdateModal
+          comment={this.state.commentTobeUpdated}
+          commentErrorMsg={this.state.commentErrorMsg}
+          commentModalIsOpen={this.state.commentModalIsOpen}
+          onRequestClose={this.closeCommentUpdateModal}
+          onCommentUpdated={this.handleCommentUpdated}
         />
       </div>
     );
