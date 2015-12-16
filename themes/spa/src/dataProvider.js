@@ -361,6 +361,32 @@ function getSystemInformation(successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ * Create or update a comment.
+ *
+ */
+function reply(replyData, successCallback, errorCallback) {
+  var formData = {
+    mid: replyData.pid,
+    content: replyData.content
+  };
+  if (replyData.rid) {
+    formData.update = 1;
+  }
+  yuanjs.ajax({
+    type: "POST",
+    url: "index.php?controller=reply&action=create",
+    data: formData,
+    dataType: "json",
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
 module.exports = {
   banIP: banIP,
   createPost: createPost,
@@ -376,6 +402,7 @@ module.exports = {
   getAllUsers: getAllUsers,
   getSystemInformation: getSystemInformation,
   getTranslations: getTranslations,
+  reply: reply,
   signIn: signIn,
   signOut: signOut,
   signUp: signUp,
