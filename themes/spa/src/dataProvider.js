@@ -177,6 +177,11 @@ function createPost(comment, successCallback, errorCallback) {
     });
 }
 
+/**
+ * Tested 1.
+ *
+ *
+ */
 function getACPData(successCallback, errorCallback) {
   yuanjs.ajax({
     type: "GET",
@@ -308,10 +313,30 @@ function getCookie(name) {
   }
 }
 
+/**
+ * Tested 1.
+ *
+ *
+ */
 function getTranslations(successCallback, errorCallback) {
   yuanjs.ajax({
     type: "GET",
     url: 'index.php?controller=config&action=getTranslations',
+    dataType: "json",
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
+/**
+ * Tested 1.
+ *
+ *
+ */
+function getAppOverviewInfo(successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "GET",
+    url: 'index.php?controller=site&action=getOverviewInfo',
     dataType: "json",
     success: successCallback,
     error: errorCallback
@@ -330,6 +355,7 @@ module.exports = {
   deleteUser: deleteUser,
   getACPData: getACPData,
   getAllUsers: getAllUsers,
+  getAppOverviewInfo: getAppOverviewInfo,
   getTranslations: getTranslations,
   signIn: signIn,
   signOut: signOut,
