@@ -128,4 +128,15 @@ class PostController extends BaseController{
         $statusCode = count($result['comments']) ? 200 : 404;
         exitWithResponse($statusCode, $result);
     }
+    public function actionAll() {
+        isAdminAjaxRequest();
+        $result = array();
+        $sql = parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS uname,p.content AS post_content,p.post_time AS time,r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <sysuser> AS u ON p.uid=u.uid ORDER BY p.pid DESC");
+        $commentsArr = $this->_model->queryAll($sql);
+        $countSql = parse_tbprefix("SELECT * FROM <post>");
+        $result['total'] = $this->_model->num_rows($this->_model->query($countSql));
+        $result['comments'] = formatComments($commentsArr);
+        $statusCode = count($result['comments']) ? 200 : 404;
+        exitWithResponse($statusCode, $result);
+    }
 }
