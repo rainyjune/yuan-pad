@@ -143,6 +143,21 @@ function loadCommentsFromServer(pageId, successCallback, errorCallback) {
   });
 }
 
+function loadAllCommentsFromServer(successCallback, errorCallback) {
+  yuanjs.ajax({
+    url: 'index.php',
+    dataType: 'json',
+    method: 'GET',
+    cache: false,
+    data: {controller: 'post', action: 'all'},
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
 /**
  * Tested 1.
  *
@@ -365,6 +380,7 @@ module.exports = {
   signOut: signOut,
   signUp: signUp,
   updateUser: updateUser,
+  loadAllCommentsFromServer: loadAllCommentsFromServer,
   loadCommentsFromServer: loadCommentsFromServer,
   loadUserDataFromServer: loadUserDataFromServer,
   getUserInfo: getUserInfo,
