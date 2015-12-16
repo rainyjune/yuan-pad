@@ -19,6 +19,9 @@ var ACPBox = React.createClass({
       translations: {}
     };
   },
+  /**
+   * Tested 1.
+   */
   // When the component is rendered, load the site configuration from server, and then try to indentify current user.
   // If this is not the admin user, show the login modal.
   componentDidMount: function() {
@@ -41,6 +44,9 @@ var ACPBox = React.createClass({
       }
     }.bind(this));
   },
+  /**
+   * Tested 1.
+   */
   loadACPData: function() {
     dataProvider.getACPData(function(res){
         if (res.statusCode !== 200) {
@@ -74,6 +80,9 @@ var ACPBox = React.createClass({
       });
     }
   },
+  /**
+   * Tested 1.
+   */
   // Get current user identity from server.
   getUserInfo: function(successCallback) {
     dataProvider.getUserInfo(function(res){
@@ -92,6 +101,9 @@ var ACPBox = React.createClass({
     }.bind(this), function(){
     }.bind(this));
   },
+  /**
+   * Tested 1.
+   */
   updateActiveTab: function(newTabName) {
     this.setState({activeTab: newTabName});
   },
