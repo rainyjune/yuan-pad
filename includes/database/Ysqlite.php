@@ -35,7 +35,7 @@ class Ysqlite extends YDBBase {
         $result=sqlite_array_query($this->lnk,$sql,SQLITE_ASSOC);
         return $result;
     }
-    // TODO
+
     public function queryWithLimit($sql, $offset, $row_count) {
         $sql .= " LIMIT ".(int)$row_count .' OFFSET '.(int)$offset;
         return $this->queryAll($sql);
