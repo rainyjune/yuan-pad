@@ -132,9 +132,17 @@ var ACPMessages = React.createClass({
   },
   deleteAllComments: function(e) {
     e.preventDefault();
-    // TODO
-    dataProvider.deleteAllComments();
+    dataProvider.deleteAllComments(function(res){
+      if (res.statusCode === 200) {
+        this.setState({comments: []});
+      } else {
+        alert('Error');
+      }
+    }.bind(this));
   },
+  /**
+   * Tested 1
+   */
   deleteAllReplies: function(e) {
     e.preventDefault();
     dataProvider.deleteAllReplies(function(res){
