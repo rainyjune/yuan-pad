@@ -52,7 +52,9 @@ var ACPBox = React.createClass({
     }.bind(this));
   },
   
-  // TODO
+  /**
+   * Tested 1.
+   */
   // Reload site configuration after being updated by admin user.
   handleConfigUpdate: function() {
     this.loadApplicationConfiguration();
@@ -108,11 +110,7 @@ var ACPBox = React.createClass({
     }
   },
   handleCommentDeleted: function() {
-    dataProvider.getACPData(function(data){
-      this.setState({
-        systemInformation: data
-      });
-    }.bind(this));
+    this.loadApplicationSystemInformation();
   },
   render: function() {
     var tabs = [
