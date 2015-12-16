@@ -294,13 +294,19 @@ function deleteMutiComments(dataObj, successCallback, errorCallback) {
   });
 }
 
-// TODO
+/**
+ * Tested 1.
+ *
+ */
 function deleteReply(commentId, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
-    url: "api.php?controller=reply&action=delete",
+    url: "index.php?controller=reply&action=delete",
     data: {mid: commentId},
     dataType: "json",
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
     success: successCallback,
     error: errorCallback
   });
