@@ -199,9 +199,12 @@ function getAppConfigACP(successCallback, errorCallback) {
 function updateSiteConfig(configObj, successCallback, errorCallback) {
   yuanjs.ajax({
       type: "POST",
-      url: "api.php?controller=config&action=update",
+      url: "index.php?controller=config&action=update",
       data: configObj,
       dataType: "json",
+      headers: {
+        'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      },
       success: successCallback,
       error: errorCallback
     });
