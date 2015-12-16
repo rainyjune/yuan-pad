@@ -115,7 +115,7 @@ class PostController extends BaseController{
         $isPaginationOn = (bool)getConfigVar('page_on');
         $paginationSize = (int)getConfigVar('num_perpage');
         $page = isset($_GET['page']) ? (int)$_GET['page'] : 0;
-        $sql = parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS uname,p.content AS post_content,p.post_time AS time,r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <sysuser> AS u ON p.uid=u.uid ORDER BY p.pid DESC");
+        $sql = parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS uname,p.content AS post_content,p.post_time AS time, r.rid AS reply_id, r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <sysuser> AS u ON p.uid=u.uid ORDER BY p.pid DESC");
         if ($isPaginationOn) {
             $offset = $page * $paginationSize;
             $commentsArr = $this->_model->queryWithLimit($sql, $offset, $paginationSize);
@@ -131,7 +131,7 @@ class PostController extends BaseController{
     public function actionAll() {
         isAdminAjaxRequest();
         $result = array();
-        $sql = parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS uname,p.content AS post_content,p.post_time AS time,r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <sysuser> AS u ON p.uid=u.uid ORDER BY p.pid DESC");
+        $sql = parse_tbprefix("SELECT p.pid AS id, p.ip AS ip , p.uid AS uid ,p.uname AS uname,p.content AS post_content,p.post_time AS time, r.rid AS reply_id, r.content AS reply_content,r.r_time AS reply_time ,u.username AS b_username FROM <post> AS p LEFT JOIN <reply> AS r ON p.pid=r.pid LEFT JOIN <sysuser> AS u ON p.uid=u.uid ORDER BY p.pid DESC");
         $commentsArr = $this->_model->queryAll($sql);
         $countSql = parse_tbprefix("SELECT * FROM <post>");
         $result['total'] = $this->_model->num_rows($this->_model->query($countSql));
