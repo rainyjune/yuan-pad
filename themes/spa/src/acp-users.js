@@ -43,8 +43,8 @@ var ACPUser = React.createClass({
     };
   },
   componentDidMount: function() {
-    dataProvider.getAllUsers(function(data){
-      this.setState({users: data});
+    dataProvider.getAllUsers(function(res){
+      this.setState({users: res.response});
     }.bind(this));
   },
   handleUserDeleted: function() {
