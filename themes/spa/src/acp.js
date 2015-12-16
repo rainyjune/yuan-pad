@@ -28,7 +28,7 @@ var ACPBox = React.createClass({
 
   loadApplicationConfiguration: function(successCallback) {
     dataProvider.getAppConfigACP(function(res){
-      debugger;
+      //debugger;
       if (res.statusCode !== 200) {
         return ;
       }
@@ -37,7 +37,7 @@ var ACPBox = React.createClass({
   },
   loadApplicationTranslation: function(successCallback) {
     dataProvider.getTranslations(function(res){
-      debugger;
+      //debugger;
       if (res.statusCode === 200) {
         this.setState({translations: res.response}, successCallback || this.loadApplicationSystemInformation);
       }
@@ -45,7 +45,7 @@ var ACPBox = React.createClass({
   },
   loadApplicationSystemInformation: function(successCallback) {
     dataProvider.getSystemInformation(function(res){
-      debugger;
+      //debugger;
       if (res.statusCode === 200) {
         this.setState({systemInformation: res.response}, successCallback);
       }
