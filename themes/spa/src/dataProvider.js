@@ -369,7 +369,7 @@ function getSystemInformation(successCallback, errorCallback) {
 
 /**
  * Tested 1.
- * Create or update a comment.
+ * Create or update a reply.
  *
  */
 function reply(replyData, successCallback, errorCallback) {
@@ -384,6 +384,23 @@ function reply(replyData, successCallback, errorCallback) {
     type: "POST",
     url: "index.php?controller=reply&action=create",
     data: formData,
+    dataType: "json",
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
+/**
+ * Tested 1.
+ */
+function updateComment(commentData, successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "POST",
+    url: "index.php?controller=post&action=update",
+    data: commentData,
     dataType: "json",
     headers: {
       'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
@@ -412,6 +429,7 @@ module.exports = {
   signIn: signIn,
   signOut: signOut,
   signUp: signUp,
+  updateComment: updateComment,
   updateUser: updateUser,
   loadAllCommentsFromServer: loadAllCommentsFromServer,
   loadCommentsFromServer: loadCommentsFromServer,
