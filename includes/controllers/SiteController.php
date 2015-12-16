@@ -132,4 +132,33 @@ HERE;
     public  function actionCaptcha(){
         $this->_verifyCode->image(2,4,900,array('borderColor'=>'#66CCFF','bgcolor'=>'#FFCC33'));
     }
+    
+    public function actionGetOverviewInfo() {
+        isAdmin();
+        global $gd_exist,$zip_support;
+        $commentsTotalSql = parse_tbprefix("SELECT * FROM <post>");
+        $commentsTotal = $this->_model->num_rows($this->_model->query($commentsTotalSql));
+        $repliesTotalSql = parse_tbprefix("SELECT * FROM <reply>");
+        $repliesTotal = $this->_model->num_rows($this->_model->query($repliesTotalSql));
+        
+        if ($gd_exist) {
+            $gd_info = gd_version();
+            $gd_version = $gd_info ? $gd_info : t('UNKNOWN');
+        } else {
+            $gd_version = t('NOT_SUPPORT');
+        }
+        
+        $result = array(
+            'commentsTotal'   => $commentsTotal,
+            'repliesTotal'   => $repliesTotal,
+            'appVersion'      => constant('MP_VERSION'),
+            'phpVersion'      => PHP_VERSION,
+            'gdVersion'       => $gd_version,
+            'registerGlobals' => ini_get("register_globals") ? 'On' : 'Off',
+            'magicQuotesGPC'  => ini_get("magic_quotes_gpc") ? 'On' : 'Off',
+            'zipSupport'  => $zip_support
+            
+        );
+        exitWithResponse(200, $result);
+    }
 }

@@ -38,6 +38,15 @@ function isAdminAjaxRequest() {
 }
 
 /**
+ * Check the user is root user or not.
+ */
+function isAdmin() {
+    if (!isset($_SESSION['admin'])) {
+        exitWithResponse(403);
+    }
+}
+
+/**
  * Returns an array that represent current status.
  * @param number $statusCode The status code.
  * @return array 
