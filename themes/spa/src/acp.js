@@ -22,20 +22,34 @@ var ACPBox = React.createClass({
   // When the component is rendered, load the site configuration from server, and then try to indentify current user.
   // If this is not the admin user, show the login modal.
   componentDidMount: function() {
-    dataProvider.getAppConfig(function(data){
-      if (this.isMounted()) {
-        this.setState({translations: data.translations, appConfig: data});
-      }
-      this.getUserInfo(function() {
-        if (this.state.currentUser.admin) {
-          dataProvider.getACPData(function(data){
-            this.setState({
-              acpData: data
-            });
+    dataProvider.getAppConfig(function(res){
+      if (res.statusCode === 200) {
+        var siteConfig = res.response;
+        dataProvider.getTranslations(function(res){
+          if (this.isMounted()) {
+            this.setState({translations: res.response, appConfig: siteConfig});
+          }
+          this.getUserInfo(function(){
+            if (this.state.currentUser.admin) {
+              this.loadACPData();
+            }
           }.bind(this));
-        }
-      }.bind(this));
+        }.bind(this));
+      } else {
+        // TODO Tell the user what's wrong.
+        alert(res.statusText);
+      }
     }.bind(this));
+  },
+  loadACPData: function() {
+    dataProvider.getACPData(function(res){
+        if (res.statusCode !== 200) {
+          return;
+        }
+        this.setState({
+          acpData: res.response
+        });
+      }.bind(this));
   },
   // Reload site configuration after being updated by admin user.
   handleConfigUpdate: function() {
@@ -62,18 +76,21 @@ var ACPBox = React.createClass({
   },
   // Get current user identity from server.
   getUserInfo: function(successCallback) {
-    dataProvider.getUserInfo(function(data){
-        console.log('user info:', data);
-        if (Object.prototype.toString.call(data) === "[object Array]") {
-          data = {};
+    dataProvider.getUserInfo(function(res){
+      console.log('user info:', res);
+      if (res.statusCode !== 200) {
+        return ;
+      }
+      if (Object.prototype.toString.call(res.response) === "[object Array]") {
+        res.response = {};
+      }
+      if (this.isMounted()) {
+        if (res.response.admin) {
+          this.setState({currentUser: res.response}, successCallback);
         }
-        if (this.isMounted()) {
-          this.setState({currentUser: data}, successCallback);
-        }
-      }.bind(this),
-      function(){
-      }.bind(this) 
-    );
+      }
+    }.bind(this), function(){
+    }.bind(this));
   },
   updateActiveTab: function(newTabName) {
     this.setState({activeTab: newTabName});
