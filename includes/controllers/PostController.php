@@ -62,7 +62,7 @@ class PostController extends BaseController{
         $mid=(int)$_POST['mid'];        
         $update_content = $this->_model->escape_string(str_replace(array("\n", "\r\n", "\r"), '', nl2br($_POST['update_content'])));
         $this->_model->query(sprintf(parse_tbprefix("UPDATE <post> SET content='%s' WHERE pid=%d"),$update_content,$mid));
-        exitWithResponse(200, $json_array);
+        exitWithResponse(200);
     }
     
     public function actionShow() {
