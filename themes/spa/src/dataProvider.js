@@ -1,4 +1,6 @@
-// TODO => POST
+/**
+ * Tested 1.
+ */
 function banIP(ip, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -146,6 +148,9 @@ function loadCommentsFromServer(pageId, successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ */
 function loadAllCommentsFromServer(successCallback, errorCallback) {
   yuanjs.ajax({
     url: 'index.php',
@@ -214,6 +219,9 @@ function getAppConfigACP(successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ */
 function updateSiteConfig(configObj, successCallback, errorCallback) {
   yuanjs.ajax({
       type: "POST",
@@ -243,12 +251,17 @@ function getAllUsers(successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ */
 function deleteAllReplies(successCallback, errorCallback) {
   yuanjs.ajax({
-    type: "GET",
-    url: 'api.php',
-    data: {controller: "reply", action: "reply"},
-    //dataType: "json",
+    type: "POST",
+    url: 'index.php?controller=reply&action=deleteAll',
+    dataType: "json",
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
     success: successCallback,
     error: errorCallback
   });
