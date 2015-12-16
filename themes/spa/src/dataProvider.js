@@ -10,6 +10,12 @@ function banIP(ip, successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ *
+ *
+ *
+ */
 function signIn(credentials, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -21,6 +27,12 @@ function signIn(credentials, successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ *
+ *
+ *
+ */
 function loadUserDataFromServer(uid, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "GET",
@@ -32,6 +44,11 @@ function loadUserDataFromServer(uid, successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ *
+ *
+ */
 function getUserInfo(successCallback, errorCallback) {
   yuanjs.ajax({
     type: "GET",
@@ -43,6 +60,11 @@ function getUserInfo(successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ *
+ *
+ */
 function getAppConfig(successCallback, errorCallback) {
   yuanjs.ajax({
     type: "GET",
@@ -53,6 +75,12 @@ function getAppConfig(successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1
+ *
+ *
+ *
+ */
 function signOut(successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -66,6 +94,11 @@ function signOut(successCallback, errorCallback) {
   });
 }
 
+/***
+ * Tested 1
+ *
+ *
+ */
 function updateUser(userData, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -77,6 +110,11 @@ function updateUser(userData, successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1
+ *
+ *
+ */
 function signUp(userData, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -88,6 +126,11 @@ function signUp(userData, successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ *
+ *
+ */
 function loadCommentsFromServer(pageId, successCallback, errorCallback) {
   yuanjs.ajax({
     url: 'index.php',
@@ -100,6 +143,12 @@ function loadCommentsFromServer(pageId, successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ *
+ *
+ *
+ */
 function search(keyword, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -111,6 +160,12 @@ function search(keyword, successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ *
+ *
+ *
+ */
 function createPost(comment, successCallback, errorCallback) {
   comment.ajax = true;
     yuanjs.ajax({
@@ -125,10 +180,12 @@ function createPost(comment, successCallback, errorCallback) {
 function getACPData(successCallback, errorCallback) {
   yuanjs.ajax({
     type: "GET",
-    url: 'api.php',
-    data: {action: "control_panel",t:Date.now()},
+    url: 'index.php?controller=config&action=showAll',
     cache: false,
     dataType: "json",
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
     success: successCallback,
     error: errorCallback
   });
@@ -148,10 +205,13 @@ function updateSiteConfig(configObj, successCallback, errorCallback) {
 function getAllUsers(successCallback, errorCallback) {
   yuanjs.ajax({
     type: "GET",
-    url: 'api.php',
-    data: {controller: "user", action: "index",t:Date.now()},
+    url: 'index.php',
+    data: {controller: "user", action: "list"},
     cache: false,
     dataType: "json",
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
     success: successCallback,
     error: errorCallback
   });
