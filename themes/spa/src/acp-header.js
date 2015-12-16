@@ -4,8 +4,12 @@ var dataProvider = require('./dataProvider.js');
 var ACPHeader = React.createClass({
   handleSignOut: function(e) {
     e.preventDefault();
-    dataProvider.logout(function(){
-      this.props.onUserLogout();
+    dataProvider.signOut(function(response){
+      if (response.statusCode === 200) {
+        this.props.onUserLogout();
+      } else {
+        alert(response.statusText);
+      }
     }.bind(this));
   },
   render: function() {
