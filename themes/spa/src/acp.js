@@ -20,43 +20,38 @@ var ACPBox = React.createClass({
     };
   },
   /**
-   * Tested 1.
+   * Tested 1. Load application data after we verified the root user.
    */
-  // When the component is rendered, load the site configuration from server, and then try to indentify current user.
-  // If this is not the admin user, show the login modal.
   componentDidMount: function() {
+    this.getUserInfo(this.loadApplicationConfiguration);
+  },
+
+  loadApplicationConfiguration: function(successCallback) {
     dataProvider.getAppConfigACP(function(res){
+      debugger;
+      if (res.statusCode !== 200) {
+        return ;
+      }
+      this.setState({appConfig: res.response}, successCallback || this.loadApplicationTranslation);
+    }.bind(this));
+  },
+  loadApplicationTranslation: function(successCallback) {
+    dataProvider.getTranslations(function(res){
+      debugger;
       if (res.statusCode === 200) {
-        var siteConfig = res.response;
-        dataProvider.getTranslations(function(res){
-          if (this.isMounted()) {
-            this.setState({translations: res.response, appConfig: siteConfig});
-          }
-          this.getUserInfo(function(){
-            if (this.state.currentUser.admin) {
-              this.loadSystemInformation();
-            }
-          }.bind(this));
-        }.bind(this));
-      } else {
-        // TODO Tell the user what's wrong.
-        alert(res.statusText);
+        this.setState({translations: res.response}, successCallback || this.loadApplicationSystemInformation);
       }
     }.bind(this));
   },
-  /**
-   * Tested 1.
-   */
-  loadSystemInformation: function() {
+  loadApplicationSystemInformation: function(successCallback) {
     dataProvider.getSystemInformation(function(res){
-        if (res.statusCode !== 200) {
-          return;
-        }
-        this.setState({
-          systemInformation: res.response
-        });
-      }.bind(this));
+      debugger;
+      if (res.statusCode === 200) {
+        this.setState({systemInformation: res.response}, successCallback);
+      }
+    }.bind(this));
   },
+  
   // TODO
   // Reload site configuration after being updated by admin user.
   handleConfigUpdate: function() {
@@ -72,6 +67,9 @@ var ACPBox = React.createClass({
       }
     }.bind(this));
   },
+  /**
+   * Tested 1.
+   */
   // Update the `currentUser` state to default value.
   handleLogout: function() {
     if (this.isMounted()) {
@@ -108,16 +106,13 @@ var ACPBox = React.createClass({
   updateActiveTab: function(newTabName) {
     this.setState({activeTab: newTabName});
   },
+  /**
+   * Tested 1
+   */
   // Update the `currentUser` state after a user signed in.
   handleUserSignedIn: function(signedInUser) {
     if (signedInUser.admin) {
-      this.setState({currentUser: signedInUser}, function(){
-        dataProvider.getSystemInformation(function(res){
-          this.setState({
-            systemInformation: res.response
-          });
-        }.bind(this));
-      }.bind(this));
+      this.setState({currentUser: signedInUser}, this.loadApplicationConfiguration);
     } else if (signedInUser.uid) {
       window.location = "index.php";
     }
