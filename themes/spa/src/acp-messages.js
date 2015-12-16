@@ -89,7 +89,7 @@ var Comment = React.createClass({
           <input type='hidden' name={this.props.data.id} value={data.reply ? 1 : 0} />
         </td>
         <td>
-          {data.uid ? data.b_username : data.user}
+          {data.uid ? data.b_username : data.uname}
         </td>
         <td className='admin_message'>
           {data.post_content}<br />{lang.TIME}：{data.time}
@@ -106,6 +106,11 @@ var Comment = React.createClass({
 });
 
 var ACPMessages = React.createClass({
+  getInitialState: function() {
+    return {
+      comments: []
+    };
+  },
   checkAll: function(e) {
     e.preventDefault();
   },
@@ -130,9 +135,19 @@ var ACPMessages = React.createClass({
   invertCheck: function(e) {
     e.preventDefault();
   },
+  componentDidMount: function() {
+    dataProvider.loadAllCommentsFromServer(function(res){
+      if (res.statusCode === 200) {
+        this.setState({comments: res.response.comments});
+      } else {
+        // TODO .
+        alert('error');
+      }
+    }.bind(this));
+  },
   render: function() {
     var lang = this.props.lang;
-    var comments = this.props.systemInformation.data;
+    var comments = this.state.comments;
     var cssClass = this.props.activeTab === "message" ? "message_container selectTag" : "message_container";
     var createComment = function(comment) {
       return (
