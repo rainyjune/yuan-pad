@@ -36,12 +36,15 @@ var ACPConfig = React.createClass({
   },
   handleSubmit: function(e) {
     e.preventDefault();
-    dataProvider.updateSiteConfig(this.state, function(data){
+    dataProvider.updateSiteConfig(this.state, function(res){
       console.log('ACPConfig state:', this.state);
-      if (data && data.status === "OK") {
+      if (res.statusCode === 200) {
+        // TODO show friendly message.
+        alert('OK');
         this.props.onConfigUpdated();
       } else {
-        alert(data.error_detail);
+        // TODO User friendly message.
+        alert('failed');
       }
     }.bind(this), function(){
       debugger;

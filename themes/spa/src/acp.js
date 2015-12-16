@@ -55,17 +55,7 @@ var ACPBox = React.createClass({
   // TODO
   // Reload site configuration after being updated by admin user.
   handleConfigUpdate: function() {
-    dataProvider.getAppConfigACP(function(data){
-      if (this.isMounted()) {
-        this.setState({translations: data.translations, appConfig: data});
-
-        dataProvider.getACPData(function(data){
-          this.setState({
-            systemInformation: data
-          });
-        }.bind(this));
-      }
-    }.bind(this));
+    this.loadApplicationConfiguration();
   },
   /**
    * Tested 1.
