@@ -134,8 +134,7 @@ var App = React.createClass({
         var siteConfig = res.response;
         dataProvider.getTranslations(function(res){
           if (this.isMounted()) {
-            this.setState({translations: res.response});
-            this.setState({appConfig: siteConfig});
+            this.setState({translations: res.response, appConfig: siteConfig});
           }
           this.getUserInfo();
         }.bind(this));
