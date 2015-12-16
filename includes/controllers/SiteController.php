@@ -133,7 +133,7 @@ HERE;
         $this->_verifyCode->image(2,4,900,array('borderColor'=>'#66CCFF','bgcolor'=>'#FFCC33'));
     }
     
-    public function actionGetOverviewInfo() {
+    public function actionGetSystemInformation() {
         isAdmin();
         global $gd_exist,$zip_support;
         $commentsTotalSql = parse_tbprefix("SELECT * FROM <post>");
@@ -150,13 +150,17 @@ HERE;
         
         $result = array(
             'commentsTotal'   => $commentsTotal,
-            'repliesTotal'   => $repliesTotal,
+            'repliesTotal'    => $repliesTotal,
             'appVersion'      => constant('MP_VERSION'),
             'phpVersion'      => PHP_VERSION,
             'gdVersion'       => $gd_version,
             'registerGlobals' => ini_get("register_globals") ? 'On' : 'Off',
             'magicQuotesGPC'  => ini_get("magic_quotes_gpc") ? 'On' : 'Off',
-            'zipSupport'  => $zip_support
+            'zipSupport'      => $zip_support,
+            
+            'themes'          => get_all_themes(),
+            'timezones'       => get_all_timezone(),
+            'languages'       => get_all_langs()
             
         );
         exitWithResponse(200, $result);
