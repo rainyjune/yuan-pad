@@ -1,6 +1,8 @@
 var React = require('react');
 var dataProvider = require('./dataProvider.js');
 
+var ReplyModal = require('./acp-replyModal.js');
+
 var Reply = React.createClass({
   getInitialState: function() {
     return {
@@ -47,7 +49,7 @@ var Reply = React.createClass({
     }
     return (
       <div>
-        {lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content)}
+        {lang.YOU_REPLIED && lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content)}
         <span>&nbsp;<a onClick={this.deleteReply} data-commentid={data.id} href="#">{lang.DELETE_THIS_REPLY}</a></span>
       </div>
     );
@@ -77,7 +79,7 @@ var Comment = React.createClass({
     e.preventDefault();
     var dom = e.target;
     var commentId = dom.getAttribute('data-commentid');
-    this.props.onReplyComment(commentId);
+    this.props.onReplyComment(this.props.data);
   },
   render: function() {
     var data = this.props.data;
@@ -108,7 +110,10 @@ var Comment = React.createClass({
 var ACPMessages = React.createClass({
   getInitialState: function() {
     return {
-      comments: []
+      comments: [],
+      replyModalIsOpen: false,
+      replyErrorMsg: '',
+      commentTobeReplied: null
     };
   },
   checkAll: function(e) {
@@ -135,7 +140,28 @@ var ACPMessages = React.createClass({
   invertCheck: function(e) {
     e.preventDefault();
   },
-  componentDidMount: function() {
+  handleReplyComment: function(commentTobeReplied) {
+    this.setState({
+      replyModalIsOpen: true,
+      replyErrorMsg: '',
+      commentTobeReplied: commentTobeReplied
+    });
+  },
+  closeReplyModal: function() {
+    this.setState({
+      replyModalIsOpen: false,
+      replyErrorMsg: ''
+    });
+  },
+  handleReplyFormSubmitted: function() {
+    this.setState({
+      replyModalIsOpen: false,
+      replyErrorMsg: '',
+      commentTobeReplied: null
+    });
+    this.loadCommentsFromServer();
+  },
+  loadCommentsFromServer: function() {
     dataProvider.loadAllCommentsFromServer(function(res){
       if (res.statusCode === 200) {
         this.setState({comments: res.response.comments});
@@ -144,6 +170,9 @@ var ACPMessages = React.createClass({
         alert('error');
       }
     }.bind(this));
+  },
+  componentDidMount: function() {
+    this.loadCommentsFromServer();
   },
   render: function() {
     var lang = this.props.lang;
@@ -190,6 +219,13 @@ var ACPMessages = React.createClass({
             </tfoot>
           </table>
         </form>
+        <ReplyModal
+          comment={this.state.commentTobeReplied}
+          replyErrorMsg={this.state.replyErrorMsg}
+          replyModalIsOpen={this.state.replyModalIsOpen}
+          onRequestClose={this.closeReplyModal}
+          onReplySubmit={this.handleReplyFormSubmitted}
+        />
       </div>
     );
   }
