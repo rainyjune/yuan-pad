@@ -2,9 +2,12 @@
 function banIP(ip, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
-    url: 'api.php?controller=badip&action=create',
+    url: 'index.php?controller=badip&action=create',
     data: {ip: ip},
     dataType: 'json',
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
     success: successCallback,
     error: errorCallback
   });
