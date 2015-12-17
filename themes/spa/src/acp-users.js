@@ -11,10 +11,12 @@ var UserItem = React.createClass({
       this.props.onUserDeleted();
     }.bind(this));
   },
+  /**
+   * Tested 1.
+   */
   updateUser: function(e) {
-    var uid = e.target.getAttribute('data-uid');
     e.preventDefault();
-    this.props.onOpenUserUpdateModal(uid);
+    this.props.onOpenUserUpdateModal(this.props.data);
   },
   render: function() {
     var user = this.props.data;
@@ -26,7 +28,7 @@ var UserItem = React.createClass({
         <td>{user.email}</td>
         <td>
           <a data-uid={user.uid} onClick={this.deleteUser} href="#">{lang.DELETE}</a>
-          <a data-uid={user.uid} onClick={this.updateUser} href={'index.php?controller=user&amp;action=update&amp;uid=' + user.uid}>{lang.UPDATE}</a>
+          <a data-uid={user.uid} onClick={this.updateUser} href='#'>{lang.UPDATE}</a>
         </td>
       </tr>
     );
@@ -34,6 +36,9 @@ var UserItem = React.createClass({
 });
 
 var ACPUser = React.createClass({
+  /**
+   * Tested 1.
+   */
   getInitialState: function() {
     return {
       users: [],
@@ -42,9 +47,14 @@ var ACPUser = React.createClass({
       updatedModalUserData: null,
     };
   },
+  /**
+   * Tested 1
+   */
   componentDidMount: function() {
     dataProvider.getAllUsers(function(res){
-      this.setState({users: res.response});
+      if (res.statusCode === 200) {
+        this.setState({users: res.response});
+      }
     }.bind(this));
   },
   handleUserDeleted: function() {
@@ -64,6 +74,9 @@ var ACPUser = React.createClass({
       }.bind(this));
     }.bind(this));
   },
+  /**
+   * Tested 1.
+   */
   closeUpdateModal: function() {
     this.setState({
       updateErrorMsg: '',
@@ -71,15 +84,15 @@ var ACPUser = React.createClass({
       updateModalIsOpen: false
     });
   },
-  openUserUpdateModal: function(uid) {
-    dataProvider.loadUserDataFromServer(uid, function(response){
-      this.setState({
+  /**
+   * Tested 1.
+   */
+  openUserUpdateModal: function(userData) {
+    this.setState({
         updateErrorMsg: '',
-        updatedModalUserData: response,
+        updatedModalUserData: userData,
         updateModalIsOpen: true
       });
-    }.bind(this));return;
-    
   },
   deleteAllUsers: function(e) {
     e.preventDefault();
