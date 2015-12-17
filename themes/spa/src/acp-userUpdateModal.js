@@ -38,7 +38,7 @@ var UserUpdateModal = React.createClass({
     var user = this.state.user.trim();
     var pwd = this.state.pwd.trim();
     var email = this.state.email.trim();
-    if (!user || !pwd || !email) return;
+    if (!user || !email) return;
     this.props.onUpdateSubmit(this.state);
     return false;
   },
@@ -61,7 +61,7 @@ var UserUpdateModal = React.createClass({
           <div className="inputbox">
             <dl>
               <dt>{lang.USERNAME}</dt>
-              <dd><input type="text" readonly="readonly" value={this.state.user} name="user" size="20" /></dd>
+              <dd><input type="text" readOnly="readonly" value={this.state.user} name="user" size="20" /></dd>
             </dl>
             <dl>
               <dt>{lang.PASSWORD}</dt>
