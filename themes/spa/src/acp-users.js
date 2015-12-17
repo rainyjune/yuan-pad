@@ -62,6 +62,9 @@ var ACPUser = React.createClass({
   getMixinAttr: function() {
     return 'users';
   },
+  getItemKey: function() {
+    return 'uid';
+  },
   setMixState: function(data) {
     this.setState({users: data});
   },

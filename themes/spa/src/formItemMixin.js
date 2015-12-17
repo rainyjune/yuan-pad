@@ -51,9 +51,11 @@ var FormItemMixIn = {
   },
   getCheckedItems: function() {
     var arr = [];
-    this.state.users.forEach(function(currentValue, index) {
+    var key = this.getItemKey();
+    var field = this.getMixinAttr();
+    this.state[field].forEach(function(currentValue, index) {
       if (currentValue.checked) {
-        arr.push(currentValue.uid);
+        arr.push(currentValue[key]);
       }
     });
     return arr;

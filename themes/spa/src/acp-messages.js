@@ -134,8 +134,10 @@ var ACPMessages = React.createClass({
   getMixinAttr: function() {
     return 'comments';
   },
+  getItemKey: function() {
+    return 'id';
+  },
   setMixState: function(data) {
-    debugger;
     this.setState({comments: data});
   },
   deleteAllComments: function(e) {
@@ -163,8 +165,14 @@ var ACPMessages = React.createClass({
   },
   deleteSelected: function(e) {
     e.preventDefault();
-    // TODO
-    dataProvider.deleteMutiComments();
+    var checkedItems = this.getCheckedItems();
+    dataProvider.deleteMutiComments(checkedItems, function(res){
+      if (res.statusCode === 200) {
+        this.loadCommentsFromServer();
+      } else {
+        alert('delete error');
+      }
+    }.bind(this));
   },
   handleReplyComment: function(commentTobeReplied) {
     this.setState({
