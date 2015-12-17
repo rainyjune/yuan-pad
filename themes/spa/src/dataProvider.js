@@ -236,6 +236,9 @@ function updateSiteConfig(configObj, successCallback, errorCallback) {
     });
 }
 
+/**
+ * Tested 1.
+ */
 function getAllUsers(successCallback, errorCallback) {
   yuanjs.ajax({
     type: "GET",
@@ -316,12 +319,18 @@ function deleteComment(commentId, reply, successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ */
 function deleteMutiComments(dataObj, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
-    url: "api.php?controller=post&action=delete_multi_messages",
-    data: dataObj,
+    url: "index.php?controller=post&action=delete_multi_messages",
+    data: {select_mid: dataObj},
     dataType: "json",
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
     success: successCallback,
     error: errorCallback
   });
