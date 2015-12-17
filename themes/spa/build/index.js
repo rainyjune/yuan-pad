@@ -21831,6 +21831,23 @@
 	
 	/**
 	 * Tested 1.
+	 */
+	function deleteMultiIPs(ips, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: 'index.php?controller=badip&action=update',
+	    data: { select_ip: ips },
+	    dataType: 'json',
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
 	 *
 	 *
 	 *
@@ -22050,6 +22067,9 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function getAllUsers(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
@@ -22130,12 +22150,18 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function deleteMutiComments(dataObj, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: "api.php?controller=post&action=delete_multi_messages",
-	    data: dataObj,
+	    url: "index.php?controller=post&action=delete_multi_messages",
+	    data: { select_mid: dataObj },
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
@@ -22307,6 +22333,7 @@
 	  deleteReply: deleteReply,
 	  deleteUser: deleteUser,
 	  deleteMutiUsers: deleteMutiUsers,
+	  deleteMultiIPs: deleteMultiIPs,
 	  getIPBlackList: getIPBlackList,
 	  getAppConfig: getAppConfig,
 	  getAppConfigACP: getAppConfigACP,

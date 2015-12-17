@@ -21779,6 +21779,23 @@
 	
 	/**
 	 * Tested 1.
+	 */
+	function deleteMultiIPs(ips, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: 'index.php?controller=badip&action=update',
+	    data: { select_ip: ips },
+	    dataType: 'json',
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
 	 *
 	 *
 	 *
@@ -21998,6 +22015,9 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function getAllUsers(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
@@ -22078,12 +22098,18 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function deleteMutiComments(dataObj, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: "api.php?controller=post&action=delete_multi_messages",
-	    data: dataObj,
+	    url: "index.php?controller=post&action=delete_multi_messages",
+	    data: { select_mid: dataObj },
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
@@ -22255,6 +22281,7 @@
 	  deleteReply: deleteReply,
 	  deleteUser: deleteUser,
 	  deleteMutiUsers: deleteMutiUsers,
+	  deleteMultiIPs: deleteMultiIPs,
 	  getIPBlackList: getIPBlackList,
 	  getAppConfig: getAppConfig,
 	  getAppConfigACP: getAppConfigACP,
@@ -22386,8 +22413,8 @@
 	var ACPOverview = __webpack_require__(186);
 	var ACPConfig = __webpack_require__(187);
 	var ACPMessages = __webpack_require__(192);
-	var ACPIpConfig = __webpack_require__(195);
-	var ACPUsers = __webpack_require__(196);
+	var ACPIpConfig = __webpack_require__(196);
+	var ACPUsers = __webpack_require__(197);
 	
 	var ACPTabContent = React.createClass({
 	  displayName: 'ACPTabContent',
@@ -23345,6 +23372,8 @@
 	var ReplyModal = __webpack_require__(193);
 	var CommentUpdateModal = __webpack_require__(194);
 	
+	var FormItemMixin = __webpack_require__(195);
+	
 	var Reply = React.createClass({
 	  displayName: 'Reply',
 	
@@ -23440,6 +23469,10 @@
 	    e.preventDefault();
 	    this.props.onUpdateComment(this.props.data);
 	  },
+	  toggleItem: function () {
+	    //this.setState({checked: !this.state.checked});
+	    this.props.onToggleItem(this.props.data);
+	  },
 	  render: function () {
 	    var data = this.props.data;
 	    var lang = this.props.lang;
@@ -23449,7 +23482,7 @@
 	      React.createElement(
 	        'td',
 	        null,
-	        React.createElement('input', { type: 'checkbox', name: 'select_mid[]', value: data.id }),
+	        React.createElement('input', { type: 'checkbox', checked: this.props.data.checked, onChange: this.toggleItem }),
 	        React.createElement('input', { type: 'hidden', name: this.props.data.id, value: data.reply ? 1 : 0 })
 	      ),
 	      React.createElement(
@@ -23498,6 +23531,7 @@
 	var ACPMessages = React.createClass({
 	  displayName: 'ACPMessages',
 	
+	  mixins: [FormItemMixin],
 	  getInitialState: function () {
 	    return {
 	      comments: [],
@@ -23509,11 +23543,14 @@
 	      commentErrorMsg: ''
 	    };
 	  },
-	  checkAll: function (e) {
-	    e.preventDefault();
+	  getMixinAttr: function () {
+	    return 'comments';
 	  },
-	  clearAll: function (e) {
-	    e.preventDefault();
+	  getItemKey: function () {
+	    return 'id';
+	  },
+	  setMixState: function (data) {
+	    this.setState({ comments: data });
 	  },
 	  deleteAllComments: function (e) {
 	    e.preventDefault();
@@ -23540,11 +23577,14 @@
 	  },
 	  deleteSelected: function (e) {
 	    e.preventDefault();
-	    // TODO
-	    dataProvider.deleteMutiComments();
-	  },
-	  invertCheck: function (e) {
-	    e.preventDefault();
+	    var checkedItems = this.getCheckedItems();
+	    dataProvider.deleteMutiComments(checkedItems, (function (res) {
+	      if (res.statusCode === 200) {
+	        this.loadCommentsFromServer();
+	      } else {
+	        alert('delete error');
+	      }
+	    }).bind(this));
 	  },
 	  handleReplyComment: function (commentTobeReplied) {
 	    this.setState({
@@ -23596,7 +23636,9 @@
 	  loadCommentsFromServer: function () {
 	    dataProvider.loadAllCommentsFromServer((function (res) {
 	      if (res.statusCode === 200 || res.statusCode === 404) {
-	        this.setState({ comments: res.response.comments });
+	        var data = res.response.comments;
+	        this.addSelectedFlag(data);
+	        this.setState({ comments: data });
 	      } else {
 	        // TODO .
 	        alert('error');
@@ -23605,6 +23647,9 @@
 	  },
 	  componentDidMount: function () {
 	    this.loadCommentsFromServer();
+	  },
+	  handleToggleItem: function (item) {
+	    this.toggle(item);
 	  },
 	  render: function () {
 	    var lang = this.props.lang;
@@ -23618,7 +23663,8 @@
 	        onActiveTabChanged: this.props.onActiveTabChanged,
 	        onReplyComment: this.handleReplyComment,
 	        onCommentDeleted: this.props.onCommentDeleted,
-	        onUpdateComment: this.handleUpdateComment
+	        onUpdateComment: this.handleUpdateComment,
+	        onToggleItem: this.handleToggleItem
 	      });
 	    };
 	    return React.createElement(
@@ -23680,13 +23726,13 @@
 	                '  ',
 	                React.createElement(
 	                  'a',
-	                  { href: '#', onClick: this.clearAll },
+	                  { href: '#', onClick: this.checkNone },
 	                  lang.CHECK_NONE
 	                ),
 	                '  ',
 	                React.createElement(
 	                  'a',
-	                  { href: '#', onClick: this.invertCheck },
+	                  { href: '#', onClick: this.checkXAll },
 	                  lang.CHECK_INVERT
 	                ),
 	                ' ',
@@ -23882,11 +23928,85 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	
+	var FormItemMixIn = {
+	  addSelectedFlag: function (arr) {
+	    if (Array.isArray(arr)) {
+	      arr.forEach(function (currentValue, index) {
+	        currentValue['checked'] = false;
+	      }, this);
+	    }
+	  },
+	  toggle: function (itemToToggle) {
+	    var field = this.getMixinAttr();
+	    var data = this.state[field].map(function (currentValue, index) {
+	      if (currentValue === itemToToggle) {
+	        currentValue['checked'] = !currentValue['checked'];
+	      }
+	      return currentValue;
+	    });
+	    //console.log('data:', this.state[field]);
+	    this.setMixState(data);
+	  },
+	  toggleAll: function (checked) {
+	    var field = this.getMixinAttr();
+	    var data = this.state[field].map(function (currentValue, index) {
+	      currentValue['checked'] = checked;
+	      return currentValue;
+	    }, this);
+	    //this.setState({users: data});
+	    this.setMixState(data);
+	  },
+	  checkAll: function (e) {
+	    e.preventDefault();
+	    this.toggleAll(true);
+	  },
+	  checkNone: function (e) {
+	    e.preventDefault();
+	    this.toggleAll(false);
+	  },
+	  checkXAll: function (e) {
+	    e.preventDefault();
+	    this.toggleXAll();
+	  },
+	  toggleXAll: function () {
+	    var field = this.getMixinAttr();
+	    var data = this.state[field].map(function (currentValue, index) {
+	      currentValue['checked'] = !currentValue['checked'];
+	      return currentValue;
+	    }, this);
+	    //this.setState({users: data});
+	    this.setMixState(data);
+	  },
+	  getCheckedItems: function () {
+	    var arr = [];
+	    var key = this.getItemKey();
+	    var field = this.getMixinAttr();
+	    this.state[field].forEach(function (currentValue, index) {
+	      if (currentValue.checked) {
+	        arr.push(currentValue[key]);
+	      }
+	    });
+	    return arr;
+	  }
+	};
+	
+	module.exports = FormItemMixIn;
+
+/***/ },
+/* 196 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
 	var dataProvider = __webpack_require__(182);
+	var FormItemMixin = __webpack_require__(195);
 	
 	var IPItem = React.createClass({
 	  displayName: 'IPItem',
 	
+	  toggleItem: function () {
+	    this.props.onItemToggled(this.props.data);
+	  },
 	  render: function () {
 	    return React.createElement(
 	      'tr',
@@ -23894,7 +24014,7 @@
 	      React.createElement(
 	        'td',
 	        null,
-	        React.createElement('input', { type: 'checkbox', name: 'select_ip[]', value: this.props.data.ip })
+	        React.createElement('input', { type: 'checkbox', onChange: this.toggleItem, checked: this.props.data.checked })
 	      ),
 	      React.createElement(
 	        'td',
@@ -23913,12 +24033,41 @@
 	      IPs: []
 	    };
 	  },
+	  mixins: [FormItemMixin],
+	  getMixinAttr: function () {
+	    return 'IPs';
+	  },
+	  getItemKey: function () {
+	    return 'ip';
+	  },
+	  setMixState: function (data) {
+	    this.setState({ IPs: data });
+	  },
 	  componentDidMount: function () {
+	    this.loadBlackList();
+	  },
+	  loadBlackList: function () {
 	    dataProvider.getIPBlackList((function (res) {
 	      if (res.statusCode === 200) {
 	        this.setState({ IPs: res.response });
 	      }
 	    }).bind(this));
+	  },
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    var checkedItems = this.getCheckedItems();
+	    debugger;
+	    dataProvider.deleteMultiIPs(checkedItems, (function (res) {
+	      debugger;
+	      if (res.statusCode === 200) {
+	        this.loadBlackList();
+	      } else {
+	        alert('delete error');
+	      }
+	    }).bind(this));
+	  },
+	  handleToggleItem: function (item) {
+	    this.toggle(item);
 	  },
 	  render: function () {
 	    var IPList = this.state.IPs;
@@ -23927,7 +24076,8 @@
 	    var createIPItem = function (ip) {
 	      return React.createElement(IPItem, {
 	        data: ip,
-	        key: ip.ip
+	        key: ip.ip,
+	        onItemToggled: this.handleToggleItem
 	      });
 	    };
 	    return React.createElement(
@@ -23935,7 +24085,7 @@
 	      { className: cssClass },
 	      React.createElement(
 	        'form',
-	        { id: 'banip_manage', action: 'index.php?controller=badip&action=update', method: 'post' },
+	        { onSubmit: this.handleSubmit, action: '#', method: 'post' },
 	        React.createElement(
 	          'table',
 	          { className: 'table2' },
@@ -23960,7 +24110,7 @@
 	          React.createElement(
 	            'tbody',
 	            null,
-	            IPList && IPList.map(createIPItem),
+	            IPList && IPList.map(createIPItem, this),
 	            React.createElement(
 	              'tr',
 	              null,
@@ -23972,19 +24122,19 @@
 	                  null,
 	                  React.createElement(
 	                    'a',
-	                    { href: '#', id: 'ip_checkall' },
+	                    { href: '#', onClick: this.checkAll },
 	                    lang.CHECK_ALL
 	                  ),
 	                  '  ',
 	                  React.createElement(
 	                    'a',
-	                    { href: '#', id: 'ip_checknone' },
+	                    { href: '#', onClick: this.checkNone },
 	                    lang.CHECK_NONE
 	                  ),
 	                  '  ',
 	                  React.createElement(
 	                    'a',
-	                    { href: '#', id: 'ip_checkxor' },
+	                    { href: '#', onClick: this.checkXAll },
 	                    lang.CHECK_INVERT
 	                  ),
 	                  ' '
@@ -24002,33 +24152,17 @@
 	module.exports = ACPIpConfig;
 
 /***/ },
-/* 196 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UserUpdateModal = __webpack_require__(197);
+	var UserUpdateModal = __webpack_require__(198);
 	var dataProvider = __webpack_require__(182);
-	var FormItemMixin = __webpack_require__(198);
+	var FormItemMixin = __webpack_require__(195);
 	
 	var UserItem = React.createClass({
 	  displayName: 'UserItem',
 	
-	  /**
-	   * Tested 1.
-	   */
-	  getInitialState: function () {
-	    return {
-	      checked: false
-	    };
-	  },
-	  /**
-	   * Tested 1.
-	   */
-	  componentWillReceiveProps: function (nextProps) {
-	    if (nextProps.data) {
-	      this.setState({ checked: nextProps.data.checked });
-	    }
-	  },
 	  /**
 	   * Tested 1.
 	   */
@@ -24051,7 +24185,6 @@
 	   * Tested 1.
 	   */
 	  toggleItem: function () {
-	    this.setState({ checked: !this.state.checked });
 	    this.props.onToggleItem(this.props.data);
 	  },
 	  render: function () {
@@ -24064,7 +24197,7 @@
 	      React.createElement(
 	        'td',
 	        null,
-	        React.createElement('input', { type: 'checkbox', checked: this.state.checked, onChange: this.toggleItem })
+	        React.createElement('input', { type: 'checkbox', checked: this.props.data.checked, onChange: this.toggleItem })
 	      ),
 	      React.createElement(
 	        'td',
@@ -24108,6 +24241,15 @@
 	      updateModalIsOpen: false,
 	      updatedModalUserData: null
 	    };
+	  },
+	  getMixinAttr: function () {
+	    return 'users';
+	  },
+	  getItemKey: function () {
+	    return 'uid';
+	  },
+	  setMixState: function (data) {
+	    this.setState({ users: data });
 	  },
 	  /**
 	   * Tested 1
@@ -24315,7 +24457,7 @@
 	module.exports = ACPUser;
 
 /***/ },
-/* 197 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -24452,70 +24594,6 @@
 	});
 	
 	module.exports = UserUpdateModal;
-
-/***/ },
-/* 198 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var React = __webpack_require__(1);
-	
-	var FormItemMixIn = {
-	  addSelectedFlag: function (arr) {
-	    if (Array.isArray(arr)) {
-	      arr.forEach(function (currentValue, index) {
-	        currentValue['checked'] = false;
-	      }, this);
-	    }
-	  },
-	  toggle: function (itemToToggle) {
-	    var data = this.state.users;
-	    for (var i = 0, len = data.length; i < len; i++) {
-	      var currentValue = data[i];
-	      if (currentValue === itemToToggle) {
-	        currentValue['checked'] = !currentValue['checked'];
-	        break;
-	      }
-	    }
-	    console.log('data:', this.state.users);
-	  },
-	  toggleAll: function (checked) {
-	    var data = this.state.users.map(function (currentValue, index) {
-	      currentValue['checked'] = checked;
-	      return currentValue;
-	    }, this);
-	    this.setState({ users: data });
-	  },
-	  checkAll: function (e) {
-	    e.preventDefault();
-	    this.toggleAll(true);
-	  },
-	  checkNone: function (e) {
-	    e.preventDefault();
-	    this.toggleAll(false);
-	  },
-	  checkXAll: function (e) {
-	    e.preventDefault();
-	    this.toggleXAll();
-	  },
-	  toggleXAll: function () {
-	    var data = this.state.users.map(function (currentValue, index) {
-	      currentValue['checked'] = !currentValue['checked'];
-	      return currentValue;
-	    }, this);
-	    this.setState({ users: data });
-	  },
-	  getCheckedItems: function () {
-	    var arr = [];
-	    this.state.users.forEach(function (currentValue, index) {
-	      if (currentValue.checked) {
-	        arr.push(currentValue.uid);
-	      }
-	    });
-	    return arr;
-	  }
-	};
-	
-	module.exports = FormItemMixIn;
 
 /***/ },
 /* 199 */
