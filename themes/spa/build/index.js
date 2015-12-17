@@ -47,10 +47,10 @@
 	var React = __webpack_require__(1),
 	    ReactDOM = __webpack_require__(158);
 	
-	var SearchBar = __webpack_require__(197);
-	var CommentBox = __webpack_require__(198);
-	var Header = __webpack_require__(199);
-	var Footer = __webpack_require__(204);
+	var SearchBar = __webpack_require__(200);
+	var CommentBox = __webpack_require__(201);
+	var Header = __webpack_require__(202);
+	var Footer = __webpack_require__(207);
 	var dataProvider = __webpack_require__(182);
 	
 	var App = React.createClass({
@@ -176,8 +176,7 @@
 	        var siteConfig = res.response;
 	        dataProvider.getTranslations((function (res) {
 	          if (this.isMounted()) {
-	            this.setState({ translations: res.response });
-	            this.setState({ appConfig: siteConfig });
+	            this.setState({ translations: res.response, appConfig: siteConfig });
 	          }
 	          this.getUserInfo();
 	        }).bind(this));
@@ -21813,18 +21812,29 @@
 /* 182 */
 /***/ function(module, exports) {
 
-	// TODO => POST
+	/**
+	 * Tested 1.
+	 */
 	function banIP(ip, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: 'api.php?controller=badip&action=create',
+	    url: 'index.php?controller=badip&action=create',
 	    data: { ip: ip },
 	    dataType: 'json',
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 *
+	 */
 	function signIn(credentials, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
@@ -21836,6 +21846,12 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 *
+	 */
 	function loadUserDataFromServer(uid, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
@@ -21847,6 +21863,11 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 */
 	function getUserInfo(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
@@ -21858,6 +21879,11 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 */
 	function getAppConfig(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
@@ -21868,6 +21894,12 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1
+	 *
+	 *
+	 *
+	 */
 	function signOut(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
@@ -21881,6 +21913,11 @@
 	  });
 	}
 	
+	/***
+	 * Tested 1
+	 *
+	 *
+	 */
 	function updateUser(userData, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
@@ -21892,6 +21929,11 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1
+	 *
+	 *
+	 */
 	function signUp(userData, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
@@ -21903,6 +21945,11 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 */
 	function loadCommentsFromServer(pageId, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    url: 'index.php',
@@ -21915,6 +21962,30 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
+	function loadAllCommentsFromServer(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    url: 'index.php',
+	    dataType: 'json',
+	    method: 'GET',
+	    cache: false,
+	    data: { controller: 'post', action: 'all' },
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 *
+	 */
 	function search(keyword, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
@@ -21926,6 +21997,12 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 *
+	 */
 	function createPost(comment, successCallback, errorCallback) {
 	  comment.ajax = true;
 	  yuanjs.ajax({
@@ -21937,24 +22014,37 @@
 	  });
 	}
 	
-	function getACPData(successCallback, errorCallback) {
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 */
+	function getAppConfigACP(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
-	    url: 'api.php',
-	    data: { action: "control_panel", t: Date.now() },
+	    url: 'index.php?controller=config&action=showAll',
 	    cache: false,
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function updateSiteConfig(configObj, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: "api.php?controller=config&action=update",
+	    url: "index.php?controller=config&action=update",
 	    data: configObj,
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
@@ -21963,53 +22053,78 @@
 	function getAllUsers(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
-	    url: 'api.php',
-	    data: { controller: "user", action: "index", t: Date.now() },
+	    url: 'index.php',
+	    data: { controller: "user", action: "list" },
 	    cache: false,
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function deleteAllReplies(successCallback, errorCallback) {
 	  yuanjs.ajax({
-	    type: "GET",
-	    url: 'api.php',
-	    data: { controller: "reply", action: "reply" },
-	    //dataType: "json",
+	    type: "POST",
+	    url: 'index.php?controller=reply&action=deleteAll',
+	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function deleteAllComments(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: 'api.php',
-	    data: { controller: "post", action: "deleteAll" },
+	    url: 'index.php?controller=post&action=deleteAll',
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    dataType: "json",
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function deleteAllUsers(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: 'api.php?controller=user&action=deleteAll',
+	    url: 'index.php?controller=user&action=deleteAll',
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function deleteComment(commentId, reply, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: 'api.php?controller=post&action=delete',
+	    url: 'index.php?controller=post&action=delete',
 	    data: { mid: commentId, reply: reply },
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
@@ -22026,24 +22141,53 @@
 	  });
 	}
 	
-	// TODO
+	/**
+	 * Tested 1.
+	 *
+	 */
 	function deleteReply(commentId, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: "api.php?controller=reply&action=delete",
+	    url: "index.php?controller=reply&action=delete",
 	    data: { mid: commentId },
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function deleteUser(uid, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: "api.php?controller=user&action=delete",
+	    url: "index.php?controller=user&action=delete",
 	    data: { uid: uid },
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 */
+	function deleteMutiUsers(uids, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=user&action=delete_multi",
+	    data: { select_uid: uids },
+	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
@@ -22063,11 +22207,90 @@
 	  }
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 */
 	function getTranslations(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
 	    url: 'index.php?controller=config&action=getTranslations',
 	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 */
+	function getSystemInformation(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'index.php?controller=site&action=getSystemInformation',
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 * Create or update a reply.
+	 *
+	 */
+	function reply(replyData, successCallback, errorCallback) {
+	  var formData = {
+	    mid: replyData.pid,
+	    content: replyData.content
+	  };
+	  if (replyData.rid) {
+	    formData.update = 1;
+	  }
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=reply&action=create",
+	    data: formData,
+	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 */
+	function updateComment(commentData, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=post&action=update",
+	    data: commentData,
+	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 */
+	function getIPBlackList(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: "index.php?controller=badip&action=list",
+	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
@@ -22083,17 +22306,23 @@
 	  deleteMutiComments: deleteMutiComments,
 	  deleteReply: deleteReply,
 	  deleteUser: deleteUser,
-	  getACPData: getACPData,
+	  deleteMutiUsers: deleteMutiUsers,
+	  getIPBlackList: getIPBlackList,
+	  getAppConfig: getAppConfig,
+	  getAppConfigACP: getAppConfigACP,
 	  getAllUsers: getAllUsers,
+	  getSystemInformation: getSystemInformation,
 	  getTranslations: getTranslations,
+	  reply: reply,
 	  signIn: signIn,
 	  signOut: signOut,
 	  signUp: signUp,
+	  updateComment: updateComment,
 	  updateUser: updateUser,
+	  loadAllCommentsFromServer: loadAllCommentsFromServer,
 	  loadCommentsFromServer: loadCommentsFromServer,
 	  loadUserDataFromServer: loadUserDataFromServer,
 	  getUserInfo: getUserInfo,
-	  getAppConfig: getAppConfig,
 	  search: search,
 	  updateSiteConfig: updateSiteConfig
 	};
@@ -22113,7 +22342,10 @@
 /* 194 */,
 /* 195 */,
 /* 196 */,
-/* 197 */
+/* 197 */,
+/* 198 */,
+/* 199 */,
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -22155,7 +22387,7 @@
 	module.exports = SearchBar;
 
 /***/ },
-/* 198 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -22527,15 +22759,15 @@
 	module.exports = CommentBox;
 
 /***/ },
-/* 199 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	
-	var SignIn = __webpack_require__(200);
-	var SignUp = __webpack_require__(201);
-	var UpdateUser = __webpack_require__(202);
-	var SignOutButton = __webpack_require__(203);
+	var SignIn = __webpack_require__(203);
+	var SignUp = __webpack_require__(204);
+	var UpdateUser = __webpack_require__(205);
+	var SignOutButton = __webpack_require__(206);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -22571,7 +22803,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 200 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -22624,7 +22856,7 @@
 	module.exports = SignIn;
 
 /***/ },
-/* 201 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -22810,7 +23042,7 @@
 	module.exports = SignUp;
 
 /***/ },
-/* 202 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -22901,7 +23133,7 @@
 	    var user = this.refs.user.value.trim();
 	    var pwd = this.refs.pwd.value.trim();
 	    var email = this.refs.email.value.trim();
-	    if (!uid || !user || !pwd || !email) return;
+	    if (!uid || !user || !email) return;
 	    this.props.onUserUpdateSubmit({ uid: uid, user: user, pwd: pwd, email: email });
 	    return false;
 	  },
@@ -22987,7 +23219,7 @@
 	module.exports = UserUpdate;
 
 /***/ },
-/* 203 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -23014,7 +23246,7 @@
 	module.exports = LogoutButton;
 
 /***/ },
-/* 204 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -23023,7 +23255,7 @@
 	  displayName: "AppFooter",
 	
 	  ACPMarkup: function () {
-	    var ACP = this.props.user && this.props.user.admin ? "<a href='index.php?action=acp'>" + this.props.lang.ACP + "</a>" : '';
+	    var ACP = this.props.user && this.props.user.admin ? "<a href='index.php?action=control_panel'>" + this.props.lang.ACP + "</a>" : '';
 	    return {
 	      __html: ACP
 	    };

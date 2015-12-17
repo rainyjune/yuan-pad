@@ -52,7 +52,7 @@
 	var ACPHeader = __webpack_require__(183);
 	var ACPTabHeader = __webpack_require__(184);
 	var ACPTabContent = __webpack_require__(185);
-	var ACPFooter = __webpack_require__(196);
+	var ACPFooter = __webpack_require__(199);
 	var dataProvider = __webpack_require__(182);
 	
 	var ACPBox = React.createClass({
@@ -60,45 +60,56 @@
 	
 	  getInitialState: function () {
 	    return {
-	      acpData: {},
+	      systemInformation: {}, // System information
 	      activeTab: 'overview',
-	      appConfig: {},
+	      appConfig: {}, // App config, including filter words.
 	      currentUser: {},
 	      translations: {}
 	    };
 	  },
-	  // When the component is rendered, load the site configuration from server, and then try to indentify current user.
-	  // If this is not the admin user, show the login modal.
+	  /**
+	   * Tested 1. Load application data after we verified the root user.
+	   */
 	  componentDidMount: function () {
-	    dataProvider.getAppConfig((function (data) {
-	      if (this.isMounted()) {
-	        this.setState({ translations: data.translations, appConfig: data });
+	    this.getUserInfo(this.loadApplicationConfiguration);
+	  },
+	
+	  loadApplicationConfiguration: function (successCallback) {
+	    dataProvider.getAppConfigACP((function (res) {
+	      //debugger;
+	      if (res.statusCode !== 200) {
+	        return;
 	      }
-	      this.getUserInfo((function () {
-	        if (this.state.currentUser.admin) {
-	          dataProvider.getACPData((function (data) {
-	            this.setState({
-	              acpData: data
-	            });
-	          }).bind(this));
-	        }
-	      }).bind(this));
+	      this.setState({ appConfig: res.response }, successCallback || this.loadApplicationTranslation);
 	    }).bind(this));
 	  },
+	  loadApplicationTranslation: function (successCallback) {
+	    dataProvider.getTranslations((function (res) {
+	      //debugger;
+	      if (res.statusCode === 200) {
+	        this.setState({ translations: res.response }, successCallback || this.loadApplicationSystemInformation);
+	      }
+	    }).bind(this));
+	  },
+	  loadApplicationSystemInformation: function (successCallback) {
+	    dataProvider.getSystemInformation((function (res) {
+	      //debugger;
+	      if (res.statusCode === 200) {
+	        this.setState({ systemInformation: res.response }, successCallback);
+	      }
+	    }).bind(this));
+	  },
+	
+	  /**
+	   * Tested 1.
+	   */
 	  // Reload site configuration after being updated by admin user.
 	  handleConfigUpdate: function () {
-	    dataProvider.getAppConfig((function (data) {
-	      if (this.isMounted()) {
-	        this.setState({ translations: data.translations, appConfig: data });
-	
-	        dataProvider.getACPData((function (data) {
-	          this.setState({
-	            acpData: data
-	          });
-	        }).bind(this));
-	      }
-	    }).bind(this));
+	    this.loadApplicationConfiguration();
 	  },
+	  /**
+	   * Tested 1.
+	   */
 	  // Update the `currentUser` state to default value.
 	  handleLogout: function () {
 	    if (this.isMounted()) {
@@ -108,41 +119,45 @@
 	      });
 	    }
 	  },
+	  /**
+	   * Tested 1.
+	   */
 	  // Get current user identity from server.
 	  getUserInfo: function (successCallback) {
-	    dataProvider.getUserInfo((function (data) {
-	      console.log('user info:', data);
-	      if (Object.prototype.toString.call(data) === "[object Array]") {
-	        data = {};
+	    dataProvider.getUserInfo((function (res) {
+	      console.log('user info:', res);
+	      if (res.statusCode !== 200) {
+	        return;
+	      }
+	      if (Object.prototype.toString.call(res.response) === "[object Array]") {
+	        res.response = {};
 	      }
 	      if (this.isMounted()) {
-	        this.setState({ currentUser: data }, successCallback);
+	        if (res.response.admin) {
+	          this.setState({ currentUser: res.response }, successCallback);
+	        }
 	      }
 	    }).bind(this), (function () {}).bind(this));
 	  },
+	  /**
+	   * Tested 1.
+	   */
 	  updateActiveTab: function (newTabName) {
 	    this.setState({ activeTab: newTabName });
 	  },
+	  /**
+	   * Tested 1
+	   */
 	  // Update the `currentUser` state after a user signed in.
 	  handleUserSignedIn: function (signedInUser) {
 	    if (signedInUser.admin) {
-	      this.setState({ currentUser: signedInUser }, (function () {
-	        dataProvider.getACPData((function (data) {
-	          this.setState({
-	            acpData: data
-	          });
-	        }).bind(this));
-	      }).bind(this));
+	      this.setState({ currentUser: signedInUser }, this.loadApplicationConfiguration);
 	    } else if (signedInUser.uid) {
 	      window.location = "index.php";
 	    }
 	  },
 	  handleCommentDeleted: function () {
-	    dataProvider.getACPData((function (data) {
-	      this.setState({
-	        acpData: data
-	      });
-	    }).bind(this));
+	    this.loadApplicationSystemInformation();
 	  },
 	  render: function () {
 	    var tabs = [{ text: this.state.translations.ACP_OVERVIEW, value: "overview" }, { text: this.state.translations.ACP_CONFSET, value: "siteset" }, { text: this.state.translations.ACP_MANAGE_POST, value: "message" }, { text: this.state.translations.ACP_MANAGE_IP, value: "ban_ip" }, { text: this.state.translations.USER_ADMIN, value: "user" }];
@@ -168,7 +183,7 @@
 	      React.createElement(ACPTabContent, {
 	        lang: this.state.translations,
 	        activeTab: this.state.activeTab,
-	        acpData: this.state.acpData,
+	        systemInformation: this.state.systemInformation,
 	        appConfig: this.state.appConfig,
 	        user: this.state.currentUser,
 	        onActiveTabChanged: this.updateActiveTab,
@@ -21745,18 +21760,29 @@
 /* 182 */
 /***/ function(module, exports) {
 
-	// TODO => POST
+	/**
+	 * Tested 1.
+	 */
 	function banIP(ip, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: 'api.php?controller=badip&action=create',
+	    url: 'index.php?controller=badip&action=create',
 	    data: { ip: ip },
 	    dataType: 'json',
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 *
+	 */
 	function signIn(credentials, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
@@ -21768,6 +21794,12 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 *
+	 */
 	function loadUserDataFromServer(uid, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
@@ -21779,6 +21811,11 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 */
 	function getUserInfo(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
@@ -21790,6 +21827,11 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 */
 	function getAppConfig(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
@@ -21800,6 +21842,12 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1
+	 *
+	 *
+	 *
+	 */
 	function signOut(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
@@ -21813,6 +21861,11 @@
 	  });
 	}
 	
+	/***
+	 * Tested 1
+	 *
+	 *
+	 */
 	function updateUser(userData, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
@@ -21824,6 +21877,11 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1
+	 *
+	 *
+	 */
 	function signUp(userData, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
@@ -21835,6 +21893,11 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 */
 	function loadCommentsFromServer(pageId, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    url: 'index.php',
@@ -21847,6 +21910,30 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
+	function loadAllCommentsFromServer(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    url: 'index.php',
+	    dataType: 'json',
+	    method: 'GET',
+	    cache: false,
+	    data: { controller: 'post', action: 'all' },
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 *
+	 */
 	function search(keyword, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
@@ -21858,6 +21945,12 @@
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 *
+	 */
 	function createPost(comment, successCallback, errorCallback) {
 	  comment.ajax = true;
 	  yuanjs.ajax({
@@ -21869,24 +21962,37 @@
 	  });
 	}
 	
-	function getACPData(successCallback, errorCallback) {
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 */
+	function getAppConfigACP(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
-	    url: 'api.php',
-	    data: { action: "control_panel", t: Date.now() },
+	    url: 'index.php?controller=config&action=showAll',
 	    cache: false,
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function updateSiteConfig(configObj, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: "api.php?controller=config&action=update",
+	    url: "index.php?controller=config&action=update",
 	    data: configObj,
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
@@ -21895,53 +22001,78 @@
 	function getAllUsers(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
-	    url: 'api.php',
-	    data: { controller: "user", action: "index", t: Date.now() },
+	    url: 'index.php',
+	    data: { controller: "user", action: "list" },
 	    cache: false,
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function deleteAllReplies(successCallback, errorCallback) {
 	  yuanjs.ajax({
-	    type: "GET",
-	    url: 'api.php',
-	    data: { controller: "reply", action: "reply" },
-	    //dataType: "json",
+	    type: "POST",
+	    url: 'index.php?controller=reply&action=deleteAll',
+	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function deleteAllComments(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: 'api.php',
-	    data: { controller: "post", action: "deleteAll" },
+	    url: 'index.php?controller=post&action=deleteAll',
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    dataType: "json",
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function deleteAllUsers(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: 'api.php?controller=user&action=deleteAll',
+	    url: 'index.php?controller=user&action=deleteAll',
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function deleteComment(commentId, reply, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: 'api.php?controller=post&action=delete',
+	    url: 'index.php?controller=post&action=delete',
 	    data: { mid: commentId, reply: reply },
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
@@ -21958,24 +22089,53 @@
 	  });
 	}
 	
-	// TODO
+	/**
+	 * Tested 1.
+	 *
+	 */
 	function deleteReply(commentId, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: "api.php?controller=reply&action=delete",
+	    url: "index.php?controller=reply&action=delete",
 	    data: { mid: commentId },
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
 	}
 	
+	/**
+	 * Tested 1.
+	 */
 	function deleteUser(uid, successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "POST",
-	    url: "api.php?controller=user&action=delete",
+	    url: "index.php?controller=user&action=delete",
 	    data: { uid: uid },
 	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 */
+	function deleteMutiUsers(uids, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=user&action=delete_multi",
+	    data: { select_uid: uids },
+	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
@@ -21995,11 +22155,90 @@
 	  }
 	}
 	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 */
 	function getTranslations(successCallback, errorCallback) {
 	  yuanjs.ajax({
 	    type: "GET",
 	    url: 'index.php?controller=config&action=getTranslations',
 	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 *
+	 *
+	 */
+	function getSystemInformation(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: 'index.php?controller=site&action=getSystemInformation',
+	    dataType: "json",
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 * Create or update a reply.
+	 *
+	 */
+	function reply(replyData, successCallback, errorCallback) {
+	  var formData = {
+	    mid: replyData.pid,
+	    content: replyData.content
+	  };
+	  if (replyData.rid) {
+	    formData.update = 1;
+	  }
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=reply&action=create",
+	    data: formData,
+	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 */
+	function updateComment(commentData, successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=post&action=update",
+	    data: commentData,
+	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 */
+	function getIPBlackList(successCallback, errorCallback) {
+	  yuanjs.ajax({
+	    type: "GET",
+	    url: "index.php?controller=badip&action=list",
+	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
 	    success: successCallback,
 	    error: errorCallback
 	  });
@@ -22015,17 +22254,23 @@
 	  deleteMutiComments: deleteMutiComments,
 	  deleteReply: deleteReply,
 	  deleteUser: deleteUser,
-	  getACPData: getACPData,
+	  deleteMutiUsers: deleteMutiUsers,
+	  getIPBlackList: getIPBlackList,
+	  getAppConfig: getAppConfig,
+	  getAppConfigACP: getAppConfigACP,
 	  getAllUsers: getAllUsers,
+	  getSystemInformation: getSystemInformation,
 	  getTranslations: getTranslations,
+	  reply: reply,
 	  signIn: signIn,
 	  signOut: signOut,
 	  signUp: signUp,
+	  updateComment: updateComment,
 	  updateUser: updateUser,
+	  loadAllCommentsFromServer: loadAllCommentsFromServer,
 	  loadCommentsFromServer: loadCommentsFromServer,
 	  loadUserDataFromServer: loadUserDataFromServer,
 	  getUserInfo: getUserInfo,
-	  getAppConfig: getAppConfig,
 	  search: search,
 	  updateSiteConfig: updateSiteConfig
 	};
@@ -22042,7 +22287,7 @@
 	
 	  handleSignOut: function (e) {
 	    e.preventDefault();
-	    dataProvider.logout((function (response) {
+	    dataProvider.signOut((function (response) {
 	      if (response.statusCode === 200) {
 	        this.props.onUserLogout();
 	      } else {
@@ -22141,8 +22386,8 @@
 	var ACPOverview = __webpack_require__(186);
 	var ACPConfig = __webpack_require__(187);
 	var ACPMessages = __webpack_require__(192);
-	var ACPIpConfig = __webpack_require__(193);
-	var ACPUsers = __webpack_require__(194);
+	var ACPIpConfig = __webpack_require__(195);
+	var ACPUsers = __webpack_require__(196);
 	
 	var ACPTabContent = React.createClass({
 	  displayName: 'ACPTabContent',
@@ -22154,12 +22399,12 @@
 	      'div',
 	      { className: 'tagContent' },
 	      React.createElement(ACPOverview, {
-	        acpData: this.props.acpData,
+	        systemInformation: this.props.systemInformation,
 	        lang: this.props.lang,
 	        activeTab: this.props.activeTab
 	      }),
 	      React.createElement(ACPConfig, {
-	        acpData: this.props.acpData,
+	        systemInformation: this.props.systemInformation,
 	        lang: this.props.lang,
 	        activeTab: this.props.activeTab,
 	        appConfig: this.props.appConfig,
@@ -22168,12 +22413,12 @@
 	      React.createElement(ACPMessages, {
 	        lang: this.props.lang,
 	        activeTab: this.props.activeTab,
-	        acpData: this.props.acpData,
+	        systemInformation: this.props.systemInformation,
 	        onActiveTabChanged: this.props.onActiveTabChanged,
 	        onCommentDeleted: this.props.onCommentDeleted
 	      }),
 	      React.createElement(ACPIpConfig, {
-	        acpData: this.props.acpData,
+	        systemInformation: this.props.systemInformation,
 	        lang: this.props.lang,
 	        activeTab: this.props.activeTab
 	      }),
@@ -22192,192 +22437,195 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var dataProvider = __webpack_require__(182);
 	
 	var ACPOverview = React.createClass({
-	  displayName: "ACPOverview",
+	  displayName: 'ACPOverview',
 	
 	  render: function () {
+	    var lang = this.props.lang;
+	    var sysInfo = this.props.systemInformation;
 	    var cssClass = this.props.activeTab === "overview" ? "selectTag" : "";
 	    return React.createElement(
-	      "div",
+	      'div',
 	      { className: cssClass },
 	      React.createElement(
-	        "table",
+	        'table',
 	        null,
 	        React.createElement(
-	          "tbody",
+	          'tbody',
 	          null,
 	          React.createElement(
-	            "tr",
+	            'tr',
 	            null,
 	            React.createElement(
-	              "td",
+	              'td',
 	              null,
 	              React.createElement(
-	                "h1",
+	                'h1',
 	                null,
-	                this.props.lang.WELCOME_SYS
+	                lang.WELCOME_SYS
 	              )
 	            )
 	          ),
 	          React.createElement(
-	            "tr",
+	            'tr',
 	            null,
 	            React.createElement(
-	              "td",
+	              'td',
 	              null,
-	              this.props.lang.THANKS
+	              lang.THANKS
 	            )
 	          )
 	        )
 	      ),
 	      React.createElement(
-	        "table",
+	        'table',
 	        null,
 	        React.createElement(
-	          "tbody",
+	          'tbody',
 	          null,
 	          React.createElement(
-	            "tr",
+	            'tr',
 	            null,
 	            React.createElement(
-	              "td",
-	              { colSpan: "2" },
+	              'td',
+	              { colSpan: '2' },
 	              React.createElement(
-	                "b",
+	                'b',
 	                null,
-	                this.props.lang.STATS_INFO
+	                lang.STATS_INFO
 	              )
 	            )
 	          ),
 	          React.createElement(
-	            "tr",
+	            'tr',
 	            null,
 	            React.createElement(
-	              "td",
+	              'td',
 	              null,
-	              this.props.lang.NUM_POSTS,
-	              "："
+	              lang.NUM_POSTS,
+	              '：'
 	            ),
 	            React.createElement(
-	              "td",
-	              { align: "right" },
-	              this.props.acpData.nums
+	              'td',
+	              { align: 'right' },
+	              sysInfo.commentsTotal
 	            )
 	          ),
 	          React.createElement(
-	            "tr",
+	            'tr',
 	            null,
 	            React.createElement(
-	              "td",
+	              'td',
 	              null,
-	              this.props.lang.NUM_REPLY,
-	              "："
+	              lang.NUM_REPLY,
+	              '：'
 	            ),
 	            React.createElement(
-	              "td",
-	              { align: "right" },
-	              this.props.acpData.reply_num
+	              'td',
+	              { align: 'right' },
+	              sysInfo.repliesTotal
 	            )
 	          ),
 	          React.createElement(
-	            "tr",
+	            'tr',
 	            null,
 	            React.createElement(
-	              "td",
+	              'td',
 	              null,
-	              this.props.lang.MP_VERSION,
-	              "："
+	              lang.MP_VERSION,
+	              '：'
 	            ),
 	            React.createElement(
-	              "td",
-	              { align: "right" },
-	              this.props.acpData.yuanpad_version
+	              'td',
+	              { align: 'right' },
+	              sysInfo.appVersion
 	            )
 	          ),
 	          React.createElement(
-	            "tr",
+	            'tr',
 	            null,
 	            React.createElement(
-	              "td",
-	              { colSpan: "2" },
+	              'td',
+	              { colSpan: '2' },
 	              React.createElement(
-	                "b",
+	                'b',
 	                null,
-	                this.props.lang.SYS_INFO
+	                lang.SYS_INFO
 	              )
 	            )
 	          ),
 	          React.createElement(
-	            "tr",
+	            'tr',
 	            null,
 	            React.createElement(
-	              "td",
+	              'td',
 	              null,
-	              this.props.lang.PHP_VERSION,
-	              "："
+	              lang.PHP_VERSION,
+	              '：'
 	            ),
 	            React.createElement(
-	              "td",
-	              { align: "right" },
-	              this.props.acpData.php_version
+	              'td',
+	              { align: 'right' },
+	              sysInfo.phpVersion
 	            )
 	          ),
 	          React.createElement(
-	            "tr",
+	            'tr',
 	            null,
 	            React.createElement(
-	              "td",
+	              'td',
 	              null,
-	              this.props.lang.GD_VERSION,
-	              "： "
+	              lang.GD_VERSION,
+	              '： '
 	            ),
 	            React.createElement(
-	              "td",
-	              { align: "right" },
-	              this.props.acpData.gd_version
+	              'td',
+	              { align: 'right' },
+	              sysInfo.gdVersion
 	            )
 	          ),
 	          React.createElement(
-	            "tr",
+	            'tr',
 	            null,
 	            React.createElement(
-	              "td",
+	              'td',
 	              null,
-	              "Register_Globals："
+	              'Register_Globals：'
 	            ),
 	            React.createElement(
-	              "td",
-	              { align: "right" },
-	              this.props.acpData.register_globals
+	              'td',
+	              { align: 'right' },
+	              sysInfo.registerGlobals
 	            )
 	          ),
 	          React.createElement(
-	            "tr",
+	            'tr',
 	            null,
 	            React.createElement(
-	              "td",
+	              'td',
 	              null,
-	              "Magic_Quotes_Gpc："
+	              'Magic_Quotes_Gpc：'
 	            ),
 	            React.createElement(
-	              "td",
-	              { align: "right" },
-	              this.props.acpData.magic_quotes_gpc
+	              'td',
+	              { align: 'right' },
+	              sysInfo.magicQuotesGPC
 	            )
 	          ),
 	          React.createElement(
-	            "tr",
+	            'tr',
 	            null,
 	            React.createElement(
-	              "td",
+	              'td',
 	              null,
-	              "ZipArchive："
+	              'ZipArchive：'
 	            ),
 	            React.createElement(
-	              "td",
-	              { align: "right" },
-	              this.props.acpData.zip_support
+	              'td',
+	              { align: 'right' },
+	              sysInfo.zipSupport
 	            )
 	          )
 	        )
@@ -22432,12 +22680,15 @@
 	  },
 	  handleSubmit: function (e) {
 	    e.preventDefault();
-	    dataProvider.updateSiteConfig(this.state, (function (data) {
+	    dataProvider.updateSiteConfig(this.state, (function (res) {
 	      console.log('ACPConfig state:', this.state);
-	      if (data && data.status === "OK") {
+	      if (res.statusCode === 200) {
+	        // TODO show friendly message.
+	        alert('OK');
 	        this.props.onConfigUpdated();
 	      } else {
-	        alert(data.error_detail);
+	        // TODO User friendly message.
+	        alert('failed');
 	      }
 	    }).bind(this), (function () {
 	      debugger;
@@ -22457,11 +22708,11 @@
 	  },
 	  render: function () {
 	    var appConfig = this.state;
-	    var acpData = this.props.acpData;
+	    var acpData = this.props.systemInformation;
 	    var lang = this.props.lang;
 	    var cssClass = this.props.activeTab === "siteset" ? "configContainer selectTag" : "configContainer";
 	    var isSiteClosed = appConfig.site_close;
-	    var themes = this.props.acpData.themes;
+	    var themes = acpData.themes;
 	    var themeOptions = [];
 	    for (var i in themes) {
 	      var theme = themes[i];
@@ -22472,7 +22723,7 @@
 	      ));
 	    }
 	
-	    var timeZones = this.props.acpData.timezone_array;
+	    var timeZones = acpData.timezones;
 	    var timeZoneOptions = [];
 	    for (var i in timeZones) {
 	      var timezone = timeZones[i];
@@ -22483,7 +22734,7 @@
 	      ));
 	    }
 	
-	    var languages = this.props.acpData.languages;
+	    var languages = acpData.languages;
 	    var languageOptions = [];
 	    for (var i in languages) {
 	      var language = languages[i];
@@ -23091,6 +23342,9 @@
 	var React = __webpack_require__(1);
 	var dataProvider = __webpack_require__(182);
 	
+	var ReplyModal = __webpack_require__(193);
+	var CommentUpdateModal = __webpack_require__(194);
+	
 	var Reply = React.createClass({
 	  displayName: 'Reply',
 	
@@ -23140,7 +23394,7 @@
 	    return React.createElement(
 	      'div',
 	      null,
-	      lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content),
+	      lang.YOU_REPLIED && lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content),
 	      React.createElement(
 	        'span',
 	        null,
@@ -23180,7 +23434,11 @@
 	    e.preventDefault();
 	    var dom = e.target;
 	    var commentId = dom.getAttribute('data-commentid');
-	    this.props.onReplyComment(commentId);
+	    this.props.onReplyComment(this.props.data);
+	  },
+	  updateComment: function (e) {
+	    e.preventDefault();
+	    this.props.onUpdateComment(this.props.data);
 	  },
 	  render: function () {
 	    var data = this.props.data;
@@ -23197,7 +23455,7 @@
 	      React.createElement(
 	        'td',
 	        null,
-	        data.uid ? data.b_username : data.user
+	        data.uid ? data.b_username : data.uname
 	      ),
 	      React.createElement(
 	        'td',
@@ -23240,6 +23498,17 @@
 	var ACPMessages = React.createClass({
 	  displayName: 'ACPMessages',
 	
+	  getInitialState: function () {
+	    return {
+	      comments: [],
+	      replyModalIsOpen: false,
+	      replyErrorMsg: '',
+	      commentTobeReplied: null,
+	      commentTobeUpdated: null,
+	      commentModalIsOpen: false,
+	      commentErrorMsg: ''
+	    };
+	  },
 	  checkAll: function (e) {
 	    e.preventDefault();
 	  },
@@ -23248,13 +23517,26 @@
 	  },
 	  deleteAllComments: function (e) {
 	    e.preventDefault();
-	    // TODO
-	    dataProvider.deleteAllComments();
+	    dataProvider.deleteAllComments((function (res) {
+	      if (res.statusCode === 200) {
+	        this.setState({ comments: [] });
+	      } else {
+	        alert('Error');
+	      }
+	    }).bind(this));
 	  },
+	  /**
+	   * Tested 1
+	   */
 	  deleteAllReplies: function (e) {
 	    e.preventDefault();
-	    // TODO
-	    dataProvider.deleteAllReplies();
+	    dataProvider.deleteAllReplies((function (res) {
+	      if (res.statusCode === 200) {
+	        this.loadCommentsFromServer();
+	      } else {
+	        alert('ERROR');
+	      }
+	    }).bind(this));
 	  },
 	  deleteSelected: function (e) {
 	    e.preventDefault();
@@ -23264,9 +23546,69 @@
 	  invertCheck: function (e) {
 	    e.preventDefault();
 	  },
+	  handleReplyComment: function (commentTobeReplied) {
+	    this.setState({
+	      replyModalIsOpen: true,
+	      replyErrorMsg: '',
+	      commentTobeReplied: commentTobeReplied,
+	
+	      commentTobeUpdated: null,
+	      commentModalIsOpen: false,
+	      commentErrorMsg: ''
+	    });
+	  },
+	  closeReplyModal: function () {
+	    this.setState({
+	      replyModalIsOpen: false,
+	      replyErrorMsg: ''
+	    });
+	  },
+	  closeCommentUpdateModal: function () {
+	    this.setState({
+	      commentTobeUpdated: null,
+	      commentModalIsOpen: false,
+	      commentErrorMsg: ''
+	    });
+	  },
+	  handleReplyFormSubmitted: function () {
+	    this.setState({
+	      replyModalIsOpen: false,
+	      replyErrorMsg: '',
+	      commentTobeReplied: null
+	    });
+	    this.loadCommentsFromServer();
+	  },
+	  handleUpdateComment: function (commentTobeUpdated) {
+	    this.setState({
+	      replyModalIsOpen: false,
+	      replyErrorMsg: '',
+	      commentTobeReplied: null,
+	
+	      commentTobeUpdated: commentTobeUpdated,
+	      commentModalIsOpen: true,
+	      commentErrorMsg: ''
+	    });
+	  },
+	  handleCommentUpdated: function () {
+	    this.closeCommentUpdateModal();
+	    this.loadCommentsFromServer();
+	  },
+	  loadCommentsFromServer: function () {
+	    dataProvider.loadAllCommentsFromServer((function (res) {
+	      if (res.statusCode === 200 || res.statusCode === 404) {
+	        this.setState({ comments: res.response.comments });
+	      } else {
+	        // TODO .
+	        alert('error');
+	      }
+	    }).bind(this));
+	  },
+	  componentDidMount: function () {
+	    this.loadCommentsFromServer();
+	  },
 	  render: function () {
 	    var lang = this.props.lang;
-	    var comments = this.props.acpData.data;
+	    var comments = this.state.comments;
 	    var cssClass = this.props.activeTab === "message" ? "message_container selectTag" : "message_container";
 	    var createComment = function (comment) {
 	      return React.createElement(Comment, {
@@ -23275,7 +23617,8 @@
 	        key: comment.id,
 	        onActiveTabChanged: this.props.onActiveTabChanged,
 	        onReplyComment: this.handleReplyComment,
-	        onCommentDeleted: this.props.onCommentDeleted
+	        onCommentDeleted: this.props.onCommentDeleted,
+	        onUpdateComment: this.handleUpdateComment
 	      });
 	    };
 	    return React.createElement(
@@ -23364,7 +23707,21 @@
 	            )
 	          )
 	        )
-	      )
+	      ),
+	      React.createElement(ReplyModal, {
+	        comment: this.state.commentTobeReplied,
+	        replyErrorMsg: this.state.replyErrorMsg,
+	        replyModalIsOpen: this.state.replyModalIsOpen,
+	        onRequestClose: this.closeReplyModal,
+	        onReplySubmit: this.handleReplyFormSubmitted
+	      }),
+	      React.createElement(CommentUpdateModal, {
+	        comment: this.state.commentTobeUpdated,
+	        commentErrorMsg: this.state.commentErrorMsg,
+	        commentModalIsOpen: this.state.commentModalIsOpen,
+	        onRequestClose: this.closeCommentUpdateModal,
+	        onCommentUpdated: this.handleCommentUpdated
+	      })
 	    );
 	  }
 	});
@@ -23376,6 +23733,156 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
+	var Modal = __webpack_require__(159);
+	var dataProvider = __webpack_require__(182);
+	
+	const customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
+	
+	var ReplyModal = React.createClass({
+	  displayName: 'ReplyModal',
+	
+	  getInitialState: function () {
+	    return {
+	      rid: '',
+	      pid: '',
+	      content: '',
+	      r_time: ''
+	    };
+	  },
+	  componentWillReceiveProps: function (nextProps) {
+	    var commentData = nextProps.comment;
+	    if (commentData) {
+	      this.setState({
+	        rid: commentData.reply_id,
+	        pid: commentData.id,
+	        content: commentData.reply_content
+	      });
+	    }
+	  },
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    if (!this.state.pid || !this.state.content.trim()) return;
+	    dataProvider.reply(this.state, (function (res) {
+	      if (res.statusCode === 200) {
+	        this.props.onReplySubmit();
+	      }
+	    }).bind(this), (function (e) {
+	      debugger;
+	    }).bind(this));
+	    return false;
+	  },
+	  changeContent: function (e) {
+	    this.setState({ content: e.target.value });
+	  },
+	  render: function () {
+	    return React.createElement(
+	      Modal,
+	      { isOpen: this.props.replyModalIsOpen, onRequestClose: this.props.onRequestClose, style: customStyles },
+	      React.createElement(
+	        'div',
+	        null,
+	        this.props.replyErrorMsg
+	      ),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit, action: '#', method: 'post' },
+	        React.createElement('textarea', { value: this.state.content, onChange: this.changeContent }),
+	        React.createElement('input', { type: 'submit' })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = ReplyModal;
+
+/***/ },
+/* 194 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var Modal = __webpack_require__(159);
+	var dataProvider = __webpack_require__(182);
+	
+	const customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
+	
+	var UpdateCommentModal = React.createClass({
+	  displayName: 'UpdateCommentModal',
+	
+	  getInitialState: function () {
+	    return {
+	      mid: '',
+	      update_content: ''
+	    };
+	  },
+	  componentWillReceiveProps: function (nextProps) {
+	    var commentData = nextProps.comment;
+	    if (commentData) {
+	      this.setState({
+	        mid: commentData.id,
+	        update_content: commentData.post_content
+	      });
+	    }
+	  },
+	  handleSubmit: function (e) {
+	    e.preventDefault();
+	    if (!this.state.mid || !this.state.update_content.trim()) return;
+	    dataProvider.updateComment(this.state, (function (res) {
+	      if (res.statusCode === 200) {
+	        this.props.onCommentUpdated();
+	      }
+	    }).bind(this), (function (e) {
+	      debugger;
+	    }).bind(this));
+	    return false;
+	  },
+	  changeContent: function (e) {
+	    this.setState({ update_content: e.target.value });
+	  },
+	  render: function () {
+	    return React.createElement(
+	      Modal,
+	      { isOpen: this.props.commentModalIsOpen, onRequestClose: this.props.onRequestClose, style: customStyles },
+	      React.createElement(
+	        'div',
+	        null,
+	        this.props.commentErrorMsg
+	      ),
+	      React.createElement(
+	        'form',
+	        { onSubmit: this.handleSubmit, action: '#', method: 'post' },
+	        React.createElement('textarea', { value: this.state.update_content, onChange: this.changeContent }),
+	        React.createElement('input', { type: 'submit' })
+	      )
+	    );
+	  }
+	});
+	
+	module.exports = UpdateCommentModal;
+
+/***/ },
+/* 195 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	var dataProvider = __webpack_require__(182);
 	
 	var IPItem = React.createClass({
 	  displayName: 'IPItem',
@@ -23401,8 +23908,20 @@
 	var ACPIpConfig = React.createClass({
 	  displayName: 'ACPIpConfig',
 	
+	  getInitialState: function () {
+	    return {
+	      IPs: []
+	    };
+	  },
+	  componentDidMount: function () {
+	    dataProvider.getIPBlackList((function (res) {
+	      if (res.statusCode === 200) {
+	        this.setState({ IPs: res.response });
+	      }
+	    }).bind(this));
+	  },
 	  render: function () {
-	    var IPList = this.props.acpData.ban_ip_info;
+	    var IPList = this.state.IPs;
 	    var lang = this.props.lang;
 	    var cssClass = this.props.activeTab === "ban_ip" ? "ip_container selectTag" : "ip_container";
 	    var createIPItem = function (ip) {
@@ -23483,39 +24002,69 @@
 	module.exports = ACPIpConfig;
 
 /***/ },
-/* 194 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
-	var UserUpdateModal = __webpack_require__(195);
+	var UserUpdateModal = __webpack_require__(197);
 	var dataProvider = __webpack_require__(182);
+	var FormItemMixin = __webpack_require__(198);
 	
 	var UserItem = React.createClass({
 	  displayName: 'UserItem',
 	
+	  /**
+	   * Tested 1.
+	   */
+	  getInitialState: function () {
+	    return {
+	      checked: false
+	    };
+	  },
+	  /**
+	   * Tested 1.
+	   */
+	  componentWillReceiveProps: function (nextProps) {
+	    if (nextProps.data) {
+	      this.setState({ checked: nextProps.data.checked });
+	    }
+	  },
+	  /**
+	   * Tested 1.
+	   */
 	  deleteUser: function (e) {
-	    var uid = e.target.getAttribute('data-uid');
 	    e.preventDefault();
-	    dataProvider.deleteUser(uid, (function (response) {
-	      // if OK
-	      this.props.onUserDeleted();
+	    dataProvider.deleteUser(this.props.data.uid, (function (res) {
+	      if (res.statusCode === 200) {
+	        this.props.onUserDeleted();
+	      }
 	    }).bind(this));
 	  },
+	  /**
+	   * Tested 1.
+	   */
 	  updateUser: function (e) {
-	    var uid = e.target.getAttribute('data-uid');
 	    e.preventDefault();
-	    this.props.onOpenUserUpdateModal(uid);
+	    this.props.onOpenUserUpdateModal(this.props.data);
+	  },
+	  /**
+	   * Tested 1.
+	   */
+	  toggleItem: function () {
+	    this.setState({ checked: !this.state.checked });
+	    this.props.onToggleItem(this.props.data);
 	  },
 	  render: function () {
 	    var user = this.props.data;
 	    var lang = this.props.lang;
+	    console.log('checked:', this.props.data.checked);
 	    return React.createElement(
 	      'tr',
 	      null,
 	      React.createElement(
 	        'td',
 	        null,
-	        React.createElement('input', { type: 'checkbox', name: 'select_uid[]', value: user.uid })
+	        React.createElement('input', { type: 'checkbox', checked: this.state.checked, onChange: this.toggleItem })
 	      ),
 	      React.createElement(
 	        'td',
@@ -23532,12 +24081,12 @@
 	        null,
 	        React.createElement(
 	          'a',
-	          { 'data-uid': user.uid, onClick: this.deleteUser, href: '#' },
+	          { onClick: this.deleteUser, href: '#' },
 	          lang.DELETE
 	        ),
 	        React.createElement(
 	          'a',
-	          { 'data-uid': user.uid, onClick: this.updateUser, href: 'index.php?controller=user&amp;action=update&amp;uid=' + user.uid },
+	          { onClick: this.updateUser, href: '#' },
 	          lang.UPDATE
 	        )
 	      )
@@ -23548,6 +24097,10 @@
 	var ACPUser = React.createClass({
 	  displayName: 'ACPUser',
 	
+	  mixins: [FormItemMixin],
+	  /**
+	   * Tested 1.
+	   */
 	  getInitialState: function () {
 	    return {
 	      users: [],
@@ -23556,28 +24109,50 @@
 	      updatedModalUserData: null
 	    };
 	  },
+	  /**
+	   * Tested 1
+	   */
 	  componentDidMount: function () {
-	    dataProvider.getAllUsers((function (data) {
-	      this.setState({ users: data });
+	    this.loadAllUsersFromServer();
+	  },
+	  /**
+	   * Tested 1.
+	   */
+	  loadAllUsersFromServer: function () {
+	    dataProvider.getAllUsers((function (res) {
+	      if (res.statusCode === 200) {
+	        var data = res.response;
+	        this.addSelectedFlag(data);
+	        this.setState({ users: data }, function () {
+	          console.warn('users:', this.state.users);
+	        });
+	      }
 	    }).bind(this));
 	  },
+	  /**
+	   * Tested 1.
+	   */
 	  handleUserDeleted: function () {
-	    dataProvider.getAllUsers((function (data) {
-	      this.setState({ users: data });
-	    }).bind(this));
+	    this.loadAllUsersFromServer();
 	  },
+	  /**
+	   * Tested 1.
+	   */
 	  handleUpdateSubmit: function (newUserData) {
-	    dataProvider.updateUser(newUserData, (function (response) {
-	      this.setState({
-	        updateErrorMsg: '',
-	        updatedModalUserData: null,
-	        updateModalIsOpen: false
-	      });
-	      dataProvider.getAllUsers((function (data) {
-	        this.setState({ users: data });
-	      }).bind(this));
+	    dataProvider.updateUser(newUserData, (function (res) {
+	      if (res.statusCode === 200) {
+	        this.setState({
+	          updateErrorMsg: '',
+	          updatedModalUserData: null,
+	          updateModalIsOpen: false
+	        });
+	        this.loadAllUsersFromServer();
+	      }
 	    }).bind(this));
 	  },
+	  /**
+	   * Tested 1.
+	   */
 	  closeUpdateModal: function () {
 	    this.setState({
 	      updateErrorMsg: '',
@@ -23585,22 +24160,46 @@
 	      updateModalIsOpen: false
 	    });
 	  },
-	  openUserUpdateModal: function (uid) {
-	    dataProvider.loadUserDataFromServer(uid, (function (response) {
-	      this.setState({
-	        updateErrorMsg: '',
-	        updatedModalUserData: response,
-	        updateModalIsOpen: true
-	      });
-	    }).bind(this));return;
+	  /**
+	   * Tested 1.
+	   */
+	  openUserUpdateModal: function (userData) {
+	    this.setState({
+	      updateErrorMsg: '',
+	      updatedModalUserData: userData,
+	      updateModalIsOpen: true
+	    });
 	  },
+	  /**
+	   * Tested 1.
+	   */
 	  deleteAllUsers: function (e) {
 	    e.preventDefault();
-	    dataProvider.deleteAllUsers((function (response) {
-	      dataProvider.getAllUsers((function (data) {
-	        this.setState({ users: data });
-	      }).bind(this));
+	    dataProvider.deleteAllUsers((function (res) {
+	      if (res.statusCode === 200) {
+	        this.loadAllUsersFromServer();
+	      }
 	    }).bind(this));
+	  },
+	  /**
+	   * Tested 1.
+	   */
+	  handleDeleteMulti: function (e) {
+	    e.preventDefault();
+	    var checkedUids = this.getCheckedItems();
+	    dataProvider.deleteMutiUsers(checkedUids, (function (res) {
+	      if (res.statusCode === 200) {
+	        this.loadAllUsersFromServer();
+	      } else {
+	        alert('delete error');
+	      }
+	    }).bind(this));
+	  },
+	  /**
+	   * Tested 1
+	   */
+	  handleToggleItem: function (userItem) {
+	    this.toggle(userItem);
 	  },
 	  render: function () {
 	    var lang = this.props.lang;
@@ -23611,7 +24210,8 @@
 	        lang: lang,
 	        key: user.uid,
 	        onOpenUserUpdateModal: this.openUserUpdateModal,
-	        onUserDeleted: this.handleUserDeleted
+	        onUserDeleted: this.handleUserDeleted,
+	        onToggleItem: this.handleToggleItem
 	      });
 	    };
 	    return React.createElement(
@@ -23619,7 +24219,7 @@
 	      { className: cssClass },
 	      React.createElement(
 	        'form',
-	        { action: 'index.php?controller=user&action=delete_multi', method: 'post' },
+	        { onSubmit: this.handleDeleteMulti, action: '#', method: 'post' },
 	        React.createElement(
 	          'table',
 	          null,
@@ -23667,22 +24267,22 @@
 	                { colSpan: '4' },
 	                React.createElement(
 	                  'span',
-	                  { className: 'check_span' },
+	                  null,
 	                  React.createElement(
 	                    'a',
-	                    { href: '#', id: 'm_checkall' },
+	                    { href: '#', onClick: this.checkAll },
 	                    lang.CHECK_ALL
 	                  ),
 	                  '  ',
 	                  React.createElement(
 	                    'a',
-	                    { href: '#', id: 'm_checknone' },
+	                    { href: '#', onClick: this.checkNone },
 	                    lang.CHECK_NONE
 	                  ),
 	                  '  ',
 	                  React.createElement(
 	                    'a',
-	                    { href: '#', id: 'm_checkxor' },
+	                    { href: '#', onClick: this.checkXAll },
 	                    lang.CHECK_INVERT
 	                  ),
 	                  ' '
@@ -23691,7 +24291,7 @@
 	                ' ',
 	                React.createElement(
 	                  'a',
-	                  { onClick: this.deleteAllUsers, href: 'index.php?controller=post&action=deleteAll' },
+	                  { onClick: this.deleteAllUsers },
 	                  lang.DELETE_ALL
 	                ),
 	                ' '
@@ -23715,7 +24315,7 @@
 	module.exports = ACPUser;
 
 /***/ },
-/* 195 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
@@ -23760,7 +24360,7 @@
 	    var user = this.state.user.trim();
 	    var pwd = this.state.pwd.trim();
 	    var email = this.state.email.trim();
-	    if (!user || !pwd || !email) return;
+	    if (!user || !email) return;
 	    this.props.onUpdateSubmit(this.state);
 	    return false;
 	  },
@@ -23801,7 +24401,7 @@
 	            React.createElement(
 	              'dd',
 	              null,
-	              React.createElement('input', { type: 'text', readonly: 'readonly', value: this.state.user, name: 'user', size: '20' })
+	              React.createElement('input', { type: 'text', readOnly: 'readonly', value: this.state.user, name: 'user', size: '20' })
 	            )
 	          ),
 	          React.createElement(
@@ -23854,7 +24454,71 @@
 	module.exports = UserUpdateModal;
 
 /***/ },
-/* 196 */
+/* 198 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var React = __webpack_require__(1);
+	
+	var FormItemMixIn = {
+	  addSelectedFlag: function (arr) {
+	    if (Array.isArray(arr)) {
+	      arr.forEach(function (currentValue, index) {
+	        currentValue['checked'] = false;
+	      }, this);
+	    }
+	  },
+	  toggle: function (itemToToggle) {
+	    var data = this.state.users;
+	    for (var i = 0, len = data.length; i < len; i++) {
+	      var currentValue = data[i];
+	      if (currentValue === itemToToggle) {
+	        currentValue['checked'] = !currentValue['checked'];
+	        break;
+	      }
+	    }
+	    console.log('data:', this.state.users);
+	  },
+	  toggleAll: function (checked) {
+	    var data = this.state.users.map(function (currentValue, index) {
+	      currentValue['checked'] = checked;
+	      return currentValue;
+	    }, this);
+	    this.setState({ users: data });
+	  },
+	  checkAll: function (e) {
+	    e.preventDefault();
+	    this.toggleAll(true);
+	  },
+	  checkNone: function (e) {
+	    e.preventDefault();
+	    this.toggleAll(false);
+	  },
+	  checkXAll: function (e) {
+	    e.preventDefault();
+	    this.toggleXAll();
+	  },
+	  toggleXAll: function () {
+	    var data = this.state.users.map(function (currentValue, index) {
+	      currentValue['checked'] = !currentValue['checked'];
+	      return currentValue;
+	    }, this);
+	    this.setState({ users: data });
+	  },
+	  getCheckedItems: function () {
+	    var arr = [];
+	    this.state.users.forEach(function (currentValue, index) {
+	      if (currentValue.checked) {
+	        arr.push(currentValue.uid);
+	      }
+	    });
+	    return arr;
+	  }
+	};
+	
+	module.exports = FormItemMixIn;
+
+/***/ },
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
