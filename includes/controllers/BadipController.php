@@ -44,4 +44,10 @@ class BadipController extends BaseController
         }
         exitWithResponse(200);
     }
+    
+    public function actionList() {
+      isAdminAjaxRequest();
+      $result = $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <badip>")));
+      exitWithResponse(200, $result);
+    }
 }
