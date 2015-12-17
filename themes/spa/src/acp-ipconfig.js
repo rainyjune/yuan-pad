@@ -1,4 +1,5 @@
 var React = require('react');
+var dataProvider = require('./dataProvider.js');
 
 var IPItem = React.createClass({
   render: function() {
@@ -12,8 +13,20 @@ var IPItem = React.createClass({
 });
 
 var ACPIpConfig = React.createClass({
+  getInitialState: function() {
+    return {
+      IPs: []
+    };
+  },
+  componentDidMount: function() {
+    dataProvider.getIPBlackList(function(res) {
+      if (res.statusCode === 200) {
+        this.setState({IPs: res.response});
+      }
+    }.bind(this));
+  },
   render: function() {
-    var IPList = this.props.systemInformation.ban_ip_info;
+    var IPList = this.state.IPs;
     var lang = this.props.lang;
     var cssClass = this.props.activeTab === "ban_ip" ? "ip_container selectTag" : "ip_container";
     var createIPItem = function(ip) {
