@@ -80,7 +80,7 @@ var UserUpdateModal = React.createClass({
     var user = this.refs.user.value.trim();
     var pwd = this.refs.pwd.value.trim();
     var email = this.refs.email.value.trim();
-    if (!uid || !user || !pwd || !email) return;
+    if (!uid || !user || !email) return;
     this.props.onUserUpdateSubmit({ uid: uid, user: user, pwd: pwd, email: email}); 
     return false;
   },
