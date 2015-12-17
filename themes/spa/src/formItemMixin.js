@@ -20,16 +20,30 @@ var FormItemMixIn = {
     console.log('data:', this.state.users);
   },
   toggleAll: function(checked) {
-    var data = this.state.users;
-    data.forEach(function(currentValue, index){
+    var data = this.state.users.map(function(currentValue, index){
       currentValue['checked'] = checked;
+      return currentValue;
     }, this);
+    this.setState({users: data});
+  },
+  checkAll: function(e) {
+    e.preventDefault();
+    this.toggleAll(true);
+  },
+  checkNone: function(e) {
+    e.preventDefault();
+    this.toggleAll(false);
+  },
+  checkXAll: function(e) {
+    e.preventDefault();
+    this.toggleXAll();
   },
   toggleXAll: function() {
-    var data = this.state.users;
-    data.forEach(function(currentValue, index){
+    var data = this.state.users.map(function(currentValue, index){
       currentValue['checked'] = !currentValue['checked'];
+      return currentValue;
     }, this);
+    this.setState({users: data});
   }
 };
 
