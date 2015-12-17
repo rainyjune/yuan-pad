@@ -13,7 +13,7 @@ class UserController extends BaseController{
      */
     public function actionList() {
         isAdminAjaxRequest();
-        $user_data=$this->_model->queryAll(parse_tbprefix("SELECT * FROM <sysuser>"));
+        $user_data=$this->_model->queryAll(parse_tbprefix("SELECT uid, username, email, reg_time FROM <sysuser>"));
         exitWithResponse(200, $user_data);
     }
   
@@ -92,12 +92,15 @@ class UserController extends BaseController{
             exitWithResponse(400, t('EMAIL_INVALID'));
         }
         $uid = $_POST['uid'];
-        // TODO pwd optional
-        if(!empty ($_POST['user']) && !empty ($_POST['pwd']) && !empty ($_POST['email'])){
+        if(!empty ($_POST['user']) && !empty ($_POST['email'])){
             $user=  $this->_model->escape_string($_POST['user']);
-            $pwd =  hashPassword($this->_model->escape_string($_POST['pwd']));
             $email=$_POST['email'];
-            if($this->_model->query(sprintf(parse_tbprefix("UPDATE <sysuser> SET password = '%s' , email = '%s' WHERE uid = %d"),$pwd,$email,$uid))){
+            $sql = sprintf(parse_tbprefix("UPDATE <sysuser> SET email = '%s' WHERE uid = %d"), $email, $uid);
+            if(!empty ($_POST['pwd'])) {
+              $pwd =  hashPassword($this->_model->escape_string($_POST['pwd']));
+              $sql = sprintf(parse_tbprefix("UPDATE <sysuser> SET password = '%s' , email = '%s' WHERE uid = %d"),$pwd,$email,$uid);
+            }
+            if($this->_model->query($sql)){
                 exitWithResponse(200);
             } else {
                 $exitWithResponse(500, t('USERUPDATEFAILED'));
