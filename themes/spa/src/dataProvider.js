@@ -17,6 +17,23 @@ function banIP(ip, successCallback, errorCallback) {
 
 /**
  * Tested 1.
+ */
+function deleteMultiIPs(ips, successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "POST",
+    url: 'index.php?controller=badip&action=update',
+    data: {select_ip: ips},
+    dataType: 'json',
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
+/**
+ * Tested 1.
  *
  *
  *
@@ -502,6 +519,7 @@ module.exports = {
   deleteReply: deleteReply,
   deleteUser: deleteUser,
   deleteMutiUsers: deleteMutiUsers,
+  deleteMultiIPs: deleteMultiIPs,
   getIPBlackList: getIPBlackList, 
   getAppConfig: getAppConfig,
   getAppConfigACP: getAppConfigACP,
