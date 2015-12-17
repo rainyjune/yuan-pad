@@ -339,12 +339,18 @@ function deleteReply(commentId, successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ */
 function deleteUser(uid, successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
-    url: "api.php?controller=user&action=delete",
+    url: "index.php?controller=user&action=delete",
     data: {uid: uid},
     dataType: "json",
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
     success: successCallback,
     error: errorCallback
   });
@@ -437,6 +443,9 @@ function updateComment(commentData, successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ */
 function getIPBlackList(successCallback, errorCallback) {
   yuanjs.ajax({
     type: "GET",
