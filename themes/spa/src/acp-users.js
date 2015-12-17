@@ -148,8 +148,19 @@ var ACPUser = React.createClass({
       }
     }.bind(this));
   },
+  /**
+   * Tested 1.
+   */
   handleDeleteMulti: function(e) {
     e.preventDefault();
+    var checkedUids = this.getCheckedItems();
+    dataProvider.deleteMutiUsers(checkedUids, function(res){
+      if (res.statusCode === 200) {
+        this.loadAllUsersFromServer();
+      } else {
+        alert('delete error');
+      }
+    }.bind(this));
   },
   /**
    * Tested 1
@@ -194,7 +205,7 @@ var ACPUser = React.createClass({
                   <a href="#" onClick={this.checkNone}>{lang.CHECK_NONE}</a> &nbsp;
                   <a href="#" onClick={this.checkXAll}>{lang.CHECK_INVERT}</a>&nbsp;</span>
                   <input type='submit' value={lang.DELETE_CHECKED} />&nbsp;
-                  <a onClick={this.deleteAllUsers} href="index.php?controller=post&amp;action=deleteAll">{lang.DELETE_ALL}</a>&nbsp;
+                  <a onClick={this.deleteAllUsers}>{lang.DELETE_ALL}</a>&nbsp;
                 </td>
               </tr>
             </tfoot>
