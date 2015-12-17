@@ -4,11 +4,12 @@ var dataProvider = require('./dataProvider.js');
 
 var UserItem = React.createClass({
   deleteUser: function(e) {
-    var uid = e.target.getAttribute('data-uid');
     e.preventDefault();
-    dataProvider.deleteUser(uid, function(response) {
-      // if OK
-      this.props.onUserDeleted();
+    dataProvider.deleteUser(this.props.data.uid, function(res) {
+      debugger;
+      if (res.statusCode === 200) {
+        this.props.onUserDeleted();
+      }
     }.bind(this));
   },
   /**
@@ -27,8 +28,8 @@ var UserItem = React.createClass({
         <td>{user.username}</td>
         <td>{user.email}</td>
         <td>
-          <a data-uid={user.uid} onClick={this.deleteUser} href="#">{lang.DELETE}</a>
-          <a data-uid={user.uid} onClick={this.updateUser} href='#'>{lang.UPDATE}</a>
+          <a onClick={this.deleteUser} href="#">{lang.DELETE}</a>
+          <a onClick={this.updateUser} href='#'>{lang.UPDATE}</a>
         </td>
       </tr>
     );
@@ -64,9 +65,7 @@ var ACPUser = React.createClass({
     }.bind(this));
   },
   handleUserDeleted: function() {
-    dataProvider.getAllUsers(function(data){
-      this.setState({users: data});
-    }.bind(this));
+    this.loadAllUsersFromServer();
   },
   /**
    * Tested 1.
