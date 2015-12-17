@@ -3,10 +3,12 @@ var UserUpdateModal = require('./acp-userUpdateModal.js');
 var dataProvider = require('./dataProvider.js');
 
 var UserItem = React.createClass({
+  /**
+   * Tested 1.
+   */
   deleteUser: function(e) {
     e.preventDefault();
     dataProvider.deleteUser(this.props.data.uid, function(res) {
-      debugger;
       if (res.statusCode === 200) {
         this.props.onUserDeleted();
       }
@@ -64,6 +66,9 @@ var ACPUser = React.createClass({
       }
     }.bind(this));
   },
+  /**
+   * Tested 1.
+   */
   handleUserDeleted: function() {
     this.loadAllUsersFromServer();
   },
@@ -102,12 +107,15 @@ var ACPUser = React.createClass({
         updateModalIsOpen: true
       });
   },
+  /**
+   * Tested 1.
+   */
   deleteAllUsers: function(e) {
     e.preventDefault();
-    dataProvider.deleteAllUsers(function(response){
-      dataProvider.getAllUsers(function(data){
-        this.setState({users: data});
-      }.bind(this));
+    dataProvider.deleteAllUsers(function(res){
+      if (res.statusCode === 200) {
+        this.loadAllUsersFromServer();
+      }
     }.bind(this));
   },
   render: function() {
