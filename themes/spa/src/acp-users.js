@@ -1,8 +1,25 @@
 var React = require('react');
 var UserUpdateModal = require('./acp-userUpdateModal.js');
 var dataProvider = require('./dataProvider.js');
+var FormItemMixin = require('./formItemMixin.js');
 
 var UserItem = React.createClass({
+  /**
+   * Tested 1.
+   */
+  getInitialState: function() {
+    return {
+      checked: false
+    };
+  },
+  /**
+   * Tested 1.
+   */
+  componentWillReceiveProps: function(nextProps) {
+    if (nextProps.data) {
+      this.setState({checked: nextProps.data.checked});
+    }
+  },
   /**
    * Tested 1.
    */
@@ -21,12 +38,20 @@ var UserItem = React.createClass({
     e.preventDefault();
     this.props.onOpenUserUpdateModal(this.props.data);
   },
+  /**
+   * Tested 1.
+   */
+  toggleItem: function() {
+    this.setState({checked: !this.state.checked});
+    this.props.onToggleItem(this.props.data);
+  },
   render: function() {
     var user = this.props.data;
     var lang = this.props.lang;
+    console.log('checked:', this.props.data.checked)
     return (
       <tr>
-        <td><input type='checkbox' name='select_uid[]' value={user.uid} /></td>
+        <td><input type='checkbox' checked={this.state.checked} onChange={this.toggleItem} /></td>
         <td>{user.username}</td>
         <td>{user.email}</td>
         <td>
@@ -39,6 +64,7 @@ var UserItem = React.createClass({
 });
 
 var ACPUser = React.createClass({
+  mixins: [FormItemMixin],
   /**
    * Tested 1.
    */
@@ -62,7 +88,11 @@ var ACPUser = React.createClass({
   loadAllUsersFromServer: function() {
     dataProvider.getAllUsers(function(res){
       if (res.statusCode === 200) {
-        this.setState({users: res.response});
+        var data = res.response;
+        this.addSelectedFlag(data);
+        this.setState({users: data}, function(){
+          console.warn('users:', this.state.users);
+        });
       }
     }.bind(this));
   },
@@ -118,6 +148,15 @@ var ACPUser = React.createClass({
       }
     }.bind(this));
   },
+  handleDeleteMulti: function(e) {
+    e.preventDefault();
+  },
+  /**
+   * Tested 1
+   */
+  handleToggleItem: function(userItem) {
+    this.toggle(userItem);
+  },
   render: function() {
     var lang = this.props.lang;
     var cssClass = this.props.activeTab === "user" ? "user_container selectTag" : "user_container";
@@ -129,12 +168,13 @@ var ACPUser = React.createClass({
           key={user.uid}
           onOpenUserUpdateModal={this.openUserUpdateModal}
           onUserDeleted={this.handleUserDeleted}
+          onToggleItem={this.handleToggleItem}
         />
       );
     };
     return (
       <div className={cssClass}>
-        <form action="index.php?controller=user&amp;action=delete_multi" method="post">
+        <form onSubmit={this.handleDeleteMulti} action="#" method="post">
           <table>
             <thead>
               <tr className="header">
@@ -150,9 +190,9 @@ var ACPUser = React.createClass({
             <tfoot>
               <tr>
                 <td colSpan='4'>
-                  <span className="check_span"><a href="#" id="m_checkall">{lang.CHECK_ALL}</a> &nbsp;
-                  <a href="#" id="m_checknone">{lang.CHECK_NONE}</a> &nbsp;
-                  <a href="#" id="m_checkxor">{lang.CHECK_INVERT}</a>&nbsp;</span>
+                  <span><a href="#" onClick={this.checkAll}>{lang.CHECK_ALL}</a> &nbsp;
+                  <a href="#" onClick={this.checkNone}>{lang.CHECK_NONE}</a> &nbsp;
+                  <a href="#" onClick={this.checkXAll}>{lang.CHECK_INVERT}</a>&nbsp;</span>
                   <input type='submit' value={lang.DELETE_CHECKED} />&nbsp;
                   <a onClick={this.deleteAllUsers} href="index.php?controller=post&amp;action=deleteAll">{lang.DELETE_ALL}</a>&nbsp;
                 </td>
