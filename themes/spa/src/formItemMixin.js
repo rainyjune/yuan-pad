@@ -44,6 +44,15 @@ var FormItemMixIn = {
       return currentValue;
     }, this);
     this.setState({users: data});
+  },
+  getCheckedItems: function() {
+    var arr = [];
+    this.state.users.forEach(function(currentValue, index) {
+      if (currentValue.checked) {
+        arr.push(currentValue.uid);
+      }
+    });
+    return arr;
   }
 };
 
