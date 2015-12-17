@@ -283,11 +283,17 @@ function deleteAllComments(successCallback, errorCallback) {
   });
 }
 
+/**
+ * Tested 1.
+ */
 function deleteAllUsers(successCallback, errorCallback) {
   yuanjs.ajax({
     type: "POST",
-    url: 'api.php?controller=user&action=deleteAll',
+    url: 'index.php?controller=user&action=deleteAll',
     dataType: "json",
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
     success: successCallback,
     error: errorCallback
   });
