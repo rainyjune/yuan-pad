@@ -7,22 +7,6 @@ var UserItem = React.createClass({
   /**
    * Tested 1.
    */
-  getInitialState: function() {
-    return {
-      checked: false
-    };
-  },
-  /**
-   * Tested 1.
-   */
-  componentWillReceiveProps: function(nextProps) {
-    if (nextProps.data) {
-      this.setState({checked: nextProps.data.checked});
-    }
-  },
-  /**
-   * Tested 1.
-   */
   deleteUser: function(e) {
     e.preventDefault();
     dataProvider.deleteUser(this.props.data.uid, function(res) {
@@ -42,7 +26,6 @@ var UserItem = React.createClass({
    * Tested 1.
    */
   toggleItem: function() {
-    this.setState({checked: !this.state.checked});
     this.props.onToggleItem(this.props.data);
   },
   render: function() {
@@ -51,7 +34,7 @@ var UserItem = React.createClass({
     console.log('checked:', this.props.data.checked)
     return (
       <tr>
-        <td><input type='checkbox' checked={this.state.checked} onChange={this.toggleItem} /></td>
+        <td><input type='checkbox' checked={this.props.data.checked} onChange={this.toggleItem} /></td>
         <td>{user.username}</td>
         <td>{user.email}</td>
         <td>
@@ -75,6 +58,12 @@ var ACPUser = React.createClass({
       updateModalIsOpen: false,
       updatedModalUserData: null,
     };
+  },
+  getMixinAttr: function() {
+    return 'users';
+  },
+  setMixState: function(data) {
+    this.setState({users: data});
   },
   /**
    * Tested 1

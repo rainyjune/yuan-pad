@@ -4,6 +4,8 @@ var dataProvider = require('./dataProvider.js');
 var ReplyModal = require('./acp-replyModal.js');
 var CommentUpdateModal = require('./acp-updateCommentModal.js');
 
+var FormItemMixin = require('./formItemMixin.js');
+
 var Reply = React.createClass({
   getInitialState: function() {
     return {
@@ -86,13 +88,17 @@ var Comment = React.createClass({
     e.preventDefault();
     this.props.onUpdateComment(this.props.data);
   },
+  toggleItem: function() {
+    //this.setState({checked: !this.state.checked});
+    this.props.onToggleItem(this.props.data);
+  },
   render: function() {
     var data = this.props.data;
     var lang = this.props.lang;
     return (
       <tr>
         <td>
-          <input type='checkbox' name='select_mid[]' value={data.id} />
+          <input type='checkbox' checked={this.props.data.checked} onChange={this.toggleItem} />
           <input type='hidden' name={this.props.data.id} value={data.reply ? 1 : 0} />
         </td>
         <td>
@@ -113,6 +119,7 @@ var Comment = React.createClass({
 });
 
 var ACPMessages = React.createClass({
+  mixins: [FormItemMixin],
   getInitialState: function() {
     return {
       comments: [],
@@ -124,11 +131,12 @@ var ACPMessages = React.createClass({
       commentErrorMsg: ''
     };
   },
-  checkAll: function(e) {
-    e.preventDefault();
+  getMixinAttr: function() {
+    return 'comments';
   },
-  clearAll: function(e) {
-    e.preventDefault();
+  setMixState: function(data) {
+    debugger;
+    this.setState({comments: data});
   },
   deleteAllComments: function(e) {
     e.preventDefault();
@@ -157,9 +165,6 @@ var ACPMessages = React.createClass({
     e.preventDefault();
     // TODO
     dataProvider.deleteMutiComments();
-  },
-  invertCheck: function(e) {
-    e.preventDefault();
   },
   handleReplyComment: function(commentTobeReplied) {
     this.setState({
@@ -211,7 +216,9 @@ var ACPMessages = React.createClass({
   loadCommentsFromServer: function() {
     dataProvider.loadAllCommentsFromServer(function(res){
       if (res.statusCode === 200 || res.statusCode === 404) {
-        this.setState({comments: res.response.comments});
+        var data = res.response.comments;
+        this.addSelectedFlag(data)
+        this.setState({comments: data});
       } else {
         // TODO .
         alert('error');
@@ -220,6 +227,9 @@ var ACPMessages = React.createClass({
   },
   componentDidMount: function() {
     this.loadCommentsFromServer();
+  },
+  handleToggleItem: function(item) {
+    this.toggle(item);
   },
   render: function() {
     var lang = this.props.lang;
@@ -235,6 +245,7 @@ var ACPMessages = React.createClass({
           onReplyComment={this.handleReplyComment}
           onCommentDeleted={this.props.onCommentDeleted}
           onUpdateComment={this.handleUpdateComment}
+          onToggleItem={this.handleToggleItem}
         />
       );
     };
@@ -257,8 +268,8 @@ var ACPMessages = React.createClass({
               <tr>
                 <td colSpan='4'>
                   <a href="#" onClick={this.checkAll}>{lang.CHECK_ALL}</a> &nbsp;
-                  <a href="#" onClick={this.clearAll}>{lang.CHECK_NONE}</a> &nbsp;
-                  <a href="#" onClick={this.invertCheck}>{lang.CHECK_INVERT}</a>&nbsp;
+                  <a href="#" onClick={this.checkNone}>{lang.CHECK_NONE}</a> &nbsp;
+                  <a href="#" onClick={this.checkXAll}>{lang.CHECK_INVERT}</a>&nbsp;
                   <input type='submit' value={lang.DELETE_CHECKED} />&nbsp;
                   <a onClick={this.deleteAllComments}>{lang.DELETE_ALL}</a>&nbsp;
                   <a onClick={this.deleteAllReplies}>{lang.DELETE_ALL_REPLY}</a>

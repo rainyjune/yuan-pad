@@ -9,22 +9,24 @@ var FormItemMixIn = {
     }
   },
   toggle: function(itemToToggle) {
-    var data = this.state.users;
-    for (var i = 0, len = data.length; i < len; i++) {
-      var currentValue = data[i];
+    var field = this.getMixinAttr();
+    var data = this.state[field].map(function(currentValue, index) {
       if (currentValue === itemToToggle) {
         currentValue['checked'] = !currentValue['checked'];
-        break;
       }
-    }
-    console.log('data:', this.state.users);
+      return currentValue;
+    });
+    //console.log('data:', this.state[field]);
+    this.setMixState(data);
   },
   toggleAll: function(checked) {
-    var data = this.state.users.map(function(currentValue, index){
+    var field = this.getMixinAttr();
+    var data = this.state[field].map(function(currentValue, index){
       currentValue['checked'] = checked;
       return currentValue;
     }, this);
-    this.setState({users: data});
+    //this.setState({users: data});
+    this.setMixState(data);
   },
   checkAll: function(e) {
     e.preventDefault();
@@ -39,11 +41,13 @@ var FormItemMixIn = {
     this.toggleXAll();
   },
   toggleXAll: function() {
-    var data = this.state.users.map(function(currentValue, index){
+    var field = this.getMixinAttr();
+    var data = this.state[field].map(function(currentValue, index){
       currentValue['checked'] = !currentValue['checked'];
       return currentValue;
     }, this);
-    this.setState({users: data});
+    //this.setState({users: data});
+    this.setMixState(data);
   },
   getCheckedItems: function() {
     var arr = [];
