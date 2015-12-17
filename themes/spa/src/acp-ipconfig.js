@@ -1,11 +1,15 @@
 var React = require('react');
 var dataProvider = require('./dataProvider.js');
+var FormItemMixin = require('./formItemMixin.js');
 
 var IPItem = React.createClass({
+  toggleItem: function() {
+    this.props.onItemToggled(this.props.data);
+  },
   render: function() {
     return (
       <tr className='admin_message'>
-        <td><input type='checkbox' name='select_ip[]' value={this.props.data.ip} /></td>
+        <td><input type='checkbox' onChange={this.toggleItem} checked={this.props.data.checked} /></td>
         <td>{this.props.data.ip}</td>
       </tr>
     );
@@ -18,12 +22,41 @@ var ACPIpConfig = React.createClass({
       IPs: []
     };
   },
+  mixins: [FormItemMixin],
+  getMixinAttr: function() {
+    return 'IPs';
+  },
+  getItemKey: function() {
+    return 'ip';
+  },
+  setMixState: function(data) {
+    this.setState({IPs: data});
+  },
   componentDidMount: function() {
+    this.loadBlackList();
+  },
+  loadBlackList: function() {
     dataProvider.getIPBlackList(function(res) {
       if (res.statusCode === 200) {
         this.setState({IPs: res.response});
       }
     }.bind(this));
+  },
+  handleSubmit: function(e) {
+    e.preventDefault();
+    var checkedItems = this.getCheckedItems();
+    debugger;
+    dataProvider.deleteMultiIPs(checkedItems, function(res) {
+      debugger;
+      if (res.statusCode === 200) {
+        this.loadBlackList();
+      } else {
+        alert('delete error');
+      }
+    }.bind(this));
+  },
+  handleToggleItem: function(item) {
+    this.toggle(item);
   },
   render: function() {
     var IPList = this.state.IPs;
@@ -34,12 +67,13 @@ var ACPIpConfig = React.createClass({
         <IPItem
           data={ip}
           key={ip.ip}
+          onItemToggled={this.handleToggleItem}
         />
       );
     };
     return (
       <div className={cssClass}>
-        <form id="banip_manage" action="index.php?controller=badip&amp;action=update" method="post">
+        <form onSubmit={this.handleSubmit} action="#" method="post">
           <table className="table2">
             <thead>
               <tr className="header">
@@ -47,13 +81,13 @@ var ACPIpConfig = React.createClass({
               </tr>
             </thead>
             <tbody>
-              {IPList && IPList.map(createIPItem)}
+              {IPList && IPList.map(createIPItem, this)}
               <tr>
                 <td colSpan='2' align='left'>
                   <span>
-                    <a href="#" id="ip_checkall">{lang.CHECK_ALL}</a> &nbsp;
-                    <a href="#" id="ip_checknone">{lang.CHECK_NONE}</a> &nbsp;
-                    <a href="#" id="ip_checkxor">{lang.CHECK_INVERT}</a>&nbsp;
+                    <a href="#" onClick={this.checkAll}>{lang.CHECK_ALL}</a> &nbsp;
+                    <a href="#" onClick={this.checkNone}>{lang.CHECK_NONE}</a> &nbsp;
+                    <a href="#" onClick={this.checkXAll}>{lang.CHECK_INVERT}</a>&nbsp;
                   </span>
                   <input type='submit' value={lang.DELETE_CHECKED} /></td>
               </tr>
