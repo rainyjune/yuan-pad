@@ -437,6 +437,19 @@ function updateComment(commentData, successCallback, errorCallback) {
   });
 }
 
+function getIPBlackList(successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "GET",
+    url: "index.php?controller=badip&action=list",
+    dataType: "json",
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
 module.exports = {
   banIP: banIP,
   createPost: createPost,
@@ -447,6 +460,7 @@ module.exports = {
   deleteMutiComments: deleteMutiComments,
   deleteReply: deleteReply,
   deleteUser: deleteUser,
+  getIPBlackList: getIPBlackList, 
   getAppConfig: getAppConfig,
   getAppConfigACP: getAppConfigACP,
   getAllUsers: getAllUsers,
