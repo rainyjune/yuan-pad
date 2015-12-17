@@ -51,6 +51,12 @@ var ACPUser = React.createClass({
    * Tested 1
    */
   componentDidMount: function() {
+    this.loadAllUsersFromServer();
+  },
+  /**
+   * Tested 1.
+   */
+  loadAllUsersFromServer: function() {
     dataProvider.getAllUsers(function(res){
       if (res.statusCode === 200) {
         this.setState({users: res.response});
@@ -62,16 +68,19 @@ var ACPUser = React.createClass({
       this.setState({users: data});
     }.bind(this));
   },
+  /**
+   * Tested 1.
+   */
   handleUpdateSubmit: function(newUserData) {
-    dataProvider.updateUser(newUserData, function(response){
-      this.setState({
-        updateErrorMsg: '',
-        updatedModalUserData: null,
-        updateModalIsOpen: false
-      });
-      dataProvider.getAllUsers(function(data){
-        this.setState({users: data});
-      }.bind(this));
+    dataProvider.updateUser(newUserData, function(res){
+      if (res.statusCode === 200) {
+        this.setState({
+          updateErrorMsg: '',
+          updatedModalUserData: null,
+          updateModalIsOpen: false
+        });
+        this.loadAllUsersFromServer();
+      }
     }.bind(this));
   },
   /**
