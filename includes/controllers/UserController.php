@@ -224,6 +224,16 @@ class UserController extends BaseController{
      * Get current user identity.
      */
     public function actionGetUserInfo() {
-      exitWithResponse(200, $_SESSION);
+      $result = array();
+      if (isset($_SESSION['admin'])) {
+        $result['admin'] = $_SESSION['admin'];
+      }
+      if (isset($_SESSION['uid'])) {
+        $result['uid'] = $_SESSION['uid'];
+      }
+      if (isset($_SESSION['user'])) {
+        $result['user'] = $_SESSION['user'];
+      }
+      exitWithResponse(200, $result);
     }
 }
