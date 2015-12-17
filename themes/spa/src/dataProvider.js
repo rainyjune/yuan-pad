@@ -363,6 +363,23 @@ function deleteUser(uid, successCallback, errorCallback) {
 }
 
 /**
+ * Tested 1.
+ */
+function deleteMutiUsers(uids, successCallback, errorCallback) {
+  yuanjs.ajax({
+    type: "POST",
+    url: "index.php?controller=user&action=delete_multi",
+    data: {select_uid: uids},
+    dataType: "json",
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
+/**
  * Get cookie value by a specific name.
  * http://stackoverflow.com/a/15724300
  */
@@ -475,6 +492,7 @@ module.exports = {
   deleteMutiComments: deleteMutiComments,
   deleteReply: deleteReply,
   deleteUser: deleteUser,
+  deleteMutiUsers: deleteMutiUsers,
   getIPBlackList: getIPBlackList, 
   getAppConfig: getAppConfig,
   getAppConfigACP: getAppConfigACP,
