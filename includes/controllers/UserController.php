@@ -71,7 +71,9 @@ class UserController extends BaseController{
         $uid = $_GET['uid'];
         $user_data = $this->_model->queryAll(sprintf(parse_tbprefix("SELECT uid, username, email FROM <sysuser> WHERE uid=%d"),$uid));
         if(count($user_data)){
-            exitWithResponse(200, $user_data[0]);
+            $result = $user_data[0];
+            $result['uid'] = (int)$result['uid'];
+            exitWithResponse(200, $result);
         } else {
             exitWithResponse(404, t('USER_NOT_EXISTS'));
         }
