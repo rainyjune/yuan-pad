@@ -13,7 +13,11 @@ class UserController extends BaseController{
      */
     public function actionList() {
         isAdminAjaxRequest();
-        $user_data=$this->_model->queryAll(parse_tbprefix("SELECT uid, username, email, reg_time FROM <sysuser>"));
+        $user_data=$this->_model->queryAll(parse_tbprefix("SELECT uid, username, email FROM <sysuser>"));
+        foreach ($user_data as &$user) {
+            $user['uid'] = (int)$user['uid'];
+            $user['user_type'] = 'regular';
+        }
         exitWithResponse(200, $user_data);
     }
   
