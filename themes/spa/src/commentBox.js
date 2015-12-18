@@ -217,7 +217,7 @@ var CommentForm = React.createClass({
     if(this.props.commentListType !== 1) {
       return null;
     }
-    var captcha = this.props.appConfig.valid_code_open ?
+    var captcha = (this.props.appConfig.valid_code_open == 1) ?
             <Captcha
               ref="captcha"
               valid_code={this.state.valid_code}
