@@ -24,12 +24,11 @@ var RegisterButton = React.createClass({
 var RegisterModal = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
-    var register = this.refs.register.value;
     var user = this.refs.user.value.trim();
     var pwd = this.refs.pwd.value.trim();
     var email = this.refs.email.value.trim();
     if (!user || !pwd || !email) return;
-    this.props.onRegisterSubmit({ register: register, user: user, pwd: pwd, email: email}); 
+    this.props.onRegisterSubmit({user: user, pwd: pwd, email: email}); 
     return false;
   },
   render: function(){
@@ -38,11 +37,9 @@ var RegisterModal = React.createClass({
         <h2>Register</h2>
         <p>{this.props.registerErrorMsg}</p>
         <button onClick={this.props.onRequestClose}>close</button>
-        <form onSubmit={this.handleSubmit} action="index.php?controller=user&amp;action=create" method="post">
+        <form onSubmit={this.handleSubmit} action="#" method="post">
                 <fieldset>
                           <legend>{this.props.lang.REGISTER}</legend>
-            <input type="hidden" ref="register" value="true" />
-          
               <dl>
             <dt>{this.props.lang.USERNAME}</dt>
             <dd><input type="text" ref="user" size="20" />
