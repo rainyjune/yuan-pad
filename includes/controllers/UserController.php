@@ -66,7 +66,7 @@ class UserController extends BaseController{
         issetGETParam('uid', t('PARAM_ERROR'));
         $this->checkUpdate();
         if (!isset($_SESSION['admin']) && $_GET['uid']!= @$_SESSION['uid']) {
-            exitWithResponse(403, t('PARAM_ERROR'));
+            exitWithResponse(403);
         }
         $uid = $_GET['uid'];
         $user_data = $this->_model->queryAll(sprintf(parse_tbprefix("SELECT uid, username, email FROM <sysuser> WHERE uid=%d"),$uid));
