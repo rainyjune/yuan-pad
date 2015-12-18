@@ -153,6 +153,7 @@ HERE;
             'repliesTotal'    => $repliesTotal,
             'appVersion'      => constant('MP_VERSION'),
             'phpVersion'      => PHP_VERSION,
+            'gd_loaded'       => $gd_exist,
             'gdVersion'       => $gd_version,
             'registerGlobals' => ini_get("register_globals") ? 'On' : 'Off',
             'magicQuotesGPC'  => ini_get("magic_quotes_gpc") ? 'On' : 'Off',
