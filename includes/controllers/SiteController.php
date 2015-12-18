@@ -76,6 +76,7 @@ class SiteController extends BaseController{
                 }
                 $installed=TRUE;
                 $_SESSION['admin']=$_POST['adminname'];
+                $_SESSION['email'] = 'rainyjune@live.cn';
                 $_SESSION['token'] = getToken();
                 setrawcookie('CSRF-TOKEN', $_SESSION['token']);
             }

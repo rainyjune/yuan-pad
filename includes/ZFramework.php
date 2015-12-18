@@ -43,7 +43,8 @@ class ZFramework{
     public function run() {
         $thisController = $this->_controller;
         $thisAction = $this->_action;
-        if(getConfigVar('site_close') == 1 && !isset ($_SESSION['admin']) && !in_array($thisController.'/'.$thisAction, $this->_maintenanceSafeAPI)) {
+        $currentUser = getCurrentUser();
+        if(getConfigVar('site_close') == 1 && ($currentUser['user_type'] !== "admin") && !in_array($thisController.'/'.$thisAction, $this->_maintenanceSafeAPI)) {
             exitWithResponse(503, getConfigVar('close_reason'));
         }
         try {

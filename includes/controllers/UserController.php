@@ -13,19 +13,24 @@ class UserController extends BaseController{
      */
     public function actionList() {
         isAdminAjaxRequest();
-        $user_data=$this->_model->queryAll(parse_tbprefix("SELECT uid, username, email FROM <sysuser>"));
+        exitWithResponse(200, $this->_getAllUsers());
+    }
+    
+    protected function _getAllUsers() {
+        $user_data=$this->_model->queryAll(parse_tbprefix("SELECT uid, username, email FROM <sysuser> ORDER BY uid DESC"));
         foreach ($user_data as &$user) {
             $user['uid'] = (int)$user['uid'];
             $user['user_type'] = 'regular';
         }
-        exitWithResponse(200, $user_data);
+        return $user_data;
     }
   
     /**
      * Sign up.
      */
     public function actionCreate(){
-        if(isset ($_SESSION['admin']) || isset ($_SESSION['user'])){
+        $currentUser = getCurrentUser();
+        if($currentUser['user_type'] !== "guest"){
             exitWithResponse(403);
         }
         issetPostParam(array('user', 'pwd', 'email'));
@@ -52,6 +57,7 @@ class UserController extends BaseController{
             $uid = $this->_model->insert_id();
             $_SESSION['user'] = $user;
             $_SESSION['uid'] =  $uid;
+            $_SESSION['email'] = $email;
             $_SESSION['token'] = getToken();
             setrawcookie('CSRF-TOKEN', $_SESSION['token']);
             exitWithResponse(200, array('uid'=>$uid, 'username'=> $user, 'email'=>$email, 'user_type'=>'regular'));
@@ -66,7 +72,8 @@ class UserController extends BaseController{
     public function actionShow() {
         issetGETParam('uid', t('PARAM_ERROR'));
         $this->checkUpdate();
-        if (!isset($_SESSION['admin']) && $_GET['uid']!= @$_SESSION['uid']) {
+        $currentUser = getCurrentUser();
+        if (($currentUser['user_type'] !== "admin") && $_GET['uid'] != $currentUser['uid']) {
             exitWithResponse(403);
         }
         $uid = $_GET['uid'];
@@ -81,7 +88,8 @@ class UserController extends BaseController{
     }
     
     protected function checkUpdate() {
-        if(!isset ($_SESSION['admin']) && !isset ($_SESSION['uid'])) {
+        $currentUser = getCurrentUser();
+        if($currentUser['user_type'] === "guest") {
             exitWithResponse(401, t('LOGIN_REQUIRED'));
         }
     }
@@ -92,7 +100,8 @@ class UserController extends BaseController{
     public function actionUpdate(){
         issetPostParam(array('uid', 'user', 'pwd', 'email'), t('PARAM_ERROR'));
         $this->checkUpdate();
-        if(!isset($_SESSION['admin']) && $_POST['uid'] != $_SESSION['uid']) {
+        $currentUser = getCurrentUser();
+        if(($currentUser['user_type'] != "admin") && $_POST['uid'] != $currentUser['uid']) {
             exitWithResponse(403);
         }
         if (!is_email($_POST['email'])) {
@@ -104,10 +113,13 @@ class UserController extends BaseController{
             $email=$_POST['email'];
             $sql = sprintf(parse_tbprefix("UPDATE <sysuser> SET email = '%s' WHERE uid = %d"), $email, $uid);
             if(!empty ($_POST['pwd'])) {
-              $pwd =  hashPassword($this->_model->escape_string($_POST['pwd']));
-              $sql = sprintf(parse_tbprefix("UPDATE <sysuser> SET password = '%s' , email = '%s' WHERE uid = %d"),$pwd,$email,$uid);
+                $pwd =  hashPassword($this->_model->escape_string($_POST['pwd']));
+                $sql = sprintf(parse_tbprefix("UPDATE <sysuser> SET password = '%s' , email = '%s' WHERE uid = %d"),$pwd,$email,$uid);
             }
             if($this->_model->query($sql)){
+                if ($_POST['uid'] == $currentUser['uid']) {
+                    $_SESSION['email'] = $email;
+                }
                 exitWithResponse(200, array('uid'=>$uid, 'username'=> $user, 'email'=>$email, 'user_type'=>'regular'));
             } else {
                 $exitWithResponse(500, t('USERUPDATEFAILED'));
@@ -127,7 +139,7 @@ class UserController extends BaseController{
         $uid = (int)$_POST['uid'];
         $this->_model->query(parse_tbprefix("DELETE FROM <sysuser> WHERE uid=$uid"));
         $this->_model->query(parse_tbprefix("UPDATE <post> SET uid=0 WHERE uid=$uid"));
-        exitWithResponse(200);
+        exitWithResponse(200, $this->_getAllUsers());
     }
     
     /**
@@ -153,7 +165,7 @@ class UserController extends BaseController{
             $this->_model->query(parse_tbprefix("DELETE FROM <sysuser> WHERE uid=$deleted_id"));
             $this->_model->query(parse_tbprefix("UPDATE <post> SET uid=0 WHERE uid=$deleted_id"));
         }
-        exitWithResponse(200);
+        exitWithResponse(200, $this->_getAllUsers());
     }
     
     /**
@@ -162,7 +174,8 @@ class UserController extends BaseController{
      */
     public function actionLogin(){
         $session_name=session_name();
-        if (isset($_SESSION['admin']) || isset($_SESSION['user'])) {
+        $currentUser = getCurrentUser();
+        if ($currentUser['user_type'] != "guest") {
             exitWithResponse(304);
         }
         issetPostParam(array('user', 'password'));
@@ -170,10 +183,12 @@ class UserController extends BaseController{
         $user =  $this->_model->escape_string($_REQUEST['user']);
         $password = $this->_model->escape_string($_REQUEST['password']);
         if(($user==ZFramework::app()->admin) && verifyPassword($password, ZFramework::app()->password)){//Admin user
+            $adminEmail = getConfigVar('admin_email');
             $_SESSION['admin']=$_REQUEST['user'];
             $_SESSION['token'] = getToken();
+            $_SESSION['email'] = $adminEmail;
             setrawcookie('CSRF-TOKEN', $_SESSION['token']);
-            $json_array=array('uid'=> -1, 'user_type'=>'admin','username'=>$_SESSION['admin'], 'email'=>getConfigVar('admin_email'));
+            $json_array=array('uid'=> -1, 'user_type'=>'admin','username'=>$_SESSION['admin'], 'email'=>$adminEmail);
             exitWithResponse(200, $json_array);
         } else {//common user
             $user_result =  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysuser> WHERE username='%s'"),$user));
@@ -183,6 +198,7 @@ class UserController extends BaseController{
                     $_SESSION['user']=$_REQUEST['user'];
                     $_SESSION['uid']=$user_result['uid'];
                     $_SESSION['token'] = getToken();
+                    $_SESSION['email'] = $user_result['email'];
                     setrawcookie('CSRF-TOKEN', $_SESSION['token']);
                     $json_array=array('uid'=>$user_result['uid'], 'user_type'=>'regular', 'username'=>$user_result['username'], 'email'=>$user_result['email']);
                     exitWithResponse(200, $json_array);
@@ -201,7 +217,8 @@ class UserController extends BaseController{
      */
     public function actionLogout(){
         is_post();
-        if (!isset($_SESSION['admin']) && !isset($_SESSION['user'])) {
+        $currentUser = getCurrentUser();
+        if ($currentUser['user_type'] == "guest") {
             exitWithResponse(304);
         }
         if (isTokenValid() == false) {
@@ -231,16 +248,6 @@ class UserController extends BaseController{
      * Get current user identity.
      */
     public function actionGetUserInfo() {
-      $result = array();
-      if (isset($_SESSION['admin'])) {
-        $result['admin'] = $_SESSION['admin'];
-      }
-      if (isset($_SESSION['uid'])) {
-        $result['uid'] = $_SESSION['uid'];
-      }
-      if (isset($_SESSION['user'])) {
-        $result['user'] = $_SESSION['user'];
-      }
-      exitWithResponse(200, $result);
+        exitWithResponse(200, getCurrentUser());
     }
 }

@@ -30,7 +30,8 @@ function is_post() {
  * @return void
  */
 function isAdminAjaxRequest() {
-    if (!isset($_SESSION['admin'])) {
+    $currentUser = getCurrentUser();
+    if ($currentUser['user_type'] !== "admin") {
         exitWithResponse(403);
     } elseif (isTokenValid() == false) {
         exitWithResponse(400);
@@ -41,7 +42,8 @@ function isAdminAjaxRequest() {
  * Check the user is root user or not.
  */
 function isAdmin() {
-    if (!isset($_SESSION['admin'])) {
+    $currentUser = getCurrentUser();
+    if ($currentUser['user_type'] !== "admin") {
         exitWithResponse(403);
     }
 }
@@ -606,4 +608,31 @@ if(!function_exists('hash_equals')) {
  */
 function verifyPassword($password, $hashStr) {
     return hash_equals($hashStr, crypt($password, $hashStr));
+}
+
+/**
+ * Get current user's information.
+ * @return array
+ */
+function getCurrentUser() {
+    $result = array(
+        'uid'       => -1,
+        'user_type' => 'guest',
+        'username'  => '',
+        'email'     => ''
+    );
+    if (isset($_SESSION['uid'])) {
+        $result['uid'] = $_SESSION['uid'];
+    }
+    if (isset($_SESSION['email'])) {
+        $result['email'] = $_SESSION['email'];
+    }
+    if (isset($_SESSION['admin'])) {
+        $result['user_type'] = 'admin';
+        $result['username'] = $_SESSION['admin'];
+    } elseif (isset($_SESSION['user'])) {
+        $result['user_type'] = 'regular';
+        $result['username'] = $_SESSION['user'];
+    }
+    return $result;
 }

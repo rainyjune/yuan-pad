@@ -31,16 +31,17 @@ class PostController extends BaseController{
         
         // Ready to send query to database
         $user=  $this->_model->escape_string($_POST['user']);
-        if(!isset($_SESSION['admin']) && $_POST['user']==ZFramework::app()->admin ) {
+        $currentUser = getCurrentUser();
+        if(($currentUser['user_type'] !== "admin") && $_POST['user']==ZFramework::app()->admin ) {
             $user='anonymous';
         }
         $userExists =  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysuser> WHERE username='%s'"),  $this->_model->escape_string($_POST['user'])));
-        if($userExists && (@$_SESSION['user']!=$_POST['user'])) {
+        if($userExists && ($currentUser['username'] != $_POST['user'])) {
             $user='anonymous';
         }
         $content = $this->_model->escape_string($_POST['content']);
-        if(isset ($_SESSION['uid'])) {
-            $sql_insert= sprintf (parse_tbprefix("INSERT INTO <post> ( uid , content , post_time , ip ) VALUES ( %d , '%s' , %d , '%s' )"), $_SESSION['uid'],$content,  time (),  getIp ());
+        if($currentUser['uid'] !== -1) {
+            $sql_insert= sprintf (parse_tbprefix("INSERT INTO <post> ( uid , content , post_time , ip ) VALUES ( %d , '%s' , %d , '%s' )"), $currentUser['uid'], $content,  time (),  getIp ());
         } else {
             $sql_insert = sprintf (parse_tbprefix("INSERT INTO <post> ( uname , content , post_time , ip ) VALUES ( '%s' ,'%s' , %d , '%s')"), $user,$content,  time (),  getIp ());
         }
