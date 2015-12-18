@@ -49,11 +49,12 @@ class UserController extends BaseController{
         }
         $pwd = hashPassword($pwd);
         if($this->_model->query(sprintf(parse_tbprefix("INSERT INTO <sysuser> ( username , password , email , reg_time ) VALUES ( '%s' , '%s' , '%s' , %d )"),$user,$pwd,$email,$time))){
-            $_SESSION['user']=$user;
-            $_SESSION['uid']=  $this->_model->insert_id();
+            $uid = $this->_model->insert_id();
+            $_SESSION['user'] = $user;
+            $_SESSION['uid'] =  $uid;
             $_SESSION['token'] = getToken();
             setrawcookie('CSRF-TOKEN', $_SESSION['token']);
-            exitWithResponse(200, array('user'=> $user, 'uid'=>$_SESSION['uid']));
+            exitWithResponse(200, array('uid'=>$uid, 'username'=> $user, 'uid'=>$_SESSION['uid'], 'email'=>$email, 'user_type'=>'regular'));
         } else {
             exitWithResponse(500, $this->_model->error());
         }
