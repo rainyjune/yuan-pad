@@ -54,7 +54,7 @@ class UserController extends BaseController{
             $_SESSION['uid'] =  $uid;
             $_SESSION['token'] = getToken();
             setrawcookie('CSRF-TOKEN', $_SESSION['token']);
-            exitWithResponse(200, array('uid'=>$uid, 'username'=> $user, 'uid'=>$_SESSION['uid'], 'email'=>$email, 'user_type'=>'regular'));
+            exitWithResponse(200, array('uid'=>$uid, 'username'=> $user, 'email'=>$email, 'user_type'=>'regular'));
         } else {
             exitWithResponse(500, $this->_model->error());
         }
@@ -108,7 +108,7 @@ class UserController extends BaseController{
               $sql = sprintf(parse_tbprefix("UPDATE <sysuser> SET password = '%s' , email = '%s' WHERE uid = %d"),$pwd,$email,$uid);
             }
             if($this->_model->query($sql)){
-                exitWithResponse(200);
+                exitWithResponse(200, array('uid'=>$uid, 'username'=> $user, 'email'=>$email, 'user_type'=>'regular'));
             } else {
                 $exitWithResponse(500, t('USERUPDATEFAILED'));
             }
@@ -173,7 +173,7 @@ class UserController extends BaseController{
             $_SESSION['admin']=$_REQUEST['user'];
             $_SESSION['token'] = getToken();
             setrawcookie('CSRF-TOKEN', $_SESSION['token']);
-            $json_array=array('admin'=>$_SESSION['admin'],'session_name'=>$session_name,'session_value'=>session_id());
+            $json_array=array('uid'=> -1, 'user_type'=>'admin','username'=>$_SESSION['admin'], 'email'=>getConfigVar('admin_email'));
             exitWithResponse(200, $json_array);
         } else {//common user
             $user_result =  $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <sysuser> WHERE username='%s'"),$user));
@@ -184,7 +184,7 @@ class UserController extends BaseController{
                     $_SESSION['uid']=$user_result['uid'];
                     $_SESSION['token'] = getToken();
                     setrawcookie('CSRF-TOKEN', $_SESSION['token']);
-                    $json_array=array('user'=>$_REQUEST['user'],'uid'=>$user_result['uid'],'session_name'=>$session_name,'session_value'=>session_id());
+                    $json_array=array('uid'=>$user_result['uid'], 'user_type'=>'regular', 'username'=>$user_result['username'], 'email'=>$user_result['email']);
                     exitWithResponse(200, $json_array);
                 } else {
                     exitWithResponse(401, t('LOGIN_ERROR'));
