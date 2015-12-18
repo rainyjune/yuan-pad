@@ -8,7 +8,12 @@ class YDB {
         if(in_array($dbms, self::$allowdDBMS)){ 
             $DBClass='Y'.$dbms;
             include_once APPROOT.'/includes/database/'.$DBClass.'.php';
-            return new $DBClass($url);
+            try {
+                return new $DBClass($url);
+            } catch (Exception $e) {
+                require('./error.html');
+                exit;
+            }
         }else{
             die("DBMS '$dbms' is not supported.");
         }
