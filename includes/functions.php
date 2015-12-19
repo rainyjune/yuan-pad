@@ -334,6 +334,7 @@ function formatComments($data, $filter_words=true, $stripTags=true) {
         if($filter_words) {
             $_data['post_content']=filter_words($_data['post_content']);
         }
+        $_data['id'] = (int)$_data['id'];
         $_data['time']=date('m-d H:i',$_data['time']+ZFramework::app()->timezone*60*60);
         $_data['reply_time']=date('m-d H:i',$_data['reply_time']+ZFramework::app()->timezone*60*60);
     }
