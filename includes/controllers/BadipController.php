@@ -27,7 +27,7 @@ class BadipController extends BaseController
             exitWithResponse(304);
         }
         $this->_model->query(sprintf(parse_tbprefix("INSERT INTO <badip> ( ip ) VALUES ( '%s' )"),$ip));
-        exitWithResponse(200);
+        exitWithResponse(200, $this->_getAllIps());
     }
 
     /**
@@ -42,12 +42,16 @@ class BadipController extends BaseController
         foreach ($_POST['select_ip'] as $_ip) {
             $this->_model->query(sprintf(parse_tbprefix("DELETE FROM <badip> WHERE ip = '%s'"),$_ip));
         }
-        exitWithResponse(200);
+        exitWithResponse(200, $this->_getAllIps());
     }
     
     public function actionList() {
       isAdminAjaxRequest();
-      $result = $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <badip>")));
-      exitWithResponse(200, $result);
+      exitWithResponse(200, $this->_getAllIps());
+    }
+    
+    private function _getAllIps() {
+        $result = $this->_model->queryAll(sprintf(parse_tbprefix("SELECT * FROM <badip>")));
+        return $result;
     }
 }
