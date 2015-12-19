@@ -39,10 +39,10 @@ class ReplyController extends BaseController{
     }
     
     public function actionShow() {
-        isAdminAjaxRequest();
         issetGETParam('mid');
         $reply_data=$this->loadModel();
-        exitWithResponse(200, array('response'=>$reply_data));
+        $statusCode = empty($reply_data) ? 404 : 200;
+        exitWithResponse($statusCode, $reply_data);
     }
 
     protected function loadModel() {
