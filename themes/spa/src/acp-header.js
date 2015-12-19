@@ -13,7 +13,7 @@ var ACPHeader = React.createClass({
     }.bind(this));
   },
   render: function() {
-    if (!this.props.user.admin) return null;
+    if (this.props.user.user_type !== "admin") return null;
     return (
       <header>
         <a href="index.php">{this.props.lang.HOME}</a>&nbsp;

@@ -11,7 +11,7 @@ var ACPLogin = React.createClass({
     };
   },
   render: function() {
-    return (this.props.user.admin) ?
+    return (this.props.user.user_type === "admin") ?
            null :
       (
         <div>

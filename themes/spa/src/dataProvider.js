@@ -451,20 +451,38 @@ function getSystemInformation(successCallback, errorCallback) {
 
 /**
  * Tested 1.
- * Create or update a reply.
+ * Create a reply.
  *
  */
-function reply(replyData, successCallback, errorCallback) {
+function createReply(replyData, successCallback, errorCallback) {
   var formData = {
     mid: replyData.pid,
     content: replyData.content
   };
-  if (replyData.rid) {
-    formData.update = 1;
-  }
   yuanjs.ajax({
     type: "POST",
     url: "index.php?controller=reply&action=create",
+    data: formData,
+    dataType: "json",
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
+    success: successCallback,
+    error: errorCallback
+  });
+}
+
+/**
+ * Tested 1.
+ */
+function updateReply(replyData, successCallback, errorCallback) {
+  var formData = {
+    mid: replyData.pid,
+    content: replyData.content
+  };
+  yuanjs.ajax({
+    type: "POST",
+    url: "index.php?controller=reply&action=update",
     data: formData,
     dataType: "json",
     headers: {
@@ -511,6 +529,7 @@ function getIPBlackList(successCallback, errorCallback) {
 module.exports = {
   banIP: banIP,
   createPost: createPost,
+  createReply: createReply,
   deleteAllComments: deleteAllComments,
   deleteAllReplies: deleteAllReplies,
   deleteAllUsers: deleteAllUsers,
@@ -526,11 +545,11 @@ module.exports = {
   getAllUsers: getAllUsers,
   getSystemInformation: getSystemInformation,
   getTranslations: getTranslations,
-  reply: reply,
   signIn: signIn,
   signOut: signOut,
   signUp: signUp,
   updateComment: updateComment,
+  updateReply: updateReply,
   updateUser: updateUser,
   loadAllCommentsFromServer: loadAllCommentsFromServer,
   loadCommentsFromServer: loadCommentsFromServer,

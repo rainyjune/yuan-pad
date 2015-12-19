@@ -81,11 +81,8 @@ var ACPBox = React.createClass({
       if (res.statusCode !== 200) {
         return ;
       }
-      if (Object.prototype.toString.call(res.response) === "[object Array]") {
-        res.response = {};
-      }
       if (this.isMounted()) {
-        if (res.response.admin) {
+        if (res.response.user_type === "admin") {
           this.setState({currentUser: res.response}, successCallback);
         }
       }

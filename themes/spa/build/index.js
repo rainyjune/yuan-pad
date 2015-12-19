@@ -22265,20 +22265,38 @@
 	
 	/**
 	 * Tested 1.
-	 * Create or update a reply.
+	 * Create a reply.
 	 *
 	 */
-	function reply(replyData, successCallback, errorCallback) {
+	function createReply(replyData, successCallback, errorCallback) {
 	  var formData = {
 	    mid: replyData.pid,
 	    content: replyData.content
 	  };
-	  if (replyData.rid) {
-	    formData.update = 1;
-	  }
 	  yuanjs.ajax({
 	    type: "POST",
 	    url: "index.php?controller=reply&action=create",
+	    data: formData,
+	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 */
+	function updateReply(replyData, successCallback, errorCallback) {
+	  var formData = {
+	    mid: replyData.pid,
+	    content: replyData.content
+	  };
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=reply&action=update",
 	    data: formData,
 	    dataType: "json",
 	    headers: {
@@ -22325,6 +22343,7 @@
 	module.exports = {
 	  banIP: banIP,
 	  createPost: createPost,
+	  createReply: createReply,
 	  deleteAllComments: deleteAllComments,
 	  deleteAllReplies: deleteAllReplies,
 	  deleteAllUsers: deleteAllUsers,
@@ -22340,11 +22359,11 @@
 	  getAllUsers: getAllUsers,
 	  getSystemInformation: getSystemInformation,
 	  getTranslations: getTranslations,
-	  reply: reply,
 	  signIn: signIn,
 	  signOut: signOut,
 	  signUp: signUp,
 	  updateComment: updateComment,
+	  updateReply: updateReply,
 	  updateUser: updateUser,
 	  loadAllCommentsFromServer: loadAllCommentsFromServer,
 	  loadCommentsFromServer: loadCommentsFromServer,
@@ -22675,7 +22694,7 @@
 	    if (this.props.commentListType !== 1) {
 	      return null;
 	    }
-	    var captcha = this.props.appConfig.valid_code_open ? React.createElement(Captcha, {
+	    var captcha = this.props.appConfig.valid_code_open == 1 ? React.createElement(Captcha, {
 	      ref: "captcha",
 	      valid_code: this.state.valid_code,
 	      lang: this.props.lang,
@@ -22918,12 +22937,11 @@
 	
 	  handleSubmit: function (e) {
 	    e.preventDefault();
-	    var register = this.refs.register.value;
 	    var user = this.refs.user.value.trim();
 	    var pwd = this.refs.pwd.value.trim();
 	    var email = this.refs.email.value.trim();
 	    if (!user || !pwd || !email) return;
-	    this.props.onRegisterSubmit({ register: register, user: user, pwd: pwd, email: email });
+	    this.props.onRegisterSubmit({ user: user, pwd: pwd, email: email });
 	    return false;
 	  },
 	  render: function () {
@@ -22947,7 +22965,7 @@
 	      ),
 	      React.createElement(
 	        'form',
-	        { onSubmit: this.handleSubmit, action: 'index.php?controller=user&action=create', method: 'post' },
+	        { onSubmit: this.handleSubmit, action: '#', method: 'post' },
 	        React.createElement(
 	          'fieldset',
 	          null,
@@ -22956,7 +22974,6 @@
 	            null,
 	            this.props.lang.REGISTER
 	          ),
-	          React.createElement('input', { type: 'hidden', ref: 'register', value: 'true' }),
 	          React.createElement(
 	            'dl',
 	            null,

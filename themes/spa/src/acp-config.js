@@ -88,7 +88,6 @@ var ACPConfig = React.createClass({
       var language = languages[i];
       languageOptions.push(<option key={i} value={language}>{language}</option>);
     }
-
     
     var captchaInputs = [];
     if (acpData.gd_loaded) {

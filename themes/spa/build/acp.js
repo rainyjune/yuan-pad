@@ -129,11 +129,8 @@
 	      if (res.statusCode !== 200) {
 	        return;
 	      }
-	      if (Object.prototype.toString.call(res.response) === "[object Array]") {
-	        res.response = {};
-	      }
 	      if (this.isMounted()) {
-	        if (res.response.admin) {
+	        if (res.response.user_type === "admin") {
 	          this.setState({ currentUser: res.response }, successCallback);
 	        }
 	      }
@@ -21592,7 +21589,7 @@
 	    };
 	  },
 	  render: function () {
-	    return this.props.user.admin ? null : React.createElement(
+	    return this.props.user.user_type === "admin" ? null : React.createElement(
 	      'div',
 	      null,
 	      React.createElement(LoginModal, {
@@ -22213,20 +22210,38 @@
 	
 	/**
 	 * Tested 1.
-	 * Create or update a reply.
+	 * Create a reply.
 	 *
 	 */
-	function reply(replyData, successCallback, errorCallback) {
+	function createReply(replyData, successCallback, errorCallback) {
 	  var formData = {
 	    mid: replyData.pid,
 	    content: replyData.content
 	  };
-	  if (replyData.rid) {
-	    formData.update = 1;
-	  }
 	  yuanjs.ajax({
 	    type: "POST",
 	    url: "index.php?controller=reply&action=create",
+	    data: formData,
+	    dataType: "json",
+	    headers: {
+	      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+	    },
+	    success: successCallback,
+	    error: errorCallback
+	  });
+	}
+	
+	/**
+	 * Tested 1.
+	 */
+	function updateReply(replyData, successCallback, errorCallback) {
+	  var formData = {
+	    mid: replyData.pid,
+	    content: replyData.content
+	  };
+	  yuanjs.ajax({
+	    type: "POST",
+	    url: "index.php?controller=reply&action=update",
 	    data: formData,
 	    dataType: "json",
 	    headers: {
@@ -22273,6 +22288,7 @@
 	module.exports = {
 	  banIP: banIP,
 	  createPost: createPost,
+	  createReply: createReply,
 	  deleteAllComments: deleteAllComments,
 	  deleteAllReplies: deleteAllReplies,
 	  deleteAllUsers: deleteAllUsers,
@@ -22288,11 +22304,11 @@
 	  getAllUsers: getAllUsers,
 	  getSystemInformation: getSystemInformation,
 	  getTranslations: getTranslations,
-	  reply: reply,
 	  signIn: signIn,
 	  signOut: signOut,
 	  signUp: signUp,
 	  updateComment: updateComment,
+	  updateReply: updateReply,
 	  updateUser: updateUser,
 	  loadAllCommentsFromServer: loadAllCommentsFromServer,
 	  loadCommentsFromServer: loadCommentsFromServer,
@@ -22323,7 +22339,7 @@
 	    }).bind(this));
 	  },
 	  render: function () {
-	    if (!this.props.user.admin) return null;
+	    if (this.props.user.user_type !== "admin") return null;
 	    return React.createElement(
 	      'header',
 	      null,
@@ -22380,7 +22396,7 @@
 	  displayName: 'ACPTabHeader',
 	
 	  render: function () {
-	    if (!this.props.user.admin) return null;
+	    if (this.props.user.user_type !== "admin") return null;
 	    var activeTab = this.props.activeTab;
 	    var onTabSelected = this.props.onTabSelected;
 	    var items = this.props.tabs.map(function (tab) {
@@ -22420,7 +22436,7 @@
 	  displayName: 'ACPTabContent',
 	
 	  render: function () {
-	    if (!this.props.user.admin) return null;
+	    if (this.props.user.user_type !== "admin") return null;
 	
 	    return React.createElement(
 	      'div',
@@ -23817,7 +23833,8 @@
 	  handleSubmit: function (e) {
 	    e.preventDefault();
 	    if (!this.state.pid || !this.state.content.trim()) return;
-	    dataProvider.reply(this.state, (function (res) {
+	    var action = this.state.rid ? 'updateReply' : 'createReply';
+	    dataProvider[action](this.state, (function (res) {
 	      if (res.statusCode === 200) {
 	        this.props.onReplySubmit();
 	      }
@@ -24605,7 +24622,7 @@
 	  displayName: "ACPFooter",
 	
 	  render: function () {
-	    if (!this.props.user.admin) return null;
+	    if (this.props.user.user_type !== "admin") return null;
 	    return React.createElement(
 	      "footer",
 	      null,

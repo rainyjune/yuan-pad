@@ -35,7 +35,8 @@ var ReplyModal = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
     if (!this.state.pid || !this.state.content.trim()) return;
-    dataProvider.reply(this.state, function(res){
+    var action = this.state.rid ? 'updateReply' : 'createReply';
+    dataProvider[action](this.state, function(res){
       if (res.statusCode === 200) {
         this.props.onReplySubmit();
       }

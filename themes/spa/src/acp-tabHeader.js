@@ -22,7 +22,7 @@ var ACPTableHeaderItem = React.createClass({
 
 var ACPTabHeader = React.createClass({
   render: function() {
-    if (!this.props.user.admin) return null;
+    if (this.props.user.user_type !== "admin") return null;
     var activeTab = this.props.activeTab;
     var onTabSelected = this.props.onTabSelected;
     var items = this.props.tabs.map(function(tab) {
