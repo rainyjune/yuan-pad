@@ -553,7 +553,8 @@ function maple_unset_globals()
  * @return string A base64-encoded token.
  */
 function getToken() {
-    return base64_encode(openssl_random_pseudo_bytes(32));
+    $str = function_exists('openssl_random_pseudo_bytes') ? openssl_random_pseudo_bytes(32) : getRandomString(32);
+    return base64_encode($str);
 }
 
 /**
@@ -573,10 +574,24 @@ function isTokenValid() {
  */
 function hashPassword($password) {
     $cost = 10;
-    $salt = strtr(base64_encode(mcrypt_create_iv(16, MCRYPT_DEV_RANDOM)), '+', '.');
+    $iv = function_exists('mcrypt_create_iv')? mcrypt_create_iv(16) : getRandomString();
+    $salt = strtr(base64_encode($iv), '+', '.');
     $salt = sprintf("$2a$%02d$", $cost).$salt;
     $hash = crypt($password, $salt);
     return $hash;
+}
+
+/**
+ * Generate a random string of bytes.
+ * @param int $size The length of the desired string of bytes.
+ * @return string Returns the generated string of bytes.
+ */
+function getRandomString($size = 16) {
+    $str = '';
+    for ($i = 0; $i < $size; $i++) {
+        $str .= chr(mt_rand(0,255));
+    }
+    return $str;
 }
 
 /**
