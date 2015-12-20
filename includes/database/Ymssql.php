@@ -62,9 +62,10 @@ class Ymssql extends YDBBase {
     }
 
 
-    // TODO
+    //Note : MS SQL Server 2012 + 
     public function queryWithLimit($sql, $offset, $row_count) {
-
+        $sql .= ' OFFSET '. $offset .' ROWS FETCH NEXT '.$row_count.' ROWS ONLY';
+		return $this->queryAll($sql);
     }
 
     // Tested 1
