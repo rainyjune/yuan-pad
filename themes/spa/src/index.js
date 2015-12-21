@@ -25,7 +25,7 @@ var App = React.createClass({
    */
   // Get a regular user profile by uid.
   loadUserDataFromServer: function(uid) {
-    dataProvider.loadUserDataFromServer(uid, function(res){
+    dataProvider.loadUserDataFromServer(uid, res => {
         console.log('user info from server:', res);
         if (res.statusCode !== 200) {
           return;
@@ -33,7 +33,7 @@ var App = React.createClass({
         if (this.isMounted()) {
           this.setState({currentUser: res.response});
         }
-      }.bind(this), function(){
+      }, function(){
       }.bind(this));
   },
   /**
@@ -42,23 +42,16 @@ var App = React.createClass({
    */
   // Get current user identity from server.
   getUserInfo: function() {
-    dataProvider.getUserInfo(function(res){
+    dataProvider.getUserInfo(res => {
       console.log('user info:', res);
       if (res.statusCode !== 200) {
         return ;
       }
-      if (Object.prototype.toString.call(res.response) === "[object Array]") {
-        res.response = {};
-      }
       if (this.isMounted()) {
-        if (res.response.uid) {
-          this.loadUserDataFromServer(res.response.uid)
-        } else {
-          this.setState({currentUser: res.response});
-        }
+        this.setState({currentUser: res.response});
         this.loadCommentsFromServer();
       }
-    }.bind(this), function(){
+    }, function(){
     }.bind(this));
   },
   /**
@@ -84,7 +77,7 @@ var App = React.createClass({
    */
   // Load comments to be displayed on page by page number.
   loadCommentsFromServer: function() {
-    dataProvider.loadCommentsFromServer(this.state.currentPage, function(res) {
+    dataProvider.loadCommentsFromServer(this.state.currentPage, res => {
         if (res.statusCode === 200) {
           //code
         } else if (res.statusCode === 404) {
@@ -97,7 +90,7 @@ var App = React.createClass({
             commentListType: 1
           });
         }
-      }.bind(this),
+      },
       function(xhr, status, err) {
         debugger;
       }.bind(this)
@@ -109,7 +102,7 @@ var App = React.createClass({
    */
   // Get comments from server according to the keyword user has entered.
   handleSearch: function(keyword) {
-    dataProvider.search(keyword, function(res) {
+    dataProvider.search(keyword, res => {
         console.log('search result:', res);
         if (this.isMounted()) {
           this.setState({
@@ -118,7 +111,7 @@ var App = React.createClass({
             commentListType: 2
           });
         }
-      }.bind(this),
+      },
       function(xhr, status, err) {
         debugger;
       }.bind(this)
@@ -129,7 +122,7 @@ var App = React.createClass({
    */
   // When the component is rendered, load the site configuration from server, and then try to indentify current user.
   componentDidMount: function() {
-    dataProvider.getAppConfig(function(res){
+    dataProvider.getAppConfig(res => {
       if (res.statusCode === 200) {
         var siteConfig = res.response;
         dataProvider.getTranslations(function(res){
@@ -142,14 +135,14 @@ var App = React.createClass({
         // TODO Tell the user what's wrong.
         alert(res.statusText);
       }
-    }.bind(this));
+    });
   },
   /**
    * Tested 1.
    */
   // Save comment to the server, reload comments after saved sucessfully.
   handleCommentSubmit: function(comment) {
-    dataProvider.createPost(comment, function(res) {
+    dataProvider.createPost(comment, res => {
         if (res.statusCode !== 200) {
           alert(res.response);
           return;
@@ -157,7 +150,7 @@ var App = React.createClass({
         // Clear the text in the textarea.
         this.refs.commentBox.refs.commentForm.setState({text:''});
         this.loadCommentsFromServer();
-      }.bind(this),
+      },
       function(xhr, status, err) {
         console.log("error", xhr, status, err);
       }.bind(this)
@@ -169,9 +162,7 @@ var App = React.createClass({
   // Reload comments from server if the `currentPage` state changed.
   handlePageChange: function(pageNumber) {
     pageNumber = parseInt(pageNumber);
-    this.setState({currentPage: pageNumber}, function(){
-      this.loadCommentsFromServer();
-    });
+    this.setState({currentPage: pageNumber}, () => this.loadCommentsFromServer());
   },
   /**
    * Tested 1.
