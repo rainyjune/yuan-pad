@@ -3,14 +3,14 @@ var React = require('react');
 var FormItemMixIn = {
   addSelectedFlag: function(arr) {
     if (Array.isArray(arr)) {
-      arr.forEach(function(currentValue, index){
+      arr.forEach((currentValue, index) => {
         currentValue['checked'] = false;
-      }, this);
+      });
     }
   },
   toggle: function(itemToToggle) {
     var field = this.getMixinAttr();
-    var data = this.state[field].map(function(currentValue, index) {
+    var data = this.state[field].map((currentValue, index) => {
       if (currentValue === itemToToggle) {
         currentValue['checked'] = !currentValue['checked'];
       }
@@ -21,10 +21,10 @@ var FormItemMixIn = {
   },
   toggleAll: function(checked) {
     var field = this.getMixinAttr();
-    var data = this.state[field].map(function(currentValue, index){
+    var data = this.state[field].map((currentValue, index) => {
       currentValue['checked'] = checked;
       return currentValue;
-    }, this);
+    });
     //this.setState({users: data});
     this.setMixState(data);
   },
@@ -42,10 +42,10 @@ var FormItemMixIn = {
   },
   toggleXAll: function() {
     var field = this.getMixinAttr();
-    var data = this.state[field].map(function(currentValue, index){
+    var data = this.state[field].map((currentValue, index) => {
       currentValue['checked'] = !currentValue['checked'];
       return currentValue;
-    }, this);
+    });
     //this.setState({users: data});
     this.setMixState(data);
   },
@@ -53,7 +53,7 @@ var FormItemMixIn = {
     var arr = [];
     var key = this.getItemKey();
     var field = this.getMixinAttr();
-    this.state[field].forEach(function(currentValue, index) {
+    this.state[field].forEach((currentValue, index) => {
       if (currentValue.checked) {
         arr.push(currentValue[key]);
       }
