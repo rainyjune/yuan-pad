@@ -36,11 +36,11 @@ var ReplyModal = React.createClass({
     e.preventDefault();
     if (!this.state.pid || !this.state.content.trim()) return;
     var action = this.state.rid ? 'updateReply' : 'createReply';
-    dataProvider[action](this.state, function(res){
+    dataProvider[action](this.state, res => {
       if (res.statusCode === 200) {
         this.props.onReplySubmit();
       }
-    }.bind(this), function(e){
+    }, function(e){
       debugger;
     }.bind(this));
     return false;

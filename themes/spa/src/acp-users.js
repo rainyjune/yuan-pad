@@ -9,11 +9,11 @@ var UserItem = React.createClass({
    */
   deleteUser: function(e) {
     e.preventDefault();
-    dataProvider.deleteUser(this.props.data.uid, function(res) {
+    dataProvider.deleteUser(this.props.data.uid, res=> {
       if (res.statusCode === 200) {
         this.props.onUserDeleted();
       }
-    }.bind(this));
+    });
   },
   /**
    * Tested 1.
@@ -78,7 +78,7 @@ var ACPUser = React.createClass({
    * Tested 1.
    */
   loadAllUsersFromServer: function() {
-    dataProvider.getAllUsers(function(res){
+    dataProvider.getAllUsers(res => {
       if (res.statusCode === 200) {
         var data = res.response;
         this.addSelectedFlag(data);
@@ -86,7 +86,7 @@ var ACPUser = React.createClass({
           console.warn('users:', this.state.users);
         });
       }
-    }.bind(this));
+    });
   },
   /**
    * Tested 1.
@@ -98,7 +98,7 @@ var ACPUser = React.createClass({
    * Tested 1.
    */
   handleUpdateSubmit: function(newUserData) {
-    dataProvider.updateUser(newUserData, function(res){
+    dataProvider.updateUser(newUserData, res => {
       if (res.statusCode === 200) {
         this.setState({
           updateErrorMsg: '',
@@ -107,7 +107,7 @@ var ACPUser = React.createClass({
         });
         this.loadAllUsersFromServer();
       }
-    }.bind(this));
+    });
   },
   /**
    * Tested 1.
@@ -134,11 +134,11 @@ var ACPUser = React.createClass({
    */
   deleteAllUsers: function(e) {
     e.preventDefault();
-    dataProvider.deleteAllUsers(function(res){
+    dataProvider.deleteAllUsers(res => {
       if (res.statusCode === 200) {
         this.loadAllUsersFromServer();
       }
-    }.bind(this));
+    });
   },
   /**
    * Tested 1.
@@ -146,13 +146,13 @@ var ACPUser = React.createClass({
   handleDeleteMulti: function(e) {
     e.preventDefault();
     var checkedUids = this.getCheckedItems();
-    dataProvider.deleteMutiUsers(checkedUids, function(res){
+    dataProvider.deleteMutiUsers(checkedUids, res => {
       if (res.statusCode === 200) {
         this.loadAllUsersFromServer();
       } else {
         alert('delete error');
       }
-    }.bind(this));
+    });
   },
   /**
    * Tested 1

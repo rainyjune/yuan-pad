@@ -27,29 +27,28 @@ var ACPBox = React.createClass({
   },
 
   loadApplicationConfiguration: function(successCallback) {
-    dataProvider.getAppConfigACP(function(res){
+    dataProvider.getAppConfigACP(res => {
       //debugger;
       if (res.statusCode !== 200) {
         return ;
       }
       this.setState({appConfig: res.response}, successCallback || this.loadApplicationTranslation);
-    }.bind(this));
+    });
   },
   loadApplicationTranslation: function(successCallback) {
-    dataProvider.getTranslations(function(res){
+    dataProvider.getTranslations(res => {
       //debugger;
       if (res.statusCode === 200) {
         this.setState({translations: res.response}, successCallback || this.loadApplicationSystemInformation);
       }
-    }.bind(this));
+    });
   },
   loadApplicationSystemInformation: function(successCallback) {
-    dataProvider.getSystemInformation(function(res){
-      //debugger;
+    dataProvider.getSystemInformation(res => {
       if (res.statusCode === 200) {
         this.setState({systemInformation: res.response}, successCallback);
       }
-    }.bind(this));
+    });
   },
   
   /**
@@ -76,7 +75,7 @@ var ACPBox = React.createClass({
    */
   // Get current user identity from server.
   getUserInfo: function(successCallback) {
-    dataProvider.getUserInfo(function(res){
+    dataProvider.getUserInfo(res => {
       console.log('user info:', res);
       if (res.statusCode !== 200) {
         return ;
@@ -86,7 +85,7 @@ var ACPBox = React.createClass({
           this.setState({currentUser: res.response}, successCallback);
         }
       }
-    }.bind(this), function(){
+    }, function(){
     }.bind(this));
   },
   /**

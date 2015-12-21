@@ -81,7 +81,7 @@ var SignUp = React.createClass({
     this.setState({registerModalIsOpen: false});
   },
   handleSignUp: function(userData) {
-    dataProvider.signUp(userData,function(res) {
+    dataProvider.signUp(userData, res => {
         console.log('create user result:', res);
         if (res.statusCode !== 200) {
           if (this.isMounted()) {
@@ -93,7 +93,7 @@ var SignUp = React.createClass({
           }
           this.props.onSignedUp(res.response);
         }
-      }.bind(this),
+      },
       function(xhr, status, err) {
         debugger;
       }.bind(this)

@@ -36,24 +36,22 @@ var ACPIpConfig = React.createClass({
     this.loadBlackList();
   },
   loadBlackList: function() {
-    dataProvider.getIPBlackList(function(res) {
+    dataProvider.getIPBlackList(res => {
       if (res.statusCode === 200) {
         this.setState({IPs: res.response});
       }
-    }.bind(this));
+    });
   },
   handleSubmit: function(e) {
     e.preventDefault();
     var checkedItems = this.getCheckedItems();
-    debugger;
-    dataProvider.deleteMultiIPs(checkedItems, function(res) {
-      debugger;
+    dataProvider.deleteMultiIPs(checkedItems, res => {
       if (res.statusCode === 200) {
         this.loadBlackList();
       } else {
         alert('delete error');
       }
-    }.bind(this));
+    });
   },
   handleToggleItem: function(item) {
     this.toggle(item);

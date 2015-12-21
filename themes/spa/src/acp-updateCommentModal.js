@@ -32,11 +32,11 @@ var UpdateCommentModal = React.createClass({
   handleSubmit: function(e) {
     e.preventDefault();
     if (!this.state.mid || !this.state.update_content.trim()) return;
-    dataProvider.updateComment(this.state, function(res){
+    dataProvider.updateComment(this.state, res => {
       if (res.statusCode === 200) {
         this.props.onCommentUpdated();
       }
-    }.bind(this), function(e){
+    }, function(e){
       debugger;
     }.bind(this));
     return false;

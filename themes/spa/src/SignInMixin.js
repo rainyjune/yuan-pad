@@ -12,7 +12,7 @@ var SignInMixIn = {
     this.setState({loginModalIsOpen: false});
   },
   handleSignIn: function(loginData) {
-    dataProvider.signIn(loginData, function(res){
+    dataProvider.signIn(loginData, res => {
       if (this.isMounted()) {
         if (res.statusCode === 200) {
           this.setState({loginErrorMsg: '', loginModalIsOpen: false});
@@ -23,7 +23,7 @@ var SignInMixIn = {
           this.setState({loginErrorMsg: res.response});
         }
       }
-    }.bind(this), function(){
+    }, function(){
       debugger;
     }.bind(this));
   }

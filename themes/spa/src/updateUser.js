@@ -27,7 +27,7 @@ var UserUpdate = React.createClass({
     this.setState({userUpdateModalIsOpen: false});
   },
   handleUserUpdate: function(userData) {
-    dataProvider.updateUser(userData, function(data) {
+    dataProvider.updateUser(userData,  data => {
         console.log('update user result:', data, userData);
         if (data.error) {
           if (this.isMounted()) {
@@ -39,7 +39,7 @@ var UserUpdate = React.createClass({
             this.props.onUserUpdated();
           }
         }
-      }.bind(this),
+      },
       function(xhr, status, err) {
         debugger;
       }.bind(this));

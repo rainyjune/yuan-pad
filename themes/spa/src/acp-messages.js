@@ -40,9 +40,9 @@ var Reply = React.createClass({
   },
   deleteReply: function(e) {
     e.preventDefault();
-    dataProvider.deleteReply(e.target.getAttribute("data-commentid"), function(response) {
+    dataProvider.deleteReply(e.target.getAttribute("data-commentid"), response => {
       this.setState({reply_content: ''});
-    }.bind(this));
+    });
   },
   render: function() {
     var lang = this.props.lang,
@@ -64,9 +64,9 @@ var Comment = React.createClass({
     var dom = e.target;
     e.preventDefault();
     var ip = dom.getAttribute('data-ip');
-    dataProvider.banIP(ip, function(){
+    dataProvider.banIP(ip, () => {
       this.props.onActiveTabChanged('ban_ip');
-    }.bind(this));
+    });
   },
   deleteComment: function(e) {
     e.preventDefault();
@@ -74,9 +74,9 @@ var Comment = React.createClass({
     var commentId = dom.getAttribute("data-commentid");
     var reply = dom.getAttribute("data-reply");
     // TODO
-    dataProvider.deleteComment(commentId, reply, function(response) {
+    dataProvider.deleteComment(commentId, reply, response => {
       this.props.onCommentDeleted();
-    }.bind(this));
+    });
   },
   replyComment: function(e) {
     e.preventDefault();
@@ -142,37 +142,37 @@ var ACPMessages = React.createClass({
   },
   deleteAllComments: function(e) {
     e.preventDefault();
-    dataProvider.deleteAllComments(function(res){
+    dataProvider.deleteAllComments(res => {
       if (res.statusCode === 200) {
         this.setState({comments: []});
       } else {
         alert('Error');
       }
-    }.bind(this));
+    });
   },
   /**
    * Tested 1
    */
   deleteAllReplies: function(e) {
     e.preventDefault();
-    dataProvider.deleteAllReplies(function(res){
+    dataProvider.deleteAllReplies(res => {
       if (res.statusCode === 200) {
         this.loadCommentsFromServer();
       } else {
         alert('ERROR')
       }
-    }.bind(this));
+    });
   },
   deleteSelected: function(e) {
     e.preventDefault();
     var checkedItems = this.getCheckedItems();
-    dataProvider.deleteMutiComments(checkedItems, function(res){
+    dataProvider.deleteMutiComments(checkedItems, res => {
       if (res.statusCode === 200) {
         this.loadCommentsFromServer();
       } else {
         alert('delete error');
       }
-    }.bind(this));
+    });
   },
   handleReplyComment: function(commentTobeReplied) {
     this.setState({
@@ -222,7 +222,7 @@ var ACPMessages = React.createClass({
     this.loadCommentsFromServer();
   },
   loadCommentsFromServer: function() {
-    dataProvider.loadAllCommentsFromServer(function(res){
+    dataProvider.loadAllCommentsFromServer(res => {
       if (res.statusCode === 200 || res.statusCode === 404) {
         var data = res.response.comments;
         this.addSelectedFlag(data)
@@ -231,7 +231,7 @@ var ACPMessages = React.createClass({
         // TODO .
         alert('error');
       }
-    }.bind(this));
+    });
   },
   componentDidMount: function() {
     this.loadCommentsFromServer();

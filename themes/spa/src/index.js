@@ -125,12 +125,12 @@ var App = React.createClass({
     dataProvider.getAppConfig(res => {
       if (res.statusCode === 200) {
         var siteConfig = res.response;
-        dataProvider.getTranslations(function(res){
+        dataProvider.getTranslations(res => {
           if (this.isMounted()) {
             this.setState({translations: res.response, appConfig: siteConfig});
           }
           this.getUserInfo();
-        }.bind(this));
+        });
       } else {
         // TODO Tell the user what's wrong.
         alert(res.statusText);
