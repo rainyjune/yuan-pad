@@ -23,7 +23,7 @@ module.exports = {
         query: {
           cacheDirectory: true,
           plugins: ['transform-runtime'],
-          presets: ['react']
+          presets: ['react', 'es2015']
         }
       },
       // https://www.npmjs.com/package/sass-loader

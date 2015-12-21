@@ -13,7 +13,7 @@ module.exports = function(grunt) {
         },
         options: {
           transform: [
-            ['babelify', {presets: ['react']}]
+            ['babelify', {presets: ['es2015', 'react']}]
           ]
         }
       }
@@ -96,33 +96,33 @@ module.exports = function(grunt) {
     },
     
     webpack: {
-			options: webpackConfig,
-			build: {
-				plugins: webpackConfig.plugins.concat(
-					new webpack.DefinePlugin({
-						"process.env": {
-							// This has effect on the react lib size
-							"NODE_ENV": JSON.stringify("production")
-						}
-					}),
-					new webpack.optimize.DedupePlugin(),
-					new webpack.optimize.UglifyJsPlugin()
-				)
-			},
-			"build-dev": {
-				devtool: "sourcemap",
-				debug: true
-			}
-		},
+      options: webpackConfig,
+      build: {
+        plugins: webpackConfig.plugins.concat(
+          new webpack.DefinePlugin({
+            "process.env": {
+              // This has effect on the react lib size
+              "NODE_ENV": JSON.stringify("production")
+            }
+          }),
+          new webpack.optimize.DedupePlugin(),
+          new webpack.optimize.UglifyJsPlugin()
+        )
+      },
+      "build-dev": {
+        devtool: "sourcemap",
+        debug: true
+      }
+    },
 
     // https://github.com/gruntjs/grunt-contrib-watch
     watch: {
       app: {
         files: ["themes/spa/src/*.js"],
-				tasks: ["webpack:build-dev"],
-				options: {
-					spawn: false,
-				}
+        tasks: ["webpack:build-dev"],
+        options: {
+          spawn: false,
+        }
       },
       indexhtml: {
         files: ['themes/spa/templates/index.html', 'themes/spa/templates/admin.html'],
