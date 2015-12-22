@@ -12,7 +12,7 @@ let SignIn = React.createClass({
     };
   },
   render() {
-    return (this.props.user.admin || this.props.user.uid) ?
+    return this.props.user.user_type != 'guest' ?
            null :
       (
         <div className="signIn">
