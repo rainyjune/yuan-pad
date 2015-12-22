@@ -18,7 +18,7 @@ var LoginModal = React.createClass({
     var user = this.refs.user.value.trim();
     var pwd = this.refs.password.value.trim();
     if (!user || !pwd) return;
-    this.props.onLoginSubmit({ user: user, password: pwd});
+    this.props.onLoginSubmit({ user, password: pwd});
     return false;
   },
   render(){

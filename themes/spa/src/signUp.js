@@ -28,7 +28,7 @@ var RegisterModal = React.createClass({
     var pwd = this.refs.pwd.value.trim();
     var email = this.refs.email.value.trim();
     if (!user || !pwd || !email) return;
-    this.props.onRegisterSubmit({user: user, pwd: pwd, email: email}); 
+    this.props.onRegisterSubmit({user, pwd, email}); 
     return false;
   },
   render(){

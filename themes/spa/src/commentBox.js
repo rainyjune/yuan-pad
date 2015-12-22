@@ -199,7 +199,7 @@ var CommentForm = React.createClass({
     var text = this.state.text.trim();
     var valid_code = this.state.valid_code.trim();
     if (!author || !text) return;
-    this.props.onCommentSubmit({ user: author, content: text, valid_code: valid_code}); 
+    this.props.onCommentSubmit({ user: author, content: text, valid_code}); 
     this.setState({ valid_code: ''});
     this.refs.captcha.refresh();
     return false;
