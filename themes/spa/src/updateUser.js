@@ -45,7 +45,7 @@ let UserUpdate = React.createClass({
       }.bind(this));
   },
   render() {
-    return this.props.user.uid ?
+    return this.props.user.user_type === "regular" ?
             (
               <div className="updateUser">
                 <UserUpdateButton 
