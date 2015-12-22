@@ -13,12 +13,6 @@ const customStyles = {
   }
 };
 
-let RegisterButton = React.createClass({
-  render() {
-    return (<a href='javascript:void(0);' onClick={this.props.onOpenRegisterModal}>{this.props.lang.REGISTER}</a>);
-  }
-});
-
 let RegisterModal = React.createClass({
   handleSubmit(e) {
     e.preventDefault();
@@ -64,7 +58,6 @@ let RegisterModal = React.createClass({
   }
 });
 
-
 let SignUp = React.createClass({
   getInitialState() {
     return {
@@ -102,11 +95,7 @@ let SignUp = React.createClass({
            null :
       (
         <div className="signUp">
-          <RegisterButton 
-            user={this.props.user}
-            lang={this.props.lang} 
-            onOpenRegisterModal={this.openRegisterModal}
-          />
+          <a href='javascript:void(0);' onClick={this.openRegisterModal}>{this.props.lang.REGISTER}</a>
           <RegisterModal 
             registerErrorMsg={this.state.registerErrorMsg} 
             onRegisterSubmit={this.handleSignUp} 
@@ -120,4 +109,3 @@ let SignUp = React.createClass({
 });
 
 module.exports = SignUp;
-
