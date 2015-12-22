@@ -25,34 +25,29 @@ let RegisterModal = React.createClass({
   },
   render(){
     return (
-      <Modal isOpen={this.props.registerModalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
-        <h2>Register</h2>
+      <Modal isOpen={this.props.registerModalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles}>
         <p>{this.props.registerErrorMsg}</p>
         <button onClick={this.props.onRequestClose}>close</button>
         <form onSubmit={this.handleSubmit} action="#" method="post">
-                <fieldset>
-                          <legend>{this.props.lang.REGISTER}</legend>
-              <dl>
-            <dt>{this.props.lang.USERNAME}</dt>
-            <dd><input type="text" ref="user" size="20" />
-            </dd>
-              </dl>
-              <dl>
-            <dt>{this.props.lang.PASSWORD}</dt>
-            <dd><input type="password" ref="pwd" size="20" />
-            </dd>
-              </dl>
-              <dl>
-            <dt>{this.props.lang.EMAIL}</dt>
-            <dd><input type="text" ref="email" size="20" />
-            </dd>
-              </dl>
-              <dl>
-                  <dt><input type="submit" value={this.props.lang.REGISTER} /></dt>
-              </dl>
-            </fieldset>
+          <fieldset>
+            <legend>{this.props.lang.REGISTER}</legend>
+            <dl>
+              <dt>{this.props.lang.USERNAME}</dt>
+              <dd><input type="text" ref="user" size="20" /></dd>
+            </dl>
+            <dl>
+              <dt>{this.props.lang.PASSWORD}</dt>
+              <dd><input type="password" ref="pwd" size="20" /></dd>
+            </dl>
+            <dl>
+              <dt>{this.props.lang.EMAIL}</dt>
+              <dd><input type="text" ref="email" size="20" /></dd>
+            </dl>
+            <dl>
+              <dt><input type="submit" value={this.props.lang.REGISTER} /></dt>
+            </dl>
+          </fieldset>
         </form>
-          
       </Modal>
     );
   }
@@ -65,7 +60,8 @@ let SignUp = React.createClass({
       registerModalIsOpen: false
     };
   },
-  openRegisterModal() {
+  openRegisterModal(e) {
+    e.preventDefault();
     this.setState({registerModalIsOpen: true});
   },
   closeRegisterModal() {
@@ -95,7 +91,7 @@ let SignUp = React.createClass({
            null :
       (
         <div className="signUp">
-          <a href='javascript:void(0);' onClick={this.openRegisterModal}>{this.props.lang.REGISTER}</a>
+          <a href='#' onClick={this.openRegisterModal}>{this.props.lang.REGISTER}</a>
           <RegisterModal 
             registerErrorMsg={this.state.registerErrorMsg} 
             onRegisterSubmit={this.handleSignUp} 
