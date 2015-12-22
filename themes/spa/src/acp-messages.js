@@ -1,12 +1,12 @@
-var React = require('react');
-var dataProvider = require('./dataProvider.js');
+let React = require('react');
+let dataProvider = require('./dataProvider.js');
 
-var ReplyModal = require('./acp-replyModal.js');
-var CommentUpdateModal = require('./acp-updateCommentModal.js');
+let ReplyModal = require('./acp-replyModal.js');
+let CommentUpdateModal = require('./acp-updateCommentModal.js');
 
-var FormItemMixin = require('./formItemMixin.js');
+let FormItemMixin = require('./formItemMixin.js');
 
-var Reply = React.createClass({
+let Reply = React.createClass({
   getInitialState() {
     return {
       b_username: null,
@@ -22,7 +22,7 @@ var Reply = React.createClass({
     };
   },
   componentWillReceiveProps(nextProps) {
-    var data = nextProps.data;
+    let data = nextProps.data;
     if (data) {
       this.setState({
         b_username: data.b_username,
@@ -45,7 +45,7 @@ var Reply = React.createClass({
     });
   },
   render() {
-    var lang = this.props.lang,
+    let lang = this.props.lang,
         data = this.state;
     if (!data || !data.reply_content) {
       return null;
@@ -59,20 +59,20 @@ var Reply = React.createClass({
   }
 });
 
-var Comment = React.createClass({
+let Comment = React.createClass({
   banIP(e) {
-    var dom = e.target;
+    let dom = e.target;
     e.preventDefault();
-    var ip = dom.getAttribute('data-ip');
+    let ip = dom.getAttribute('data-ip');
     dataProvider.banIP(ip, () => {
       this.props.onActiveTabChanged('ban_ip');
     });
   },
   deleteComment(e) {
     e.preventDefault();
-    var dom = e.target;
-    var commentId = dom.getAttribute("data-commentid");
-    var reply = dom.getAttribute("data-reply");
+    let dom = e.target;
+    let commentId = dom.getAttribute("data-commentid");
+    let reply = dom.getAttribute("data-reply");
     // TODO
     dataProvider.deleteComment(commentId, reply, response => {
       this.props.onCommentDeleted();
@@ -80,8 +80,8 @@ var Comment = React.createClass({
   },
   replyComment(e) {
     e.preventDefault();
-    var dom = e.target;
-    var commentId = dom.getAttribute('data-commentid');
+    let dom = e.target;
+    let commentId = dom.getAttribute('data-commentid');
     this.props.onReplyComment(this.props.data);
   },
   updateComment(e) {
@@ -93,8 +93,8 @@ var Comment = React.createClass({
     this.props.onToggleItem(this.props.data);
   },
   render() {
-    var data = this.props.data;
-    var lang = this.props.lang;
+    let data = this.props.data;
+    let lang = this.props.lang;
     return (
       <tr>
         <td>
@@ -118,7 +118,7 @@ var Comment = React.createClass({
   }
 });
 
-var ACPMessages = React.createClass({
+let ACPMessages = React.createClass({
   mixins: [FormItemMixin],
   getInitialState() {
     return {
@@ -165,7 +165,7 @@ var ACPMessages = React.createClass({
   },
   deleteSelected(e) {
     e.preventDefault();
-    var checkedItems = this.getCheckedItems();
+    let checkedItems = this.getCheckedItems();
     dataProvider.deleteMutiComments(checkedItems, res => {
       if (res.statusCode === 200) {
         this.loadCommentsFromServer();
@@ -224,7 +224,7 @@ var ACPMessages = React.createClass({
   loadCommentsFromServer() {
     dataProvider.loadAllCommentsFromServer(res => {
       if (res.statusCode === 200 || res.statusCode === 404) {
-        var data = res.response.comments;
+        let data = res.response.comments;
         this.addSelectedFlag(data)
         this.setState({comments: data});
       } else {
@@ -240,10 +240,10 @@ var ACPMessages = React.createClass({
     this.toggle(item);
   },
   render() {
-    var lang = this.props.lang;
-    var comments = this.state.comments;
-    var cssClass = this.props.activeTab === "message" ? "message_container selectTag" : "message_container";
-    var createComment = function(comment) {
+    let lang = this.props.lang;
+    let comments = this.state.comments;
+    let cssClass = this.props.activeTab === "message" ? "message_container selectTag" : "message_container";
+    let createComment = function(comment) {
       return (
         <Comment
           lang={lang}

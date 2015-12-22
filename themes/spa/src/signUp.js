@@ -1,6 +1,6 @@
-var React = require('react');
-var Modal = require('react-modal');
-var dataProvider = require('./dataProvider.js');
+let React = require('react');
+let Modal = require('react-modal');
+let dataProvider = require('./dataProvider.js');
 
 const customStyles = {
   content : {
@@ -13,7 +13,7 @@ const customStyles = {
   }
 };
 
-var RegisterButton = React.createClass({
+let RegisterButton = React.createClass({
   render() {
     return (this.props.user.admin || this.props.user.uid) ?
            null : 
@@ -21,12 +21,12 @@ var RegisterButton = React.createClass({
   }
 });
 
-var RegisterModal = React.createClass({
+let RegisterModal = React.createClass({
   handleSubmit(e) {
     e.preventDefault();
-    var user = this.refs.user.value.trim();
-    var pwd = this.refs.pwd.value.trim();
-    var email = this.refs.email.value.trim();
+    let user = this.refs.user.value.trim(),
+        pwd = this.refs.pwd.value.trim(),
+        email = this.refs.email.value.trim();
     if (!user || !pwd || !email) return;
     this.props.onRegisterSubmit({user, pwd, email}); 
     return false;
@@ -67,7 +67,7 @@ var RegisterModal = React.createClass({
 });
 
 
-var SignUp = React.createClass({
+let SignUp = React.createClass({
   getInitialState() {
     return {
       registerErrorMsg: '',

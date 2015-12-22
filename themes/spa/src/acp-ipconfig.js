@@ -1,8 +1,8 @@
-var React = require('react');
-var dataProvider = require('./dataProvider.js');
-var FormItemMixin = require('./formItemMixin.js');
+let React = require('react');
+let dataProvider = require('./dataProvider.js');
+let FormItemMixin = require('./formItemMixin.js');
 
-var IPItem = React.createClass({
+let IPItem = React.createClass({
   toggleItem() {
     this.props.onItemToggled(this.props.data);
   },
@@ -16,7 +16,7 @@ var IPItem = React.createClass({
   }
 });
 
-var ACPIpConfig = React.createClass({
+let ACPIpConfig = React.createClass({
   getInitialState() {
     return {
       IPs: []
@@ -44,7 +44,7 @@ var ACPIpConfig = React.createClass({
   },
   handleSubmit(e) {
     e.preventDefault();
-    var checkedItems = this.getCheckedItems();
+    let checkedItems = this.getCheckedItems();
     dataProvider.deleteMultiIPs(checkedItems, res => {
       if (res.statusCode === 200) {
         this.loadBlackList();
@@ -57,10 +57,10 @@ var ACPIpConfig = React.createClass({
     this.toggle(item);
   },
   render() {
-    var IPList = this.state.IPs;
-    var lang = this.props.lang;
-    var cssClass = this.props.activeTab === "ban_ip" ? "ip_container selectTag" : "ip_container";
-    var createIPItem = function(ip) {
+    let IPList = this.state.IPs;
+    let lang = this.props.lang;
+    let cssClass = this.props.activeTab === "ban_ip" ? "ip_container selectTag" : "ip_container";
+    let createIPItem = function(ip) {
       return (
         <IPItem
           data={ip}

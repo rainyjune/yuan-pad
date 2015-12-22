@@ -1,8 +1,8 @@
-var React = require('react');
+let React = require('react');
 
-var AppFooter = React.createClass({
+let AppFooter = React.createClass({
   ACPMarkup() {
-    var ACP = (this.props.user && this.props.user.admin) ? 
+    let ACP = (this.props.user && this.props.user.admin) ? 
               "<a href='index.php?action=control_panel'>"+ this.props.lang.ACP+"</a>" 
               : '';
     return {

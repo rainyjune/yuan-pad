@@ -1,11 +1,11 @@
-var React = require('react');
-var ACPOverview = require('./acp-overview.js');
-var ACPConfig = require('./acp-config.js');
-var ACPMessages = require('./acp-messages.js');
-var ACPIpConfig = require('./acp-ipconfig.js');
-var ACPUsers = require('./acp-users.js');
+let React = require('react');
+let ACPOverview = require('./acp-overview.js'),
+    ACPConfig = require('./acp-config.js'),
+    ACPMessages = require('./acp-messages.js'),
+    ACPIpConfig = require('./acp-ipconfig.js'),
+    ACPUsers = require('./acp-users.js');
 
-var ACPTabContent = React.createClass({
+let ACPTabContent = React.createClass({
   render() {
     if (this.props.user.user_type !== "admin") return null;
 

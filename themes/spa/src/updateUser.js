@@ -1,6 +1,6 @@
-var React = require('react');
-var Modal = require('react-modal');
-var dataProvider = require('./dataProvider.js');
+let React = require('react');
+let Modal = require('react-modal');
+let dataProvider = require('./dataProvider.js');
 
 const customStyles = {
   content : {
@@ -13,7 +13,7 @@ const customStyles = {
   }
 };
 
-var UserUpdate = React.createClass({
+let UserUpdate = React.createClass({
   getInitialState() {
     return {
       userUpdateErrorMsg: '',
@@ -65,7 +65,7 @@ var UserUpdate = React.createClass({
   }
 });
 
-var UserUpdateButton = React.createClass({
+let UserUpdateButton = React.createClass({
   render() {
     return (
       <a href="javascript:void(0);" onClick={this.props.onShowUpdateModal}>{this.props.lang.UPDATE}</a>
@@ -73,13 +73,13 @@ var UserUpdateButton = React.createClass({
   }
 });
 
-var UserUpdateModal = React.createClass({
+let UserUpdateModal = React.createClass({
   handleSubmit(e) {
     e.preventDefault();
-    var uid = this.refs.uid.value.trim();
-    var user = this.refs.user.value.trim();
-    var pwd = this.refs.pwd.value.trim();
-    var email = this.refs.email.value.trim();
+    let uid = this.refs.uid.value.trim(),
+        user = this.refs.user.value.trim(),
+        pwd = this.refs.pwd.value.trim(),
+        email = this.refs.email.value.trim();
     if (!uid || !user || !email) return;
     this.props.onUserUpdateSubmit({ uid, user, pwd, email}); 
     return false;

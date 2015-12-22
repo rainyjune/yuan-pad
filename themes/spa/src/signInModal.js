@@ -1,5 +1,5 @@
-var React = require('react');
-var Modal = require('react-modal');
+let React = require('react');
+let Modal = require('react-modal');
 
 const customStyles = {
   content : {
@@ -12,11 +12,11 @@ const customStyles = {
   }
 };
 
-var LoginModal = React.createClass({
+let LoginModal = React.createClass({
   handleSubmit(e) {
     e.preventDefault();
-    var user = this.refs.user.value.trim();
-    var pwd = this.refs.password.value.trim();
+    let user = this.refs.user.value.trim(),
+        pwd = this.refs.password.value.trim();
     if (!user || !pwd) return;
     this.props.onLoginSubmit({ user, password: pwd});
     return false;

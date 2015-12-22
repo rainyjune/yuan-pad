@@ -1,9 +1,9 @@
-var React = require('react');
-var dataProvider = require('./dataProvider.js');
-var LoginModal = require('./signInModal.js');
-var SignInMixIn = require('./SignInMixin.js');
+let React = require('react');
+let dataProvider = require('./dataProvider.js');
+let LoginModal = require('./signInModal.js');
+let SignInMixIn = require('./SignInMixin.js');
 
-var SignIn = React.createClass({
+let SignIn = React.createClass({
   mixins: [SignInMixIn], // Use the mixin
   getInitialState() {
     return {
@@ -33,7 +33,7 @@ var SignIn = React.createClass({
   }
 });
 
-var LoginButton = React.createClass({  
+let LoginButton = React.createClass({  
   render() {
     return (
       <a href='javascript:void(0);' onClick={this.props.onOpenLoginModal}>{this.props.lang.LOGIN}</a>

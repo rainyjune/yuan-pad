@@ -1,9 +1,9 @@
-var React = require('react');
+let React = require('react');
 
-var SearchBar = React.createClass({
+let SearchBar = React.createClass({
   handleSearch(e) {
     e.preventDefault();
-    var keyword = this.refs.s.value.trim();
+    let keyword = this.refs.s.value.trim();
     if (!keyword) return ;
     this.props.onSubmit(keyword);
     return false;

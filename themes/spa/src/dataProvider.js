@@ -410,8 +410,8 @@ function deleteMutiUsers(uids, successCallback, errorCallback) {
  * http://stackoverflow.com/a/15724300
  */
 function getCookie(name) {
-  var value = "; " + document.cookie;
-  var parts = value.split("; " + name + "=");
+  let value = "; " + document.cookie;
+  let parts = value.split("; " + name + "=");
   if (parts.length == 2) {
     return parts.pop().split(";").shift();
   } else {
@@ -455,7 +455,7 @@ function getSystemInformation(successCallback, errorCallback) {
  *
  */
 function createReply(replyData, successCallback, errorCallback) {
-  var formData = {
+  let formData = {
     mid: replyData.pid,
     content: replyData.content
   };
@@ -476,7 +476,7 @@ function createReply(replyData, successCallback, errorCallback) {
  * Tested 1.
  */
 function updateReply(replyData, successCallback, errorCallback) {
-  var formData = {
+  let formData = {
     mid: replyData.pid,
     content: replyData.content
   };

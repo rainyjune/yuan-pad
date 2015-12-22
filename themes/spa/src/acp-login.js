@@ -1,8 +1,8 @@
-var React = require('react');
-var LoginModal = require('./signInModal.js');
-var SignInMixIn = require('./SignInMixin.js');
+let React = require('react');
+let LoginModal = require('./signInModal.js');
+let SignInMixIn = require('./SignInMixin.js');
 
-var ACPLogin = React.createClass({
+let ACPLogin = React.createClass({
   mixins: [SignInMixIn], // Use the mixin
   getInitialState() {
     return {

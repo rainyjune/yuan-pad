@@ -1,7 +1,7 @@
-var React = require('react');
-var dataProvider = require('./dataProvider.js');
+let React = require('react'),
+    dataProvider = require('./dataProvider.js');
 
-var ACPHeader = React.createClass({
+let ACPHeader = React.createClass({
   handleSignOut(e) {
     e.preventDefault();
     dataProvider.signOut(response => {

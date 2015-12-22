@@ -1,6 +1,6 @@
-var React = require('react');
-var Modal = require('react-modal');
-var dataProvider = require('./dataProvider.js');
+let React = require('react');
+let Modal = require('react-modal');
+let dataProvider = require('./dataProvider.js');
 
 const customStyles = {
   content : {
@@ -13,7 +13,7 @@ const customStyles = {
   }
 };
 
-var ReplyModal = React.createClass({
+let ReplyModal = React.createClass({
   getInitialState() {
     return {
       rid: '',
@@ -23,7 +23,7 @@ var ReplyModal = React.createClass({
     };
   },
   componentWillReceiveProps(nextProps) {
-    var commentData = nextProps.comment;
+    let commentData = nextProps.comment;
     if (commentData) {
       this.setState({
         rid: commentData.reply_id,
@@ -35,7 +35,7 @@ var ReplyModal = React.createClass({
   handleSubmit(e) {
     e.preventDefault();
     if (!this.state.pid || !this.state.content.trim()) return;
-    var action = this.state.rid ? 'updateReply' : 'createReply';
+    let action = this.state.rid ? 'updateReply' : 'createReply';
     dataProvider[action](this.state, res => {
       if (res.statusCode === 200) {
         this.props.onReplySubmit();

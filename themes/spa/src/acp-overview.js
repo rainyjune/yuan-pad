@@ -1,11 +1,11 @@
-var React = require('react');
-var dataProvider = require('./dataProvider.js');
+let React = require('react');
+let dataProvider = require('./dataProvider.js');
 
-var ACPOverview = React.createClass({
+let ACPOverview = React.createClass({
   render() {
-    var lang = this.props.lang;
-    var sysInfo = this.props.systemInformation;
-    var cssClass = this.props.activeTab === "overview" ? "selectTag" : "";
+    let lang = this.props.lang;
+    let sysInfo = this.props.systemInformation;
+    let cssClass = this.props.activeTab === "overview" ? "selectTag" : "";
     return (
       <div className={cssClass}>
         <table>

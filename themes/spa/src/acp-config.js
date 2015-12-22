@@ -1,8 +1,8 @@
-var React = require('react');
-var dataProvider = require('./dataProvider.js');
-var LinkedStateMixin = require('react-addons-linked-state-mixin');
+let React = require('react');
+let dataProvider = require('./dataProvider.js');
+let LinkedStateMixin = require('react-addons-linked-state-mixin');
 
-var ACPConfig = React.createClass({
+let ACPConfig = React.createClass({
   getInitialState() {
     return {
       board_name: '',
@@ -24,8 +24,8 @@ var ACPConfig = React.createClass({
   },
   mixins: [LinkedStateMixin],
   componentWillReceiveProps(nextProps) {
-    var propAppConfig = nextProps.appConfig;
-    var computedState = {};
+    let propAppConfig = nextProps.appConfig;
+    let computedState = {};
     for (var i in propAppConfig) {
       if (this.state.hasOwnProperty(i)) {
         computedState[i] = propAppConfig[i] === null ? 0 : propAppConfig[i];
@@ -63,33 +63,34 @@ var ACPConfig = React.createClass({
     this.setState({filter_type: e.target.value});
   },
   render() {
-    var appConfig = this.state;
-    var acpData = this.props.systemInformation;
-    var lang = this.props.lang;
-    var cssClass = this.props.activeTab === "siteset" ? "configContainer selectTag" : "configContainer";
-    var isSiteClosed = appConfig.site_close;
-    var themes = acpData.themes;
-    var themeOptions = [];
+    let appConfig = this.state,
+        acpData = this.props.systemInformation,
+        lang = this.props.lang,
+        cssClass = this.props.activeTab === "siteset" ? "configContainer selectTag" : "configContainer",
+        isSiteClosed = appConfig.site_close,
+        themes = acpData.themes,
+        themeOptions = [];
+        
     for (var i in themes) {
-      var theme = themes[i];
+      let theme = themes[i];
       themeOptions.push(<option key={theme} value={theme}>{theme}</option>)
     }
 
-    var timeZones = acpData.timezones;
-    var timeZoneOptions = [];
+    let timeZones = acpData.timezones,
+        timeZoneOptions = [];
     for (var i in timeZones) {
-      var timezone = timeZones[i];
+      let timezone = timeZones[i];
       timeZoneOptions.push(<option key={i} value={i}>{timezone}</option>);
     }
 
-    var languages = acpData.languages;
-    var languageOptions = [];
+    let languages = acpData.languages,
+        languageOptions = [];
     for (var i in languages) {
-      var language = languages[i];
+      let language = languages[i];
       languageOptions.push(<option key={i} value={language}>{language}</option>);
     }
     
-    var captchaInputs = [];
+    let captchaInputs = [];
     if (acpData.gd_loaded) {
       captchaInputs.push(<label key="1"><input type="radio" value="1" checked={appConfig.valid_code_open == 1} onChange={this.toggleCaptcha} />{lang.YES}</label>);
       captchaInputs.push(<label key="0"><input type="radio" value="0" checked={appConfig.valid_code_open != 1} onChange={this.toggleCaptcha} />{lang.NO}</label>);

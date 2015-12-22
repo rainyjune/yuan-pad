@@ -1,6 +1,6 @@
-var React = require('react');
-var Modal = require('react-modal');
-var dataProvider = require('./dataProvider.js');
+let React = require('react');
+let Modal = require('react-modal');
+let dataProvider = require('./dataProvider.js');
 
 const customStyles = {
   content : {
@@ -13,7 +13,7 @@ const customStyles = {
   }
 };
 
-var UpdateCommentModal = React.createClass({
+let UpdateCommentModal = React.createClass({
   getInitialState() {
     return {
       mid: '',
@@ -21,7 +21,7 @@ var UpdateCommentModal = React.createClass({
     };
   },
   componentWillReceiveProps(nextProps) {
-    var commentData = nextProps.comment;
+    let commentData = nextProps.comment;
     if (commentData) {
       this.setState({
         mid: commentData.id,

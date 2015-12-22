@@ -1,13 +1,13 @@
-var React = require('react'),
+let React = require('react'),
     ReactDOM = require('react-dom');
     
-var SearchBar = require('./searchBar.js');
-var CommentBox = require('./commentBox.js');
-var Header = require('./header.js');
-var Footer = require('./footer.js');
-var dataProvider = require('./dataProvider.js');
+let SearchBar = require('./searchBar.js'),
+    CommentBox = require('./commentBox.js'),
+    Header = require('./header.js'),
+    Footer = require('./footer.js'),
+    dataProvider = require('./dataProvider.js');
 
-var App = React.createClass({
+let App = React.createClass({
   getInitialState() {
     return {
       appConfig: {},
@@ -124,7 +124,7 @@ var App = React.createClass({
   componentDidMount() {
     dataProvider.getAppConfig(res => {
       if (res.statusCode === 200) {
-        var siteConfig = res.response;
+        let siteConfig = res.response;
         dataProvider.getTranslations(res => {
           if (this.isMounted()) {
             this.setState({translations: res.response, appConfig: siteConfig});

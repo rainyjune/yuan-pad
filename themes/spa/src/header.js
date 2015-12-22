@@ -1,11 +1,11 @@
-var React = require('react');
+let React = require('react');
 
-var SignIn = require('./signIn.js');
-var SignUp = require('./signUp.js');
-var UpdateUser = require('./updateUser.js');
-var SignOutButton = require('./signOut.js');
+let SignIn = require('./signIn.js'),
+    SignUp = require('./signUp.js'),
+    UpdateUser = require('./updateUser.js'),
+    SignOutButton = require('./signOut.js');
 
-var Header = React.createClass({
+let Header = React.createClass({
   render() {
     return (
       <div className="header">

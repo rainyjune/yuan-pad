@@ -1,6 +1,6 @@
-var React = require('react');
-var Modal = require('react-modal');
-var dataProvider = require('./dataProvider.js');
+let React = require('react');
+let Modal = require('react-modal');
+let dataProvider = require('./dataProvider.js');
 
 const customStyles = {
   content : {
@@ -13,7 +13,7 @@ const customStyles = {
   }
 };
 
-var UserUpdateModal = React.createClass({
+let UserUpdateModal = React.createClass({
   getInitialState() {
     return {
       uid: '',
@@ -24,7 +24,7 @@ var UserUpdateModal = React.createClass({
   },
   componentWillReceiveProps(nextProps) {
     if (nextProps.userData) {
-      var userData = nextProps.userData;
+      let userData = nextProps.userData;
       this.setState({
         uid: userData.uid,
         user: userData.username,
@@ -35,9 +35,9 @@ var UserUpdateModal = React.createClass({
   },
   handleSubmit(e) {
     e.preventDefault();
-    var user = this.state.user.trim();
-    var pwd = this.state.pwd.trim();
-    var email = this.state.email.trim();
+    let user = this.state.user.trim(),
+        pwd = this.state.pwd.trim(),
+        email = this.state.email.trim();
     if (!user || !email) return;
     this.props.onUpdateSubmit(this.state);
     return false;
@@ -53,7 +53,7 @@ var UserUpdateModal = React.createClass({
     });
   },
   render(){
-    var lang = this.props.lang;
+    let lang = this.props.lang;
     return (
       <Modal isOpen={this.props.modalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
         <div>{this.props.errorMsg}</div>

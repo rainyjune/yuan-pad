@@ -1,15 +1,15 @@
-var React = require('react'),
+let React = require('react'),
     ReactDOM = require('react-dom');
-var Modal = require('react-modal');
+let Modal = require('react-modal');
 
-var ACPLogin = require('./acp-login.js');
-var ACPHeader = require('./acp-header.js');
-var ACPTabHeader = require('./acp-tabHeader.js');
-var ACPTabContent = require('./acp-tabContent.js');
-var ACPFooter = require('./acp-footer.js');
-var dataProvider = require('./dataProvider.js');
+let ACPLogin = require('./acp-login.js'),
+    ACPHeader = require('./acp-header.js'),
+    ACPTabHeader = require('./acp-tabHeader.js'),
+    ACPTabContent = require('./acp-tabContent.js'),
+    ACPFooter = require('./acp-footer.js'),
+    dataProvider = require('./dataProvider.js');
 
-var ACPBox = React.createClass({
+let ACPBox = React.createClass({
   getInitialState() {
     return {
       systemInformation: {}, // System information
@@ -109,7 +109,7 @@ var ACPBox = React.createClass({
     this.loadApplicationSystemInformation();
   },
   render() {
-    var tabs = [
+    let tabs = [
       {text: this.state.translations.ACP_OVERVIEW,value: "overview"},
       {text: this.state.translations.ACP_CONFSET,value: "siteset"},
       {text: this.state.translations.ACP_MANAGE_POST,value: "message"},

@@ -1,10 +1,10 @@
-var React = require('react');
-var dataProvider = require('./dataProvider.js');
+let React = require('react');
+let dataProvider = require('./dataProvider.js');
 
 /**
  * Tested 1
  */
-var SignInMixIn = {
+let SignInMixIn = {
   openLoginModal() {
     this.setState({loginModalIsOpen: true});
   },

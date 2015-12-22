@@ -1,17 +1,17 @@
-var React = require('react');
+let React = require('react');
 
-var ACPTableHeaderItem = React.createClass({
+let ACPTableHeaderItem = React.createClass({
   updateActiveTab(e) {
     e.preventDefault();
-    var tabLink = e.target;
-    var newTabName = tabLink.getAttribute('data-tabname');
+    let tabLink = e.target;
+    let newTabName = tabLink.getAttribute('data-tabname');
     if (newTabName === this.props.activeTab) {
       return false;
     }
     this.props.onTabSelected(newTabName);
   },
   render() {
-    var itemClass = this.props.value === this.props.activeTab ? "selectTag" : "";
+    let itemClass = this.props.value === this.props.activeTab ? "selectTag" : "";
     return (
       <li className={itemClass}>
         <a href="javascript:void(0);" data-tabname={this.props.value} onClick={this.updateActiveTab}>{this.props.text}</a>
@@ -20,12 +20,12 @@ var ACPTableHeaderItem = React.createClass({
   }
 });
 
-var ACPTabHeader = React.createClass({
+let ACPTabHeader = React.createClass({
   render() {
     if (this.props.user.user_type !== "admin") return null;
-    var activeTab = this.props.activeTab;
-    var onTabSelected = this.props.onTabSelected;
-    var items = this.props.tabs.map(tab => {
+    let activeTab = this.props.activeTab;
+    let onTabSelected = this.props.onTabSelected;
+    let items = this.props.tabs.map(tab => {
       return (
         <ACPTableHeaderItem 
           onTabSelected={onTabSelected}

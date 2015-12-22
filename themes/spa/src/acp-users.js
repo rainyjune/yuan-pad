@@ -1,9 +1,9 @@
-var React = require('react');
-var UserUpdateModal = require('./acp-userUpdateModal.js');
-var dataProvider = require('./dataProvider.js');
-var FormItemMixin = require('./formItemMixin.js');
+let React = require('react');
+let UserUpdateModal = require('./acp-userUpdateModal.js');
+let dataProvider = require('./dataProvider.js');
+let FormItemMixin = require('./formItemMixin.js');
 
-var UserItem = React.createClass({
+let UserItem = React.createClass({
   /**
    * Tested 1.
    */
@@ -29,8 +29,8 @@ var UserItem = React.createClass({
     this.props.onToggleItem(this.props.data);
   },
   render() {
-    var user = this.props.data;
-    var lang = this.props.lang;
+    let user = this.props.data;
+    let lang = this.props.lang;
     console.log('checked:', this.props.data.checked)
     return (
       <tr>
@@ -46,7 +46,7 @@ var UserItem = React.createClass({
   }
 });
 
-var ACPUser = React.createClass({
+let ACPUser = React.createClass({
   mixins: [FormItemMixin],
   /**
    * Tested 1.
@@ -80,7 +80,7 @@ var ACPUser = React.createClass({
   loadAllUsersFromServer() {
     dataProvider.getAllUsers(res => {
       if (res.statusCode === 200) {
-        var data = res.response;
+        let data = res.response;
         this.addSelectedFlag(data);
         this.setState({users: data}, function(){
           console.warn('users:', this.state.users);
@@ -145,7 +145,7 @@ var ACPUser = React.createClass({
    */
   handleDeleteMulti(e) {
     e.preventDefault();
-    var checkedUids = this.getCheckedItems();
+    let checkedUids = this.getCheckedItems();
     dataProvider.deleteMutiUsers(checkedUids, res => {
       if (res.statusCode === 200) {
         this.loadAllUsersFromServer();
@@ -161,9 +161,9 @@ var ACPUser = React.createClass({
     this.toggle(userItem);
   },
   render() {
-    var lang = this.props.lang;
-    var cssClass = this.props.activeTab === "user" ? "user_container selectTag" : "user_container";
-    var createUserItem = function(user) {
+    let lang = this.props.lang;
+    let cssClass = this.props.activeTab === "user" ? "user_container selectTag" : "user_container";
+    let createUserItem = function(user) {
       return (
         <UserItem
           data={user}
