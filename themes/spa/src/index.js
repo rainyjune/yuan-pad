@@ -78,11 +78,6 @@ let App = React.createClass({
   // Load comments to be displayed on page by page number.
   loadCommentsFromServer() {
     dataProvider.loadCommentsFromServer(this.state.currentPage, res => {
-        if (res.statusCode === 200) {
-          //code
-        } else if (res.statusCode === 404) {
-          // No comments found.
-        }
         if (this.isMounted()) {
           this.setState({
             comments: res.response.comments,
@@ -90,11 +85,7 @@ let App = React.createClass({
             commentListType: 1
           });
         }
-      },
-      function(xhr, status, err) {
-        debugger;
-      }.bind(this)
-    );
+    });
   },
   /**
    * Tested 1.
@@ -103,7 +94,6 @@ let App = React.createClass({
   // Get comments from server according to the keyword user has entered.
   handleSearch(keyword) {
     dataProvider.search(keyword, res => {
-        console.log('search result:', res);
         if (this.isMounted()) {
           this.setState({
             comments: res.response.comments,
@@ -111,11 +101,7 @@ let App = React.createClass({
             commentListType: 2
           });
         }
-      },
-      function(xhr, status, err) {
-        debugger;
-      }.bind(this)
-    );
+    });
   },
   /**
    * Tested 1.
@@ -178,20 +164,14 @@ let App = React.createClass({
    */
   // Update the `currentUser` state after a user signed in.
   handleUserSignedIn(signedInUser) {
-    if (signedInUser.admin) {
-      this.setState({currentUser: signedInUser});
-    } else if (signedInUser.uid) {
-      this.loadUserDataFromServer(signedInUser.uid);
-    }
+    this.setState({currentUser: signedInUser});
   },
   /**
    * Tested 1.
    */
   // Reload a regular user profile from server after the user signed up successfully.
   handleSignedUp(userData) {
-    if (userData.uid) {
-      this.loadUserDataFromServer(userData.uid);
-    }
+    this.setState({currentUser: userData});
   },
   render() {
     return (
