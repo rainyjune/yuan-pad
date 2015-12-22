@@ -4,13 +4,13 @@ var SignInMixIn = require('./SignInMixin.js');
 
 var ACPLogin = React.createClass({
   mixins: [SignInMixIn], // Use the mixin
-  getInitialState: function() {
+  getInitialState() {
     return {
       loginErrorMsg: '',
       loginModalIsOpen: true
     };
   },
-  render: function() {
+  render() {
     return (this.props.user.user_type === "admin") ?
            null :
       (

@@ -14,7 +14,7 @@ const customStyles = {
 };
 
 var RegisterButton = React.createClass({
-  render: function() {
+  render() {
     return (this.props.user.admin || this.props.user.uid) ?
            null : 
            (<a href='javascript:void(0);' onClick={this.props.onOpenRegisterModal}>{this.props.lang.REGISTER}</a>);
@@ -22,7 +22,7 @@ var RegisterButton = React.createClass({
 });
 
 var RegisterModal = React.createClass({
-  handleSubmit: function(e) {
+  handleSubmit(e) {
     e.preventDefault();
     var user = this.refs.user.value.trim();
     var pwd = this.refs.pwd.value.trim();
@@ -31,7 +31,7 @@ var RegisterModal = React.createClass({
     this.props.onRegisterSubmit({user: user, pwd: pwd, email: email}); 
     return false;
   },
-  render: function(){
+  render(){
     return (
       <Modal isOpen={this.props.registerModalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
         <h2>Register</h2>
@@ -68,19 +68,19 @@ var RegisterModal = React.createClass({
 
 
 var SignUp = React.createClass({
-  getInitialState: function() {
+  getInitialState() {
     return {
       registerErrorMsg: '',
       registerModalIsOpen: false
     };
   },
-  openRegisterModal: function() {
+  openRegisterModal() {
     this.setState({registerModalIsOpen: true});
   },
-  closeRegisterModal: function() {
+  closeRegisterModal() {
     this.setState({registerModalIsOpen: false});
   },
-  handleSignUp: function(userData) {
+  handleSignUp(userData) {
     dataProvider.signUp(userData, res => {
         console.log('create user result:', res);
         if (res.statusCode !== 200) {
@@ -99,7 +99,7 @@ var SignUp = React.createClass({
       }.bind(this)
     );
   },
-  render: function() {
+  render() {
     return (this.props.user.admin || this.props.user.uid) ?
            null :
       (

@@ -5,13 +5,13 @@ var SignInMixIn = require('./SignInMixin.js');
 
 var SignIn = React.createClass({
   mixins: [SignInMixIn], // Use the mixin
-  getInitialState: function() {
+  getInitialState() {
     return {
       loginErrorMsg: '',
       loginModalIsOpen: false
     };
   },
-  render: function() {
+  render() {
     return (this.props.user.admin || this.props.user.uid) ?
            null :
       (
@@ -34,7 +34,7 @@ var SignIn = React.createClass({
 });
 
 var LoginButton = React.createClass({  
-  render: function() {
+  render() {
     return (
       <a href='javascript:void(0);' onClick={this.props.onOpenLoginModal}>{this.props.lang.LOGIN}</a>
     );

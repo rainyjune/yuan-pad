@@ -1,14 +1,14 @@
 var React = require('react');
 
 var FormItemMixIn = {
-  addSelectedFlag: function(arr) {
+  addSelectedFlag(arr) {
     if (Array.isArray(arr)) {
       arr.forEach((currentValue, index) => {
         currentValue['checked'] = false;
       });
     }
   },
-  toggle: function(itemToToggle) {
+  toggle(itemToToggle) {
     var field = this.getMixinAttr();
     var data = this.state[field].map((currentValue, index) => {
       if (currentValue === itemToToggle) {
@@ -19,7 +19,7 @@ var FormItemMixIn = {
     //console.log('data:', this.state[field]);
     this.setMixState(data);
   },
-  toggleAll: function(checked) {
+  toggleAll(checked) {
     var field = this.getMixinAttr();
     var data = this.state[field].map((currentValue, index) => {
       currentValue['checked'] = checked;
@@ -28,19 +28,19 @@ var FormItemMixIn = {
     //this.setState({users: data});
     this.setMixState(data);
   },
-  checkAll: function(e) {
+  checkAll(e) {
     e.preventDefault();
     this.toggleAll(true);
   },
-  checkNone: function(e) {
+  checkNone(e) {
     e.preventDefault();
     this.toggleAll(false);
   },
-  checkXAll: function(e) {
+  checkXAll(e) {
     e.preventDefault();
     this.toggleXAll();
   },
-  toggleXAll: function() {
+  toggleXAll() {
     var field = this.getMixinAttr();
     var data = this.state[field].map((currentValue, index) => {
       currentValue['checked'] = !currentValue['checked'];
@@ -49,7 +49,7 @@ var FormItemMixIn = {
     //this.setState({users: data});
     this.setMixState(data);
   },
-  getCheckedItems: function() {
+  getCheckedItems() {
     var arr = [];
     var key = this.getItemKey();
     var field = this.getMixinAttr();

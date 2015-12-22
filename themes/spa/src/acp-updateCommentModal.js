@@ -14,13 +14,13 @@ const customStyles = {
 };
 
 var UpdateCommentModal = React.createClass({
-  getInitialState: function() {
+  getInitialState() {
     return {
       mid: '',
       update_content: '',
     };
   },
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     var commentData = nextProps.comment;
     if (commentData) {
       this.setState({
@@ -29,7 +29,7 @@ var UpdateCommentModal = React.createClass({
       });
     }
   },
-  handleSubmit: function(e) {
+  handleSubmit(e) {
     e.preventDefault();
     if (!this.state.mid || !this.state.update_content.trim()) return;
     dataProvider.updateComment(this.state, res => {
@@ -41,10 +41,10 @@ var UpdateCommentModal = React.createClass({
     }.bind(this));
     return false;
   },
-  changeContent: function(e) {
+  changeContent(e) {
     this.setState({update_content: e.target.value});
   },
-  render: function(){
+  render(){
     return (
       <Modal isOpen={this.props.commentModalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
         <div>{this.props.commentErrorMsg}</div>

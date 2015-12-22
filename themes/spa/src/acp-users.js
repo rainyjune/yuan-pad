@@ -7,7 +7,7 @@ var UserItem = React.createClass({
   /**
    * Tested 1.
    */
-  deleteUser: function(e) {
+  deleteUser(e) {
     e.preventDefault();
     dataProvider.deleteUser(this.props.data.uid, res=> {
       if (res.statusCode === 200) {
@@ -18,17 +18,17 @@ var UserItem = React.createClass({
   /**
    * Tested 1.
    */
-  updateUser: function(e) {
+  updateUser(e) {
     e.preventDefault();
     this.props.onOpenUserUpdateModal(this.props.data);
   },
   /**
    * Tested 1.
    */
-  toggleItem: function() {
+  toggleItem() {
     this.props.onToggleItem(this.props.data);
   },
-  render: function() {
+  render() {
     var user = this.props.data;
     var lang = this.props.lang;
     console.log('checked:', this.props.data.checked)
@@ -51,7 +51,7 @@ var ACPUser = React.createClass({
   /**
    * Tested 1.
    */
-  getInitialState: function() {
+  getInitialState() {
     return {
       users: [],
       updateErrorMsg: '',
@@ -59,25 +59,25 @@ var ACPUser = React.createClass({
       updatedModalUserData: null,
     };
   },
-  getMixinAttr: function() {
+  getMixinAttr() {
     return 'users';
   },
-  getItemKey: function() {
+  getItemKey() {
     return 'uid';
   },
-  setMixState: function(data) {
+  setMixState(data) {
     this.setState({users: data});
   },
   /**
    * Tested 1
    */
-  componentDidMount: function() {
+  componentDidMount() {
     this.loadAllUsersFromServer();
   },
   /**
    * Tested 1.
    */
-  loadAllUsersFromServer: function() {
+  loadAllUsersFromServer() {
     dataProvider.getAllUsers(res => {
       if (res.statusCode === 200) {
         var data = res.response;
@@ -91,13 +91,13 @@ var ACPUser = React.createClass({
   /**
    * Tested 1.
    */
-  handleUserDeleted: function() {
+  handleUserDeleted() {
     this.loadAllUsersFromServer();
   },
   /**
    * Tested 1.
    */
-  handleUpdateSubmit: function(newUserData) {
+  handleUpdateSubmit(newUserData) {
     dataProvider.updateUser(newUserData, res => {
       if (res.statusCode === 200) {
         this.setState({
@@ -112,7 +112,7 @@ var ACPUser = React.createClass({
   /**
    * Tested 1.
    */
-  closeUpdateModal: function() {
+  closeUpdateModal() {
     this.setState({
       updateErrorMsg: '',
       updatedModalUserData: null,
@@ -122,7 +122,7 @@ var ACPUser = React.createClass({
   /**
    * Tested 1.
    */
-  openUserUpdateModal: function(userData) {
+  openUserUpdateModal(userData) {
     this.setState({
         updateErrorMsg: '',
         updatedModalUserData: userData,
@@ -132,7 +132,7 @@ var ACPUser = React.createClass({
   /**
    * Tested 1.
    */
-  deleteAllUsers: function(e) {
+  deleteAllUsers(e) {
     e.preventDefault();
     dataProvider.deleteAllUsers(res => {
       if (res.statusCode === 200) {
@@ -143,7 +143,7 @@ var ACPUser = React.createClass({
   /**
    * Tested 1.
    */
-  handleDeleteMulti: function(e) {
+  handleDeleteMulti(e) {
     e.preventDefault();
     var checkedUids = this.getCheckedItems();
     dataProvider.deleteMutiUsers(checkedUids, res => {
@@ -157,10 +157,10 @@ var ACPUser = React.createClass({
   /**
    * Tested 1
    */
-  handleToggleItem: function(userItem) {
+  handleToggleItem(userItem) {
     this.toggle(userItem);
   },
-  render: function() {
+  render() {
     var lang = this.props.lang;
     var cssClass = this.props.activeTab === "user" ? "user_container selectTag" : "user_container";
     var createUserItem = function(user) {

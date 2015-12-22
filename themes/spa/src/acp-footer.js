@@ -1,7 +1,7 @@
 var React = require('react');
 
 var ACPFooter = React.createClass({
-  render: function() {
+  render() {
     if (this.props.user.user_type !== "admin") return null;
     return (
       <footer>

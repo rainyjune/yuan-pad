@@ -2,7 +2,7 @@ var React = require('react');
 var dataProvider = require('./dataProvider.js');
 
 var ACPOverview = React.createClass({
-  render: function() {
+  render() {
     var lang = this.props.lang;
     var sysInfo = this.props.systemInformation;
     var cssClass = this.props.activeTab === "overview" ? "selectTag" : "";

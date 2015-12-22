@@ -13,7 +13,7 @@ const customStyles = {
 };
 
 var LoginModal = React.createClass({
-  handleSubmit: function(e) {
+  handleSubmit(e) {
     e.preventDefault();
     var user = this.refs.user.value.trim();
     var pwd = this.refs.password.value.trim();
@@ -21,7 +21,7 @@ var LoginModal = React.createClass({
     this.props.onLoginSubmit({ user: user, password: pwd});
     return false;
   },
-  render: function(){
+  render(){
     return (
       <Modal isOpen={this.props.loginModalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
         <h2>Login</h2>

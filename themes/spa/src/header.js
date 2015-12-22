@@ -6,7 +6,7 @@ var UpdateUser = require('./updateUser.js');
 var SignOutButton = require('./signOut.js');
 
 var Header = React.createClass({
-  render: function() {
+  render() {
     return (
       <div className="header">
         <SignIn 

@@ -10,7 +10,7 @@ var ACPFooter = require('./acp-footer.js');
 var dataProvider = require('./dataProvider.js');
 
 var ACPBox = React.createClass({
-  getInitialState: function() {
+  getInitialState() {
     return {
       systemInformation: {}, // System information
       activeTab: 'overview',
@@ -22,11 +22,11 @@ var ACPBox = React.createClass({
   /**
    * Tested 1. Load application data after we verified the root user.
    */
-  componentDidMount: function() {
+  componentDidMount() {
     this.getUserInfo(this.loadApplicationConfiguration);
   },
 
-  loadApplicationConfiguration: function(successCallback) {
+  loadApplicationConfiguration(successCallback) {
     dataProvider.getAppConfigACP(res => {
       //debugger;
       if (res.statusCode !== 200) {
@@ -35,7 +35,7 @@ var ACPBox = React.createClass({
       this.setState({appConfig: res.response}, successCallback || this.loadApplicationTranslation);
     });
   },
-  loadApplicationTranslation: function(successCallback) {
+  loadApplicationTranslation(successCallback) {
     dataProvider.getTranslations(res => {
       //debugger;
       if (res.statusCode === 200) {
@@ -43,7 +43,7 @@ var ACPBox = React.createClass({
       }
     });
   },
-  loadApplicationSystemInformation: function(successCallback) {
+  loadApplicationSystemInformation(successCallback) {
     dataProvider.getSystemInformation(res => {
       if (res.statusCode === 200) {
         this.setState({systemInformation: res.response}, successCallback);
@@ -55,14 +55,14 @@ var ACPBox = React.createClass({
    * Tested 1.
    */
   // Reload site configuration after being updated by admin user.
-  handleConfigUpdate: function() {
+  handleConfigUpdate() {
     this.loadApplicationConfiguration();
   },
   /**
    * Tested 1.
    */
   // Update the `currentUser` state to default value.
-  handleLogout: function() {
+  handleLogout() {
     if (this.isMounted()) {
       // Navigates to the index.php page after signed out.
       this.setState({ currentUser: {} }, function(){
@@ -74,7 +74,7 @@ var ACPBox = React.createClass({
    * Tested 1.
    */
   // Get current user identity from server.
-  getUserInfo: function(successCallback) {
+  getUserInfo(successCallback) {
     dataProvider.getUserInfo(res => {
       console.log('user info:', res);
       if (res.statusCode !== 200) {
@@ -91,24 +91,24 @@ var ACPBox = React.createClass({
   /**
    * Tested 1.
    */
-  updateActiveTab: function(newTabName) {
+  updateActiveTab(newTabName) {
     this.setState({activeTab: newTabName});
   },
   /**
    * Tested 1
    */
   // Update the `currentUser` state after a user signed in.
-  handleUserSignedIn: function(signedInUser) {
+  handleUserSignedIn(signedInUser) {
     if (signedInUser.admin) {
       this.setState({currentUser: signedInUser}, this.loadApplicationConfiguration);
     } else if (signedInUser.uid) {
       window.location = "index.php";
     }
   },
-  handleCommentDeleted: function() {
+  handleCommentDeleted() {
     this.loadApplicationSystemInformation();
   },
-  render: function() {
+  render() {
     var tabs = [
       {text: this.state.translations.ACP_OVERVIEW,value: "overview"},
       {text: this.state.translations.ACP_CONFSET,value: "siteset"},

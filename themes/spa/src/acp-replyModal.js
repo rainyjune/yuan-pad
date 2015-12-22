@@ -14,7 +14,7 @@ const customStyles = {
 };
 
 var ReplyModal = React.createClass({
-  getInitialState: function() {
+  getInitialState() {
     return {
       rid: '',
       pid: '',
@@ -22,7 +22,7 @@ var ReplyModal = React.createClass({
       r_time: ''
     };
   },
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     var commentData = nextProps.comment;
     if (commentData) {
       this.setState({
@@ -32,7 +32,7 @@ var ReplyModal = React.createClass({
       });
     }
   },
-  handleSubmit: function(e) {
+  handleSubmit(e) {
     e.preventDefault();
     if (!this.state.pid || !this.state.content.trim()) return;
     var action = this.state.rid ? 'updateReply' : 'createReply';
@@ -45,10 +45,10 @@ var ReplyModal = React.createClass({
     }.bind(this));
     return false;
   },
-  changeContent: function(e) {
+  changeContent(e) {
     this.setState({content: e.target.value});
   },
-  render: function(){
+  render(){
     return (
       <Modal isOpen={this.props.replyModalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
         <div>{this.props.replyErrorMsg}</div>

@@ -14,19 +14,19 @@ const customStyles = {
 };
 
 var UserUpdate = React.createClass({
-  getInitialState: function() {
+  getInitialState() {
     return {
       userUpdateErrorMsg: '',
       userUpdateModalIsOpen: false
     };
   },
-  openUserUpdateModal: function() {
+  openUserUpdateModal() {
     this.setState({userUpdateModalIsOpen: true});
   },
-  closeUserUpdateModal: function() {
+  closeUserUpdateModal() {
     this.setState({userUpdateModalIsOpen: false});
   },
-  handleUserUpdate: function(userData) {
+  handleUserUpdate(userData) {
     dataProvider.updateUser(userData,  data => {
         console.log('update user result:', data, userData);
         if (data.error) {
@@ -44,7 +44,7 @@ var UserUpdate = React.createClass({
         debugger;
       }.bind(this));
   },
-  render: function() {
+  render() {
     return this.props.user.uid ?
             (
               <div className="updateUser">
@@ -66,7 +66,7 @@ var UserUpdate = React.createClass({
 });
 
 var UserUpdateButton = React.createClass({
-  render: function() {
+  render() {
     return (
       <a href="javascript:void(0);" onClick={this.props.onShowUpdateModal}>{this.props.lang.UPDATE}</a>
     );
@@ -74,7 +74,7 @@ var UserUpdateButton = React.createClass({
 });
 
 var UserUpdateModal = React.createClass({
-  handleSubmit: function(e) {
+  handleSubmit(e) {
     e.preventDefault();
     var uid = this.refs.uid.value.trim();
     var user = this.refs.user.value.trim();
@@ -84,7 +84,7 @@ var UserUpdateModal = React.createClass({
     this.props.onUserUpdateSubmit({ uid: uid, user: user, pwd: pwd, email: email}); 
     return false;
   },
-  render: function(){
+  render(){
     return (
       <Modal isOpen={this.props.userUpdateModalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
         <h2>Update profile</h2>

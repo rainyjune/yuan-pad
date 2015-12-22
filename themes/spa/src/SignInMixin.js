@@ -5,13 +5,13 @@ var dataProvider = require('./dataProvider.js');
  * Tested 1
  */
 var SignInMixIn = {
-  openLoginModal: function() {
+  openLoginModal() {
     this.setState({loginModalIsOpen: true});
   },
-  closeLoginModal: function() {
+  closeLoginModal() {
     this.setState({loginModalIsOpen: false});
   },
-  handleSignIn: function(loginData) {
+  handleSignIn(loginData) {
     dataProvider.signIn(loginData, res => {
       if (this.isMounted()) {
         if (res.statusCode === 200) {

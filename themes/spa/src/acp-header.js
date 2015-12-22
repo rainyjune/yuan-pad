@@ -2,7 +2,7 @@ var React = require('react');
 var dataProvider = require('./dataProvider.js');
 
 var ACPHeader = React.createClass({
-  handleSignOut: function(e) {
+  handleSignOut(e) {
     e.preventDefault();
     dataProvider.signOut(response => {
       if (response.statusCode === 200) {
@@ -12,7 +12,7 @@ var ACPHeader = React.createClass({
       }
     });
   },
-  render: function() {
+  render() {
     if (this.props.user.user_type !== "admin") return null;
     return (
       <header>

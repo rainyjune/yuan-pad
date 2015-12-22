@@ -6,7 +6,7 @@ var ACPIpConfig = require('./acp-ipconfig.js');
 var ACPUsers = require('./acp-users.js');
 
 var ACPTabContent = React.createClass({
-  render: function() {
+  render() {
     if (this.props.user.user_type !== "admin") return null;
 
     return (

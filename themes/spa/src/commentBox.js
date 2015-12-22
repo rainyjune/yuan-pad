@@ -1,7 +1,7 @@
 var React = require('react');
     
 var CloseSearchButton = React.createClass({
-  render: function() {
+  render() {
     return (
       <a href="javascript:void(0)" onClick={this.props.onCloseSearch}>Close</a>
     );
@@ -9,7 +9,7 @@ var CloseSearchButton = React.createClass({
 });
 
 var PaginationItem = React.createClass({
-  handleClick: function(e) {
+  handleClick(e) {
     e.preventDefault();
     var pageNumber = e.target.getAttribute("data-pagenumber");
     console.log("You chosed the page number: ", pageNumber);
@@ -20,7 +20,7 @@ var PaginationItem = React.createClass({
     this.props.onPageChanged(pageNumber);
     return false;
   },
-  render: function() {
+  render() {
     return (
       <a 
         className={(() => { if (this.props.currentPage === this.props.pageNumber) { return "pagination-item currentPage" } else { return "pagination-item"}})()} 
@@ -33,7 +33,7 @@ var PaginationItem = React.createClass({
 });
 
 var Pagination = React.createClass({
-  render: function() {
+  render() {
     if(!this.props.appConfig.page_on || this.props.commentListType !== 1) {
       return null;
     }
@@ -50,7 +50,7 @@ var Pagination = React.createClass({
 });
 
 var CommentStatistics = React.createClass({
-  rawMarkup: function() {
+  rawMarkup() {
     var pagenavText, text;
     if (this.props.commentListType === 1) {
       pagenavText = this.props.lang.PAGE_NAV;
@@ -65,7 +65,7 @@ var CommentStatistics = React.createClass({
     }
     return { __html: text };
   },
-  render: function() {
+  render() {
     var closeSearchBtn = (this.props.commentListType === 2) ? <CloseSearchButton onCloseSearch={this.props.onCloseSearch} /> : '';
     return (
       <div className="statistics">
@@ -84,7 +84,7 @@ var CommentStatistics = React.createClass({
 });
 
 var CommentList = React.createClass({
-  render: function() {
+  render() {
     var lang = this.props.lang,
         searchText = this.props.searchText,
         appConfig = this.props.appConfig,
@@ -116,25 +116,25 @@ var CommentList = React.createClass({
 });
 
 var Reply = React.createClass({
-  rawMarkup: function() {
+  rawMarkup() {
     // TODO: Get the actual admini user name.
     return { __html: this.props.lang.ADMIN_REPLIED.replace('{admin_name}', this.props.appConfig.admin)
                       .replace('{reply_time}', this.props.date)
                       .replace('{reply_content}', this.props.content)};
   },
-  render: function() {
+  render() {
     return this.props.content ? (<div className="reply" dangerouslySetInnerHTML={this.rawMarkup()}></div>) : null;
   }
 });
 
 var Comment = React.createClass({
-  rawMarkup: function() {
+  rawMarkup() {
     return { __html: this.props.children.toString() };
   },
-  rawAuthorMarkup: function() {
+  rawAuthorMarkup() {
     return { __html: this.props.uid ? this.props.b_username : this.props.author};
   },
-  render: function() {    
+  render() {    
     return (
       <div className="comment">
         <span className="commentAuthor" dangerouslySetInnerHTML={this.rawAuthorMarkup()}></span> 
@@ -149,16 +149,16 @@ var Comment = React.createClass({
 });
 
 var Captcha = React.createClass({
-  refreshCaptch: function(e) {
+  refreshCaptch(e) {
     e.preventDefault();
     this.refresh();
   },
-  refresh: function() {
+  refresh() {
     var img = this.refs.captchaImg;
     var url = img.getAttribute('data-src');
     img.src = url + '&v=' + Math.random();
   },
-  render: function() {
+  render() {
     return (
       <tr>
         <th>{this.props.lang.CAPTCHA}</th>
@@ -171,11 +171,11 @@ var Captcha = React.createClass({
 });
 
 var CommentForm = React.createClass({
-  getInitialState: function() {
+  getInitialState() {
     // TODO
     return {userInputType: 'text', labelContent: "", username: 'anonymous', text: '', valid_code: ''};
   },
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     var computedState = {};
     var propUser = nextProps.user;
     if (propUser.admin) {
@@ -193,7 +193,7 @@ var CommentForm = React.createClass({
     }
     this.setState(computedState);
   },
-  handleSubmit: function(e) {
+  handleSubmit(e) {
     e.preventDefault();
     var author = this.state.username.trim();
     var text = this.state.text.trim();
@@ -204,16 +204,16 @@ var CommentForm = React.createClass({
     this.refs.captcha.refresh();
     return false;
   },
-  handleUsernameChange: function(e) {
+  handleUsernameChange(e) {
     this.setState({username: e.target.value});
   },
-  handleTextChange: function(e) {
+  handleTextChange(e) {
     this.setState({text: e.target.value});
   },
-  handleCaptchaChange: function(e) {
+  handleCaptchaChange(e) {
     this.setState({valid_code: e.target.value});
   },
-  render: function() {
+  render() {
     if(this.props.commentListType !== 1) {
       return null;
     }
@@ -258,7 +258,7 @@ var CommentForm = React.createClass({
 });
     
 var CommentBox = React.createClass({
-  render: function() {
+  render() {
     return (
       <div className="commentBox">
         <h1>{this.props.lang.WELCOME_POST}</h1>

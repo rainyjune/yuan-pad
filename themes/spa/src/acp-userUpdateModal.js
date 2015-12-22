@@ -14,7 +14,7 @@ const customStyles = {
 };
 
 var UserUpdateModal = React.createClass({
-  getInitialState: function() {
+  getInitialState() {
     return {
       uid: '',
       user: '',
@@ -22,7 +22,7 @@ var UserUpdateModal = React.createClass({
       email: ''
     };
   },
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     if (nextProps.userData) {
       var userData = nextProps.userData;
       this.setState({
@@ -33,7 +33,7 @@ var UserUpdateModal = React.createClass({
       });
     }
   },
-  handleSubmit: function(e) {
+  handleSubmit(e) {
     e.preventDefault();
     var user = this.state.user.trim();
     var pwd = this.state.pwd.trim();
@@ -42,17 +42,17 @@ var UserUpdateModal = React.createClass({
     this.props.onUpdateSubmit(this.state);
     return false;
   },
-  updatePassword: function(e) {
+  updatePassword(e) {
     this.setState({
       pwd: e.target.value
     });
   },
-  updateEmail: function(e) {
+  updateEmail(e) {
     this.setState({
       email: e.target.value
     });
   },
-  render: function(){
+  render(){
     var lang = this.props.lang;
     return (
       <Modal isOpen={this.props.modalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >

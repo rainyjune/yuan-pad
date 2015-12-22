@@ -1,17 +1,17 @@
 var React = require('react');
 
 var SearchBar = React.createClass({
-  handleSearch: function(e) {
+  handleSearch(e) {
     e.preventDefault();
     var keyword = this.refs.s.value.trim();
     if (!keyword) return ;
     this.props.onSubmit(keyword);
     return false;
   },
-  handleChange: function() {
+  handleChange() {
     this.props.onUserInput(this.refs.s.value.trim());
   },
-  render: function() {
+  render() {
     return (
       <div className="searchbar">
         <form onSubmit={this.handleSearch}>

@@ -3,7 +3,7 @@ var dataProvider = require('./dataProvider.js');
 var LinkedStateMixin = require('react-addons-linked-state-mixin');
 
 var ACPConfig = React.createClass({
-  getInitialState: function() {
+  getInitialState() {
     return {
       board_name: '',
       site_close: 0,
@@ -23,7 +23,7 @@ var ACPConfig = React.createClass({
     };
   },
   mixins: [LinkedStateMixin],
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     var propAppConfig = nextProps.appConfig;
     var computedState = {};
     for (var i in propAppConfig) {
@@ -34,7 +34,7 @@ var ACPConfig = React.createClass({
 //debugger;
     this.setState(computedState);
   },
-  handleSubmit: function(e) {
+  handleSubmit(e) {
     e.preventDefault();
     dataProvider.updateSiteConfig(this.state, res => {
       console.log('ACPConfig state:', this.state);
@@ -50,19 +50,19 @@ var ACPConfig = React.createClass({
       debugger;
     }.bind(this));
   },
-  toggleSiteClose: function(e) {
+  toggleSiteClose(e) {
     this.setState({site_close: e.target.value});
   },
-  toggleCaptcha: function(e) {
+  toggleCaptcha(e) {
     this.setState({valid_code_open: e.target.value});
   },
-  togglePagination: function(e) {
+  togglePagination(e) {
     this.setState({page_on: e.target.value});
   },
-  toggleFilterType: function(e) {
+  toggleFilterType(e) {
     this.setState({filter_type: e.target.value});
   },
-  render: function() {
+  render() {
     var appConfig = this.state;
     var acpData = this.props.systemInformation;
     var lang = this.props.lang;

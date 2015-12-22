@@ -1,7 +1,7 @@
 var React = require('react');
 
 var AppFooter = React.createClass({
-  ACPMarkup: function() {
+  ACPMarkup() {
     var ACP = (this.props.user && this.props.user.admin) ? 
               "<a href='index.php?action=control_panel'>"+ this.props.lang.ACP+"</a>" 
               : '';
@@ -9,7 +9,7 @@ var AppFooter = React.createClass({
       __html: ACP
     };
   },
-  render: function() {
+  render() {
     return (
       <footer>
         <p>

@@ -8,7 +8,7 @@ var Footer = require('./footer.js');
 var dataProvider = require('./dataProvider.js');
 
 var App = React.createClass({
-  getInitialState: function() {
+  getInitialState() {
     return {
       appConfig: {},
       comments: [],
@@ -24,7 +24,7 @@ var App = React.createClass({
    * Tested 1.
    */
   // Get a regular user profile by uid.
-  loadUserDataFromServer: function(uid) {
+  loadUserDataFromServer(uid) {
     dataProvider.loadUserDataFromServer(uid, res => {
         console.log('user info from server:', res);
         if (res.statusCode !== 200) {
@@ -41,7 +41,7 @@ var App = React.createClass({
    *
    */
   // Get current user identity from server.
-  getUserInfo: function() {
+  getUserInfo() {
     dataProvider.getUserInfo(res => {
       console.log('user info:', res);
       if (res.statusCode !== 200) {
@@ -58,7 +58,7 @@ var App = React.createClass({
    * Tested 1.
    */
   // Update the `currentUser` state to default value.
-  handleLogout: function() {
+  handleLogout() {
     if (this.isMounted()) {
       this.setState({ currentUser: {} });
     }
@@ -67,7 +67,7 @@ var App = React.createClass({
    * Tested 1.
    */
   // Reload user profile from server by uid.
-  handleUserUpdated: function() {
+  handleUserUpdated() {
     if (this.state.currentUser && this.state.currentUser.uid) {
       this.loadUserDataFromServer(this.state.currentUser.uid);
     }
@@ -76,7 +76,7 @@ var App = React.createClass({
    * Test 1
    */
   // Load comments to be displayed on page by page number.
-  loadCommentsFromServer: function() {
+  loadCommentsFromServer() {
     dataProvider.loadCommentsFromServer(this.state.currentPage, res => {
         if (res.statusCode === 200) {
           //code
@@ -101,7 +101,7 @@ var App = React.createClass({
    *
    */
   // Get comments from server according to the keyword user has entered.
-  handleSearch: function(keyword) {
+  handleSearch(keyword) {
     dataProvider.search(keyword, res => {
         console.log('search result:', res);
         if (this.isMounted()) {
@@ -121,7 +121,7 @@ var App = React.createClass({
    * Tested 1.
    */
   // When the component is rendered, load the site configuration from server, and then try to indentify current user.
-  componentDidMount: function() {
+  componentDidMount() {
     dataProvider.getAppConfig(res => {
       if (res.statusCode === 200) {
         var siteConfig = res.response;
@@ -141,7 +141,7 @@ var App = React.createClass({
    * Tested 1.
    */
   // Save comment to the server, reload comments after saved sucessfully.
-  handleCommentSubmit: function(comment) {
+  handleCommentSubmit(comment) {
     dataProvider.createPost(comment, res => {
         if (res.statusCode !== 200) {
           alert(res.response);
@@ -160,7 +160,7 @@ var App = React.createClass({
    * Tested 1.
    */
   // Reload comments from server if the `currentPage` state changed.
-  handlePageChange: function(pageNumber) {
+  handlePageChange(pageNumber) {
     pageNumber = parseInt(pageNumber);
     this.setState({currentPage: pageNumber}, () => this.loadCommentsFromServer());
   },
@@ -168,7 +168,7 @@ var App = React.createClass({
    * Tested 1.
    */
   // Update the `searchText` state.
-  handleKeywordInput: function(searchText) {
+  handleKeywordInput(searchText) {
     this.setState({
       searchText: searchText
     });
@@ -177,7 +177,7 @@ var App = React.createClass({
    * Tested 1.
    */
   // Update the `currentUser` state after a user signed in.
-  handleUserSignedIn: function(signedInUser) {
+  handleUserSignedIn(signedInUser) {
     if (signedInUser.admin) {
       this.setState({currentUser: signedInUser});
     } else if (signedInUser.uid) {
@@ -188,12 +188,12 @@ var App = React.createClass({
    * Tested 1.
    */
   // Reload a regular user profile from server after the user signed up successfully.
-  handleSignedUp: function(userData) {
+  handleSignedUp(userData) {
     if (userData.uid) {
       this.loadUserDataFromServer(userData.uid);
     }
   },
-  render: function() {
+  render() {
     return (
       <div id="appbox">
         <Header 

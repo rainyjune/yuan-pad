@@ -3,10 +3,10 @@ var dataProvider = require('./dataProvider.js');
 var FormItemMixin = require('./formItemMixin.js');
 
 var IPItem = React.createClass({
-  toggleItem: function() {
+  toggleItem() {
     this.props.onItemToggled(this.props.data);
   },
-  render: function() {
+  render() {
     return (
       <tr className='admin_message'>
         <td><input type='checkbox' onChange={this.toggleItem} checked={this.props.data.checked} /></td>
@@ -17,32 +17,32 @@ var IPItem = React.createClass({
 });
 
 var ACPIpConfig = React.createClass({
-  getInitialState: function() {
+  getInitialState() {
     return {
       IPs: []
     };
   },
   mixins: [FormItemMixin],
-  getMixinAttr: function() {
+  getMixinAttr() {
     return 'IPs';
   },
-  getItemKey: function() {
+  getItemKey() {
     return 'ip';
   },
-  setMixState: function(data) {
+  setMixState(data) {
     this.setState({IPs: data});
   },
-  componentDidMount: function() {
+  componentDidMount() {
     this.loadBlackList();
   },
-  loadBlackList: function() {
+  loadBlackList() {
     dataProvider.getIPBlackList(res => {
       if (res.statusCode === 200) {
         this.setState({IPs: res.response});
       }
     });
   },
-  handleSubmit: function(e) {
+  handleSubmit(e) {
     e.preventDefault();
     var checkedItems = this.getCheckedItems();
     dataProvider.deleteMultiIPs(checkedItems, res => {
@@ -53,10 +53,10 @@ var ACPIpConfig = React.createClass({
       }
     });
   },
-  handleToggleItem: function(item) {
+  handleToggleItem(item) {
     this.toggle(item);
   },
-  render: function() {
+  render() {
     var IPList = this.state.IPs;
     var lang = this.props.lang;
     var cssClass = this.props.activeTab === "ban_ip" ? "ip_container selectTag" : "ip_container";

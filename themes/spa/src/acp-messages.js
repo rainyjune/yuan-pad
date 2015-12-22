@@ -7,7 +7,7 @@ var CommentUpdateModal = require('./acp-updateCommentModal.js');
 var FormItemMixin = require('./formItemMixin.js');
 
 var Reply = React.createClass({
-  getInitialState: function() {
+  getInitialState() {
     return {
       b_username: null,
       id: 0,
@@ -21,7 +21,7 @@ var Reply = React.createClass({
       user: ""
     };
   },
-  componentWillReceiveProps: function(nextProps) {
+  componentWillReceiveProps(nextProps) {
     var data = nextProps.data;
     if (data) {
       this.setState({
@@ -38,13 +38,13 @@ var Reply = React.createClass({
       });
     }
   },
-  deleteReply: function(e) {
+  deleteReply(e) {
     e.preventDefault();
     dataProvider.deleteReply(e.target.getAttribute("data-commentid"), response => {
       this.setState({reply_content: ''});
     });
   },
-  render: function() {
+  render() {
     var lang = this.props.lang,
         data = this.state;
     if (!data || !data.reply_content) {
@@ -60,7 +60,7 @@ var Reply = React.createClass({
 });
 
 var Comment = React.createClass({
-  banIP: function(e) {
+  banIP(e) {
     var dom = e.target;
     e.preventDefault();
     var ip = dom.getAttribute('data-ip');
@@ -68,7 +68,7 @@ var Comment = React.createClass({
       this.props.onActiveTabChanged('ban_ip');
     });
   },
-  deleteComment: function(e) {
+  deleteComment(e) {
     e.preventDefault();
     var dom = e.target;
     var commentId = dom.getAttribute("data-commentid");
@@ -78,21 +78,21 @@ var Comment = React.createClass({
       this.props.onCommentDeleted();
     });
   },
-  replyComment: function(e) {
+  replyComment(e) {
     e.preventDefault();
     var dom = e.target;
     var commentId = dom.getAttribute('data-commentid');
     this.props.onReplyComment(this.props.data);
   },
-  updateComment: function(e) {
+  updateComment(e) {
     e.preventDefault();
     this.props.onUpdateComment(this.props.data);
   },
-  toggleItem: function() {
+  toggleItem() {
     //this.setState({checked: !this.state.checked});
     this.props.onToggleItem(this.props.data);
   },
-  render: function() {
+  render() {
     var data = this.props.data;
     var lang = this.props.lang;
     return (
@@ -120,7 +120,7 @@ var Comment = React.createClass({
 
 var ACPMessages = React.createClass({
   mixins: [FormItemMixin],
-  getInitialState: function() {
+  getInitialState() {
     return {
       comments: [],
       replyModalIsOpen: false,
@@ -131,16 +131,16 @@ var ACPMessages = React.createClass({
       commentErrorMsg: ''
     };
   },
-  getMixinAttr: function() {
+  getMixinAttr() {
     return 'comments';
   },
-  getItemKey: function() {
+  getItemKey() {
     return 'id';
   },
-  setMixState: function(data) {
+  setMixState(data) {
     this.setState({comments: data});
   },
-  deleteAllComments: function(e) {
+  deleteAllComments(e) {
     e.preventDefault();
     dataProvider.deleteAllComments(res => {
       if (res.statusCode === 200) {
@@ -153,7 +153,7 @@ var ACPMessages = React.createClass({
   /**
    * Tested 1
    */
-  deleteAllReplies: function(e) {
+  deleteAllReplies(e) {
     e.preventDefault();
     dataProvider.deleteAllReplies(res => {
       if (res.statusCode === 200) {
@@ -163,7 +163,7 @@ var ACPMessages = React.createClass({
       }
     });
   },
-  deleteSelected: function(e) {
+  deleteSelected(e) {
     e.preventDefault();
     var checkedItems = this.getCheckedItems();
     dataProvider.deleteMutiComments(checkedItems, res => {
@@ -174,7 +174,7 @@ var ACPMessages = React.createClass({
       }
     });
   },
-  handleReplyComment: function(commentTobeReplied) {
+  handleReplyComment(commentTobeReplied) {
     this.setState({
       replyModalIsOpen: true,
       replyErrorMsg: '',
@@ -185,20 +185,20 @@ var ACPMessages = React.createClass({
       commentErrorMsg: ''
     });
   },
-  closeReplyModal: function() {
+  closeReplyModal() {
     this.setState({
       replyModalIsOpen: false,
       replyErrorMsg: ''
     });
   },
-  closeCommentUpdateModal: function() {
+  closeCommentUpdateModal() {
     this.setState({
       commentTobeUpdated: null,
       commentModalIsOpen: false,
       commentErrorMsg: ''
     });
   },
-  handleReplyFormSubmitted: function() {
+  handleReplyFormSubmitted() {
     this.setState({
       replyModalIsOpen: false,
       replyErrorMsg: '',
@@ -206,7 +206,7 @@ var ACPMessages = React.createClass({
     });
     this.loadCommentsFromServer();
   },
-  handleUpdateComment: function(commentTobeUpdated) {
+  handleUpdateComment(commentTobeUpdated) {
     this.setState({
       replyModalIsOpen: false,
       replyErrorMsg: '',
@@ -217,11 +217,11 @@ var ACPMessages = React.createClass({
       commentErrorMsg: ''
     });
   },
-  handleCommentUpdated: function() {
+  handleCommentUpdated() {
     this.closeCommentUpdateModal();
     this.loadCommentsFromServer();
   },
-  loadCommentsFromServer: function() {
+  loadCommentsFromServer() {
     dataProvider.loadAllCommentsFromServer(res => {
       if (res.statusCode === 200 || res.statusCode === 404) {
         var data = res.response.comments;
@@ -233,13 +233,13 @@ var ACPMessages = React.createClass({
       }
     });
   },
-  componentDidMount: function() {
+  componentDidMount() {
     this.loadCommentsFromServer();
   },
-  handleToggleItem: function(item) {
+  handleToggleItem(item) {
     this.toggle(item);
   },
-  render: function() {
+  render() {
     var lang = this.props.lang;
     var comments = this.state.comments;
     var cssClass = this.props.activeTab === "message" ? "message_container selectTag" : "message_container";
