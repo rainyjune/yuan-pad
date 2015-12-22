@@ -15,9 +15,7 @@ const customStyles = {
 
 let RegisterButton = React.createClass({
   render() {
-    return (this.props.user.admin || this.props.user.uid) ?
-           null : 
-           (<a href='javascript:void(0);' onClick={this.props.onOpenRegisterModal}>{this.props.lang.REGISTER}</a>);
+    return (<a href='javascript:void(0);' onClick={this.props.onOpenRegisterModal}>{this.props.lang.REGISTER}</a>);
   }
 });
 
@@ -100,7 +98,7 @@ let SignUp = React.createClass({
     );
   },
   render() {
-    return (this.props.user.admin || this.props.user.uid) ?
+    return (this.props.user.user_type != 'guest') ?
            null :
       (
         <div className="signUp">
