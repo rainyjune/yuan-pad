@@ -21,11 +21,11 @@ let SignUp = React.createClass({
     };
   },
   openModal(e) {
-    e.preventDefault();
+    e && e.preventDefault();
     this.setState({modalIsOpen: true});
   },
   closeModal(e) {
-    e.preventDefault();
+    e && e.preventDefault();
     this.setState({modalIsOpen: false});
   },
   handleSubmit(e) {
