@@ -5,13 +5,11 @@ let LogoutButton = React.createClass({
   handleSignOut(e) {
     e.preventDefault();
     dataProvider.signOut(() => {
-      this.props.onUserLogout();
+      this.props.onCurrentUserUpdated({});
     });
   },
   render() {
-    return this.props.user.user_type === "guest" ?
-           null :
-           (<a className="signOutButton" href='#' onClick={this.handleSignOut}>{this.props.lang.LOGOUT}</a>);
+    return (<a className="signOutButton" href='#' onClick={this.handleSignOut}>{this.props.lang.LOGOUT}</a>);
   }
 });
 
