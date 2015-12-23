@@ -7,7 +7,7 @@ let SignIn = require('./signIn.js'),
 
 let Header = React.createClass({
   render() {
-    var props = {
+    let props = {
       user: this.props.user,
       lang: this.props.lang,
       onCurrentUserUpdated: this.props.onCurrentUserUpdated

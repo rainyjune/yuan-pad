@@ -13,92 +13,73 @@ const customStyles = {
   }
 };
 
-let RegisterModal = React.createClass({
+let SignUp = React.createClass({
+  getInitialState() {
+    return {
+      errorMsg: '',
+      modalIsOpen: false
+    };
+  },
+  openModal(e) {
+    e.preventDefault();
+    this.setState({modalIsOpen: true});
+  },
+  closeModal(e) {
+    e.preventDefault();
+    this.setState({modalIsOpen: false});
+  },
   handleSubmit(e) {
     e.preventDefault();
     let user = this.refs.user.value.trim(),
         pwd = this.refs.pwd.value.trim(),
         email = this.refs.email.value.trim();
     if (!user || !pwd || !email) return;
-    this.props.onRegisterSubmit({user, pwd, email}); 
+    
+    dataProvider.signUp({user, pwd, email}, res => {
+      if (this.isMounted()) {
+        if (res.statusCode !== 200) {
+          this.setState({errorMsg: res.response});
+        } else {
+          this.setState({errorMsg: '', modalIsOpen: false});
+          this.props.onCurrentUserUpdated(res.response);
+        }
+      }
+    });
     return false;
   },
-  render(){
-    return (
-      <Modal isOpen={this.props.registerModalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles}>
-        <p>{this.props.registerErrorMsg}</p>
-        <button onClick={this.props.onRequestClose}>close</button>
-        <form onSubmit={this.handleSubmit} action="#" method="post">
-          <fieldset>
-            <legend>{this.props.lang.REGISTER}</legend>
-            <dl>
-              <dt>{this.props.lang.USERNAME}</dt>
-              <dd><input type="text" ref="user" size="20" /></dd>
-            </dl>
-            <dl>
-              <dt>{this.props.lang.PASSWORD}</dt>
-              <dd><input type="password" ref="pwd" size="20" /></dd>
-            </dl>
-            <dl>
-              <dt>{this.props.lang.EMAIL}</dt>
-              <dd><input type="text" ref="email" size="20" /></dd>
-            </dl>
-            <dl>
-              <dt><input type="submit" value={this.props.lang.REGISTER} /></dt>
-            </dl>
-          </fieldset>
-        </form>
-      </Modal>
-    );
-  }
-});
-
-let SignUp = React.createClass({
-  getInitialState() {
-    return {
-      registerErrorMsg: '',
-      registerModalIsOpen: false
-    };
-  },
-  openRegisterModal(e) {
-    e.preventDefault();
-    this.setState({registerModalIsOpen: true});
-  },
-  closeRegisterModal() {
-    this.setState({registerModalIsOpen: false});
-  },
-  handleSignUp(userData) {
-    dataProvider.signUp(userData, res => {
-        console.log('create user result:', res);
-        if (this.isMounted()) {
-          if (res.statusCode !== 200) {
-            this.setState({registerErrorMsg: res.response});
-          } else {
-            this.setState({registerErrorMsg: '', registerModalIsOpen: false});
-            this.props.onCurrentUserUpdated(res.response);
-          }
-        }
-      },
-      function(xhr, status, err) {
-        debugger;
-      }.bind(this)
-    );
-  },
   render() {
-    return (this.props.user.user_type != 'guest') ?
-           null :
-      (
-        <div className="signUp">
-          <a href='#' onClick={this.openRegisterModal}>{this.props.lang.REGISTER}</a>
-          <RegisterModal 
-            registerErrorMsg={this.state.registerErrorMsg} 
-            onRegisterSubmit={this.handleSignUp} 
-            registerModalIsOpen={this.state.registerModalIsOpen} 
-            onRequestClose={this.closeRegisterModal} 
-            lang={this.props.lang} 
-          />
-        </div>
-      );
+    let language = this.props.lang,
+        state = this.state;
+        
+    return (
+      <div className="signUp">
+        <a href='#' onClick={this.openModal}>{language.REGISTER}</a>
+        <Modal isOpen={state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles}>
+          <p>{state.errorMsg}</p>
+          <button onClick={this.closeModal}>close</button>
+          <form onSubmit={this.handleSubmit} action="#" method="post">
+            <fieldset>
+              <legend>{language.REGISTER}</legend>
+              <dl>
+                <dt>{language.USERNAME}</dt>
+                <dd><input type="text" ref="user" size="20" /></dd>
+              </dl>
+              <dl>
+                <dt>{language.PASSWORD}</dt>
+                <dd><input type="password" ref="pwd" size="20" /></dd>
+              </dl>
+              <dl>
+                <dt>{language.EMAIL}</dt>
+                <dd><input type="text" ref="email" size="20" /></dd>
+              </dl>
+              <dl>
+                <dt><input type="submit" value={language.REGISTER} /></dt>
+              </dl>
+            </fieldset>
+          </form>
+        </Modal>
+      </div>
+    );
   }
 });
 
