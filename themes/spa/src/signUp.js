@@ -70,15 +70,13 @@ let SignUp = React.createClass({
   handleSignUp(userData) {
     dataProvider.signUp(userData, res => {
         console.log('create user result:', res);
-        if (res.statusCode !== 200) {
-          if (this.isMounted()) {
+        if (this.isMounted()) {
+          if (res.statusCode !== 200) {
             this.setState({registerErrorMsg: res.response});
+          } else {
+            this.setState({registerErrorMsg: '', registerModalIsOpen: false});
+            this.props.onCurrentUserUpdated(res.response);
           }
-        } else {
-          if (this.isMounted()) {
-            this.setState({registerErrorMsg: '', registerModalIsOpen: false})//, currentUser: data});
-          }
-          this.props.onSignedUp(res.response);
         }
       },
       function(xhr, status, err) {
