@@ -22,22 +22,6 @@ let App = React.createClass({
   },
   /**
    * Tested 1.
-   */
-  // Get a regular user profile by uid.
-  loadUserDataFromServer(uid) {
-    dataProvider.loadUserDataFromServer(uid, res => {
-        console.log('user info from server:', res);
-        if (res.statusCode !== 200) {
-          return;
-        }
-        if (this.isMounted()) {
-          this.setState({currentUser: res.response});
-        }
-      }, function(){
-      }.bind(this));
-  },
-  /**
-   * Tested 1.
    *
    */
   // Get current user identity from server.
@@ -53,24 +37,6 @@ let App = React.createClass({
       }
     }, function(){
     }.bind(this));
-  },
-  /**
-   * Tested 1.
-   */
-  // Update the `currentUser` state to default value.
-  handleLogout() {
-    if (this.isMounted()) {
-      this.setState({ currentUser: {} });
-    }
-  },
-  /**
-   * Tested 1.
-   */
-  // Reload user profile from server by uid.
-  handleUserUpdated() {
-    if (this.state.currentUser && this.state.currentUser.uid) {
-      this.loadUserDataFromServer(this.state.currentUser.uid);
-    }
   },
   /**
    * Test 1
@@ -159,18 +125,8 @@ let App = React.createClass({
       searchText: searchText
     });
   },
-  /**
-   * Tested 1.
-   */
-  // Update the `currentUser` state after a user signed in.
-  handleUserSignedIn(signedInUser) {
-    this.setState({currentUser: signedInUser});
-  },
-  /**
-   * Tested 1.
-   */
-  // Reload a regular user profile from server after the user signed up successfully.
-  handleSignedUp(userData) {
+  setCurrentUser(userData) {
+    debugger;
     this.setState({currentUser: userData});
   },
   render() {
@@ -178,10 +134,7 @@ let App = React.createClass({
     return (
       <div id="appbox">
         <Header 
-          onSignedUp={this.handleSignedUp} 
-          onUserUpdated={this.handleUserUpdated} 
-          onUserLogout={this.handleLogout} 
-          onUserSignedIn={this.handleUserSignedIn}
+          onCurrentUserUpdated={this.setCurrentUser}
           user={state.currentUser} 
           appConfig={state.appConfig}
           lang={state.translations}
