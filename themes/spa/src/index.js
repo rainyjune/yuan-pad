@@ -174,6 +174,7 @@ let App = React.createClass({
     this.setState({currentUser: userData});
   },
   render() {
+    let state = this.state;
     return (
       <div id="appbox">
         <Header 
@@ -181,33 +182,33 @@ let App = React.createClass({
           onUserUpdated={this.handleUserUpdated} 
           onUserLogout={this.handleLogout} 
           onUserSignedIn={this.handleUserSignedIn}
-          user={this.state.currentUser} 
-          appConfig={this.state.appConfig}
-          lang={this.state.translations}
+          user={state.currentUser} 
+          appConfig={state.appConfig}
+          lang={state.translations}
         />
         <CommentBox
           ref="commentBox"
           onCommentSubmit={this.handleCommentSubmit}
           onCloseSearch={this.loadCommentsFromServer}
           onPageChanged={this.handlePageChange}
-          user={this.state.currentUser} 
-          lang={this.state.translations} 
-          currentPage = {this.state.currentPage}
-          appConfig={this.state.appConfig}
-          commentListType={this.state.commentListType} 
-          comments={this.state.comments} 
-          commentsTotalNumber={this.state.commentsTotalNumber}
-          searchText={this.state.searchText}
+          user={state.currentUser} 
+          lang={state.translations} 
+          currentPage = {state.currentPage}
+          appConfig={state.appConfig}
+          commentListType={state.commentListType} 
+          comments={state.comments} 
+          commentsTotalNumber={state.commentsTotalNumber}
+          searchText={state.searchText}
         />
         <SearchBar 
           onSubmit={this.handleSearch} 
           onUserInput={this.handleKeywordInput}
-          searchText={this.state.searchText}
+          searchText={state.searchText}
         />
         <Footer
-          lang={this.state.translations} 
-          appConfig={this.state.appConfig}
-          user={this.state.currentUser} 
+          lang={state.translations} 
+          appConfig={state.appConfig}
+          user={state.currentUser} 
         />
       </div>
     );
