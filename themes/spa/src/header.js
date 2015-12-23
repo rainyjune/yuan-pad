@@ -16,12 +16,13 @@ let Header = React.createClass({
       <div className="header">
         {(()=> {
           switch (this.props.user.user_type) {
-            case "guest":
-              return <div><SignIn {...props} /> <SignUp {...props} /></div>;
             case "regular":
               return <div><UpdateUser {...props} /><SignOutButton {...props} /></div>;
             case "admin":
               return <SignOutButton {...props} />;
+            case "guest":
+            default:
+              return <div><SignIn {...props} /> <SignUp {...props} /></div>;
           }
         })()}
       </div>
