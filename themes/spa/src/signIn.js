@@ -1,42 +1,65 @@
 let React = require('react');
 let dataProvider = require('./dataProvider.js');
-let LoginModal = require('./signInModal.js');
 let SignInMixIn = require('./SignInMixin.js');
+let Modal = require('react-modal');
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
 
 let SignIn = React.createClass({
   mixins: [SignInMixIn], // Use the mixin
   getInitialState() {
     return {
-      loginErrorMsg: '',
-      loginModalIsOpen: false
+      errorMsg: '',
+      modalIsOpen: false
     };
   },
+  handleSubmit(e) {
+    e.preventDefault();
+    let user = this.refs.user.value.trim(),
+        pwd = this.refs.password.value.trim();
+    if (!user || !pwd) return;
+    this.handleSignIn({ user, password: pwd});
+    return false;
+  },
   render() {
-    return this.props.user.user_type != 'guest' ?
-           null :
-      (
-        <div className="signIn">
-          <LoginButton 
-            user={this.props.user}
-            lang={this.props.lang} 
-            onOpenLoginModal={this.openLoginModal}
-          />
-          <LoginModal 
-            loginErrorMsg={this.state.loginErrorMsg} 
-            onLoginSubmit={this.handleSignIn} 
-            loginModalIsOpen={this.state.loginModalIsOpen} 
-            onRequestClose={this.closeLoginModal} 
-            lang={this.props.lang} 
-          />
-        </div>
-      );
-  }
-});
-
-let LoginButton = React.createClass({  
-  render() {
+    let language = this.props.lang,
+        state = this.state;
     return (
-      <a href='javascript:void(0);' onClick={this.props.onOpenLoginModal}>{this.props.lang.LOGIN}</a>
+      <div className="signIn">
+        <a href='javascript:void(0);' onClick={this.openModal}>{language.LOGIN}</a>
+        <Modal isOpen={state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles}>
+          <p>{state.errorMsg}</p>
+          <button onClick={this.closeModal}>close</button>
+          <form onSubmit={this.handleSubmit} action="#" method="post">
+            <table>
+              <tbody>
+                <tr>
+                  <td><label>{language.USERNAME}</label></td>
+                  <td><input type="text" ref="user" size="20" /></td>
+                </tr>
+                <tr>
+                  <td><label>{language.ADMIN_PWD}</label></td>
+                  <td><input type="password" ref="password" size="20" /></td>
+                </tr>
+                <tr>
+                  <td colSpan="2">
+                    <input type="submit" value={language.SUBMIT} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </Modal>
+      </div>
     );
   }
 });
