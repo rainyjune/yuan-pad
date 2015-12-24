@@ -1,12 +1,4 @@
 let React = require('react');
-    
-let CloseSearchButton = React.createClass({
-  render() {
-    return (
-      <a href="javascript:void(0)" onClick={this.props.onCloseSearch}>Close</a>
-    );
-  }
-});
 
 let PaginationItem = React.createClass({
   handleClick(e) {
@@ -34,9 +26,6 @@ let PaginationItem = React.createClass({
 
 let Pagination = React.createClass({
   render() {
-    if(!this.props.appConfig.page_on || this.props.commentListType !== 1) {
-      return null;
-    }
     let items = [];
     for (let i = 0; i < this.props.total; i++) {
       items.push(<PaginationItem onPageChanged={this.props.onPageChanged} currentPage={this.props.currentPage} pageNumber={i} text={i+1} key={i} />);
@@ -66,18 +55,19 @@ let CommentStatistics = React.createClass({
     return { __html: text };
   },
   render() {
-    let closeSearchBtn = (this.props.commentListType === 2) ? <CloseSearchButton onCloseSearch={this.props.onCloseSearch} /> : '';
     return (
       <div className="statistics">
-        {closeSearchBtn}
+        {(this.props.commentListType === 2) ? <a href="javascript:void(0)" onClick={this.props.onCloseSearch}>Close</a> : ''}
         <p dangerouslySetInnerHTML={this.rawMarkup()} />
-        <Pagination 
-          onPageChanged={this.props.onPageChanged} 
-          currentPage = {this.props.currentPage}  
-          appConfig={this.props.appConfig}
-          commentListType={this.props.commentListType}
-          total={Math.ceil(this.props.total/this.props.appConfig.num_perpage)} 
-        />
+        { (!this.props.appConfig.page_on || this.props.commentListType !== 1) ? '' :
+          <Pagination 
+            onPageChanged={this.props.onPageChanged} 
+            currentPage = {this.props.currentPage}  
+            appConfig={this.props.appConfig}
+            commentListType={this.props.commentListType}
+            total={Math.ceil(this.props.total/this.props.appConfig.num_perpage)} 
+          />
+        }
       </div>
     );
   }
@@ -214,16 +204,6 @@ let CommentForm = React.createClass({
     this.setState({valid_code: e.target.value});
   },
   render() {
-    if(this.props.commentListType !== 1) {
-      return null;
-    }
-    let captcha = (this.props.appConfig.valid_code_open == 1) ?
-            <Captcha
-              ref="captcha"
-              valid_code={this.state.valid_code}
-              lang={this.props.lang}
-              onCaptchaChange={this.handleCaptchaChange}
-            /> : null;
     return (
       <form onSubmit={this.handleSubmit} className="commentForm">
         <table>
@@ -244,7 +224,15 @@ let CommentForm = React.createClass({
               <th>{this.props.lang.CONTENT}</th>
               <td><textarea ref="content" onChange={this.handleTextChange} value={this.state.text}></textarea></td>
             </tr>
-            {captcha}
+            {
+              (this.props.appConfig.valid_code_open == 1) ?
+                <Captcha
+                  ref="captcha"
+                  valid_code={this.state.valid_code}
+                  lang={this.props.lang}
+                  onCaptchaChange={this.handleCaptchaChange}
+                /> : null
+            }
             <tr>
               <td colSpan="2">
                 <input name="submit" type="submit" value={this.props.lang.SUBMIT} />
@@ -277,15 +265,19 @@ let CommentBox = React.createClass({
           appConfig={this.props.appConfig}
           total={this.props.commentsTotalNumber} 
           currentPage = {this.props.currentPage}
-          pagenum={this.props.appConfig.page_on ? Math.ceil(this.props.commentsTotalNumber/this.props.appConfig.num_perpage) : 1} /> 
-        <CommentForm
-          ref="commentForm"
-          appConfig={this.props.appConfig}
-          user={this.props.user} 
-          lang={this.props.lang} 
-          commentListType={this.props.commentListType}
-          onCommentSubmit={this.props.onCommentSubmit}
-        />
+          pagenum={this.props.appConfig.page_on ? Math.ceil(this.props.commentsTotalNumber/this.props.appConfig.num_perpage) : 1} />
+        {
+          this.props.commentListType !== 1 ? '' :
+          <CommentForm
+            ref="commentForm"
+            appConfig={this.props.appConfig}
+            user={this.props.user} 
+            lang={this.props.lang} 
+            commentListType={this.props.commentListType}
+            onCommentSubmit={this.props.onCommentSubmit}
+          />
+        }
+        
       </div>
     );
   }
