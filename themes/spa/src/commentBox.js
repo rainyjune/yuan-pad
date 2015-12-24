@@ -1,4 +1,5 @@
 let React = require('react');
+let dataProvider = require('./dataProvider.js');
 
 let Pagination = React.createClass({
   handleClick(e) {
@@ -187,9 +188,19 @@ let CommentForm = React.createClass({
         text = this.state.text.trim(),
         valid_code = this.state.valid_code.trim();
     if (!author || !text) return;
-    this.props.onCommentSubmit({ user: author, content: text, valid_code}); 
+    
     this.setState({ valid_code: ''});
     this.refs.captcha && this.refs.captcha.refresh();
+    
+    dataProvider.createPost({ user: author, content: text, valid_code}, res => {
+        if (res.statusCode !== 200) {
+          alert(res.response);
+          return;
+        }
+        // Clear the text in the textarea.
+        this.setState({text:''});
+        this.props.onCommentCreated();
+    });
     return false;
   },
   handleUsernameChange(e) {
@@ -271,7 +282,7 @@ let CommentBox = React.createClass({
             {...props}
             ref="commentForm"
             user={this.props.user} 
-            onCommentSubmit={this.props.onCommentSubmit}
+            onCommentCreated={this.props.onCommentCreated}
           />
         }
         

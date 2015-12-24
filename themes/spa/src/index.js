@@ -92,29 +92,10 @@ let App = React.createClass({
   /**
    * Tested 1.
    */
-  // Save comment to the server, reload comments after saved sucessfully.
-  handleCommentSubmit(comment) {
-    dataProvider.createPost(comment, res => {
-        if (res.statusCode !== 200) {
-          alert(res.response);
-          return;
-        }
-        // Clear the text in the textarea.
-        this.refs.commentBox.refs.commentForm.setState({text:''});
-        this.loadCommentsFromServer();
-      },
-      function(xhr, status, err) {
-        console.log("error", xhr, status, err);
-      }.bind(this)
-    );
-  },
-  /**
-   * Tested 1.
-   */
   // Reload comments from server if the `currentPage` state changed.
   handlePageChange(pageNumber) {
     pageNumber = parseInt(pageNumber);
-    this.setState({currentPage: pageNumber}, () => this.loadCommentsFromServer());
+    this.setState({currentPage: pageNumber}, this.loadCommentsFromServer);
   },
   /**
    * Tested 1.
@@ -131,23 +112,24 @@ let App = React.createClass({
   },
   render() {
     let state = this.state;
+    let props = {
+      user: state.currentUser,
+      appConfig: state.appConfig,
+      lang: state.translations
+    };
     return (
       <div id="appbox">
-        <Header 
+        <Header
+          {...props}
           onCurrentUserUpdated={this.setCurrentUser}
-          user={state.currentUser} 
-          appConfig={state.appConfig}
-          lang={state.translations}
         />
         <CommentBox
           ref="commentBox"
-          onCommentSubmit={this.handleCommentSubmit}
+          {...props}
+          onCommentCreated={this.loadCommentsFromServer}
           onCloseSearch={this.loadCommentsFromServer}
           onPageChanged={this.handlePageChange}
-          user={state.currentUser} 
-          lang={state.translations} 
           currentPage = {state.currentPage}
-          appConfig={state.appConfig}
           commentListType={state.commentListType} 
           comments={state.comments} 
           commentsTotalNumber={state.commentsTotalNumber}
@@ -159,9 +141,7 @@ let App = React.createClass({
           searchText={state.searchText}
         />
         <Footer
-          lang={state.translations} 
-          appConfig={state.appConfig}
-          user={state.currentUser} 
+          {...props}
         />
       </div>
     );
