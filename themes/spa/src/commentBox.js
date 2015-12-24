@@ -1,6 +1,6 @@
 let React = require('react');
 
-let PaginationItem = React.createClass({
+let Pagination = React.createClass({
   handleClick(e) {
     e.preventDefault();
     let pageNumber = e.target.getAttribute("data-pagenumber");
@@ -14,25 +14,22 @@ let PaginationItem = React.createClass({
   },
   render() {
     return (
-      <a 
-        className={(() => { if (this.props.currentPage === this.props.pageNumber) { return "pagination-item currentPage" } else { return "pagination-item"}})()} 
-        href="javascript:void(0);" 
-        data-pagenumber={this.props.pageNumber}
-        onClick = {this.handleClick}
-        >{this.props.text}</a>
-    );
-  }
-});
-
-let Pagination = React.createClass({
-  render() {
-    let items = [];
-    for (let i = 0; i < this.props.total; i++) {
-      items.push(<PaginationItem onPageChanged={this.props.onPageChanged} currentPage={this.props.currentPage} pageNumber={i} text={i+1} key={i} />);
-    }
-    return (
       <div className="pagination">
-        {items}
+        {(()=> {
+          let items = [];
+          for (let i = 0; i < this.props.total; i++) {
+            let className = (this.props.currentPage === i) ? "pagination-item currentPage" : "pagination-item";
+            items.push(<a
+              key={i}
+              className={className} 
+              href="javascript:void(0);" 
+              data-pagenumber={i}
+              onClick = {this.handleClick}
+              >{i+1}</a>
+            );
+          }
+          return items;
+        })()}
       </div>
     );
   }
