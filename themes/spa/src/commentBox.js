@@ -79,14 +79,9 @@ let CommentList = React.createClass({
       let text = isSearchResult ? comment.post_content.replace(searchText, "<span class='keyword'>" + searchText + "</span>") : comment.post_content;
       return (
         <Comment
-          appConfig={appConfig}
-          uid={comment.uid}
-          b_username={comment.b_username}
-          author={comment.uname}
           key={comment.id}
-          reply_content = {comment.reply_content}
-          reply_time = {comment.reply_time}
-          time={comment.time}
+          appConfig={appConfig}
+          data = {comment}
           lang = {lang}>
           {text}
         </Comment>
@@ -108,7 +103,7 @@ let Reply = React.createClass({
                       .replace('{reply_content}', this.props.content)};
   },
   render() {
-    return this.props.content ? (<div className="reply" dangerouslySetInnerHTML={this.rawMarkup()}></div>) : null;
+    return (<div className="reply" dangerouslySetInnerHTML={this.rawMarkup()}></div>);
   }
 });
 
@@ -117,17 +112,23 @@ let Comment = React.createClass({
     return { __html: this.props.children.toString() };
   },
   rawAuthorMarkup() {
-    return { __html: this.props.uid ? this.props.b_username : this.props.author};
+    return { __html: this.props.data.uid ? this.props.data.b_username : this.props.data.uname};
   },
   render() {    
     return (
       <div className="comment">
         <span className="commentAuthor" dangerouslySetInnerHTML={this.rawAuthorMarkup()}></span> 
-        <span className="commentDate">{this.props.time}</span>
+        <span className="commentDate">{this.props.data.time}</span>
         <div className="commentText">
          <p dangerouslySetInnerHTML={this.rawMarkup()} />
         </div>
-        <Reply appConfig={this.props.appConfig} lang={this.props.lang} content={this.props.reply_content} date={this.props.reply_time} />
+        {this.props.data.reply_content ? <Reply
+          appConfig={this.props.appConfig}
+          lang={this.props.lang}
+          content={this.props.data.reply_content}
+          date={this.props.data.reply_time}
+          /> : null
+        }
       </div>
     );
   }
