@@ -107,7 +107,6 @@ let App = React.createClass({
     });
   },
   setCurrentUser(userData) {
-    debugger;
     this.setState({currentUser: userData});
   },
   render() {

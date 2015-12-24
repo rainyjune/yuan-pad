@@ -97,10 +97,12 @@ let CommentList = React.createClass({
 
 let Reply = React.createClass({
   rawMarkup() {
-    // TODO: Get the actual admini user name.
-    return { __html: this.props.lang.ADMIN_REPLIED.replace('{admin_name}', this.props.appConfig.admin)
-                      .replace('{reply_time}', this.props.date)
-                      .replace('{reply_content}', this.props.content)};
+    let mapObj = {
+      '{admin_name}': this.props.appConfig.admin,
+      '{reply_time}': this.props.date,
+      '{reply_content}': this.props.content
+    };
+    return { __html: yuanjs.replaceAll(this.props.lang.ADMIN_REPLIED, mapObj) };
   },
   render() {
     return (<div className="reply" dangerouslySetInnerHTML={this.rawMarkup()}></div>);
@@ -149,7 +151,7 @@ let Captcha = React.createClass({
       <tr>
         <th>{this.props.lang.CAPTCHA}</th>
         <td><input ref="captchaInput" type="text" value={this.props.valid_code} onChange={this.props.onCaptchaChange} />
-            <img ref="captchaImg" src="index.php?action=captcha" data-src="index.php?action=captcha" onClick={this.refreshCaptch} alt="Captcha" title={this.props.lang.CLICK_TO_REFRESH} />
+            <img className="captchaImg" ref="captchaImg" src="index.php?action=captcha" data-src="index.php?action=captcha" onClick={this.refreshCaptch} alt="Captcha" title={this.props.lang.CLICK_TO_REFRESH} />
         </td>
       </tr>
     );
