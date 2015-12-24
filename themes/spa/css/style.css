@@ -510,6 +510,12 @@ th {
   clear: both;
 }
 
+.captchaImg {
+  cursor: pointer;
+  vertical-align: top;
+  margin-left: 5px;
+}
+
 footer {
   border-top: 1px dotted blue;
   margin-top: 15px;
