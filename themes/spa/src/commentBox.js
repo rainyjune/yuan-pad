@@ -189,7 +189,7 @@ let CommentForm = React.createClass({
     if (!author || !text) return;
     this.props.onCommentSubmit({ user: author, content: text, valid_code}); 
     this.setState({ valid_code: ''});
-    this.refs.captcha.refresh();
+    this.refs.captcha && this.refs.captcha.refresh();
     return false;
   },
   handleUsernameChange(e) {
@@ -245,33 +245,32 @@ let CommentForm = React.createClass({
     
 let CommentBox = React.createClass({
   render() {
+    var props = {
+      commentListType: this.props.commentListType,
+      lang: this.props.lang,
+      appConfig: this.props.appConfig
+    }
     return (
       <div className="commentBox">
         <h1>{this.props.lang.WELCOME_POST}</h1>
         <CommentList
-          commentListType={this.props.commentListType}
-          lang={this.props.lang}
-          appConfig={this.props.appConfig}
+          {...props}
           data={this.props.comments}
           searchText={this.props.searchText}
         />
-        <CommentStatistics 
+        <CommentStatistics
+          {...props}
           onCloseSearch={this.props.onCloseSearch}
           onPageChanged={this.props.onPageChanged}
-          commentListType={this.props.commentListType} 
-          lang={this.props.lang} 
-          appConfig={this.props.appConfig}
           total={this.props.commentsTotalNumber} 
           currentPage = {this.props.currentPage}
           pagenum={this.props.appConfig.page_on ? Math.ceil(this.props.commentsTotalNumber/this.props.appConfig.num_perpage) : 1} />
         {
           this.props.commentListType !== 1 ? '' :
           <CommentForm
+            {...props}
             ref="commentForm"
-            appConfig={this.props.appConfig}
             user={this.props.user} 
-            lang={this.props.lang} 
-            commentListType={this.props.commentListType}
             onCommentSubmit={this.props.onCommentSubmit}
           />
         }
