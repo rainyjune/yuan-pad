@@ -4,13 +4,10 @@ let Pagination = React.createClass({
   handleClick(e) {
     e.preventDefault();
     let pageNumber = e.target.getAttribute("data-pagenumber");
-    console.log("You chosed the page number: ", pageNumber);
     if (parseInt(pageNumber) == this.props.currentPage) {
-      console.log('The same page , we do nothing...');
       return false;
     }
     this.props.onPageChanged(pageNumber);
-    return false;
   },
   render() {
     return (
@@ -22,7 +19,7 @@ let Pagination = React.createClass({
             items.push(<a
               key={i}
               className={className} 
-              href="javascript:void(0);" 
+              href="#" 
               data-pagenumber={i}
               onClick = {this.handleClick}
               >{i+1}</a>
@@ -159,24 +156,28 @@ let Captcha = React.createClass({
 
 let CommentForm = React.createClass({
   getInitialState() {
-    // TODO
     return {userInputType: 'text', labelContent: "", username: 'anonymous', text: '', valid_code: ''};
   },
   componentWillReceiveProps(nextProps) {
     let computedState = {};
     let propUser = nextProps.user;
-    if (propUser.admin) {
-      computedState.userInputType = "hidden";
-      computedState.username = propUser.admin;
-      computedState.labelContent = propUser.admin;
-    } else if (propUser.uid) {
-      computedState.userInputType = "hidden";
-      computedState.username = propUser.username;
-      computedState.labelContent = propUser.username;
-    } else {
-      computedState.userInputType = "text";
-      computedState.username = 'anonymous';
-      computedState.labelContent = '';
+    switch (propUser.user_type) {
+      case "admin" :
+        computedState.userInputType = "hidden";
+        computedState.username = propUser.admin;
+        computedState.labelContent = propUser.admin;
+        break;
+      case "regular":
+        computedState.userInputType = "hidden";
+        computedState.username = propUser.username;
+        computedState.labelContent = propUser.username;
+        break;
+      case "guest":
+      default:
+        computedState.userInputType = "text";
+        computedState.username = 'anonymous';
+        computedState.labelContent = '';
+        break;
     }
     this.setState(computedState);
   },
