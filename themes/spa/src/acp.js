@@ -20,26 +20,37 @@ let ACPBox = React.createClass({
     };
   },
   /**
-   * Tested 1. Load application data after we verified the root user.
+   * Load application data after we verified the root user.
    */
   componentDidMount() {
-    this.getUserInfo(this.loadApplicationConfiguration);
+    dataProvider.getAppConfig(res => {
+      if (res.statusCode === 200) {
+        let siteConfig = res.response;
+        dataProvider.getTranslations(res => {
+          if (this.isMounted()) {
+            this.setState({translations: res.response, appConfig: siteConfig});
+          }
+          this.getUserInfo();
+        });
+      } else {
+        // TODO Tell the user what's wrong.
+        alert(res.statusText);
+      }
+    });
   },
 
   loadApplicationConfiguration(successCallback) {
     dataProvider.getAppConfigACP(res => {
-      //debugger;
       if (res.statusCode !== 200) {
         return ;
       }
-      this.setState({appConfig: res.response}, successCallback || this.loadApplicationTranslation);
+      this.setState({appConfig: res.response}, successCallback);
     });
   },
   loadApplicationTranslation(successCallback) {
     dataProvider.getTranslations(res => {
-      //debugger;
       if (res.statusCode === 200) {
-        this.setState({translations: res.response}, successCallback || this.loadApplicationSystemInformation);
+        this.setState({translations: res.response}, successCallback);
       }
     });
   },
@@ -70,23 +81,16 @@ let ACPBox = React.createClass({
       });
     }
   },
-  /**
-   * Tested 1.
-   */
   // Get current user identity from server.
-  getUserInfo(successCallback) {
+  getUserInfo() {
     dataProvider.getUserInfo(res => {
-      console.log('user info:', res);
       if (res.statusCode !== 200) {
         return ;
       }
       if (this.isMounted()) {
-        if (res.response.user_type === "admin") {
-          this.setState({currentUser: res.response}, successCallback);
-        }
+        this.handleUserSignedIn(res.response);
       }
-    }, function(){
-    }.bind(this));
+    });
   },
   /**
    * Tested 1.
@@ -98,54 +102,63 @@ let ACPBox = React.createClass({
    * Tested 1
    */
   // Update the `currentUser` state after a user signed in.
-  handleUserSignedIn(signedInUser) {
-    if (signedInUser.admin) {
-      this.setState({currentUser: signedInUser}, this.loadApplicationConfiguration);
-    } else if (signedInUser.uid) {
+  handleUserSignedIn(userData) {
+    if (userData.user_type === "admin") {
+      this.setState({currentUser: userData}, () => {this.loadApplicationConfiguration(this.loadApplicationSystemInformation);});
+    } else if (userData.user_type === "regular") {
       window.location = "index.php";
+    } else {
+      this.setState({currentUser: userData});
     }
   },
   handleCommentDeleted() {
     this.loadApplicationSystemInformation();
   },
   render() {
-    let tabs = [
-      {text: this.state.translations.ACP_OVERVIEW,value: "overview"},
-      {text: this.state.translations.ACP_CONFSET,value: "siteset"},
-      {text: this.state.translations.ACP_MANAGE_POST,value: "message"},
-      {text: this.state.translations.ACP_MANAGE_IP,value: "ban_ip"},
-      {text: this.state.translations.USER_ADMIN,value: "user"}
-    ];
+    let state = this.state,
+        translations = state.translations,
+        tabs = [
+          {text: translations.ACP_OVERVIEW,value: "overview"},
+          {text: translations.ACP_CONFSET,value: "siteset"},
+          {text: translations.ACP_MANAGE_POST,value: "message"},
+          {text: translations.ACP_MANAGE_IP,value: "ban_ip"},
+          {text: translations.USER_ADMIN,value: "user"}
+        ],
+        props = {
+          user: state.currentUser,
+          lang: state.translations
+        };
+        
     return (
       <div id="acpBox">
-        <ACPLogin
-          lang={this.state.translations}
-          user={this.state.currentUser}
-          onUserSignedIn={this.handleUserSignedIn}
-        />
+        {
+          (state.currentUser.user_type && state.currentUser.user_type === "guest") ?
+            <ACPLogin
+              {...props}
+              onCurrentUserUpdated={this.handleUserSignedIn}
+            /> : null
+        }
         <ACPHeader
-          lang={this.state.translations}
-          user={this.state.currentUser}
+          {...props}
           onUserLogout={this.handleLogout}
         />
         <ACPTabHeader
+          {...props}
           activeTab={this.state.activeTab}
-          user={this.state.currentUser}
           tabs={tabs}
           onTabSelected={this.updateActiveTab}
         />
         <ACPTabContent
-          lang={this.state.translations}
+          {...props}
           activeTab={this.state.activeTab}
           systemInformation={this.state.systemInformation}
           appConfig={this.state.appConfig}
-          user={this.state.currentUser}
           onActiveTabChanged={this.updateActiveTab}
           onConfigUpdated={this.handleConfigUpdate}
           onCommentDeleted={this.handleCommentDeleted}
         />
         <ACPFooter
-          user={this.state.currentUser}
+          {...props}
         />
       </div>
     );

@@ -1,29 +1,68 @@
 let React = require('react');
-let LoginModal = require('./signInModal.js');
+let dataProvider = require('./dataProvider.js');
 let SignInMixIn = require('./SignInMixin.js');
+let Modal = require('react-modal');
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
 
 let ACPLogin = React.createClass({
   mixins: [SignInMixIn], // Use the mixin
   getInitialState() {
     return {
-      loginErrorMsg: '',
-      loginModalIsOpen: true
+      errorMsg: '',
+      modalIsOpen: true
     };
   },
+  handleSubmit(e) {
+    e.preventDefault();
+    let user = this.refs.user.value.trim(),
+        pwd = this.refs.password.value.trim();
+    if (!user || !pwd) return;
+    this.handleSignIn({ user, password: pwd});
+    return false;
+  },
+  goToHome() {
+    window.location.href = 'index.php';
+  },
   render() {
-    return (this.props.user.user_type === "admin") ?
-           null :
-      (
-        <div>
-          <LoginModal 
-            loginErrorMsg={this.state.loginErrorMsg} 
-            onLoginSubmit={this.handleSignIn} 
-            loginModalIsOpen={this.state.loginModalIsOpen} 
-            onRequestClose={this.closeLoginModal} 
-            lang={this.props.lang} 
-          />
-        </div>
-      );
+    let language = this.props.lang,
+        state = this.state;
+    return (
+      <div className="signIn">
+        <Modal isOpen={state.modalIsOpen} style={customStyles}>
+          <p>{state.errorMsg}</p>
+          <button onClick={this.goToHome}>close</button>
+          <form onSubmit={this.handleSubmit} action="#" method="post">
+            <table>
+              <tbody>
+                <tr>
+                  <td><label>{language.USERNAME}</label></td>
+                  <td><input type="text" ref="user" size="20" /></td>
+                </tr>
+                <tr>
+                  <td><label>{language.ADMIN_PWD}</label></td>
+                  <td><input type="password" ref="password" size="20" /></td>
+                </tr>
+                <tr>
+                  <td colSpan="2">
+                    <input type="submit" value={language.SUBMIT} />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </form>
+        </Modal>
+      </div>
+    );
   }
 });
 
