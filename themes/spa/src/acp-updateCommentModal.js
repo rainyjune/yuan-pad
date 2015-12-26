@@ -46,8 +46,8 @@ let UpdateCommentModal = React.createClass({
   },
   render(){
     return (
-      <Modal isOpen={this.props.commentModalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
-        <div>{this.props.commentErrorMsg}</div>
+      <Modal isOpen={this.props.modalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
+        <div>{this.props.modalErrorMsg}</div>
         <form onSubmit={this.handleSubmit} action="#" method="post">
           <textarea value={this.state.update_content} onChange={this.changeContent}></textarea>
           <input type="submit" />
