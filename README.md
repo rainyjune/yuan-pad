@@ -6,6 +6,7 @@ YuanPad is a PHP-based guestbook script.
 ### Front End Developer Guide
 
 ```
+cd yuan-pad/themes/spa
 npm install
 npm install -g grunt-cli
 ```
