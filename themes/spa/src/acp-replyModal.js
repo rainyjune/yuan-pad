@@ -40,9 +40,7 @@ let ReplyModal = React.createClass({
       if (res.statusCode === 200) {
         this.props.onReplySubmit();
       }
-    }, function(e){
-      debugger;
-    }.bind(this));
+    });
     return false;
   },
   changeContent(e) {

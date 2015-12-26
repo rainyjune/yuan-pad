@@ -31,7 +31,6 @@ let ACPConfig = React.createClass({
         computedState[i] = propAppConfig[i] === null ? 0 : propAppConfig[i];
       }
     }
-//debugger;
     this.setState(computedState);
   },
   handleSubmit(e) {
@@ -46,9 +45,7 @@ let ACPConfig = React.createClass({
         // TODO User friendly message.
         alert('failed');
       }
-    }, function(){
-      debugger;
-    }.bind(this));
+    });
   },
   toggleSiteClose(e) {
     this.setState({site_close: e.target.value});
