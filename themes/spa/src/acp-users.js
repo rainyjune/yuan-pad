@@ -82,9 +82,7 @@ let ACPUser = React.createClass({
       if (res.statusCode === 200) {
         let data = res.response;
         this.addSelectedFlag(data);
-        this.setState({users: data}, function(){
-          console.warn('users:', this.state.users);
-        });
+        this.setState({users: data});
       }
     });
   },
