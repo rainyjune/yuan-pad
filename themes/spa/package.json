@@ -20,10 +20,12 @@
   },
   "homepage": "https://github.com/rainyjune/yuan-pad#readme",
   "devDependencies": {
+    "babel-cli": "^6.3.17",
     "babel-loader": "^6.2.0",
     "babel-plugin-transform-runtime": "^6.1.18",
     "babel-preset-es2015": "^6.3.13",
     "babel-preset-react": "^6.1.18",
+    "babel-runtime": "^6.3.19",
     "babelify": "^7.2.0",
     "grunt": "^0.4.5",
     "grunt-browserify": "^4.0.1",
