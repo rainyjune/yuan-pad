@@ -265,8 +265,8 @@ let ACPMessages = React.createClass({
                   <a href="#" onClick={this.checkNone}>{lang.CHECK_NONE}</a> &nbsp;
                   <a href="#" onClick={this.checkXAll}>{lang.CHECK_INVERT}</a>&nbsp;
                   <input type='submit' value={lang.DELETE_CHECKED} />&nbsp;
-                  <a onClick={this.deleteAllComments}>{lang.DELETE_ALL}</a>&nbsp;
-                  <a onClick={this.deleteAllReplies}>{lang.DELETE_ALL_REPLY}</a>
+                  <a href="#" onClick={this.deleteAllComments}>{lang.DELETE_ALL}</a>&nbsp;
+                  <a href="#" onClick={this.deleteAllReplies}>{lang.DELETE_ALL_REPLY}</a>
                 </td>
               </tr>
             </tfoot>
