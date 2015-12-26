@@ -2,10 +2,9 @@ let React = require('react');
 
 let ACPOverview = (props) => {
   let lang = props.lang,
-      sysInfo = props.systemInformation,
-      cssClass = props.activeTab === "overview" ? "selectTag" : "";
+      sysInfo = props.systemInformation;
   return (
-    <div className={cssClass}>
+    <div className={props.activeTab === "overview" ? "selectTag" : ""}>
       <table>
         <tbody>
           <tr>
