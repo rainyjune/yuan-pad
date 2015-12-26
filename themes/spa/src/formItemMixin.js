@@ -16,7 +16,6 @@ let FormItemMixIn = {
       }
       return currentValue;
     });
-    //console.log('data:', this.state[field]);
     this.setMixState(data);
   },
   toggleAll(checked) {
@@ -25,7 +24,6 @@ let FormItemMixIn = {
       currentValue['checked'] = checked;
       return currentValue;
     });
-    //this.setState({users: data});
     this.setMixState(data);
   },
   checkAll(e) {
@@ -46,7 +44,6 @@ let FormItemMixIn = {
       currentValue['checked'] = !currentValue['checked'];
       return currentValue;
     });
-    //this.setState({users: data});
     this.setMixState(data);
   },
   getCheckedItems() {
