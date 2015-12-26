@@ -69,14 +69,11 @@ let ACPBox = React.createClass({
   handleConfigUpdate() {
     this.loadApplicationConfiguration();
   },
-  /**
-   * Tested 1.
-   */
   // Update the `currentUser` state to default value.
   handleLogout() {
     if (this.isMounted()) {
       // Navigates to the index.php page after signed out.
-      this.setState({ currentUser: {} }, function(){
+      this.setState({ currentUser: {}, appConfig: {} }, function(){
         window.location = "index.php";
       });
     }
@@ -84,23 +81,14 @@ let ACPBox = React.createClass({
   // Get current user identity from server.
   getUserInfo() {
     dataProvider.getUserInfo(res => {
-      if (res.statusCode !== 200) {
-        return ;
-      }
       if (this.isMounted()) {
         this.handleUserSignedIn(res.response);
       }
     });
   },
-  /**
-   * Tested 1.
-   */
   updateActiveTab(newTabName) {
     this.setState({activeTab: newTabName});
   },
-  /**
-   * Tested 1
-   */
   // Update the `currentUser` state after a user signed in.
   handleUserSignedIn(userData) {
     if (userData.user_type === "admin") {
