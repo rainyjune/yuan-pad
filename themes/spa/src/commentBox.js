@@ -54,7 +54,7 @@ let CommentStatistics = React.createClass({
       <div className="statistics">
         {(this.props.commentListType === 2) ? <a href="javascript:void(0)" onClick={this.props.onCloseSearch}>Close</a> : ''}
         <p dangerouslySetInnerHTML={this.rawMarkup()} />
-        { (!this.props.appConfig.page_on || this.props.commentListType !== 1) ? '' :
+        { (!parseInt(this.props.appConfig.page_on) || this.props.commentListType !== 1) ? '' :
           <Pagination 
             onPageChanged={this.props.onPageChanged} 
             currentPage = {this.props.currentPage}  
