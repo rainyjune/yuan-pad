@@ -1,11 +1,11 @@
 var path = require("path");
 module.exports = {
   entry: {
-    index: "./themes/spa/src/index.js",
-    acp: "./themes/spa/src/acp.js"
+    index: "./src/index.js",
+    acp: "./src/acp.js"
   },
   output: {
-    path: './themes/spa/build/',
+    path: './build/',
     filename: "[name].js"
   },
   module: {
@@ -35,6 +35,6 @@ module.exports = {
   },
   plugins: [],
   sassLoader: {
-    includePath: [path.resolve(__dirname, "./themes/spa/sass")]
+    includePath: [path.resolve(__dirname, "./sass")]
   }
 };
