@@ -167,10 +167,6 @@ let CommentForm = React.createClass({
     let propUser = nextProps.user;
     switch (propUser.user_type) {
       case "admin" :
-        computedState.userInputType = "hidden";
-        computedState.username = propUser.admin;
-        computedState.labelContent = propUser.admin;
-        break;
       case "regular":
         computedState.userInputType = "hidden";
         computedState.username = propUser.username;
