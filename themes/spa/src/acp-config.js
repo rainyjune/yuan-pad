@@ -26,7 +26,7 @@ let ACPConfig = React.createClass({
   componentWillReceiveProps(nextProps) {
     let propAppConfig = nextProps.appConfig;
     let computedState = {};
-    for (var i in propAppConfig) {
+    for (let i in propAppConfig) {
       if (this.state.hasOwnProperty(i)) {
         computedState[i] = propAppConfig[i] === null ? 0 : propAppConfig[i];
       }
@@ -40,6 +40,7 @@ let ACPConfig = React.createClass({
       if (res.statusCode === 200) {
         // TODO show friendly message.
         alert('OK');
+        this.setState({password: ''});// Empty the password input value.
         this.props.onConfigUpdated();
       } else {
         // TODO User friendly message.
@@ -61,91 +62,82 @@ let ACPConfig = React.createClass({
   },
   render() {
     let appConfig = this.state,
-        acpData = this.props.systemInformation,
-        lang = this.props.lang,
-        cssClass = this.props.activeTab === "siteset" ? "configContainer selectTag" : "configContainer",
-        isSiteClosed = appConfig.site_close,
-        themes = acpData.themes,
-        themeOptions = [];
-        
-    for (var i in themes) {
-      let theme = themes[i];
-      themeOptions.push(<option key={theme} value={theme}>{theme}</option>)
-    }
+        props = this.props,
+        acpData = props.systemInformation,
+        lang = props.lang;
 
-    let timeZones = acpData.timezones,
-        timeZoneOptions = [];
-    for (var i in timeZones) {
-      let timezone = timeZones[i];
-      timeZoneOptions.push(<option key={i} value={i}>{timezone}</option>);
-    }
-
-    let languages = acpData.languages,
-        languageOptions = [];
-    for (var i in languages) {
-      let language = languages[i];
-      languageOptions.push(<option key={i} value={language}>{language}</option>);
-    }
-    
-    let captchaInputs = [];
-    if (acpData.gd_loaded) {
-      captchaInputs.push(<label key="1"><input type="radio" value="1" checked={appConfig.valid_code_open == 1} onChange={this.toggleCaptcha} />{lang.YES}</label>);
-      captchaInputs.push(<label key="0"><input type="radio" value="0" checked={appConfig.valid_code_open != 1} onChange={this.toggleCaptcha} />{lang.NO}</label>);
-    } else {
-      captchaInputs.push(<label key="1"><input type="radio" value="1" onChange={this.toggleCaptcha} />{lang.YES}</label>);
-      captchaInputs.push(<label key="0"><input type="radio" value="0" checked='checked' onChange={this.toggleCaptcha} />{lang.NO}{lang.GD_DISABLED_NOTICE}</label>);
-    }
     return (
-      <div className={cssClass}>
+      <div className={props.activeTab === "siteset" ? "configContainer selectTag" : "configContainer"}>
         <form onSubmit={this.handleSubmit} action="index.php?controller=config&amp;action=update" method="post">
           <fieldset>
-            <legend>{this.props.lang.SYS_CONF}</legend>
+            <legend>{lang.SYS_CONF}</legend>
             <table>
               <tbody>
                 <tr>
-                  <td>{this.props.lang.BOARD_NAME}:</td>
+                  <td>{lang.BOARD_NAME}:</td>
                   <td><input ref="board_name" type="text" size="20" valueLink={this.linkState('board_name')} /></td>
                 </tr>
                 <tr>
-                  <td>{this.props.lang.CLOSE_BOARD}:</td>
+                  <td>{lang.CLOSE_BOARD}:</td>
                   <td>
-                    <input ref="site_close" type="radio" value="1" checked={appConfig.site_close == 1} onChange={this.toggleSiteClose} />{this.props.lang.YES}
-                    <input ref="site_close" type="radio" value="0" checked={appConfig.site_close != 1} onChange={this.toggleSiteClose} />{this.props.lang.NO}
+                    <input ref="site_close" type="radio" value="1" checked={appConfig.site_close == 1} onChange={this.toggleSiteClose} />{lang.YES}
+                    <input ref="site_close" type="radio" value="0" checked={appConfig.site_close != 1} onChange={this.toggleSiteClose} />{lang.NO}
                   </td>
                 </tr>
                 <tr>
-                  <td>{this.props.lang.CLOSE_REASON}:</td>
+                  <td>{lang.CLOSE_REASON}:</td>
                   <td><textarea ref="close_reason" cols="30" rows="3" valueLink={this.linkState('close_reason')}></textarea></td>
                 </tr>
                 <tr>
-                  <td>{this.props.lang.ADMIN_EMAIL}:</td>
+                  <td>{lang.ADMIN_EMAIL}:</td>
                   <td><input ref="admin_email" type="text" size="20" valueLink={this.linkState('admin_email')} /></td>
                 </tr>
                 <tr>
-                  <td>{this.props.lang.COPY_INFO}:</td>
+                  <td>{lang.COPY_INFO}:</td>
                   <td><textarea ref="copyright_info" cols="30" rows="3" valueLink={this.linkState('copyright_info')} ></textarea></td>
                 </tr>
                 <tr>
-                  <td>{this.props.lang.SYS_THEME}:</td>
+                  <td>{lang.SYS_THEME}:</td>
                   <td>
                     <select ref="theme" valueLink={this.linkState('theme')}>
-                      {themeOptions}
+                      {(()=>{
+                        let themes = acpData.themes, themeOptions = [];
+                        for (let i in themes) {
+                          let theme = themes[i];
+                          themeOptions.push(<option key={theme} value={theme}>{theme}</option>);
+                        }
+                        return themeOptions;
+                      })()}
                     </select>
                   </td>
                 </tr>
                 <tr>
-                  <td>{this.props.lang.TIMEZONE}:</td>
+                  <td>{lang.TIMEZONE}:</td>
                   <td>
                     <select ref="timezone" valueLink={this.linkState('timezone')}>
-                      {timeZoneOptions}
+                      {(()=>{
+                        let timeZones = acpData.timezones, timezoneOptions = [];
+                        for (let i in timeZones) {
+                          let timezone = timeZones[i];
+                          timezoneOptions.push(<option key={i} value={i}>{timezone}</option>);
+                        }
+                        return timezoneOptions;
+                      })()}
                     </select>
                   </td>
                 </tr>
                 <tr>
-                  <td>{this.props.lang.LANG}:</td>
+                  <td>{lang.LANG}:</td>
                   <td>
                     <select ref="lang" valueLink={this.linkState('lang')}>
-                      {languageOptions}
+                      {(()=>{
+                        let languages = acpData.languages, languageOptions = [];
+                        for (let i in languages) {
+                          let language = languages[i];
+                          languageOptions.push(<option key={i} value={language}>{language}</option>);
+                        }
+                        return languageOptions;
+                      })()}
                     </select>
                   </td>
                 </tr>
@@ -153,56 +145,66 @@ let ACPConfig = React.createClass({
             </table>
           </fieldset>
           <fieldset>
-            <legend>{this.props.lang.POST_CONF}</legend>
+            <legend>{lang.POST_CONF}</legend>
             <table>
               <tbody>
                 <tr>
-                  <td>{this.props.lang.FILTER_WORDS}：</td>
+                  <td>{lang.FILTER_WORDS}：</td>
                   <td><textarea ref="filter_words" cols="20" rows="3" valueLink={this.linkState('filter_words')}></textarea></td>
                 </tr>
                 <tr>
-                  <td>{this.props.lang.ENABLE_CAPTCHA}：</td>
+                  <td>{lang.ENABLE_CAPTCHA}：</td>
                   <td>
-                    {captchaInputs}
+                    {(()=>{
+                      let captchaInputs = [];
+                      if (acpData.gd_loaded) {
+                        captchaInputs.push(<label key="1"><input type="radio" value="1" checked={appConfig.valid_code_open == 1} onChange={this.toggleCaptcha} />{lang.YES}</label>);
+                        captchaInputs.push(<label key="0"><input type="radio" value="0" checked={appConfig.valid_code_open != 1} onChange={this.toggleCaptcha} />{lang.NO}</label>);
+                      } else {
+                        captchaInputs.push(<label key="1"><input type="radio" value="1" onChange={this.toggleCaptcha} />{lang.YES}</label>);
+                        captchaInputs.push(<label key="0"><input type="radio" value="0" checked='checked' onChange={this.toggleCaptcha} />{lang.NO}{lang.GD_DISABLED_NOTICE}</label>);
+                      }
+                      return captchaInputs;
+                    })()}
                   </td>
                 </tr>
                 <tr>
-                  <td>{this.props.lang.ENABLE_PAGE}：</td>
+                  <td>{lang.ENABLE_PAGE}</td>
                   <td>
-                    <label><input ref="page_on" type="radio" value="1" checked={appConfig.page_on == 1} onChange={this.togglePagination} />{this.props.lang.YES}</label>
-                    <label><input ref="page_on" type="radio" value="0" checked={appConfig.page_on != 1} onChange={this.togglePagination} />{this.props.lang.NO}</label>
+                    <label><input ref="page_on" type="radio" value="1" checked={appConfig.page_on == 1} onChange={this.togglePagination} />{lang.YES}</label>
+                    <label><input ref="page_on" type="radio" value="0" checked={appConfig.page_on != 1} onChange={this.togglePagination} />{lang.NO}</label>
                   </td>
                 </tr>
                 <tr>
-                    <td>{this.props.lang.POST_PERPAGE}：</td>
-                    <td><input ref="num_perpage" type="text" valueLink={this.linkState('num_perpage')} />{this.props.lang.PAGINATION_TIP}</td>
+                    <td>{lang.POST_PERPAGE}：</td>
+                    <td><input ref="num_perpage" type="text" valueLink={this.linkState('num_perpage')} />{lang.PAGINATION_TIP}</td>
                 </tr>
                 <tr>
-                  <td>{this.props.lang.FILTER_HTML_TAGS}：</td>
+                  <td>{lang.FILTER_HTML_TAGS}：</td>
                   <td>
-                    <label><input ref="filter_type" type="radio" value="1" checked={appConfig.filter_type == 1} onChange={this.toggleFilterType} />{this.props.lang.STRIP_DISALLOWED_TAGS}</label>
-                    <label><input ref="filter_type" type="radio" value="2" checked={appConfig.filter_type == 2} onChange={this.toggleFilterType} />{this.props.lang.ESCAPE_ALL_TAGS}</label>
+                    <label><input ref="filter_type" type="radio" value="1" checked={appConfig.filter_type == 1} onChange={this.toggleFilterType} />{lang.STRIP_DISALLOWED_TAGS}</label>
+                    <label><input ref="filter_type" type="radio" value="2" checked={appConfig.filter_type == 2} onChange={this.toggleFilterType} />{lang.ESCAPE_ALL_TAGS}</label>
                   </td>
                 </tr>
                 <tr>
-                  <td>{this.props.lang.ALLOWED_HTML_TAGS}：</td>
+                  <td>{lang.ALLOWED_HTML_TAGS}：</td>
                   <td><input ref="allowed_tags" type="text" valueLink={this.linkState('allowed_tags')} /></td>
                 </tr>
               </tbody>
             </table>
           </fieldset>
           <fieldset>
-            <legend>{this.props.lang.ADMIN_CONF}</legend>
+            <legend>{lang.ADMIN_CONF}</legend>
             <table>
               <tbody>
                 <tr>
-                  <td>{this.props.lang.CHANGE_PWD}:</td>
-                  <td><input ref="password" type="password" valueLink={this.linkState('password')} />&nbsp;{this.props.lang.PWD_TIP}</td>
+                  <td>{lang.CHANGE_PWD}:</td>
+                  <td><input ref="password" type="password" valueLink={this.linkState('password')} />&nbsp;{lang.PWD_TIP}</td>
                 </tr>
               </tbody>
             </table>
           </fieldset>
-          <input type="submit" value={this.props.lang.SUBMIT} /><input type="reset" value={this.props.lang.RESET} />
+          <input type="submit" value={lang.SUBMIT} /><input type="reset" value={lang.RESET} />
         </form>
       </div>
     );
