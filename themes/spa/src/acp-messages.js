@@ -1,9 +1,7 @@
 let React = require('react');
 let dataProvider = require('./dataProvider.js');
-
 let ReplyModal = require('./acp-replyModal.js');
 let CommentUpdateModal = require('./acp-updateCommentModal.js');
-
 let FormItemMixin = require('./formItemMixin.js');
 
 let Reply = React.createClass({
@@ -80,8 +78,6 @@ let Comment = React.createClass({
   },
   replyComment(e) {
     e.preventDefault();
-    let dom = e.target;
-    let commentId = dom.getAttribute('data-commentid');
     this.props.onReplyComment(this.props.data);
   },
   updateComment(e) {
@@ -89,7 +85,6 @@ let Comment = React.createClass({
     this.props.onUpdateComment(this.props.data);
   },
   toggleItem() {
-    //this.setState({checked: !this.state.checked});
     this.props.onToggleItem(this.props.data);
   },
   render() {
@@ -110,7 +105,7 @@ let Comment = React.createClass({
         </td>
         <td>
           <a onClick={this.deleteComment} data-commentid={data.id} data-reply={data.reply ? "1" : "0"} href='#'>{lang.DELETE}</a>
-          <a onClick={this.replyComment} data-commentid={data.id} href="#">{lang.REPLY}</a>
+          <a onClick={this.replyComment} href="#">{lang.REPLY}</a>
           <a onClick={this.updateComment} href="#">{lang.UPDATE}</a>
           <a onClick={this.banIP} data-ip={data.ip} href="#">{lang.BAN}</a></td>
       </tr>
@@ -123,12 +118,10 @@ let ACPMessages = React.createClass({
   getInitialState() {
     return {
       comments: [],
-      replyModalIsOpen: false,
-      replyErrorMsg: '',
-      commentTobeReplied: null,
-      commentTobeUpdated: null,
-      commentModalIsOpen: false,
-      commentErrorMsg: ''
+      modalIsOpen: false,
+      modalType: '', // "reply" or "update" 
+      modalCommentModel: null,
+      modalErrorMsg: ''
     };
   },
   getMixinAttr() {
@@ -175,50 +168,33 @@ let ACPMessages = React.createClass({
     });
   },
   handleReplyComment(commentTobeReplied) {
+    this.openModal('reply', commentTobeReplied);
+  },
+  closeModal() {
     this.setState({
-      replyModalIsOpen: true,
-      replyErrorMsg: '',
-      commentTobeReplied: commentTobeReplied,
-      
-      commentTobeUpdated: null,
-      commentModalIsOpen: false,
-      commentErrorMsg: ''
+      modalIsOpen: false,
+      modalType: '', 
+      modalCommentModel: null,
+      modalErrorMsg: ''
     });
   },
-  closeReplyModal() {
+  openModal(type = 'reply', commentData) {
     this.setState({
-      replyModalIsOpen: false,
-      replyErrorMsg: ''
-    });
-  },
-  closeCommentUpdateModal() {
-    this.setState({
-      commentTobeUpdated: null,
-      commentModalIsOpen: false,
-      commentErrorMsg: ''
+      modalIsOpen: true,
+      modalType: type, 
+      modalCommentModel: commentData,
+      modalErrorMsg: ''
     });
   },
   handleReplyFormSubmitted() {
-    this.setState({
-      replyModalIsOpen: false,
-      replyErrorMsg: '',
-      commentTobeReplied: null
-    });
+    this.closeModal();
     this.loadCommentsFromServer();
   },
   handleUpdateComment(commentTobeUpdated) {
-    this.setState({
-      replyModalIsOpen: false,
-      replyErrorMsg: '',
-      commentTobeReplied: null,
-      
-      commentTobeUpdated: commentTobeUpdated,
-      commentModalIsOpen: true,
-      commentErrorMsg: ''
-    });
+    this.openModal('update', commentTobeUpdated);
   },
   handleCommentUpdated() {
-    this.closeCommentUpdateModal();
+    this.closeModal();
     this.loadCommentsFromServer();
   },
   loadCommentsFromServer() {
@@ -240,25 +216,17 @@ let ACPMessages = React.createClass({
     this.toggle(item);
   },
   render() {
-    let lang = this.props.lang;
-    let comments = this.state.comments;
-    let cssClass = this.props.activeTab === "message" ? "message_container selectTag" : "message_container";
-    let createComment = function(comment) {
-      return (
-        <Comment
-          lang={lang}
-          data={comment}
-          key={comment.id}
-          onActiveTabChanged={this.props.onActiveTabChanged}
-          onReplyComment={this.handleReplyComment}
-          onCommentDeleted={this.props.onCommentDeleted}
-          onUpdateComment={this.handleUpdateComment}
-          onToggleItem={this.handleToggleItem}
-        />
-      );
+    let state = this.state,
+        props = this.props,
+        lang = props.lang;
+    
+    let modalProps = {
+      comment: state.modalCommentModel,
+      modalErrorMsg: state.modalErrorMsg,
+      onRequestClose: this.closeModal
     };
     return (
-      <div className={cssClass}>
+      <div className={props.activeTab === "message" ? "message_container selectTag" : "message_container"}>
         <form onSubmit={this.deleteSelected} action="#" method="post">
           <table>
             <thead>
@@ -270,7 +238,25 @@ let ACPMessages = React.createClass({
               </tr>
             </thead>
             <tbody>
-              {comments && comments.map(createComment, this)}
+              {(() => {
+                let comments = state.comments, commentArr = [];
+                let createComment = function(comment) {
+                  commentArr.push(
+                    <Comment
+                      lang={lang}
+                      data={comment}
+                      key={comment.id}
+                      onActiveTabChanged={props.onActiveTabChanged}
+                      onReplyComment={this.handleReplyComment}
+                      onCommentDeleted={props.onCommentDeleted}
+                      onUpdateComment={this.handleUpdateComment}
+                      onToggleItem={this.handleToggleItem}
+                    />
+                  );
+                };
+                comments && comments.map(createComment, this);
+                return commentArr;
+              })()}
             </tbody>
             <tfoot>
               <tr>
@@ -287,17 +273,15 @@ let ACPMessages = React.createClass({
           </table>
         </form>
         <ReplyModal
-          comment={this.state.commentTobeReplied}
-          replyErrorMsg={this.state.replyErrorMsg}
-          replyModalIsOpen={this.state.replyModalIsOpen}
-          onRequestClose={this.closeReplyModal}
+          {...modalProps}
+          ref="replyModal"
+          modalIsOpen = {state.modalIsOpen && state.modalType === "reply"}
           onReplySubmit={this.handleReplyFormSubmitted}
         />
         <CommentUpdateModal
-          comment={this.state.commentTobeUpdated}
-          commentErrorMsg={this.state.commentErrorMsg}
-          commentModalIsOpen={this.state.commentModalIsOpen}
-          onRequestClose={this.closeCommentUpdateModal}
+          {...modalProps}
+          ref="updateModal"
+          modalIsOpen = {state.modalIsOpen && state.modalType === "update"}
           onCommentUpdated={this.handleCommentUpdated}
         />
       </div>
