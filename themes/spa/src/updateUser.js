@@ -34,7 +34,6 @@ let UserUpdate = React.createClass({
         email = this.refs.email.value.trim();
     if (!uid || !user || !email) return;
     dataProvider.updateUser({ uid, user, pwd, email},  res => {
-      debugger;
       if (this.isMounted()) {
         if (res.statusCode === 200) {
           this.setState({errorMsg: '', modalIsOpen: false});
