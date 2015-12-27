@@ -114,7 +114,7 @@ let Comment = React.createClass({
     return { __html: this.props.children.toString() };
   },
   rawAuthorMarkup() {
-    return { __html: this.props.data.uid ? this.props.data.b_username : this.props.data.uname};
+    return { __html: parseInt(this.props.data.uid) ? this.props.data.b_username : this.props.data.uname};
   },
   render() {    
     return (
