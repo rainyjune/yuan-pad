@@ -71,7 +71,7 @@ let ACPConfig = React.createClass({
         <form onSubmit={this.handleSubmit} action="index.php?controller=config&amp;action=update" method="post">
           <fieldset>
             <legend>{lang.SYS_CONF}</legend>
-            <table>
+            <table className="table">
               <tbody>
                 <tr>
                   <td>{lang.BOARD_NAME}:</td>
@@ -146,7 +146,7 @@ let ACPConfig = React.createClass({
           </fieldset>
           <fieldset>
             <legend>{lang.POST_CONF}</legend>
-            <table>
+            <table className="table">
               <tbody>
                 <tr>
                   <td>{lang.FILTER_WORDS}：</td>
@@ -195,7 +195,7 @@ let ACPConfig = React.createClass({
           </fieldset>
           <fieldset>
             <legend>{lang.ADMIN_CONF}</legend>
-            <table>
+            <table  className="table">
               <tbody>
                 <tr>
                   <td>{lang.CHANGE_PWD}:</td>

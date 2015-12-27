@@ -5,17 +5,9 @@ let ACPOverview = (props) => {
       sysInfo = props.systemInformation;
   return (
     <div className={props.activeTab === "overview" ? "selectTag" : ""}>
-      <table>
-        <tbody>
-          <tr>
-            <td><h1>{lang.WELCOME_SYS}</h1></td>
-          </tr>
-          <tr>
-            <td>{lang.THANKS}</td>
-          </tr>
-        </tbody>
-      </table>
-      <table>
+      <h1>{lang.WELCOME_SYS}</h1>
+      {lang.THANKS}
+      <table className="table">
         <tbody>
           <tr>
             <td colSpan="2"><b>{lang.STATS_INFO}</b></td>
