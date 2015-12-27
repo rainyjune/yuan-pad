@@ -40,7 +40,9 @@ let ACPLogin = React.createClass({
       <div className="signIn">
         <Modal isOpen={state.modalIsOpen} style={customStyles}>
           <p>{state.errorMsg}</p>
-          <button onClick={this.goToHome}>close</button>
+          <p>
+            <button onClick={this.goToHome} type="button" className="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          </p>
           <form onSubmit={this.handleSubmit} action="#" method="post">
             <table>
               <tbody>
