@@ -33,35 +33,35 @@ let ACPLogin = React.createClass({
   goToHome() {
     window.location.href = 'index.php';
   },
+  dismissAlert: function() {
+    this.setState({errorMsg: ''});
+  },
   render() {
     let language = this.props.lang,
         state = this.state;
+      
+    let alertStyle = {
+      display: state.errorMsg === "" ? "none" : "block"
+    };
     return (
       <div className="signIn">
         <Modal isOpen={state.modalIsOpen} style={customStyles}>
-          <p>{state.errorMsg}</p>
-          <p>
-            <button onClick={this.goToHome} type="button" className="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          </p>
+          <div style={alertStyle} className="alert alert-danger" role="alert">
+            <button onClick={this.dismissAlert} type="button" className="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <p>{state.errorMsg}</p>
+          </div>
           <form onSubmit={this.handleSubmit} action="#" method="post">
-            <table>
-              <tbody>
-                <tr>
-                  <td><label>{language.USERNAME}</label></td>
-                  <td><input type="text" ref="user" size="20" /></td>
-                </tr>
-                <tr>
-                  <td><label>{language.ADMIN_PWD}</label></td>
-                  <td><input type="password" ref="password" size="20" /></td>
-                </tr>
-                <tr>
-                  <td colSpan="2">
-                    <input type="submit" value={language.SUBMIT} />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </form>
+            <div className="form-group">
+              <label htmlFor="inputUsername">{language.USERNAME}</label>
+              <input id="inputUsername" type="text" ref="user" className="form-control" placeholder="admin" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="inputPassword">{language.ADMIN_PWD}</label>
+              <input id="inputPassword" type="password" ref="password" className="form-control" placeholder="Password" />
+            </div>
+            <button type="submit" className="btn btn-default">{language.SUBMIT}</button>
+            <button onClick={this.goToHome} type="button" className="btn btn-default">{language.CANCEL}</button>
+          </form>            
         </Modal>
       </div>
     );
