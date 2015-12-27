@@ -22499,16 +22499,31 @@
 	      { className: "searchbar" },
 	      React.createElement(
 	        "form",
-	        { onSubmit: this.handleSearch },
-	        React.createElement("input", {
-	          type: "text",
-	          size: "10",
-	          placeholder: "Search",
-	          ref: "s",
-	          value: this.props.searchText,
-	          onChange: this.handleChange
-	        }),
-	        React.createElement("input", { type: "image", src: "misc/images/search.gif", alt: "Search", ref: "searchImg" })
+	        { onSubmit: this.handleSearch, className: "form-inline" },
+	        React.createElement(
+	          "div",
+	          { className: "form-group" },
+	          React.createElement(
+	            "label",
+	            { className: "sr-only", htmlFor: "inputSearch" },
+	            "Search"
+	          ),
+	          React.createElement("input", {
+	            id: "inputSearch",
+	            type: "text",
+	            size: "10",
+	            placeholder: "Search",
+	            ref: "s",
+	            value: this.props.searchText,
+	            onChange: this.handleChange,
+	            className: "form-control"
+	          })
+	        ),
+	        React.createElement(
+	          "button",
+	          { type: "button", className: "btn btn-default btn-sm", "aria-label": "Submit" },
+	          React.createElement("span", { className: "glyphicon glyphicon-search", "aria-hidden": "true" })
+	        )
 	      )
 	    );
 	  }

@@ -21890,9 +21890,17 @@
 	  goToHome: function goToHome() {
 	    window.location.href = 'index.php';
 	  },
+	
+	  dismissAlert: function dismissAlert() {
+	    this.setState({ errorMsg: '' });
+	  },
 	  render: function render() {
 	    var language = this.props.lang,
 	        state = this.state;
+	
+	    var alertStyle = {
+	      display: state.errorMsg === "" ? "none" : "block"
+	    };
 	    return React.createElement(
 	      'div',
 	      { className: 'signIn' },
@@ -21900,70 +21908,55 @@
 	        Modal,
 	        { isOpen: state.modalIsOpen, style: customStyles },
 	        React.createElement(
-	          'p',
-	          null,
-	          state.errorMsg
-	        ),
-	        React.createElement(
-	          'button',
-	          { onClick: this.goToHome },
-	          'close'
+	          'div',
+	          { style: alertStyle, className: 'alert alert-danger', role: 'alert' },
+	          React.createElement(
+	            'button',
+	            { onClick: this.dismissAlert, type: 'button', className: 'close', 'data-dismiss': 'alert', 'aria-label': 'Close' },
+	            React.createElement(
+	              'span',
+	              { 'aria-hidden': 'true' },
+	              '×'
+	            )
+	          ),
+	          React.createElement(
+	            'p',
+	            null,
+	            state.errorMsg
+	          )
 	        ),
 	        React.createElement(
 	          'form',
 	          { onSubmit: this.handleSubmit, action: '#', method: 'post' },
 	          React.createElement(
-	            'table',
-	            null,
+	            'div',
+	            { className: 'form-group' },
 	            React.createElement(
-	              'tbody',
-	              null,
-	              React.createElement(
-	                'tr',
-	                null,
-	                React.createElement(
-	                  'td',
-	                  null,
-	                  React.createElement(
-	                    'label',
-	                    null,
-	                    language.USERNAME
-	                  )
-	                ),
-	                React.createElement(
-	                  'td',
-	                  null,
-	                  React.createElement('input', { type: 'text', ref: 'user', size: '20' })
-	                )
-	              ),
-	              React.createElement(
-	                'tr',
-	                null,
-	                React.createElement(
-	                  'td',
-	                  null,
-	                  React.createElement(
-	                    'label',
-	                    null,
-	                    language.ADMIN_PWD
-	                  )
-	                ),
-	                React.createElement(
-	                  'td',
-	                  null,
-	                  React.createElement('input', { type: 'password', ref: 'password', size: '20' })
-	                )
-	              ),
-	              React.createElement(
-	                'tr',
-	                null,
-	                React.createElement(
-	                  'td',
-	                  { colSpan: '2' },
-	                  React.createElement('input', { type: 'submit', value: language.SUBMIT })
-	                )
-	              )
-	            )
+	              'label',
+	              { htmlFor: 'inputUsername' },
+	              language.USERNAME
+	            ),
+	            React.createElement('input', { id: 'inputUsername', type: 'text', ref: 'user', className: 'form-control', placeholder: 'admin' })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'inputPassword' },
+	              language.ADMIN_PWD
+	            ),
+	            React.createElement('input', { id: 'inputPassword', type: 'password', ref: 'password', className: 'form-control', placeholder: 'Password' })
+	          ),
+	          React.createElement(
+	            'button',
+	            { type: 'submit', className: 'btn btn-default' },
+	            language.SUBMIT
+	          ),
+	          React.createElement(
+	            'button',
+	            { onClick: this.goToHome, type: 'button', className: 'btn btn-default' },
+	            language.CANCEL
 	          )
 	        )
 	      )
@@ -22755,38 +22748,14 @@
 	    "div",
 	    { className: props.activeTab === "overview" ? "selectTag" : "" },
 	    React.createElement(
-	      "table",
+	      "h1",
 	      null,
-	      React.createElement(
-	        "tbody",
-	        null,
-	        React.createElement(
-	          "tr",
-	          null,
-	          React.createElement(
-	            "td",
-	            null,
-	            React.createElement(
-	              "h1",
-	              null,
-	              lang.WELCOME_SYS
-	            )
-	          )
-	        ),
-	        React.createElement(
-	          "tr",
-	          null,
-	          React.createElement(
-	            "td",
-	            null,
-	            lang.THANKS
-	          )
-	        )
-	      )
+	      lang.WELCOME_SYS
 	    ),
+	    lang.THANKS,
 	    React.createElement(
 	      "table",
-	      null,
+	      { className: "table" },
 	      React.createElement(
 	        "tbody",
 	        null,
@@ -23036,7 +23005,7 @@
 	          ),
 	          React.createElement(
 	            'table',
-	            null,
+	            { className: 'table' },
 	            React.createElement(
 	              'tbody',
 	              null,
@@ -23224,7 +23193,7 @@
 	          ),
 	          React.createElement(
 	            'table',
-	            null,
+	            { className: 'table' },
 	            React.createElement(
 	              'tbody',
 	              null,
@@ -23384,7 +23353,7 @@
 	          ),
 	          React.createElement(
 	            'table',
-	            null,
+	            { className: 'table' },
 	            React.createElement(
 	              'tbody',
 	              null,
@@ -23956,7 +23925,7 @@
 	        { onSubmit: this.deleteSelected, action: '#', method: 'post' },
 	        React.createElement(
 	          'table',
-	          null,
+	          { className: 'table table-striped table-hover' },
 	          React.createElement(
 	            'thead',
 	            null,
@@ -24389,7 +24358,7 @@
 	        { onSubmit: this.handleSubmit, action: '#', method: 'post' },
 	        React.createElement(
 	          'table',
-	          { className: 'table2' },
+	          { className: 'table table-striped table-hover' },
 	          React.createElement(
 	            'thead',
 	            null,
@@ -24686,7 +24655,7 @@
 	        { onSubmit: this.handleDeleteMulti, action: '#', method: 'post' },
 	        React.createElement(
 	          'table',
-	          null,
+	          { className: 'table table-striped table-hover' },
 	          React.createElement(
 	            'thead',
 	            null,
