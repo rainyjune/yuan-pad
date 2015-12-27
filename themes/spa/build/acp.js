@@ -23749,7 +23749,7 @@
 	      React.createElement(
 	        'td',
 	        null,
-	        data.uid ? data.b_username : data.uname
+	        parseInt(data.uid) ? data.b_username : data.uname
 	      ),
 	      React.createElement(
 	        'td',
