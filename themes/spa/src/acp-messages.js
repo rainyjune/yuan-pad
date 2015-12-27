@@ -97,7 +97,7 @@ let Comment = React.createClass({
           <input type='hidden' name={this.props.data.id} value={data.reply ? 1 : 0} />
         </td>
         <td>
-          {data.uid ? data.b_username : data.uname}
+          {parseInt(data.uid) ? data.b_username : data.uname}
         </td>
         <td className='admin_message'>
           {data.post_content}<br />{lang.TIME}：{data.time}
