@@ -55,16 +55,18 @@
 	var React = __webpack_require__(17),
 	    ReactDOM = __webpack_require__(174);
 	
-	var SearchBar = __webpack_require__(215),
-	    CommentBox = __webpack_require__(216),
-	    Header = __webpack_require__(217),
-	    Footer = __webpack_require__(222),
-	    dataProvider = __webpack_require__(196);
+	var SearchBar = __webpack_require__(216),
+	    CommentBox = __webpack_require__(217),
+	    Header = __webpack_require__(218),
+	    Footer = __webpack_require__(223),
+	    dataProvider = __webpack_require__(196),
+	    Progress = __webpack_require__(215);
 	
 	var App = React.createClass({
 	  displayName: 'App',
 	  getInitialState: function getInitialState() {
 	    return {
+	      loadingModalIsOpen: true,
 	      appConfig: {},
 	      comments: [],
 	      commentsTotalNumber: 0, // The total number of all comments or filtered comments.
@@ -85,7 +87,7 @@
 	    var _this = this;
 	
 	    dataProvider.getUserInfo(function (res) {
-	      console.log('user info:', res);
+	      _this.setState({ loadingModalIsOpen: false });
 	      if (res.statusCode !== 200) {
 	        return;
 	      }
@@ -209,7 +211,8 @@
 	        onUserInput: this.handleKeywordInput,
 	        searchText: state.searchText
 	      }),
-	      React.createElement(Footer, props)
+	      React.createElement(Footer, props),
+	      React.createElement(Progress, { loadingModalIsOpen: this.state.loadingModalIsOpen })
 	    );
 	  }
 	});
@@ -22477,6 +22480,39 @@
 /* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
+	var React = __webpack_require__(17),
+	    Modal = __webpack_require__(175);
+	
+	var customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
+	
+	var Progress = React.createClass({
+	  displayName: 'Progress',
+	  render: function render() {
+	    return React.createElement(
+	      Modal,
+	      { isOpen: this.props.loadingModalIsOpen, style: customStyles },
+	      React.createElement('progress', null)
+	    );
+	  }
+	});
+	
+	module.exports = Progress;
+
+/***/ },
+/* 216 */
+/***/ function(module, exports, __webpack_require__) {
+
 	"use strict";
 	
 	var React = __webpack_require__(17);
@@ -22532,7 +22568,7 @@
 	module.exports = SearchBar;
 
 /***/ },
-/* 216 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22885,17 +22921,17 @@
 	module.exports = CommentBox;
 
 /***/ },
-/* 217 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(17);
 	
-	var SignIn = __webpack_require__(218),
-	    SignUp = __webpack_require__(219),
-	    UpdateUser = __webpack_require__(220),
-	    SignOutButton = __webpack_require__(221);
+	var SignIn = __webpack_require__(219),
+	    SignUp = __webpack_require__(220),
+	    UpdateUser = __webpack_require__(221),
+	    SignOutButton = __webpack_require__(222);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -22939,7 +22975,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 218 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23067,7 +23103,7 @@
 	module.exports = SignIn;
 
 /***/ },
-/* 219 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23221,7 +23257,7 @@
 	module.exports = SignUp;
 
 /***/ },
-/* 220 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23367,7 +23403,7 @@
 	module.exports = UserUpdate;
 
 /***/ },
-/* 221 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23397,7 +23433,7 @@
 	module.exports = LogoutButton;
 
 /***/ },
-/* 222 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

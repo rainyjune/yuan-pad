@@ -61,12 +61,14 @@
 	    ACPTabHeader = __webpack_require__(199),
 	    ACPTabContent = __webpack_require__(200),
 	    ACPFooter = __webpack_require__(214),
-	    dataProvider = __webpack_require__(196);
+	    dataProvider = __webpack_require__(196),
+	    Progress = __webpack_require__(215);
 	
 	var ACPBox = React.createClass({
 	  displayName: 'ACPBox',
 	  getInitialState: function getInitialState() {
 	    return {
+	      loadingModalIsOpen: true,
 	      systemInformation: {}, // System information
 	      activeTab: 'overview',
 	      appConfig: {}, // App config, including filter words.
@@ -150,6 +152,7 @@
 	    var _this5 = this;
 	
 	    dataProvider.getUserInfo(function (res) {
+	      _this5.setState({ loadingModalIsOpen: false });
 	      if (_this5.isMounted()) {
 	        _this5.handleUserSignedIn(res.response);
 	      }
@@ -207,7 +210,8 @@
 	        onConfigUpdated: this.handleConfigUpdate,
 	        onCommentDeleted: this.handleCommentDeleted
 	      })),
-	      React.createElement(ACPFooter, props)
+	      React.createElement(ACPFooter, props),
+	      React.createElement(Progress, { loadingModalIsOpen: this.state.loadingModalIsOpen })
 	    );
 	  }
 	});
@@ -24917,6 +24921,39 @@
 	});
 	
 	module.exports = ACPFooter;
+
+/***/ },
+/* 215 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(17),
+	    Modal = __webpack_require__(175);
+	
+	var customStyles = {
+	  content: {
+	    top: '50%',
+	    left: '50%',
+	    right: 'auto',
+	    bottom: 'auto',
+	    marginRight: '-50%',
+	    transform: 'translate(-50%, -50%)'
+	  }
+	};
+	
+	var Progress = React.createClass({
+	  displayName: 'Progress',
+	  render: function render() {
+	    return React.createElement(
+	      Modal,
+	      { isOpen: this.props.loadingModalIsOpen, style: customStyles },
+	      React.createElement('progress', null)
+	    );
+	  }
+	});
+	
+	module.exports = Progress;
 
 /***/ }
 /******/ ]);
