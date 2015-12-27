@@ -213,7 +213,7 @@ let CommentForm = React.createClass({
   },
   render() {
     return (
-      <form onSubmit={this.handleSubmit} className="commentForm">
+      <form onSubmit={this.handleSubmit} className="commentForm" role="search">
         <table>
           <tbody>
             <tr>
@@ -242,8 +242,9 @@ let CommentForm = React.createClass({
                 /> : null
             }
             <tr>
-              <td colSpan="2">
-                <input name="submit" type="submit" value={this.props.lang.SUBMIT} />
+              <td>&nbsp;</td>
+              <td>
+                <input className="btn btn-default" name="submit" type="submit" value={this.props.lang.SUBMIT} />
               </td>
             </tr>
           </tbody>
