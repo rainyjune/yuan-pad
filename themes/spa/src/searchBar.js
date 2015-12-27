@@ -14,16 +14,23 @@ let SearchBar = React.createClass({
   render() {
     return (
       <div className="searchbar">
-        <form onSubmit={this.handleSearch}>
-          <input 
-            type="text" 
-            size="10" 
-            placeholder="Search" 
-            ref="s" 
-            value={this.props.searchText}
-            onChange={this.handleChange}
-          />
-          <input type="image" src="misc/images/search.gif" alt="Search" ref="searchImg" />
+        <form onSubmit={this.handleSearch} className="form-inline">
+          <div className="form-group">
+            <label className="sr-only" htmlFor="inputSearch">Search</label>
+            <input
+              id="inputSearch"
+              type="text" 
+              size="10" 
+              placeholder="Search" 
+              ref="s" 
+              value={this.props.searchText}
+              onChange={this.handleChange}
+              className="form-control" 
+            />
+          </div>
+          <button type="button" className="btn btn-default btn-sm" aria-label="Submit">
+            <span className="glyphicon glyphicon-search" aria-hidden="true"></span>
+          </button>
         </form>
       </div>
     );
