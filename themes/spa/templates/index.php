@@ -2,6 +2,7 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title><?php echo t('WELCOME',array('{site_name}'=>ZFramework::app()->board_name));?></title>
     <script src="./themes/spa/build/yuan.min.js"></script>
     <link rel="stylesheet" href="./themes/spa/css/style.css">
