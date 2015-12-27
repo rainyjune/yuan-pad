@@ -228,7 +228,7 @@ let ACPMessages = React.createClass({
     return (
       <div className={props.activeTab === "message" ? "message_container selectTag" : "message_container"}>
         <form onSubmit={this.deleteSelected} action="#" method="post">
-          <table>
+          <table className="table table-striped table-hover">
             <thead>
               <tr className="header">
                 <th>{lang.SELECT}</th>
