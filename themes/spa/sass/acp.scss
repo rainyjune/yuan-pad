@@ -65,8 +65,6 @@ a:hover{
     border:#aecbd4 1px solid;
     padding:0em 0em;
     background-color: #fff;
-    height: 50.00em;
-    *height:48.75em;
     min-height:650px;
     margin-left: auto;
     margin-right: auto;
@@ -120,4 +118,8 @@ textarea.span-9{
 
 .check_span{
     display: none;
+}
+
+footer {
+  text-align: center;
 }
