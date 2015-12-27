@@ -176,7 +176,7 @@ let ACPUser = React.createClass({
     return (
       <div className={cssClass}>
         <form onSubmit={this.handleDeleteMulti} action="#" method="post">
-          <table>
+          <table className="table table-striped table-hover">
             <thead>
               <tr className="header">
                 <th className="span-1">{lang.SELECT}</th>

@@ -72,7 +72,7 @@ let ACPIpConfig = React.createClass({
     return (
       <div className={cssClass}>
         <form onSubmit={this.handleSubmit} action="#" method="post">
-          <table className="table2">
+          <table className="table table-striped table-hover">
             <thead>
               <tr className="header">
                 <th>{lang.SELECT}</th><th>{lang.BAD_IP}</th>
