@@ -5,11 +5,13 @@ let SearchBar = require('./searchBar.js'),
     CommentBox = require('./commentBox.js'),
     Header = require('./header.js'),
     Footer = require('./footer.js'),
-    dataProvider = require('./dataProvider.js');
+    dataProvider = require('./dataProvider.js'),
+    Progress = require('./progress.js');
 
 let App = React.createClass({
   getInitialState() {
     return {
+      loadingModalIsOpen: true,
       appConfig: {},
       comments: [],
       commentsTotalNumber: 0, // The total number of all comments or filtered comments.
@@ -27,7 +29,7 @@ let App = React.createClass({
   // Get current user identity from server.
   getUserInfo() {
     dataProvider.getUserInfo(res => {
-      console.log('user info:', res);
+      this.setState({loadingModalIsOpen: false});
       if (res.statusCode !== 200) {
         return ;
       }
@@ -142,6 +144,7 @@ let App = React.createClass({
         <Footer
           {...props}
         />
+        <Progress loadingModalIsOpen={this.state.loadingModalIsOpen} />
       </div>
     );
   }

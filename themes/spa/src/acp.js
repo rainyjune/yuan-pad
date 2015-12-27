@@ -7,11 +7,13 @@ let ACPLogin = require('./acp-login.js'),
     ACPTabHeader = require('./acp-tabHeader.js'),
     ACPTabContent = require('./acp-tabContent.js'),
     ACPFooter = require('./acp-footer.js'),
-    dataProvider = require('./dataProvider.js');
+    dataProvider = require('./dataProvider.js'),
+    Progress = require('./progress.js');
 
 let ACPBox = React.createClass({
   getInitialState() {
     return {
+      loadingModalIsOpen: true,
       systemInformation: {}, // System information
       activeTab: 'overview',
       appConfig: {}, // App config, including filter words.
@@ -81,6 +83,7 @@ let ACPBox = React.createClass({
   // Get current user identity from server.
   getUserInfo() {
     dataProvider.getUserInfo(res => {
+      this.setState({loadingModalIsOpen: false});
       if (this.isMounted()) {
         this.handleUserSignedIn(res.response);
       }
@@ -148,6 +151,7 @@ let ACPBox = React.createClass({
         <ACPFooter
           {...props}
         />
+        <Progress loadingModalIsOpen={this.state.loadingModalIsOpen} />
       </div>
     );
   }
