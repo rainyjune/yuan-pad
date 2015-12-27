@@ -213,42 +213,41 @@ let CommentForm = React.createClass({
   },
   render() {
     return (
-      <form onSubmit={this.handleSubmit} className="commentForm" role="search">
-        <table>
-          <tbody>
-            <tr>
-              <th>{this.props.lang.NICKNAME}</th>
-              <td>
-                <input 
-                  ref="user" 
-                  type={this.state.userInputType} 
-                  maxLength="10" 
-                  value={this.state.username}
-                  onChange={this.handleUsernameChange} />
-                <label htmlFor="user">{this.state.labelContent}</label>
-              </td>
-            </tr>
-            <tr>
-              <th>{this.props.lang.CONTENT}</th>
-              <td><textarea ref="content" onChange={this.handleTextChange} value={this.state.text}></textarea></td>
-            </tr>
-            {
-              (this.props.appConfig.valid_code_open == 1) ?
-                <Captcha
-                  ref="captcha"
-                  valid_code={this.state.valid_code}
-                  lang={this.props.lang}
-                  onCaptchaChange={this.handleCaptchaChange}
-                /> : null
-            }
-            <tr>
-              <td>&nbsp;</td>
-              <td>
-                <input className="btn btn-default" name="submit" type="submit" value={this.props.lang.SUBMIT} />
-              </td>
-            </tr>
-          </tbody>
-        </table>
+      <form onSubmit={this.handleSubmit} className="commentForm form-horizontal" >
+        <div className="form-group">
+          <label htmlFor="inputUser" className="col-lg-2 control-label">{this.props.lang.NICKNAME}</label>
+          <div className="col-lg-5">
+            <input
+              id="inputUser"
+              ref="user" 
+              type={this.state.userInputType} 
+              maxLength="10"
+              className="form-control"
+              value={this.state.username}
+              onChange={this.handleUsernameChange}
+            />
+          </div>
+        </div>
+        <div className="form-group">
+          <label htmlFor="inputContent" className="col-lg-2 control-label">{this.props.lang.CONTENT}</label>
+          <div className="col-sm-10">
+            <textarea id="inputContent" className="form-control" rows="3" ref="content" onChange={this.handleTextChange} value={this.state.text}></textarea>
+          </div>
+        </div>
+        {
+          (this.props.appConfig.valid_code_open == 1) ?
+            <Captcha
+              ref="captcha"
+              valid_code={this.state.valid_code}
+              lang={this.props.lang}
+              onCaptchaChange={this.handleCaptchaChange}
+            /> : null
+        }
+        <div className="form-group">
+          <div className="col-lg-offset-2 col-lg-10">
+            <button className="btn btn-default" type="submit">{this.props.lang.SUBMIT}</button>
+          </div>
+        </div>
       </form>
     );
   }
