@@ -2,7 +2,7 @@ let React = require('react');
 
 let AppFooter = React.createClass({
   ACPMarkup() {
-    let ACP = (this.props.user && this.props.user.admin) ? 
+    let ACP = (this.props.user && this.props.user.user_type === "admin") ? 
               "<a href='index.php?action=control_panel'>"+ this.props.lang.ACP+"</a>" 
               : '';
     return {
