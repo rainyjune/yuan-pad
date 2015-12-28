@@ -164,3 +164,9 @@ footer {
   margin-top: 15px;
   text-align: center;
 }
+
+/* React Modal */
+.ReactModal__Overlay > div {
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
