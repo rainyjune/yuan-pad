@@ -35,28 +35,20 @@ let SignIn = React.createClass({
         state = this.state;
     return (
       <div className="signIn">
-        <a href='javascript:void(0);' onClick={this.openModal}>{language.LOGIN}</a>
+        <a href='javascript:void(0);' onClick={this.openModal} role="button" className="btn btn-default">{language.LOGIN}</a>
         <Modal isOpen={state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles}>
           <p>{state.errorMsg}</p>
           <button onClick={this.closeModal}>close</button>
           <form onSubmit={this.handleSubmit} action="#" method="post">
-            <table>
-              <tbody>
-                <tr>
-                  <td><label>{language.USERNAME}</label></td>
-                  <td><input type="text" ref="user" size="20" /></td>
-                </tr>
-                <tr>
-                  <td><label>{language.ADMIN_PWD}</label></td>
-                  <td><input type="password" ref="password" size="20" /></td>
-                </tr>
-                <tr>
-                  <td colSpan="2">
-                    <input type="submit" value={language.SUBMIT} />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div className="form-group">
+              <label htmlFor="inputUsername">{language.USERNAME}</label>
+              <input ref="user" type="text" className="form-control" id="inputUsername" placeholder="" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="inputPassword">{language.ADMIN_PWD}</label>
+              <input ref="password" type="password" className="form-control" id="inputPassword" placeholder="" />
+            </div>
+            <button type="submit" className="btn btn-default">{language.SUBMIT}</button>
           </form>
         </Modal>
       </div>

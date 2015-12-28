@@ -53,28 +53,26 @@ let SignUp = React.createClass({
         
     return (
       <div className="signUp">
-        <a href='#' onClick={this.openModal}>{language.REGISTER}</a>
+        <a role="button" className="btn btn-default" href='#' onClick={this.openModal}>{language.REGISTER}</a>
         <Modal isOpen={state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles}>
           <p>{state.errorMsg}</p>
           <button onClick={this.closeModal}>close</button>
           <form onSubmit={this.handleSubmit} action="#" method="post">
             <fieldset>
               <legend>{language.REGISTER}</legend>
-              <dl>
-                <dt>{language.USERNAME}</dt>
-                <dd><input type="text" ref="user" size="20" /></dd>
-              </dl>
-              <dl>
-                <dt>{language.PASSWORD}</dt>
-                <dd><input type="password" ref="pwd" size="20" /></dd>
-              </dl>
-              <dl>
-                <dt>{language.EMAIL}</dt>
-                <dd><input type="text" ref="email" size="20" /></dd>
-              </dl>
-              <dl>
-                <dt><input type="submit" value={language.REGISTER} /></dt>
-              </dl>
+              <div className="form-group">
+                <label htmlFor="inputUser">{language.USERNAME}</label>
+                <input type="text" ref="user" className="form-control" id="inputUser" placeholder="Username" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="inputPassword">{language.PASSWORD}</label>
+                <input type="password" ref="pwd" className="form-control" id="inputPassword" placeholder="Password" />
+              </div>
+              <div className="form-group">
+                <label htmlFor="inputEmail">{language.EMAIL}</label>
+                <input type="email" ref="email" className="form-control" id="inputEmail" placeholder="" />
+              </div>
+              <button type="submit" className="btn btn-default">{language.REGISTER}</button>
             </fieldset>
           </form>
         </Modal>

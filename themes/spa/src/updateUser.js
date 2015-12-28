@@ -53,7 +53,7 @@ let UserUpdate = React.createClass({
         
     return (
       <div className="updateUser">
-        <a href="javascript:void(0);" onClick={this.openModal}>{language.UPDATE}</a>
+        <a role="button" className="btn btn-default" href="javascript:void(0);" onClick={this.openModal}>{language.UPDATE}</a>
         <Modal isOpen={state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles}>
           <p>{state.errorMsg}</p>
           <button onClick={this.closeModal}>close</button>
