@@ -22748,18 +22748,35 @@
 	  },
 	  render: function render() {
 	    return React.createElement(
-	      'tr',
-	      null,
+	      'div',
+	      { className: 'form-group' },
 	      React.createElement(
-	        'th',
-	        null,
+	        'label',
+	        { htmlFor: 'inputCaptcha', className: 'col-sm-2 col-lg-2 control-label' },
 	        this.props.lang.CAPTCHA
 	      ),
 	      React.createElement(
-	        'td',
-	        null,
-	        React.createElement('input', { ref: 'captchaInput', type: 'text', value: this.props.valid_code, onChange: this.props.onCaptchaChange }),
-	        React.createElement('img', { className: 'captchaImg', ref: 'captchaImg', src: 'index.php?action=captcha', 'data-src': 'index.php?action=captcha', onClick: this.refreshCaptch, alt: 'Captcha', title: this.props.lang.CLICK_TO_REFRESH })
+	        'div',
+	        { className: 'col-sm-5 col-lg-5' },
+	        React.createElement('input', {
+	          id: 'inputCaptcha',
+	          ref: 'captchaInput',
+	          type: 'text',
+	          maxLength: '10',
+	          size: '20',
+	          className: 'form-control',
+	          value: this.props.valid_code,
+	          onChange: this.onCaptchaChange
+	        }),
+	        React.createElement('img', {
+	          className: 'captchaImg',
+	          ref: 'captchaImg',
+	          src: 'index.php?action=captcha',
+	          'data-src': 'index.php?action=captcha',
+	          onClick: this.refreshCaptch,
+	          alt: 'Captcha',
+	          title: this.props.lang.CLICK_TO_REFRESH
+	        })
 	      )
 	    );
 	  }
@@ -22830,12 +22847,12 @@
 	        { className: 'form-group' },
 	        React.createElement(
 	          'label',
-	          { htmlFor: 'inputUser', className: 'col-lg-2 control-label' },
+	          { htmlFor: 'inputUser', className: 'col-sm-2 col-lg-2 control-label' },
 	          this.props.lang.NICKNAME
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'col-lg-5' },
+	          { className: 'col-sm-5 col-lg-5' },
 	          React.createElement('input', {
 	            id: 'inputUser',
 	            ref: 'user',
@@ -22844,7 +22861,12 @@
 	            className: 'form-control',
 	            value: this.state.username,
 	            onChange: this.handleUsernameChange
-	          })
+	          }),
+	          React.createElement(
+	            'label',
+	            { className: 'control-label' },
+	            this.state.userInputType === "hidden" ? this.state.username : ''
+	          )
 	        )
 	      ),
 	      React.createElement(
@@ -22852,12 +22874,12 @@
 	        { className: 'form-group' },
 	        React.createElement(
 	          'label',
-	          { htmlFor: 'inputContent', className: 'col-lg-2 control-label' },
+	          { htmlFor: 'inputContent', className: 'col-sm-2 col-lg-2 control-label' },
 	          this.props.lang.CONTENT
 	        ),
 	        React.createElement(
 	          'div',
-	          { className: 'col-sm-10' },
+	          { className: 'col-sm-10 col-lg-10' },
 	          React.createElement('textarea', { id: 'inputContent', className: 'form-control', rows: '3', ref: 'content', onChange: this.handleTextChange, value: this.state.text })
 	        )
 	      ),
@@ -22872,7 +22894,7 @@
 	        { className: 'form-group' },
 	        React.createElement(
 	          'div',
-	          { className: 'col-lg-offset-2 col-lg-10' },
+	          { className: 'col-sm-offset-2 col-sm-10 col-lg-offset-2 col-lg-10' },
 	          React.createElement(
 	            'button',
 	            { className: 'btn btn-default', type: 'submit' },
