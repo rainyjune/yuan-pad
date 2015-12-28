@@ -19,7 +19,7 @@
     <![endif]-->
   </head>
   <body>
-    <div id="content"></div>
+    <div id="content" class="container-fluid"></div>
     <script src="./themes/spa/build/index.js"></script>
   </body>
 </html>
