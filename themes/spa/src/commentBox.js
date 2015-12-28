@@ -148,12 +148,30 @@ let Captcha = React.createClass({
   },
   render() {
     return (
-      <tr>
-        <th>{this.props.lang.CAPTCHA}</th>
-        <td><input ref="captchaInput" type="text" value={this.props.valid_code} onChange={this.props.onCaptchaChange} />
-            <img className="captchaImg" ref="captchaImg" src="index.php?action=captcha" data-src="index.php?action=captcha" onClick={this.refreshCaptch} alt="Captcha" title={this.props.lang.CLICK_TO_REFRESH} />
-        </td>
-      </tr>
+      <div className="form-group">
+        <label htmlFor="inputCaptcha" className="col-sm-2 col-lg-2 control-label">{this.props.lang.CAPTCHA}</label>
+        <div className="col-sm-5 col-lg-5">
+          <input
+            id="inputCaptcha"
+            ref="captchaInput" 
+            type="text" 
+            maxLength="10"
+            size="20"
+            className="form-control"
+            value={this.props.valid_code}
+            onChange={this.onCaptchaChange}
+          />
+          <img
+            className="captchaImg"
+            ref="captchaImg"
+            src="index.php?action=captcha"
+            data-src="index.php?action=captcha"
+            onClick={this.refreshCaptch}
+            alt="Captcha"
+            title={this.props.lang.CLICK_TO_REFRESH}
+          />
+        </div>
+      </div>
     );
   }
 });
@@ -215,8 +233,8 @@ let CommentForm = React.createClass({
     return (
       <form onSubmit={this.handleSubmit} className="commentForm form-horizontal" >
         <div className="form-group">
-          <label htmlFor="inputUser" className="col-lg-2 control-label">{this.props.lang.NICKNAME}</label>
-          <div className="col-lg-5">
+          <label htmlFor="inputUser" className="col-sm-2 col-lg-2 control-label">{this.props.lang.NICKNAME}</label>
+          <div className="col-sm-5 col-lg-5">
             <input
               id="inputUser"
               ref="user" 
@@ -226,11 +244,12 @@ let CommentForm = React.createClass({
               value={this.state.username}
               onChange={this.handleUsernameChange}
             />
+            <label className="control-label">{this.state.userInputType === "hidden" ? this.state.username : ''}</label>
           </div>
         </div>
         <div className="form-group">
-          <label htmlFor="inputContent" className="col-lg-2 control-label">{this.props.lang.CONTENT}</label>
-          <div className="col-sm-10">
+          <label htmlFor="inputContent" className="col-sm-2 col-lg-2 control-label">{this.props.lang.CONTENT}</label>
+          <div className="col-sm-10 col-lg-10">
             <textarea id="inputContent" className="form-control" rows="3" ref="content" onChange={this.handleTextChange} value={this.state.text}></textarea>
           </div>
         </div>
@@ -244,7 +263,7 @@ let CommentForm = React.createClass({
             /> : null
         }
         <div className="form-group">
-          <div className="col-lg-offset-2 col-lg-10">
+          <div className="col-sm-offset-2 col-sm-10 col-lg-offset-2 col-lg-10">
             <button className="btn btn-default" type="submit">{this.props.lang.SUBMIT}</button>
           </div>
         </div>
