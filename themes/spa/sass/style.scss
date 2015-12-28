@@ -20,6 +20,11 @@
   }
 }
 
+#inputCaptcha {
+  width: 100px;
+  float: left;
+}
+
 @media (max-width: 767px) {
   #content {
     width: 90%;
@@ -150,7 +155,7 @@
 
 .captchaImg {
   cursor: pointer;
-  vertical-align: top;
+  vertical-align: -webkit-baseline-middle;
   margin-left: 5px;
 }
 
