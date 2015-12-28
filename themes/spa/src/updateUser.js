@@ -58,25 +58,20 @@ let UserUpdate = React.createClass({
           <p>{state.errorMsg}</p>
           <button onClick={this.closeModal}>close</button>
           <form onSubmit={this.handleSubmit} action="#" method="post">
-            <input type="hidden" ref="uid" value={user.uid} />        
-            <dl>
-            <dt>{language.USERNAME}</dt>
-            <dd><input type="text" readOnly="readonly" defaultValue={user.username} ref="user" size="20"  />
-            </dd>
-            </dl>
-            <dl>
-            <dt>{language.PASSWORD}</dt>
-            <dd><input type="password" defaultValue={user.password} ref="pwd" size="20"  />
-            </dd>
-            </dl>
-            <dl>
-            <dt>{language.EMAIL}</dt>
-            <dd><input type="text" defaultValue={user.email} ref="email" size="20"  />
-            </dd>
-            </dl>
-            <dl>
-              <dt><input type="submit" value={language.UPDATE} /></dt>
-            </dl>
+            <input type="hidden" ref="uid" value={user.uid} />
+            <div className="form-group">
+              <label htmlFor="inputUser">{language.USERNAME}</label>
+              <input type="text" ref="user" readOnly="readonly" defaultValue={user.username} className="form-control" id="inputUser" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="inputPassword">{language.PASSWORD}</label>
+              <input type="password" defaultValue={user.password} ref="pwd" className="form-control" id="inputPassword" />
+            </div>
+            <div className="form-group">
+              <label htmlFor="inputEmail">{language.EMAIL}</label>
+              <input type="email" defaultValue={user.email} ref="email" className="form-control" id="inputEmail" />
+            </div>
+            <button type="submit" className="btn btn-default">{language.UPDATE}</button>
           </form>
         </Modal>
       </div>
