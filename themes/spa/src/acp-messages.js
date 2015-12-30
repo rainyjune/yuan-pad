@@ -231,7 +231,7 @@ let ACPMessages = React.createClass({
           <table className="table table-striped table-hover">
             <thead>
               <tr className="header">
-                <th>{lang.SELECT}</th>
+                <th><input type="checkbox" onClick={this.toggleInputClicked} /></th>
                 <th>{lang.NICKNAME}</th>
                 <th>{lang.MESSAGE}</th>
                 <th>{lang.OPERATION}</th>
@@ -261,12 +261,9 @@ let ACPMessages = React.createClass({
             <tfoot>
               <tr>
                 <td colSpan='4'>
-                  <a href="#" onClick={this.checkAll}>{lang.CHECK_ALL}</a> &nbsp;
-                  <a href="#" onClick={this.checkNone}>{lang.CHECK_NONE}</a> &nbsp;
-                  <a href="#" onClick={this.checkXAll}>{lang.CHECK_INVERT}</a>&nbsp;
-                  <input type='submit' value={lang.DELETE_CHECKED} />&nbsp;
-                  <a href="#" onClick={this.deleteAllComments}>{lang.DELETE_ALL}</a>&nbsp;
-                  <a href="#" onClick={this.deleteAllReplies}>{lang.DELETE_ALL_REPLY}</a>
+                  <input type='submit' value={lang.DELETE_CHECKED} />
+                  <button onClick={this.deleteAllComments}>{lang.DELETE_ALL}</button>
+                  <button onClick={this.deleteAllReplies}>{lang.DELETE_ALL_REPLY}</button>
                 </td>
               </tr>
             </tfoot>

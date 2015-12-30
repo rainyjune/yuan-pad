@@ -75,18 +75,14 @@ let ACPIpConfig = React.createClass({
           <table className="table table-striped table-hover">
             <thead>
               <tr className="header">
-                <th>{lang.SELECT}</th><th>{lang.BAD_IP}</th>
+                <th><input type="checkbox" onClick={this.toggleInputClicked} /></th>
+                <th>{lang.BAD_IP}</th>
               </tr>
             </thead>
             <tbody>
               {IPList && IPList.map(createIPItem, this)}
               <tr>
                 <td colSpan='2' align='left'>
-                  <span>
-                    <a href="#" onClick={this.checkAll}>{lang.CHECK_ALL}</a> &nbsp;
-                    <a href="#" onClick={this.checkNone}>{lang.CHECK_NONE}</a> &nbsp;
-                    <a href="#" onClick={this.checkXAll}>{lang.CHECK_INVERT}</a>&nbsp;
-                  </span>
                   <input type='submit' value={lang.DELETE_CHECKED} /></td>
               </tr>
             </tbody>

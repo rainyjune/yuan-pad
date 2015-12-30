@@ -18,6 +18,9 @@ let FormItemMixIn = {
     });
     this.setMixState(data);
   },
+  toggleInputClicked: function(e) {
+    this.toggleAll(e.target.checked);
+  },
   toggleAll(checked) {
     let field = this.getMixinAttr();
     let data = this.state[field].map((currentValue, index) => {

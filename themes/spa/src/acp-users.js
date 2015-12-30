@@ -31,7 +31,6 @@ let UserItem = React.createClass({
   render() {
     let user = this.props.data;
     let lang = this.props.lang;
-    console.log('checked:', this.props.data.checked)
     return (
       <tr>
         <td><input type='checkbox' checked={this.props.data.checked} onChange={this.toggleItem} /></td>
@@ -179,7 +178,7 @@ let ACPUser = React.createClass({
           <table className="table table-striped table-hover">
             <thead>
               <tr className="header">
-                <th className="span-1">{lang.SELECT}</th>
+                <th className="span-1"><input type="checkbox" onClick={this.toggleInputClicked} /></th>
                 <th className="span-3">{lang.NICKNAME}</th>
                 <th className="span-6">{lang.EMAIL}</th>
                 <th>{lang.OPERATION}</th>
@@ -191,11 +190,8 @@ let ACPUser = React.createClass({
             <tfoot>
               <tr>
                 <td colSpan='4'>
-                  <span><a href="#" onClick={this.checkAll}>{lang.CHECK_ALL}</a> &nbsp;
-                  <a href="#" onClick={this.checkNone}>{lang.CHECK_NONE}</a> &nbsp;
-                  <a href="#" onClick={this.checkXAll}>{lang.CHECK_INVERT}</a>&nbsp;</span>
-                  <input type='submit' value={lang.DELETE_CHECKED} />&nbsp;
-                  <a onClick={this.deleteAllUsers}>{lang.DELETE_ALL}</a>&nbsp;
+                  <input type='submit' value={lang.DELETE_CHECKED} />
+                  <button onClick={this.deleteAllUsers}>{lang.DELETE_ALL}</button>
                 </td>
               </tr>
             </tfoot>

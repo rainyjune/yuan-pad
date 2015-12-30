@@ -54,7 +54,6 @@ let ACPTabHeader = React.createClass({
               <a className="btn btn-default navbar-btn homeButton" href="index.php">{this.props.lang.HOME}</a>&nbsp;
               <a className="btn btn-default navbar-btn signOutButton" href="#" onClick={this.handleSignOut}>{this.props.lang.LOGOUT}</a>
             </div>
-        
             {/* Collect the nav links, forms, and other content for toggling */}
             <div className={this.state.menuIsOpen ? "navbar-collapse collapse in" : "collapse navbar-collapse"} id="bs-example-navbar-collapse-1">
               <ul className="nav nav-pills nav-justified">
