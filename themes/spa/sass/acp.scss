@@ -125,5 +125,17 @@ footer {
 }
 
 .homeButton {
-  margin-left: 8px;
+  margin-left: 15px;
+}
+
+@media (max-width: 767px) {
+  .container-fluid {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+  
+  textarea,
+  select {
+    max-width: 200px;
+  }
 }
