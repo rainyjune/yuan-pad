@@ -143,6 +143,9 @@ let ACPUser = React.createClass({
   handleDeleteMulti(e) {
     e.preventDefault();
     let checkedUids = this.getCheckedItems();
+    if (checkedUids.length === 0) {
+      return false;
+    }
     dataProvider.deleteMutiUsers(checkedUids, res => {
       if (res.statusCode === 200) {
         this.loadAllUsersFromServer();

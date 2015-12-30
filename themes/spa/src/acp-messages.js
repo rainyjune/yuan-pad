@@ -159,6 +159,9 @@ let ACPMessages = React.createClass({
   deleteSelected(e) {
     e.preventDefault();
     let checkedItems = this.getCheckedItems();
+    if (checkedItems.length === 0) {
+      return false;
+    }
     dataProvider.deleteMutiComments(checkedItems, res => {
       if (res.statusCode === 200) {
         this.loadCommentsFromServer();
