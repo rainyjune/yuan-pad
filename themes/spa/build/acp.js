@@ -23745,21 +23745,21 @@
 	    var lang = this.props.lang;
 	    return React.createElement(
 	      'tr',
-	      null,
+	      { className: 'row' },
 	      React.createElement(
 	        'td',
-	        null,
+	        { className: 'col-xs-1 col-sm-1 col-md-1' },
 	        React.createElement('input', { type: 'checkbox', checked: this.props.data.checked, onChange: this.toggleItem }),
 	        React.createElement('input', { type: 'hidden', name: this.props.data.id, value: data.reply ? 1 : 0 })
 	      ),
 	      React.createElement(
 	        'td',
-	        null,
+	        { className: 'col-xs-3 col-sm-3 col-md-3' },
 	        parseInt(data.uid) ? data.b_username : data.uname
 	      ),
 	      React.createElement(
 	        'td',
-	        { className: 'admin_message' },
+	        { className: 'col-xs-6 col-sm-6 col-md-6' },
 	        data.post_content,
 	        React.createElement('br', null),
 	        lang.TIME,
@@ -23769,26 +23769,26 @@
 	      ),
 	      React.createElement(
 	        'td',
-	        null,
+	        { className: 'col-xs-2 col-sm-2 col-md-2' },
 	        React.createElement(
-	          'a',
-	          { onClick: this.deleteComment, 'data-commentid': data.id, 'data-reply': data.reply ? "1" : "0", href: '#' },
-	          lang.DELETE
+	          'button',
+	          { className: 'btn btn-danger btn-sm', onClick: this.deleteComment, 'data-commentid': data.id, 'data-reply': data.reply ? "1" : "0" },
+	          React.createElement('span', { className: 'glyphicon glyphicon-remove-circle', 'aria-hidden': 'true' })
 	        ),
 	        React.createElement(
-	          'a',
-	          { onClick: this.replyComment, href: '#' },
-	          lang.REPLY
+	          'button',
+	          { className: 'btn btn-default btn-sm', onClick: this.replyComment },
+	          React.createElement('img', { src: './themes/spa/images/reply.png', width: '12', height: '12' })
 	        ),
 	        React.createElement(
-	          'a',
-	          { onClick: this.updateComment, href: '#' },
-	          lang.UPDATE
+	          'button',
+	          { className: 'btn btn-default btn-sm', onClick: this.updateComment },
+	          React.createElement('span', { className: 'glyphicon glyphicon-pencil', 'aria-hidden': 'true' })
 	        ),
 	        React.createElement(
-	          'a',
-	          { onClick: this.banIP, 'data-ip': data.ip, href: '#' },
-	          lang.BAN
+	          'button',
+	          { className: 'btn btn-default btn-sm', onClick: this.banIP, 'data-ip': data.ip },
+	          React.createElement('span', { className: 'glyphicon glyphicon-ban-circle', 'aria-hidden': 'true' })
 	        )
 	      )
 	    );
@@ -23940,25 +23940,25 @@
 	            null,
 	            React.createElement(
 	              'tr',
-	              { className: 'header' },
+	              { className: 'header row' },
 	              React.createElement(
 	                'th',
-	                null,
+	                { className: 'col-xs-1 col-sm-1 col-md-1' },
 	                React.createElement('input', { type: 'checkbox', onClick: this.toggleInputClicked })
 	              ),
 	              React.createElement(
 	                'th',
-	                null,
+	                { className: 'col-xs-3 col-sm-3 col-md-3' },
 	                lang.NICKNAME
 	              ),
 	              React.createElement(
 	                'th',
-	                null,
+	                { className: 'col-xs-6 col-sm-6 col-md-6' },
 	                lang.MESSAGE
 	              ),
 	              React.createElement(
 	                'th',
-	                null,
+	                { className: 'col-xs-2 col-sm-2 col-md-2' },
 	                lang.OPERATION
 	              )
 	            )
@@ -24442,33 +24442,33 @@
 	    var lang = this.props.lang;
 	    return React.createElement(
 	      'tr',
-	      null,
+	      { className: 'row' },
 	      React.createElement(
 	        'td',
-	        null,
+	        { className: 'col-xs-1 col-sm-1 col-md-1' },
 	        React.createElement('input', { type: 'checkbox', checked: this.props.data.checked, onChange: this.toggleItem })
 	      ),
 	      React.createElement(
 	        'td',
-	        null,
+	        { className: 'col-xs-3 col-sm-3 col-md-3' },
 	        user.username
 	      ),
 	      React.createElement(
 	        'td',
-	        null,
+	        { className: 'col-xs-6 col-sm-6 col-md-6' },
 	        user.email
 	      ),
 	      React.createElement(
 	        'td',
-	        null,
+	        { className: 'col-xs-2 col-sm-2 col-md-2' },
 	        React.createElement(
 	          'a',
-	          { onClick: this.deleteUser, href: '#' },
+	          { className: 'btn btn-danger btn-sm', onClick: this.deleteUser, href: '#' },
 	          lang.DELETE
 	        ),
 	        React.createElement(
 	          'a',
-	          { onClick: this.updateUser, href: '#' },
+	          { className: 'btn btn-default btn-sm', onClick: this.updateUser, href: '#' },
 	          lang.UPDATE
 	        )
 	      )
@@ -24637,25 +24637,25 @@
 	            null,
 	            React.createElement(
 	              'tr',
-	              { className: 'header' },
+	              { className: 'header row' },
 	              React.createElement(
 	                'th',
-	                { className: 'span-1' },
+	                { className: 'col-xs-1 col-sm-1 col-md-1' },
 	                React.createElement('input', { type: 'checkbox', onClick: this.toggleInputClicked })
 	              ),
 	              React.createElement(
 	                'th',
-	                { className: 'span-3' },
+	                { className: 'col-xs-3 col-sm-3 col-md-3' },
 	                lang.NICKNAME
 	              ),
 	              React.createElement(
 	                'th',
-	                { className: 'span-6' },
+	                { className: 'col-xs-6 col-sm-6 col-md-6' },
 	                lang.EMAIL
 	              ),
 	              React.createElement(
 	                'th',
-	                null,
+	                { className: 'col-xs-2 col-sm-2 col-md-2' },
 	                lang.OPERATION
 	              )
 	            )
