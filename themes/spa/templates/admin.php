@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
     <title><?= t('ACP_INDEX') ?></title>
     <script src="./themes/spa/build/yuan.min.js"></script>
-    <link rel="stylesheet" href="./themes/spa/css/acp.css">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="./themes/spa/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./themes/spa/css/acp.css">
     <!-- Optional theme -->
     <link rel="stylesheet" href="./themes/spa/css/bootstrap-theme.min.css">
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
