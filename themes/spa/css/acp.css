@@ -109,4 +109,12 @@ footer {
   text-align: center;
 }
 
+.homeButton, .signOutButton {
+  margin-top: 8px;
+}
+
+.homeButton {
+  margin-left: 8px;
+}
+
 /*# sourceMappingURL=acp.css.map */
