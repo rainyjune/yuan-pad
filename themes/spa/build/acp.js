@@ -57,12 +57,11 @@
 	var Modal = __webpack_require__(175);
 	
 	var ACPLogin = __webpack_require__(195),
-	    ACPHeader = __webpack_require__(198),
-	    ACPTabHeader = __webpack_require__(199),
-	    ACPTabContent = __webpack_require__(200),
-	    ACPFooter = __webpack_require__(214),
+	    ACPTabHeader = __webpack_require__(198),
+	    ACPTabContent = __webpack_require__(199),
+	    ACPFooter = __webpack_require__(213),
 	    dataProvider = __webpack_require__(196),
-	    Progress = __webpack_require__(215);
+	    Progress = __webpack_require__(214);
 	
 	var ACPBox = React.createClass({
 	  displayName: 'ACPBox',
@@ -194,13 +193,11 @@
 	      state.currentUser.user_type && state.currentUser.user_type === "guest" ? React.createElement(ACPLogin, (0, _extends3.default)({}, props, {
 	        onCurrentUserUpdated: this.handleUserSignedIn
 	      })) : null,
-	      React.createElement(ACPHeader, (0, _extends3.default)({}, props, {
-	        onUserLogout: this.handleLogout
-	      })),
 	      React.createElement(ACPTabHeader, (0, _extends3.default)({}, props, {
 	        activeTab: this.state.activeTab,
 	        tabs: tabs,
-	        onTabSelected: this.updateActiveTab
+	        onTabSelected: this.updateActiveTab,
+	        onUserLogout: this.handleLogout
 	      })),
 	      React.createElement(ACPTabContent, (0, _extends3.default)({}, props, {
 	        activeTab: this.state.activeTab,
@@ -22585,8 +22582,23 @@
 	var React = __webpack_require__(17),
 	    dataProvider = __webpack_require__(196);
 	
-	var ACPHeader = React.createClass({
-	  displayName: 'ACPHeader',
+	var ACPTabHeader = React.createClass({
+	  displayName: 'ACPTabHeader',
+	  getInitialState: function getInitialState() {
+	    return {
+	      menuIsOpen: false
+	    };
+	  },
+	  updateActiveTab: function updateActiveTab(e) {
+	    e.preventDefault();
+	    var tabLink = e.target;
+	    var newTabName = tabLink.getAttribute('data-tabname');
+	    if (newTabName === this.props.activeTab) {
+	      return false;
+	    }
+	    this.props.onTabSelected(newTabName);
+	    this.setState({ menuIsOpen: false });
+	  },
 	  handleSignOut: function handleSignOut(e) {
 	    var _this = this;
 	
@@ -22599,82 +22611,72 @@
 	      }
 	    });
 	  },
-	  render: function render() {
-	    if (this.props.user.user_type !== "admin") return null;
-	    return React.createElement(
-	      'header',
-	      null,
-	      React.createElement(
-	        'a',
-	        { href: 'index.php' },
-	        this.props.lang.HOME
-	      ),
-	      ' ',
-	      React.createElement(
-	        'a',
-	        { href: '#', onClick: this.handleSignOut },
-	        this.props.lang.LOGOUT
-	      )
-	    );
-	  }
-	});
 	
-	module.exports = ACPHeader;
-
-/***/ },
-/* 199 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	var React = __webpack_require__(17);
-	
-	var ACPTableHeaderItem = React.createClass({
-	  displayName: 'ACPTableHeaderItem',
-	  updateActiveTab: function updateActiveTab(e) {
-	    e.preventDefault();
-	    var tabLink = e.target;
-	    var newTabName = tabLink.getAttribute('data-tabname');
-	    if (newTabName === this.props.activeTab) {
-	      return false;
-	    }
-	    this.props.onTabSelected(newTabName);
+	  toggleMenu: function toggleMenu() {
+	    this.setState({ menuIsOpen: !this.state.menuIsOpen });
 	  },
 	  render: function render() {
-	    var itemClass = this.props.value === this.props.activeTab ? "selectTag" : "";
-	    return React.createElement(
-	      'li',
-	      { className: itemClass },
-	      React.createElement(
-	        'a',
-	        { href: 'javascript:void(0);', 'data-tabname': this.props.value, onClick: this.updateActiveTab },
-	        this.props.text
-	      )
-	    );
-	  }
-	});
+	    var _this2 = this;
 	
-	var ACPTabHeader = React.createClass({
-	  displayName: 'ACPTabHeader',
-	  render: function render() {
 	    if (this.props.user.user_type !== "admin") return null;
 	    var activeTab = this.props.activeTab;
-	    var onTabSelected = this.props.onTabSelected;
 	    var items = this.props.tabs.map(function (tab) {
-	      return React.createElement(ACPTableHeaderItem, {
-	        onTabSelected: onTabSelected,
-	        text: tab.text,
-	        value: tab.value,
-	        key: tab.value,
-	        activeTab: activeTab });
+	      return React.createElement(
+	        'li',
+	        { key: tab.value, role: 'presentation', className: tab.value === activeTab ? "active" : "" },
+	        React.createElement(
+	          'a',
+	          { href: '#', 'data-tabname': tab.value, onClick: _this2.updateActiveTab },
+	          tab.text
+	        )
+	      );
 	    });
 	    return React.createElement(
 	      'div',
-	      { className: 'tabs' },
+	      { className: '' },
 	      React.createElement(
-	        'ul',
-	        null,
-	        items
+	        'nav',
+	        { className: 'navbar navbar-default' },
+	        React.createElement(
+	          'div',
+	          { className: 'container-fluid' },
+	          React.createElement(
+	            'div',
+	            { className: 'navbar-header' },
+	            React.createElement(
+	              'button',
+	              { onClick: this.toggleMenu, type: 'button', className: 'navbar-toggle collapsed', 'data-toggle': 'collapse', 'data-target': '#bs-example-navbar-collapse-1', 'aria-expanded': 'false' },
+	              React.createElement(
+	                'span',
+	                { className: 'sr-only' },
+	                'Toggle navigation'
+	              ),
+	              React.createElement('span', { className: 'icon-bar' }),
+	              React.createElement('span', { className: 'icon-bar' }),
+	              React.createElement('span', { className: 'icon-bar' })
+	            ),
+	            React.createElement(
+	              'a',
+	              { className: 'btn btn-default navbar-btn homeButton', href: 'index.php' },
+	              this.props.lang.HOME
+	            ),
+	            ' ',
+	            React.createElement(
+	              'a',
+	              { className: 'btn btn-default navbar-btn signOutButton', href: '#', onClick: this.handleSignOut },
+	              this.props.lang.LOGOUT
+	            )
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: this.state.menuIsOpen ? "navbar-collapse collapse in" : "collapse navbar-collapse", id: 'bs-example-navbar-collapse-1' },
+	            React.createElement(
+	              'ul',
+	              { className: 'nav nav-pills nav-justified' },
+	              items
+	            )
+	          )
+	        )
 	      )
 	    );
 	  }
@@ -22683,17 +22685,17 @@
 	module.exports = ACPTabHeader;
 
 /***/ },
-/* 200 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(17);
-	var ACPOverview = __webpack_require__(201),
-	    ACPConfig = __webpack_require__(202),
-	    ACPMessages = __webpack_require__(207),
-	    ACPIpConfig = __webpack_require__(211),
-	    ACPUsers = __webpack_require__(212);
+	var ACPOverview = __webpack_require__(200),
+	    ACPConfig = __webpack_require__(201),
+	    ACPMessages = __webpack_require__(206),
+	    ACPIpConfig = __webpack_require__(210),
+	    ACPUsers = __webpack_require__(211);
 	
 	var ACPTabContent = React.createClass({
 	  displayName: 'ACPTabContent',
@@ -22738,7 +22740,7 @@
 	module.exports = ACPTabContent;
 
 /***/ },
-/* 201 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22914,14 +22916,14 @@
 	module.exports = ACPOverview;
 
 /***/ },
-/* 202 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(17);
 	var dataProvider = __webpack_require__(196);
-	var LinkedStateMixin = __webpack_require__(203);
+	var LinkedStateMixin = __webpack_require__(202);
 	
 	var ACPConfig = React.createClass({
 	  displayName: 'ACPConfig',
@@ -23391,13 +23393,13 @@
 	module.exports = ACPConfig;
 
 /***/ },
-/* 203 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(204);
+	module.exports = __webpack_require__(203);
 
 /***/ },
-/* 204 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -23414,8 +23416,8 @@
 	
 	'use strict';
 	
-	var ReactLink = __webpack_require__(205);
-	var ReactStateSetters = __webpack_require__(206);
+	var ReactLink = __webpack_require__(204);
+	var ReactStateSetters = __webpack_require__(205);
 	
 	/**
 	 * A simple mixin around ReactLink.forState().
@@ -23438,7 +23440,7 @@
 	module.exports = LinkedStateMixin;
 
 /***/ },
-/* 205 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -23512,7 +23514,7 @@
 	module.exports = ReactLink;
 
 /***/ },
-/* 206 */
+/* 205 */
 /***/ function(module, exports) {
 
 	/**
@@ -23621,7 +23623,7 @@
 	module.exports = ReactStateSetters;
 
 /***/ },
-/* 207 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23634,9 +23636,9 @@
 	
 	var React = __webpack_require__(17);
 	var dataProvider = __webpack_require__(196);
-	var ReplyModal = __webpack_require__(208);
-	var CommentUpdateModal = __webpack_require__(209);
-	var FormItemMixin = __webpack_require__(210);
+	var ReplyModal = __webpack_require__(207);
+	var CommentUpdateModal = __webpack_require__(208);
+	var FormItemMixin = __webpack_require__(209);
 	
 	var Reply = React.createClass({
 	  displayName: 'Reply',
@@ -24042,7 +24044,7 @@
 	module.exports = ACPMessages;
 
 /***/ },
-/* 208 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24120,7 +24122,7 @@
 	module.exports = ReplyModal;
 
 /***/ },
-/* 209 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24196,7 +24198,7 @@
 	module.exports = UpdateCommentModal;
 
 /***/ },
-/* 210 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24265,14 +24267,14 @@
 	module.exports = FormItemMixIn;
 
 /***/ },
-/* 211 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(17);
 	var dataProvider = __webpack_require__(196);
-	var FormItemMixin = __webpack_require__(210);
+	var FormItemMixin = __webpack_require__(209);
 	
 	var IPItem = React.createClass({
 	  displayName: 'IPItem',
@@ -24426,15 +24428,15 @@
 	module.exports = ACPIpConfig;
 
 /***/ },
-/* 212 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(17);
-	var UserUpdateModal = __webpack_require__(213);
+	var UserUpdateModal = __webpack_require__(212);
 	var dataProvider = __webpack_require__(196);
-	var FormItemMixin = __webpack_require__(210);
+	var FormItemMixin = __webpack_require__(209);
 	
 	var UserItem = React.createClass({
 	  displayName: 'UserItem',
@@ -24752,7 +24754,7 @@
 	module.exports = ACPUser;
 
 /***/ },
-/* 213 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24892,7 +24894,7 @@
 	module.exports = UserUpdateModal;
 
 /***/ },
-/* 214 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -24923,7 +24925,7 @@
 	module.exports = ACPFooter;
 
 /***/ },
-/* 215 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

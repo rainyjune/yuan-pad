@@ -55,12 +55,12 @@
 	var React = __webpack_require__(17),
 	    ReactDOM = __webpack_require__(174);
 	
-	var SearchBar = __webpack_require__(216),
-	    CommentBox = __webpack_require__(217),
-	    Header = __webpack_require__(218),
-	    Footer = __webpack_require__(223),
+	var SearchBar = __webpack_require__(215),
+	    CommentBox = __webpack_require__(216),
+	    Header = __webpack_require__(217),
+	    Footer = __webpack_require__(222),
 	    dataProvider = __webpack_require__(196),
-	    Progress = __webpack_require__(215);
+	    Progress = __webpack_require__(214);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -22476,8 +22476,7 @@
 /* 211 */,
 /* 212 */,
 /* 213 */,
-/* 214 */,
-/* 215 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22510,7 +22509,7 @@
 	module.exports = Progress;
 
 /***/ },
-/* 216 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -22568,7 +22567,7 @@
 	module.exports = SearchBar;
 
 /***/ },
-/* 217 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22943,17 +22942,17 @@
 	module.exports = CommentBox;
 
 /***/ },
-/* 218 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(17);
 	
-	var SignIn = __webpack_require__(219),
-	    SignUp = __webpack_require__(220),
-	    UpdateUser = __webpack_require__(221),
-	    SignOutButton = __webpack_require__(222);
+	var SignIn = __webpack_require__(218),
+	    SignUp = __webpack_require__(219),
+	    UpdateUser = __webpack_require__(220),
+	    SignOutButton = __webpack_require__(221);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -22997,7 +22996,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 219 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23044,7 +23043,7 @@
 	      { className: 'signIn' },
 	      React.createElement(
 	        'a',
-	        { href: 'javascript:void(0);', onClick: this.openModal },
+	        { href: 'javascript:void(0);', onClick: this.openModal, role: 'button', className: 'btn btn-default' },
 	        language.LOGIN
 	      ),
 	      React.createElement(
@@ -23064,57 +23063,29 @@
 	          'form',
 	          { onSubmit: this.handleSubmit, action: '#', method: 'post' },
 	          React.createElement(
-	            'table',
-	            null,
+	            'div',
+	            { className: 'form-group' },
 	            React.createElement(
-	              'tbody',
-	              null,
-	              React.createElement(
-	                'tr',
-	                null,
-	                React.createElement(
-	                  'td',
-	                  null,
-	                  React.createElement(
-	                    'label',
-	                    null,
-	                    language.USERNAME
-	                  )
-	                ),
-	                React.createElement(
-	                  'td',
-	                  null,
-	                  React.createElement('input', { type: 'text', ref: 'user', size: '20' })
-	                )
-	              ),
-	              React.createElement(
-	                'tr',
-	                null,
-	                React.createElement(
-	                  'td',
-	                  null,
-	                  React.createElement(
-	                    'label',
-	                    null,
-	                    language.ADMIN_PWD
-	                  )
-	                ),
-	                React.createElement(
-	                  'td',
-	                  null,
-	                  React.createElement('input', { type: 'password', ref: 'password', size: '20' })
-	                )
-	              ),
-	              React.createElement(
-	                'tr',
-	                null,
-	                React.createElement(
-	                  'td',
-	                  { colSpan: '2' },
-	                  React.createElement('input', { type: 'submit', value: language.SUBMIT })
-	                )
-	              )
-	            )
+	              'label',
+	              { htmlFor: 'inputUsername' },
+	              language.USERNAME
+	            ),
+	            React.createElement('input', { ref: 'user', type: 'text', className: 'form-control', id: 'inputUsername', placeholder: '' })
+	          ),
+	          React.createElement(
+	            'div',
+	            { className: 'form-group' },
+	            React.createElement(
+	              'label',
+	              { htmlFor: 'inputPassword' },
+	              language.ADMIN_PWD
+	            ),
+	            React.createElement('input', { ref: 'password', type: 'password', className: 'form-control', id: 'inputPassword', placeholder: '' })
+	          ),
+	          React.createElement(
+	            'button',
+	            { type: 'submit', className: 'btn btn-default' },
+	            language.SUBMIT
 	          )
 	        )
 	      )
@@ -23125,7 +23096,7 @@
 	module.exports = SignIn;
 
 /***/ },
-/* 220 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23191,7 +23162,7 @@
 	      { className: 'signUp' },
 	      React.createElement(
 	        'a',
-	        { href: '#', onClick: this.openModal },
+	        { role: 'button', className: 'btn btn-default', href: '#', onClick: this.openModal },
 	        language.REGISTER
 	      ),
 	      React.createElement(
@@ -23219,55 +23190,39 @@
 	              language.REGISTER
 	            ),
 	            React.createElement(
-	              'dl',
-	              null,
+	              'div',
+	              { className: 'form-group' },
 	              React.createElement(
-	                'dt',
-	                null,
+	                'label',
+	                { htmlFor: 'inputUser' },
 	                language.USERNAME
 	              ),
-	              React.createElement(
-	                'dd',
-	                null,
-	                React.createElement('input', { type: 'text', ref: 'user', size: '20' })
-	              )
+	              React.createElement('input', { type: 'text', ref: 'user', className: 'form-control', id: 'inputUser', placeholder: 'Username' })
 	            ),
 	            React.createElement(
-	              'dl',
-	              null,
+	              'div',
+	              { className: 'form-group' },
 	              React.createElement(
-	                'dt',
-	                null,
+	                'label',
+	                { htmlFor: 'inputPassword' },
 	                language.PASSWORD
 	              ),
-	              React.createElement(
-	                'dd',
-	                null,
-	                React.createElement('input', { type: 'password', ref: 'pwd', size: '20' })
-	              )
+	              React.createElement('input', { type: 'password', ref: 'pwd', className: 'form-control', id: 'inputPassword', placeholder: 'Password' })
 	            ),
 	            React.createElement(
-	              'dl',
-	              null,
+	              'div',
+	              { className: 'form-group' },
 	              React.createElement(
-	                'dt',
-	                null,
+	                'label',
+	                { htmlFor: 'inputEmail' },
 	                language.EMAIL
 	              ),
-	              React.createElement(
-	                'dd',
-	                null,
-	                React.createElement('input', { type: 'text', ref: 'email', size: '20' })
-	              )
+	              React.createElement('input', { type: 'email', ref: 'email', className: 'form-control', id: 'inputEmail', placeholder: '' })
 	            ),
 	            React.createElement(
-	              'dl',
-	              null,
-	              React.createElement(
-	                'dt',
-	                null,
-	                React.createElement('input', { type: 'submit', value: language.REGISTER })
-	              )
+	              'button',
+	              { type: 'submit', className: 'btn btn-default' },
+	              language.REGISTER
 	            )
 	          )
 	        )
@@ -23279,7 +23234,7 @@
 	module.exports = SignUp;
 
 /***/ },
-/* 221 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23345,7 +23300,7 @@
 	      { className: 'updateUser' },
 	      React.createElement(
 	        'a',
-	        { href: 'javascript:void(0);', onClick: this.openModal },
+	        { role: 'button', className: 'btn btn-default', href: 'javascript:void(0);', onClick: this.openModal },
 	        language.UPDATE
 	      ),
 	      React.createElement(
@@ -23366,55 +23321,39 @@
 	          { onSubmit: this.handleSubmit, action: '#', method: 'post' },
 	          React.createElement('input', { type: 'hidden', ref: 'uid', value: user.uid }),
 	          React.createElement(
-	            'dl',
-	            null,
+	            'div',
+	            { className: 'form-group' },
 	            React.createElement(
-	              'dt',
-	              null,
+	              'label',
+	              { htmlFor: 'inputUser' },
 	              language.USERNAME
 	            ),
-	            React.createElement(
-	              'dd',
-	              null,
-	              React.createElement('input', { type: 'text', readOnly: 'readonly', defaultValue: user.username, ref: 'user', size: '20' })
-	            )
+	            React.createElement('input', { type: 'text', ref: 'user', readOnly: 'readonly', defaultValue: user.username, className: 'form-control', id: 'inputUser' })
 	          ),
 	          React.createElement(
-	            'dl',
-	            null,
+	            'div',
+	            { className: 'form-group' },
 	            React.createElement(
-	              'dt',
-	              null,
+	              'label',
+	              { htmlFor: 'inputPassword' },
 	              language.PASSWORD
 	            ),
-	            React.createElement(
-	              'dd',
-	              null,
-	              React.createElement('input', { type: 'password', defaultValue: user.password, ref: 'pwd', size: '20' })
-	            )
+	            React.createElement('input', { type: 'password', defaultValue: user.password, ref: 'pwd', className: 'form-control', id: 'inputPassword' })
 	          ),
 	          React.createElement(
-	            'dl',
-	            null,
+	            'div',
+	            { className: 'form-group' },
 	            React.createElement(
-	              'dt',
-	              null,
+	              'label',
+	              { htmlFor: 'inputEmail' },
 	              language.EMAIL
 	            ),
-	            React.createElement(
-	              'dd',
-	              null,
-	              React.createElement('input', { type: 'text', defaultValue: user.email, ref: 'email', size: '20' })
-	            )
+	            React.createElement('input', { type: 'email', defaultValue: user.email, ref: 'email', className: 'form-control', id: 'inputEmail' })
 	          ),
 	          React.createElement(
-	            'dl',
-	            null,
-	            React.createElement(
-	              'dt',
-	              null,
-	              React.createElement('input', { type: 'submit', value: language.UPDATE })
-	            )
+	            'button',
+	            { type: 'submit', className: 'btn btn-default' },
+	            language.UPDATE
 	          )
 	        )
 	      )
@@ -23425,7 +23364,7 @@
 	module.exports = UserUpdate;
 
 /***/ },
-/* 222 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23446,7 +23385,7 @@
 	  render: function render() {
 	    return React.createElement(
 	      'a',
-	      { className: 'signOutButton', href: '#', onClick: this.handleSignOut },
+	      { role: 'button', className: 'btn btn-default signOutButton', href: '#', onClick: this.handleSignOut },
 	      this.props.lang.LOGOUT
 	    );
 	  }
@@ -23455,7 +23394,7 @@
 	module.exports = LogoutButton;
 
 /***/ },
-/* 223 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -23465,7 +23404,7 @@
 	var AppFooter = React.createClass({
 	  displayName: "AppFooter",
 	  ACPMarkup: function ACPMarkup() {
-	    var ACP = this.props.user && this.props.user.admin ? "<a href='index.php?action=control_panel'>" + this.props.lang.ACP + "</a>" : '';
+	    var ACP = this.props.user && this.props.user.user_type === "admin" ? "<a href='index.php?action=control_panel'>" + this.props.lang.ACP + "</a>" : '';
 	    return {
 	      __html: ACP
 	    };
