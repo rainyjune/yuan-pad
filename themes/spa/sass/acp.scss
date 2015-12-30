@@ -17,7 +17,6 @@ a:hover{
 
 #content {
   display: block;
-  width: 950px;
   margin: 0 auto;
   
   header{
@@ -69,9 +68,7 @@ a:hover{
     margin-left: auto;
     margin-right: auto;
     padding: 1em 1em;
-    width: 53.85em;
     color: #474747;
-    min-width: 800px;
     
     > div {
       display: none;
@@ -100,7 +97,6 @@ a:hover{
       margin-bottom:20px;
       height:400px;
       overflow:auto;
-      width:700px;
       margin:0 auto;
     }
 
