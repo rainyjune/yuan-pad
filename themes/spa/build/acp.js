@@ -23850,6 +23850,9 @@
 	
 	    e.preventDefault();
 	    var checkedItems = this.getCheckedItems();
+	    if (checkedItems.length === 0) {
+	      return false;
+	    }
 	    dataProvider.deleteMutiComments(checkedItems, function (res) {
 	      if (res.statusCode === 200) {
 	        _this6.loadCommentsFromServer();
@@ -24318,6 +24321,9 @@
 	
 	    e.preventDefault();
 	    var checkedItems = this.getCheckedItems();
+	    if (checkedItems.length === 0) {
+	      return false;
+	    }
 	    dataProvider.deleteMultiIPs(checkedItems, function (res) {
 	      if (res.statusCode === 200) {
 	        _this2.loadBlackList();
@@ -24586,6 +24592,9 @@
 	
 	    e.preventDefault();
 	    var checkedUids = this.getCheckedItems();
+	    if (checkedUids.length === 0) {
+	      return false;
+	    }
 	    dataProvider.deleteMutiUsers(checkedUids, function (res) {
 	      if (res.statusCode === 200) {
 	        _this5.loadAllUsersFromServer();
