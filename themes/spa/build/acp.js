@@ -23941,7 +23941,7 @@
 	              React.createElement(
 	                'th',
 	                null,
-	                lang.SELECT
+	                React.createElement('input', { type: 'checkbox', onClick: this.toggleInputClicked })
 	              ),
 	              React.createElement(
 	                'th',
@@ -23991,35 +23991,15 @@
 	              React.createElement(
 	                'td',
 	                { colSpan: '4' },
-	                React.createElement(
-	                  'a',
-	                  { href: '#', onClick: this.checkAll },
-	                  lang.CHECK_ALL
-	                ),
-	                '  ',
-	                React.createElement(
-	                  'a',
-	                  { href: '#', onClick: this.checkNone },
-	                  lang.CHECK_NONE
-	                ),
-	                '  ',
-	                React.createElement(
-	                  'a',
-	                  { href: '#', onClick: this.checkXAll },
-	                  lang.CHECK_INVERT
-	                ),
-	                ' ',
 	                React.createElement('input', { type: 'submit', value: lang.DELETE_CHECKED }),
-	                ' ',
 	                React.createElement(
-	                  'a',
-	                  { href: '#', onClick: this.deleteAllComments },
+	                  'button',
+	                  { onClick: this.deleteAllComments },
 	                  lang.DELETE_ALL
 	                ),
-	                ' ',
 	                React.createElement(
-	                  'a',
-	                  { href: '#', onClick: this.deleteAllReplies },
+	                  'button',
+	                  { onClick: this.deleteAllReplies },
 	                  lang.DELETE_ALL_REPLY
 	                )
 	              )
@@ -24223,6 +24203,10 @@
 	    });
 	    this.setMixState(data);
 	  },
+	
+	  toggleInputClicked: function toggleInputClicked(e) {
+	    this.toggleAll(e.target.checked);
+	  },
 	  toggleAll: function toggleAll(checked) {
 	    var field = this.getMixinAttr();
 	    var data = this.state[field].map(function (currentValue, index) {
@@ -24374,7 +24358,7 @@
 	              React.createElement(
 	                'th',
 	                null,
-	                lang.SELECT
+	                React.createElement('input', { type: 'checkbox', onClick: this.toggleInputClicked })
 	              ),
 	              React.createElement(
 	                'th',
@@ -24393,28 +24377,6 @@
 	              React.createElement(
 	                'td',
 	                { colSpan: '2', align: 'left' },
-	                React.createElement(
-	                  'span',
-	                  null,
-	                  React.createElement(
-	                    'a',
-	                    { href: '#', onClick: this.checkAll },
-	                    lang.CHECK_ALL
-	                  ),
-	                  '  ',
-	                  React.createElement(
-	                    'a',
-	                    { href: '#', onClick: this.checkNone },
-	                    lang.CHECK_NONE
-	                  ),
-	                  '  ',
-	                  React.createElement(
-	                    'a',
-	                    { href: '#', onClick: this.checkXAll },
-	                    lang.CHECK_INVERT
-	                  ),
-	                  ' '
-	                ),
 	                React.createElement('input', { type: 'submit', value: lang.DELETE_CHECKED })
 	              )
 	            )
@@ -24472,7 +24434,6 @@
 	  render: function render() {
 	    var user = this.props.data;
 	    var lang = this.props.lang;
-	    console.log('checked:', this.props.data.checked);
 	    return React.createElement(
 	      'tr',
 	      null,
@@ -24671,7 +24632,7 @@
 	              React.createElement(
 	                'th',
 	                { className: 'span-1' },
-	                lang.SELECT
+	                React.createElement('input', { type: 'checkbox', onClick: this.toggleInputClicked })
 	              ),
 	              React.createElement(
 	                'th',
@@ -24704,36 +24665,12 @@
 	              React.createElement(
 	                'td',
 	                { colSpan: '4' },
-	                React.createElement(
-	                  'span',
-	                  null,
-	                  React.createElement(
-	                    'a',
-	                    { href: '#', onClick: this.checkAll },
-	                    lang.CHECK_ALL
-	                  ),
-	                  '  ',
-	                  React.createElement(
-	                    'a',
-	                    { href: '#', onClick: this.checkNone },
-	                    lang.CHECK_NONE
-	                  ),
-	                  '  ',
-	                  React.createElement(
-	                    'a',
-	                    { href: '#', onClick: this.checkXAll },
-	                    lang.CHECK_INVERT
-	                  ),
-	                  ' '
-	                ),
 	                React.createElement('input', { type: 'submit', value: lang.DELETE_CHECKED }),
-	                ' ',
 	                React.createElement(
-	                  'a',
+	                  'button',
 	                  { onClick: this.deleteAllUsers },
 	                  lang.DELETE_ALL
-	                ),
-	                ' '
+	                )
 	              )
 	            )
 	          )
