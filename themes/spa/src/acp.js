@@ -3,7 +3,6 @@ let React = require('react'),
 let Modal = require('react-modal');
 
 let ACPLogin = require('./acp-login.js'),
-    ACPHeader = require('./acp-header.js'),
     ACPTabHeader = require('./acp-tabHeader.js'),
     ACPTabContent = require('./acp-tabContent.js'),
     ACPFooter = require('./acp-footer.js'),
@@ -129,15 +128,12 @@ let ACPBox = React.createClass({
               onCurrentUserUpdated={this.handleUserSignedIn}
             /> : null
         }
-        <ACPHeader
-          {...props}
-          onUserLogout={this.handleLogout}
-        />
         <ACPTabHeader
           {...props}
           activeTab={this.state.activeTab}
           tabs={tabs}
           onTabSelected={this.updateActiveTab}
+          onUserLogout={this.handleLogout}
         />
         <ACPTabContent
           {...props}
