@@ -118,6 +118,11 @@ footer {
 }
 
 @media (max-width: 767px) {
+  /*
+  body {
+    background-color: red;
+  }
+  */
   .container-fluid {
     padding-left: 5px;
     padding-right: 5px;
@@ -127,6 +132,29 @@ footer {
   select {
     max-width: 200px;
   }
+}
+/*
+@media (min-width: 768px) {
+  body {
+    background-color: green;
+  }
+}
+
+@media (min-width: 992px) {
+  body {
+    background-color: blue;
+  }
+}
+
+@media (min-width: 1200px) {
+  body {
+    background-color: purple;
+  }
+}
+*/
+tfoot input,
+tfoot button {
+  margin-right: 15px;
 }
 
 /*# sourceMappingURL=acp.css.map */
