@@ -32,13 +32,13 @@ let UserItem = React.createClass({
     let user = this.props.data;
     let lang = this.props.lang;
     return (
-      <tr>
-        <td><input type='checkbox' checked={this.props.data.checked} onChange={this.toggleItem} /></td>
-        <td>{user.username}</td>
-        <td>{user.email}</td>
-        <td>
-          <a onClick={this.deleteUser} href="#">{lang.DELETE}</a>
-          <a onClick={this.updateUser} href='#'>{lang.UPDATE}</a>
+      <tr className="row">
+        <td className="col-xs-1 col-sm-1 col-md-1"><input type='checkbox' checked={this.props.data.checked} onChange={this.toggleItem} /></td>
+        <td className="col-xs-3 col-sm-3 col-md-3">{user.username}</td>
+        <td className="col-xs-6 col-sm-6 col-md-6">{user.email}</td>
+        <td className="col-xs-2 col-sm-2 col-md-2">
+          <a className="btn btn-danger btn-sm" onClick={this.deleteUser} href="#">{lang.DELETE}</a>
+          <a className="btn btn-default btn-sm" onClick={this.updateUser} href='#'>{lang.UPDATE}</a>
         </td>
       </tr>
     );
@@ -180,11 +180,11 @@ let ACPUser = React.createClass({
         <form onSubmit={this.handleDeleteMulti} action="#" method="post">
           <table className="table table-striped table-hover">
             <thead>
-              <tr className="header">
-                <th className="span-1"><input type="checkbox" onClick={this.toggleInputClicked} /></th>
-                <th className="span-3">{lang.NICKNAME}</th>
-                <th className="span-6">{lang.EMAIL}</th>
-                <th>{lang.OPERATION}</th>
+              <tr className="header row">
+                <th className="col-xs-1 col-sm-1 col-md-1"><input type="checkbox" onClick={this.toggleInputClicked} /></th>
+                <th className="col-xs-3 col-sm-3 col-md-3">{lang.NICKNAME}</th>
+                <th className="col-xs-6 col-sm-6 col-md-6">{lang.EMAIL}</th>
+                <th className="col-xs-2 col-sm-2 col-md-2">{lang.OPERATION}</th>
               </tr>
             </thead>
             <tbody>
