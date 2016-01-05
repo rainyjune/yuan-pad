@@ -158,7 +158,6 @@ HERE;
             'gdVersion'       => $gd_version,
             'registerGlobals' => ini_get("register_globals") ? 'On' : 'Off',
             'magicQuotesGPC'  => ini_get("magic_quotes_gpc") ? 'On' : 'Off',
-            'zipSupport'      => $zip_support,
             
             'themes'          => get_all_themes(),
             'timezones'       => get_all_timezone(),

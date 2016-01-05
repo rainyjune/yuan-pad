@@ -36,9 +36,6 @@ let ACPOverview = (props) => {
           <tr>
             <td>Magic_Quotes_Gpc：</td><td align="right">{sysInfo.magicQuotesGPC}</td>
           </tr>
-          <tr>
-            <td>ZipArchive：</td><td align="right">{sysInfo.zipSupport}</td>
-          </tr>
         </tbody>
       </table>
     </div>
