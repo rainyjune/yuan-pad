@@ -38,6 +38,9 @@ let Reply = React.createClass({
   },
   deleteReply(e) {
     e.preventDefault();
+    if (!confirm(this.props.lang.DEL_REPLY_CONFIRM)) {
+      return false;
+    }
     dataProvider.deleteReply(e.target.getAttribute("data-commentid"), response => {
       this.setState({reply_content: ''});
     });
@@ -68,9 +71,12 @@ let Comment = React.createClass({
   },
   deleteComment(e) {
     e.preventDefault();
-    let dom = e.target;
-    let commentId = dom.getAttribute("data-commentid");
-    let reply = dom.getAttribute("data-reply");
+    let data = this.props.data;
+    let commentId = data.id;
+    let reply = data.reply ? "1" : "0";
+    if (!confirm(this.props.lang.DEL_COMMENT_CONFIRM)) {
+      return false;
+    }
     // TODO
     dataProvider.deleteComment(commentId, reply, response => {
       this.props.onCommentDeleted();
@@ -104,7 +110,7 @@ let Comment = React.createClass({
           <Reply lang={lang} data={data} />
         </td>
         <td className="col-xs-2 col-sm-2 col-md-2">
-          <button className="btn btn-danger btn-sm" onClick={this.deleteComment} data-commentid={data.id} data-reply={data.reply ? "1" : "0"}>
+          <button className="btn btn-danger btn-sm" onClick={this.deleteComment}>
             <span className="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
           </button>
           <button className="btn btn-default btn-sm" onClick={this.replyComment}>
@@ -144,6 +150,9 @@ let ACPMessages = React.createClass({
   },
   deleteAllComments(e) {
     e.preventDefault();
+    if (!confirm(this.props.lang.DEL_ALL_CONFIRM)) {
+      return false;
+    }
     dataProvider.deleteAllComments(res => {
       if (res.statusCode === 200) {
         this.setState({comments: []});
@@ -157,6 +166,9 @@ let ACPMessages = React.createClass({
    */
   deleteAllReplies(e) {
     e.preventDefault();
+    if (!confirm(this.props.lang.DEL_ALL_REPLY_CONFIRM)) {
+      return false;
+    }
     dataProvider.deleteAllReplies(res => {
       if (res.statusCode === 200) {
         this.loadCommentsFromServer();
@@ -169,6 +181,9 @@ let ACPMessages = React.createClass({
     e.preventDefault();
     let checkedItems = this.getCheckedItems();
     if (checkedItems.length === 0) {
+      return false;
+    }
+    if (!confirm(this.props.lang.DEL_SELECTEDCOMMENTS_CONFIRM)) {
       return false;
     }
     dataProvider.deleteMutiComments(checkedItems, res => {
@@ -227,6 +242,10 @@ let ACPMessages = React.createClass({
   handleToggleItem(item) {
     this.toggle(item);
   },
+  handleCommentDeleted() {
+    this.loadCommentsFromServer();
+    this.props.onCommentDeleted();
+  },
   render() {
     let state = this.state,
         props = this.props,
@@ -260,7 +279,7 @@ let ACPMessages = React.createClass({
                       key={comment.id}
                       onActiveTabChanged={props.onActiveTabChanged}
                       onReplyComment={this.handleReplyComment}
-                      onCommentDeleted={props.onCommentDeleted}
+                      onCommentDeleted={this.handleCommentDeleted}
                       onUpdateComment={this.handleUpdateComment}
                       onToggleItem={this.handleToggleItem}
                     />

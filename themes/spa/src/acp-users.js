@@ -9,6 +9,9 @@ let UserItem = React.createClass({
    */
   deleteUser(e) {
     e.preventDefault();
+    if (!confirm(this.props.lang.DEL_SINGLEUSER_CONFIRM)) {
+      return false;
+    }
     dataProvider.deleteUser(this.props.data.uid, res=> {
       if (res.statusCode === 200) {
         this.props.onUserDeleted();
@@ -131,6 +134,9 @@ let ACPUser = React.createClass({
    */
   deleteAllUsers(e) {
     e.preventDefault();
+    if (!confirm(this.props.lang.DEL_ALLUSER_CONFIRM)) {
+      return false;
+    }
     dataProvider.deleteAllUsers(res => {
       if (res.statusCode === 200) {
         this.loadAllUsersFromServer();
@@ -144,6 +150,9 @@ let ACPUser = React.createClass({
     e.preventDefault();
     let checkedUids = this.getCheckedItems();
     if (checkedUids.length === 0) {
+      return false;
+    }
+    if (!confirm(this.props.lang.DEL_SELECTEDUSERS_CONFIRM)) {
       return false;
     }
     dataProvider.deleteMutiUsers(checkedUids, res => {

@@ -48,6 +48,9 @@ let ACPIpConfig = React.createClass({
     if (checkedItems.length === 0) {
       return false;
     }
+    if (!confirm(this.props.lang.UPDATE_IPLIST_CONFIRM)) {
+      return false;
+    }
     dataProvider.deleteMultiIPs(checkedItems, res => {
       if (res.statusCode === 200) {
         this.loadBlackList();
