@@ -159,7 +159,7 @@ let Captcha = React.createClass({
             size="20"
             className="form-control"
             value={this.props.valid_code}
-            onChange={this.onCaptchaChange}
+            onChange={this.props.onCaptchaChange}
           />
           <img
             className="captchaImg"
