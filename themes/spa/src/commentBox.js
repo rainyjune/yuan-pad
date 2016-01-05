@@ -207,13 +207,13 @@ let CommentForm = React.createClass({
     if (!author || !text) return;
     
     this.setState({ valid_code: ''});
-    this.refs.captcha && this.refs.captcha.refresh();
     
     dataProvider.createPost({ user: author, content: text, valid_code}, res => {
         if (res.statusCode !== 200) {
           alert(res.response);
           return;
         }
+        this.refs.captcha && this.refs.captcha.refresh();
         // Clear the text in the textarea.
         this.setState({text:''});
         this.props.onCommentCreated();
