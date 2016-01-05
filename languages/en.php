@@ -43,6 +43,7 @@ return array(
     'DELETE_ALL_REPLY'=>'Delete All Replies',
     'BACKUP'=>'Backup',
     'BAD_IP'=>'Bad IP',
+    'UPDATE_IPLIST_CONFIRM'=> 'Are you sure to remove these IP addresses from the black list?',
     'CANCEL'=>'Cancel',
     'TIPS'=>'Tips',
     'TZ_ZONES'	=> array(
@@ -134,7 +135,10 @@ return array(
     'CAPTCHA'=>'Captcha',
 
     /////////////////////////////////////////// delete operation
+    'DEL_COMMENT_CONFIRM'=>'Are you sure to delete this comment?',
     'DEL_ALL_CONFIRM'=>'Are you sure to delete all messages and all replies?',
+    'DEL_SELECTEDCOMMENTS_CONFIRM'=> 'Are you sure to delete selected messages and their replies?',
+    'DEL_REPLY_CONFIRM'=>'Are you sure to delete this reply?',
     'DEL_ALL_REPLY_CONFIRM'=>'Are you sure to delete all replies?',
 
     ///////////////////////////////login
@@ -220,7 +224,8 @@ return array(
     'PARAM_ERROR'=>'Parameter error',
 
     'USER_ADMIN'=>'User Management',
-
+    'DEL_SINGLEUSER_CONFIRM'=>'Are you sure to delete this user?',
+    'DEL_SELECTEDUSERS_CONFIRM'=>'Are you sure to delete these users?',
     'DEL_ALLUSER_CONFIRM'=>'Are you sure to delete all users?',
     'ALLOWED_TAGS'=>'Allowed HTML tags:{allowed_tags}',
     'FILTER_HTML_TAGS'=>'Filter HTML tags',

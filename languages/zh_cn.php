@@ -43,6 +43,7 @@ return array(
     'DELETE_ALL_REPLY'=>'删除所有回复',
     'BACKUP'=>'备份数据',
     'BAD_IP'=>'被禁止的IP',
+    'UPDATE_IPLIST_CONFIRM'=> '你确定从黑名单删除这些IP地址吗？',
     'CANCEL'=>'取消',
     'TIPS'=>'提示信息',
     'TZ_ZONES'	=> array(
@@ -130,7 +131,10 @@ return array(
     'CAPTCHA'=>'验证码',
 
     /////////////////////////////////////////// delete operation
+    'DEL_COMMENT_CONFIRM'=>'你确定要删除这条留言吗？',
     'DEL_ALL_CONFIRM'=>'你确实要删除所有留言吗？同时会删除所有回复',
+    'DEL_SELECTEDCOMMENTS_CONFIRM'=>'你确实要删除选中的留言吗？同时会删除所有回复',
+    'DEL_REPLY_CONFIRM'=>'你确实要删除这条回复？',
     'DEL_ALL_REPLY_CONFIRM'=>'你确实要删除所有回复？',
 
     ///////////////////////////////login
@@ -217,6 +221,8 @@ return array(
     'LOGIN_REQUIRED'=>'需要登录',
     'PARAM_ERROR'=>'参数错误',
     'USER_ADMIN'=>'用户管理',
+    'DEL_SINGLEUSER_CONFIRM'=>'你确定要删除这个用户吗？',
+    'DEL_SELECTEDUSERS_CONFIRM'=>'你确定要删除选中的用户吗？',
     'DEL_ALLUSER_CONFIRM'=>'你确定要删除所有注册用户？',
     'ALLOWED_TAGS'=>'允许如下标签:{allowed_tags}',
     'FILTER_HTML_TAGS'=>'过滤 HTML 标签',
