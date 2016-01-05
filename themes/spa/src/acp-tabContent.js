@@ -6,6 +6,12 @@ let ACPOverview = require('./acp-overview.js'),
     ACPUsers = require('./acp-users.js');
 
 let ACPTabContent = React.createClass({
+  handleActiveChange(newTab) {
+    this.refs.blackListPanel.loadBlackList();
+    setTimeout(()=>{
+      this.props.onActiveTabChanged(newTab);
+    }, 0);
+  },
   render() {
     if (this.props.user.user_type !== "admin") return null;
 
@@ -27,10 +33,11 @@ let ACPTabContent = React.createClass({
           lang={this.props.lang}
           activeTab={this.props.activeTab}
           systemInformation={this.props.systemInformation}
-          onActiveTabChanged={this.props.onActiveTabChanged}
+          onActiveTabChanged={this.handleActiveChange}
           onCommentDeleted={this.props.onCommentDeleted}
         />
         <ACPIpConfig
+          ref="blackListPanel"
           systemInformation={this.props.systemInformation}
           lang={this.props.lang}
           activeTab={this.props.activeTab}
