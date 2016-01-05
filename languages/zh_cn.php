@@ -41,8 +41,8 @@ return array(
     'DELETE_CHECKED'=>'删除已选',
     'DELETE_ALL'=>'删除所有',
     'DELETE_ALL_REPLY'=>'删除所有回复',
-    'BACKUP'=>'备份数据',
-    'BAD_IP'=>'被禁止的IP',
+
+    'BAD_IP'=>'IP黑名单',
     'UPDATE_IPLIST_CONFIRM'=> '你确定从黑名单删除这些IP地址吗？',
     'CANCEL'=>'取消',
     'TIPS'=>'提示信息',
@@ -111,7 +111,7 @@ return array(
     'ACP_OVERVIEW'=>'概述',
     'ACP_CONFSET'=>'配置',
     'ACP_MANAGE_POST'=>'管理留言',
-    'ACP_MANAGE_IP'=>'被禁止的IP',
+    'ACP_MANAGE_IP'=>'IP黑名单',
     'LANG'=>'语言',
 
     'YES'=>'是',
@@ -143,8 +143,6 @@ return array(
     //////////////////////////
     'QUERY_ERROR'=>'查询出错',
     'REPLY_EMPTY'=>'回复不可为空',
-    'BACKUP_NOTSUPPORT'=>'你的服务器不支持此功能！',
-    'BACKUP_TYPE_NOTSUPPORT'=>'目前只支持备份文本数据库的数据!',
     'FILL_NOT_COMPLETE'=>"你没有填写完成",
     'WORDS_TOO_LONG'=>"您的话语太多了",
     'CAPTCHA_WRONG'=>"验证码错误.",

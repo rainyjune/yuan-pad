@@ -41,7 +41,7 @@ return array(
     'DELETE_CHECKED'=>'Delete Checked',
     'DELETE_ALL'=>'Delete All',
     'DELETE_ALL_REPLY'=>'Delete All Replies',
-    'BACKUP'=>'Backup',
+
     'BAD_IP'=>'Bad IP',
     'UPDATE_IPLIST_CONFIRM'=> 'Are you sure to remove these IP addresses from the black list?',
     'CANCEL'=>'Cancel',
@@ -147,8 +147,6 @@ return array(
     //////////////////////////
     'QUERY_ERROR'=>'Query Error',
     'REPLY_EMPTY'=>'The reply should not be empty',
-    'BACKUP_NOTSUPPORT'=>'Your server does not support backup!',
-    'BACKUP_TYPE_NOTSUPPORT'=>'Only flatfile data backup supported!',
     'FILL_NOT_COMPLETE'=>"You have not finished all the required fileds",
     'WORDS_TOO_LONG'=>"Your words was too much",
     'CAPTCHA_WRONG'=>"The code you entered is wrong",
