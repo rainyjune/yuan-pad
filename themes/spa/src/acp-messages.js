@@ -41,7 +41,7 @@ let Reply = React.createClass({
     if (!confirm(this.props.lang.DEL_REPLY_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteReply(e.target.getAttribute("data-commentid"), response => {
+    dataProvider.deleteReply(this.state.id, response => {
       this.setState({reply_content: ''});
     });
   },
@@ -54,7 +54,7 @@ let Reply = React.createClass({
     return (
       <div>
         {lang.YOU_REPLIED && lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content)}
-        <span>&nbsp;<a onClick={this.deleteReply} data-commentid={data.id} href="#">{lang.DELETE_THIS_REPLY}</a></span>
+        <span>&nbsp;<a onClick={this.deleteReply} href="#">{lang.DELETE_THIS_REPLY}</a></span>
       </div>
     );
   }
@@ -64,7 +64,7 @@ let Comment = React.createClass({
   banIP(e) {
     let dom = e.target;
     e.preventDefault();
-    let ip = dom.getAttribute('data-ip');
+    let ip = this.props.data.ip;
     dataProvider.banIP(ip, () => {
       this.props.onActiveTabChanged('ban_ip');
     });
