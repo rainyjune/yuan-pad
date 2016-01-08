@@ -1489,7 +1489,7 @@
 	 * will remain to ensure logic does not differ in production.
 	 */
 	
-	var invariant = function (condition, format, a, b, c, d, e, f) {
+	function invariant(condition, format, a, b, c, d, e, f) {
 	  if (process.env.NODE_ENV !== 'production') {
 	    if (format === undefined) {
 	      throw new Error('invariant requires an error message argument');
@@ -1503,15 +1503,16 @@
 	    } else {
 	      var args = [a, b, c, d, e, f];
 	      var argIndex = 0;
-	      error = new Error('Invariant Violation: ' + format.replace(/%s/g, function () {
+	      error = new Error(format.replace(/%s/g, function () {
 	        return args[argIndex++];
 	      }));
+	      error.name = 'Invariant Violation';
 	    }
 	
 	    error.framesToPop = 1; // we don't care about invariant's own frame
 	    throw error;
 	  }
-	};
+	}
 	
 	module.exports = invariant;
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(20)))
@@ -10938,8 +10939,8 @@
 	     */
 	    // autoCapitalize and autoCorrect are supported in Mobile Safari for
 	    // keyboard hints.
-	    autoCapitalize: null,
-	    autoCorrect: null,
+	    autoCapitalize: MUST_USE_ATTRIBUTE,
+	    autoCorrect: MUST_USE_ATTRIBUTE,
 	    // autoSave allows WebKit/Blink to persist values of input fields on page reloads
 	    autoSave: null,
 	    // color is for Safari mask-icon link
@@ -10970,9 +10971,7 @@
 	    httpEquiv: 'http-equiv'
 	  },
 	  DOMPropertyNames: {
-	    autoCapitalize: 'autocapitalize',
 	    autoComplete: 'autocomplete',
-	    autoCorrect: 'autocorrect',
 	    autoFocus: 'autofocus',
 	    autoPlay: 'autoplay',
 	    autoSave: 'autosave',
@@ -14051,7 +14050,7 @@
 	    var value = LinkedValueUtils.getValue(props);
 	
 	    if (value != null) {
-	      updateOptions(this, props, value);
+	      updateOptions(this, Boolean(props.multiple), value);
 	    }
 	  }
 	}
@@ -17090,15 +17089,11 @@
 	 * Same as document.activeElement but wraps in a try-catch block. In IE it is
 	 * not safe to call document.activeElement if there is nothing focused.
 	 *
-	 * The activeElement will be null only if the document or document body is not yet defined.
+	 * The activeElement will be null only if the document body is not yet defined.
 	 */
-	'use strict';
+	"use strict";
 	
 	function getActiveElement() /*?DOMElement*/{
-	  if (typeof document === 'undefined') {
-	    return null;
-	  }
-	
 	  try {
 	    return document.activeElement || document.body;
 	  } catch (e) {
@@ -18838,7 +18833,9 @@
 	  'setValueForProperty': 'update attribute',
 	  'setValueForAttribute': 'update attribute',
 	  'deleteValueForProperty': 'remove attribute',
-	  'dangerouslyReplaceNodeWithMarkupByID': 'replace'
+	  'setValueForStyles': 'update styles',
+	  'replaceNodeWithMarkup': 'replace',
+	  'updateTextContent': 'set textContent'
 	};
 	
 	function getTotalTime(measurements) {
@@ -19030,18 +19027,23 @@
 	'use strict';
 	
 	var performance = __webpack_require__(161);
-	var curPerformance = performance;
+	
+	var performanceNow;
 	
 	/**
 	 * Detect if we can use `window.performance.now()` and gracefully fallback to
 	 * `Date.now()` if it doesn't exist. We need to support Firefox < 15 for now
 	 * because of Facebook's testing infrastructure.
 	 */
-	if (!curPerformance || !curPerformance.now) {
-	  curPerformance = Date;
+	if (performance.now) {
+	  performanceNow = function () {
+	    return performance.now();
+	  };
+	} else {
+	  performanceNow = function () {
+	    return Date.now();
+	  };
 	}
-	
-	var performanceNow = curPerformance.now.bind(curPerformance);
 	
 	module.exports = performanceNow;
 
@@ -19090,7 +19092,7 @@
 	
 	'use strict';
 	
-	module.exports = '0.14.3';
+	module.exports = '0.14.5';
 
 /***/ },
 /* 163 */
@@ -22699,6 +22701,14 @@
 	
 	var ACPTabContent = React.createClass({
 	  displayName: 'ACPTabContent',
+	  handleActiveChange: function handleActiveChange(newTab) {
+	    var _this = this;
+	
+	    this.refs.blackListPanel.loadBlackList();
+	    setTimeout(function () {
+	      _this.props.onActiveTabChanged(newTab);
+	    }, 0);
+	  },
 	  render: function render() {
 	    if (this.props.user.user_type !== "admin") return null;
 	
@@ -22721,10 +22731,11 @@
 	        lang: this.props.lang,
 	        activeTab: this.props.activeTab,
 	        systemInformation: this.props.systemInformation,
-	        onActiveTabChanged: this.props.onActiveTabChanged,
+	        onActiveTabChanged: this.handleActiveChange,
 	        onCommentDeleted: this.props.onCommentDeleted
 	      }),
 	      React.createElement(ACPIpConfig, {
+	        ref: 'blackListPanel',
 	        systemInformation: this.props.systemInformation,
 	        lang: this.props.lang,
 	        activeTab: this.props.activeTab
@@ -22892,20 +22903,6 @@
 	            "td",
 	            { align: "right" },
 	            sysInfo.magicQuotesGPC
-	          )
-	        ),
-	        React.createElement(
-	          "tr",
-	          null,
-	          React.createElement(
-	            "td",
-	            null,
-	            "ZipArchive："
-	          ),
-	          React.createElement(
-	            "td",
-	            { align: "right" },
-	            sysInfo.zipSupport
 	          )
 	        )
 	      )
@@ -23677,7 +23674,10 @@
 	    var _this = this;
 	
 	    e.preventDefault();
-	    dataProvider.deleteReply(e.target.getAttribute("data-commentid"), function (response) {
+	    if (!confirm(this.props.lang.DEL_REPLY_CONFIRM)) {
+	      return false;
+	    }
+	    dataProvider.deleteReply(this.state.id, function (response) {
 	      _this.setState({ reply_content: '' });
 	    });
 	  },
@@ -23697,7 +23697,7 @@
 	        ' ',
 	        React.createElement(
 	          'a',
-	          { onClick: this.deleteReply, 'data-commentid': data.id, href: '#' },
+	          { onClick: this.deleteReply, href: '#' },
 	          lang.DELETE_THIS_REPLY
 	        )
 	      )
@@ -23712,7 +23712,7 @@
 	
 	    var dom = e.target;
 	    e.preventDefault();
-	    var ip = dom.getAttribute('data-ip');
+	    var ip = this.props.data.ip;
 	    dataProvider.banIP(ip, function () {
 	      _this2.props.onActiveTabChanged('ban_ip');
 	    });
@@ -23721,9 +23721,12 @@
 	    var _this3 = this;
 	
 	    e.preventDefault();
-	    var dom = e.target;
-	    var commentId = dom.getAttribute("data-commentid");
-	    var reply = dom.getAttribute("data-reply");
+	    var data = this.props.data;
+	    var commentId = data.id;
+	    var reply = data.reply ? "1" : "0";
+	    if (!confirm(this.props.lang.DEL_COMMENT_CONFIRM)) {
+	      return false;
+	    }
 	    // TODO
 	    dataProvider.deleteComment(commentId, reply, function (response) {
 	      _this3.props.onCommentDeleted();
@@ -23772,7 +23775,7 @@
 	        { className: 'col-xs-2 col-sm-2 col-md-2' },
 	        React.createElement(
 	          'button',
-	          { className: 'btn btn-danger btn-sm', onClick: this.deleteComment, 'data-commentid': data.id, 'data-reply': data.reply ? "1" : "0" },
+	          { className: 'btn btn-danger btn-sm', onClick: this.deleteComment },
 	          React.createElement('span', { className: 'glyphicon glyphicon-remove-circle', 'aria-hidden': 'true' })
 	        ),
 	        React.createElement(
@@ -23821,6 +23824,9 @@
 	    var _this4 = this;
 	
 	    e.preventDefault();
+	    if (!confirm(this.props.lang.DEL_ALL_CONFIRM)) {
+	      return false;
+	    }
 	    dataProvider.deleteAllComments(function (res) {
 	      if (res.statusCode === 200) {
 	        _this4.setState({ comments: [] });
@@ -23837,6 +23843,9 @@
 	    var _this5 = this;
 	
 	    e.preventDefault();
+	    if (!confirm(this.props.lang.DEL_ALL_REPLY_CONFIRM)) {
+	      return false;
+	    }
 	    dataProvider.deleteAllReplies(function (res) {
 	      if (res.statusCode === 200) {
 	        _this5.loadCommentsFromServer();
@@ -23851,6 +23860,9 @@
 	    e.preventDefault();
 	    var checkedItems = this.getCheckedItems();
 	    if (checkedItems.length === 0) {
+	      return false;
+	    }
+	    if (!confirm(this.props.lang.DEL_SELECTEDCOMMENTS_CONFIRM)) {
 	      return false;
 	    }
 	    dataProvider.deleteMutiComments(checkedItems, function (res) {
@@ -23914,6 +23926,10 @@
 	  handleToggleItem: function handleToggleItem(item) {
 	    this.toggle(item);
 	  },
+	  handleCommentDeleted: function handleCommentDeleted() {
+	    this.loadCommentsFromServer();
+	    this.props.onCommentDeleted();
+	  },
 	  render: function render() {
 	    var _this8 = this;
 	
@@ -23976,7 +23992,7 @@
 	                  key: comment.id,
 	                  onActiveTabChanged: props.onActiveTabChanged,
 	                  onReplyComment: this.handleReplyComment,
-	                  onCommentDeleted: props.onCommentDeleted,
+	                  onCommentDeleted: this.handleCommentDeleted,
 	                  onUpdateComment: this.handleUpdateComment,
 	                  onToggleItem: this.handleToggleItem
 	                }));
@@ -24324,6 +24340,9 @@
 	    if (checkedItems.length === 0) {
 	      return false;
 	    }
+	    if (!confirm(this.props.lang.UPDATE_IPLIST_CONFIRM)) {
+	      return false;
+	    }
 	    dataProvider.deleteMultiIPs(checkedItems, function (res) {
 	      if (res.statusCode === 200) {
 	        _this2.loadBlackList();
@@ -24416,6 +24435,9 @@
 	    var _this = this;
 	
 	    e.preventDefault();
+	    if (!confirm(this.props.lang.DEL_SINGLEUSER_CONFIRM)) {
+	      return false;
+	    }
 	    dataProvider.deleteUser(this.props.data.uid, function (res) {
 	      if (res.statusCode === 200) {
 	        _this.props.onUserDeleted();
@@ -24577,6 +24599,9 @@
 	    var _this4 = this;
 	
 	    e.preventDefault();
+	    if (!confirm(this.props.lang.DEL_ALLUSER_CONFIRM)) {
+	      return false;
+	    }
 	    dataProvider.deleteAllUsers(function (res) {
 	      if (res.statusCode === 200) {
 	        _this4.loadAllUsersFromServer();
@@ -24593,6 +24618,9 @@
 	    e.preventDefault();
 	    var checkedUids = this.getCheckedItems();
 	    if (checkedUids.length === 0) {
+	      return false;
+	    }
+	    if (!confirm(this.props.lang.DEL_SELECTEDUSERS_CONFIRM)) {
 	      return false;
 	    }
 	    dataProvider.deleteMutiUsers(checkedUids, function (res) {
