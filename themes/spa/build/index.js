@@ -55,12 +55,13 @@
 	var React = __webpack_require__(17),
 	    ReactDOM = __webpack_require__(174);
 	
-	var SearchBar = __webpack_require__(215),
-	    CommentBox = __webpack_require__(216),
-	    Header = __webpack_require__(217),
-	    Footer = __webpack_require__(222),
+	var SearchBar = __webpack_require__(216),
+	    CommentBox = __webpack_require__(217),
+	    Header = __webpack_require__(218),
+	    Footer = __webpack_require__(223),
 	    dataProvider = __webpack_require__(196),
-	    Progress = __webpack_require__(214);
+	    Progress = __webpack_require__(214),
+	    OfflineWarning = __webpack_require__(215);
 	
 	var App = React.createClass({
 	  displayName: 'App',
@@ -95,7 +96,7 @@
 	        _this.setState({ currentUser: res.response });
 	        _this.loadCommentsFromServer();
 	      }
-	    }, (function () {}).bind(this));
+	    }, function () {}.bind(this));
 	  },
 	
 	  /**
@@ -188,12 +189,24 @@
 	      appConfig: state.appConfig,
 	      lang: state.translations
 	    };
+	
+	    if (state.currentUser.user_type !== "admin" && state.appConfig.site_close == 1) {
+	      return React.createElement(
+	        'div',
+	        null,
+	        state.appConfig.close_reason
+	      );
+	    }
 	    return React.createElement(
 	      'div',
 	      { id: 'appbox' },
 	      React.createElement(Header, (0, _extends3.default)({}, props, {
 	        onCurrentUserUpdated: this.setCurrentUser
 	      })),
+	      React.createElement(OfflineWarning, {
+	        appConfig: state.appConfig,
+	        lang: state.translations
+	      }),
 	      React.createElement(CommentBox, (0, _extends3.default)({
 	        ref: 'commentBox'
 	      }, props, {
@@ -17089,15 +17102,21 @@
 	 * @typechecks
 	 */
 	
+	/* eslint-disable fb-www/typeof-undefined */
+	
 	/**
 	 * Same as document.activeElement but wraps in a try-catch block. In IE it is
 	 * not safe to call document.activeElement if there is nothing focused.
 	 *
-	 * The activeElement will be null only if the document body is not yet defined.
+	 * The activeElement will be null only if the document or document body is not
+	 * yet defined.
 	 */
-	"use strict";
+	'use strict';
 	
 	function getActiveElement() /*?DOMElement*/{
+	  if (typeof document === 'undefined') {
+	    return null;
+	  }
 	  try {
 	    return document.activeElement || document.body;
 	  } catch (e) {
@@ -19096,7 +19115,7 @@
 	
 	'use strict';
 	
-	module.exports = '0.14.5';
+	module.exports = '0.14.6';
 
 /***/ },
 /* 163 */
@@ -22514,6 +22533,31 @@
 /* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
+	'use strict';
+	
+	var React = __webpack_require__(17);
+	
+	var Offline = React.createClass({
+	  displayName: 'Offline',
+	  render: function render() {
+	    var prop = this.props;
+	    var offlineStyle = {
+	      display: prop.appConfig.site_close == 1 ? 'block' : 'none'
+	    };
+	    return React.createElement(
+	      'p',
+	      { className: 'bg-warning', style: offlineStyle },
+	      prop.lang.OFFLINE_WARNING
+	    );
+	  }
+	});
+	
+	module.exports = Offline;
+
+/***/ },
+/* 216 */
+/***/ function(module, exports, __webpack_require__) {
+
 	"use strict";
 	
 	var React = __webpack_require__(17);
@@ -22569,7 +22613,7 @@
 	module.exports = SearchBar;
 
 /***/ },
-/* 216 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22599,7 +22643,7 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'pagination' },
-	      (function () {
+	      function () {
 	        var items = [];
 	        for (var i = 0; i < _this.props.total; i++) {
 	          var className = _this.props.currentPage === i ? "pagination-item currentPage" : "pagination-item";
@@ -22616,7 +22660,7 @@
 	          ));
 	        }
 	        return items;
-	      })()
+	      }()
 	    );
 	  }
 	});
@@ -22944,17 +22988,17 @@
 	module.exports = CommentBox;
 
 /***/ },
-/* 217 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
 	var React = __webpack_require__(17);
 	
-	var SignIn = __webpack_require__(218),
-	    SignUp = __webpack_require__(219),
-	    UpdateUser = __webpack_require__(220),
-	    SignOutButton = __webpack_require__(221);
+	var SignIn = __webpack_require__(219),
+	    SignUp = __webpack_require__(220),
+	    UpdateUser = __webpack_require__(221),
+	    SignOutButton = __webpack_require__(222);
 	
 	var Header = React.createClass({
 	  displayName: 'Header',
@@ -22969,7 +23013,7 @@
 	    return React.createElement(
 	      'div',
 	      { className: 'header' },
-	      (function () {
+	      function () {
 	        switch (_this.props.user.user_type) {
 	          case "regular":
 	            return React.createElement(
@@ -22990,7 +23034,7 @@
 	              React.createElement(SignUp, props)
 	            );
 	        }
-	      })()
+	      }()
 	    );
 	  }
 	});
@@ -22998,7 +23042,7 @@
 	module.exports = Header;
 
 /***/ },
-/* 218 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23098,7 +23142,7 @@
 	module.exports = SignIn;
 
 /***/ },
-/* 219 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23236,7 +23280,7 @@
 	module.exports = SignUp;
 
 /***/ },
-/* 220 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23366,7 +23410,7 @@
 	module.exports = UserUpdate;
 
 /***/ },
-/* 221 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23396,7 +23440,7 @@
 	module.exports = LogoutButton;
 
 /***/ },
-/* 222 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";

@@ -61,7 +61,8 @@
 	    ACPTabContent = __webpack_require__(199),
 	    ACPFooter = __webpack_require__(213),
 	    dataProvider = __webpack_require__(196),
-	    Progress = __webpack_require__(214);
+	    Progress = __webpack_require__(214),
+	    OfflineWarning = __webpack_require__(215);
 	
 	var ACPBox = React.createClass({
 	  displayName: 'ACPBox',
@@ -186,11 +187,10 @@
 	      user: state.currentUser,
 	      lang: state.translations
 	    };
-	
 	    return React.createElement(
 	      'div',
 	      { id: 'acpBox' },
-	      state.currentUser.user_type && state.currentUser.user_type === "guest" ? React.createElement(ACPLogin, (0, _extends3.default)({}, props, {
+	      state.currentUser.user_type === undefined || state.currentUser.user_type === "guest" ? React.createElement(ACPLogin, (0, _extends3.default)({}, props, {
 	        onCurrentUserUpdated: this.handleUserSignedIn
 	      })) : null,
 	      React.createElement(ACPTabHeader, (0, _extends3.default)({}, props, {
@@ -199,6 +199,10 @@
 	        onTabSelected: this.updateActiveTab,
 	        onUserLogout: this.handleLogout
 	      })),
+	      React.createElement(OfflineWarning, {
+	        appConfig: state.appConfig,
+	        lang: translations
+	      }),
 	      React.createElement(ACPTabContent, (0, _extends3.default)({}, props, {
 	        activeTab: this.state.activeTab,
 	        systemInformation: this.state.systemInformation,
@@ -17085,15 +17089,21 @@
 	 * @typechecks
 	 */
 	
+	/* eslint-disable fb-www/typeof-undefined */
+	
 	/**
 	 * Same as document.activeElement but wraps in a try-catch block. In IE it is
 	 * not safe to call document.activeElement if there is nothing focused.
 	 *
-	 * The activeElement will be null only if the document body is not yet defined.
+	 * The activeElement will be null only if the document or document body is not
+	 * yet defined.
 	 */
-	"use strict";
+	'use strict';
 	
 	function getActiveElement() /*?DOMElement*/{
+	  if (typeof document === 'undefined') {
+	    return null;
+	  }
 	  try {
 	    return document.activeElement || document.body;
 	  } catch (e) {
@@ -19092,7 +19102,7 @@
 	
 	'use strict';
 	
-	module.exports = '0.14.5';
+	module.exports = '0.14.6';
 
 /***/ },
 /* 163 */
@@ -23105,7 +23115,7 @@
 	                  React.createElement(
 	                    'select',
 	                    { ref: 'theme', valueLink: this.linkState('theme') },
-	                    (function () {
+	                    function () {
 	                      var themes = acpData.themes,
 	                          themeOptions = [];
 	                      for (var i in themes) {
@@ -23117,7 +23127,7 @@
 	                        ));
 	                      }
 	                      return themeOptions;
-	                    })()
+	                    }()
 	                  )
 	                )
 	              ),
@@ -23136,7 +23146,7 @@
 	                  React.createElement(
 	                    'select',
 	                    { ref: 'timezone', valueLink: this.linkState('timezone') },
-	                    (function () {
+	                    function () {
 	                      var timeZones = acpData.timezones,
 	                          timezoneOptions = [];
 	                      for (var i in timeZones) {
@@ -23148,7 +23158,7 @@
 	                        ));
 	                      }
 	                      return timezoneOptions;
-	                    })()
+	                    }()
 	                  )
 	                )
 	              ),
@@ -23167,7 +23177,7 @@
 	                  React.createElement(
 	                    'select',
 	                    { ref: 'lang', valueLink: this.linkState('lang') },
-	                    (function () {
+	                    function () {
 	                      var languages = acpData.languages,
 	                          languageOptions = [];
 	                      for (var i in languages) {
@@ -23179,7 +23189,7 @@
 	                        ));
 	                      }
 	                      return languageOptions;
-	                    })()
+	                    }()
 	                  )
 	                )
 	              )
@@ -23227,7 +23237,7 @@
 	                React.createElement(
 	                  'td',
 	                  null,
-	                  (function () {
+	                  function () {
 	                    var captchaInputs = [];
 	                    if (acpData.gd_loaded) {
 	                      captchaInputs.push(React.createElement(
@@ -23258,7 +23268,7 @@
 	                      ));
 	                    }
 	                    return captchaInputs;
-	                  })()
+	                  }()
 	                )
 	              ),
 	              React.createElement(
@@ -23982,7 +23992,7 @@
 	          React.createElement(
 	            'tbody',
 	            null,
-	            (function () {
+	            function () {
 	              var comments = state.comments,
 	                  commentArr = [];
 	              var createComment = function createComment(comment) {
@@ -23999,7 +24009,7 @@
 	              };
 	              comments && comments.map(createComment, _this8);
 	              return commentArr;
-	            })()
+	            }()
 	          ),
 	          React.createElement(
 	            'tfoot',
@@ -24167,9 +24177,9 @@
 	      if (res.statusCode === 200) {
 	        _this.props.onCommentUpdated();
 	      }
-	    }, (function (e) {
+	    }, function (e) {
 	      debugger;
-	    }).bind(this));
+	    }.bind(this));
 	    return false;
 	  },
 	  changeContent: function changeContent(e) {
@@ -24930,6 +24940,31 @@
 	});
 	
 	module.exports = Progress;
+
+/***/ },
+/* 215 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	var React = __webpack_require__(17);
+	
+	var Offline = React.createClass({
+	  displayName: 'Offline',
+	  render: function render() {
+	    var prop = this.props;
+	    var offlineStyle = {
+	      display: prop.appConfig.site_close == 1 ? 'block' : 'none'
+	    };
+	    return React.createElement(
+	      'p',
+	      { className: 'bg-warning', style: offlineStyle },
+	      prop.lang.OFFLINE_WARNING
+	    );
+	  }
+	});
+	
+	module.exports = Offline;
 
 /***/ }
 /******/ ]);
