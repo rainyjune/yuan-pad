@@ -118,6 +118,9 @@ let App = React.createClass({
       appConfig: state.appConfig,
       lang: state.translations
     };
+    if (state.currentUser.user_type !== "admin" && state.appConfig.site_close == 1) {
+      return <div>{state.appConfig.close_reason}</div>;
+    }
     return (
       <div id="appbox">
         <Header
