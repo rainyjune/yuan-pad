@@ -21,7 +21,7 @@ class ZFramework{
                                              'SiteController/actionIndex',
                                              'SiteController/actionControl_panel',
                                              'ConfigController/actionShow',
-                                             'ConfigController/actionGetTranslations',
+                                             'ConfigController/actionGettranslations',
                                              'UserController/actionLogin');
 
     public static function app(){
