@@ -6,7 +6,8 @@ let SearchBar = require('./searchBar.js'),
     Header = require('./header.js'),
     Footer = require('./footer.js'),
     dataProvider = require('./dataProvider.js'),
-    Progress = require('./progress.js');
+    Progress = require('./progress.js'),
+    OfflineWarning = require('./offlineMode.js');
 
 let App = React.createClass({
   getInitialState() {
@@ -118,6 +119,7 @@ let App = React.createClass({
       appConfig: state.appConfig,
       lang: state.translations
     };
+    
     if (state.currentUser.user_type !== "admin" && state.appConfig.site_close == 1) {
       return <div>{state.appConfig.close_reason}</div>;
     }
@@ -126,6 +128,10 @@ let App = React.createClass({
         <Header
           {...props}
           onCurrentUserUpdated={this.setCurrentUser}
+        />
+        <OfflineWarning 
+          appConfig={state.appConfig}
+          lang={state.translations}
         />
         <CommentBox
           ref="commentBox"

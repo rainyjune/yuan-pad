@@ -7,7 +7,8 @@ let ACPLogin = require('./acp-login.js'),
     ACPTabContent = require('./acp-tabContent.js'),
     ACPFooter = require('./acp-footer.js'),
     dataProvider = require('./dataProvider.js'),
-    Progress = require('./progress.js');
+    Progress = require('./progress.js'),
+    OfflineWarning = require('./offlineMode.js');
 
 let ACPBox = React.createClass({
   getInitialState() {
@@ -133,6 +134,10 @@ let ACPBox = React.createClass({
           tabs={tabs}
           onTabSelected={this.updateActiveTab}
           onUserLogout={this.handleLogout}
+        />
+        <OfflineWarning 
+          appConfig={state.appConfig}
+          lang={translations}
         />
         <ACPTabContent
           {...props}
