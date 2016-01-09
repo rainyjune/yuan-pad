@@ -1,5 +1,6 @@
 <?php
 return array(
+    'OFFLINE_WARNING'=>'当前站点处于离线模式',
     'WELCOME_SYS'=>'欢迎使用YuanPad',
     'THANKS'=>'感谢使用 YuanPad.',
     'STATS_INFO'=>'统计信息',

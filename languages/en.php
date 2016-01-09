@@ -1,5 +1,6 @@
 <?php
 return array(
+    'OFFLINE_WARNING'=>'This site is in offline mode',
     'WELCOME_SYS'=>'Welcome to YuanPad',
     'THANKS'=>'Thanks for using YuanPad.',
     'STATS_INFO'=>'Statistical Information',
