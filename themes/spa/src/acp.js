@@ -118,11 +118,10 @@ let ACPBox = React.createClass({
           user: state.currentUser,
           lang: state.translations
         };
-        
     return (
       <div id="acpBox">
         {
-          (state.currentUser.user_type && state.currentUser.user_type === "guest") ?
+          (state.currentUser.user_type === undefined || state.currentUser.user_type === "guest") ?
             <ACPLogin
               {...props}
               onCurrentUserUpdated={this.handleUserSignedIn}
