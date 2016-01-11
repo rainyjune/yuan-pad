@@ -32,7 +32,7 @@ class SiteController extends BaseController{
         } elseif(!is_writable(CONFIGFILE)) {
             $tips[]=t('CONFIG_FILE_NOTWRITABLE',array('{config_file}'=>CONFIGFILE),$language);
         }
-        if(!is_writable(APPROOT.'/data/')) {
+        if(in_array('sqlite', get_supported_rdbms()) && !is_writable(APPROOT.'/data/')) {
             $tips[]=t('DATADIR_NOT_WRITABLE', array(), $language);
         }
         if(isset($_POST['dbtype']))
