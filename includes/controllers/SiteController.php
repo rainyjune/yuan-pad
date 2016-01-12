@@ -161,7 +161,8 @@ HERE;
             
             'themes'          => get_all_themes(),
             'timezones'       => get_all_timezone(),
-            'languages'       => get_all_langs()
+            'languages'       => get_all_langs(),
+            'dateFormates'    => get_all_dateFormats()
             
         );
         exitWithResponse(200, $result);

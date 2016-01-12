@@ -22944,6 +22944,7 @@
 	      theme: 'spa',
 	      timezone: 0,
 	      lang: 'en',
+	      dateformat: '',
 	      filter_words: '',
 	      valid_code_open: 0,
 	      page_on: 0,
@@ -23189,6 +23190,37 @@
 	                        ));
 	                      }
 	                      return languageOptions;
+	                    }()
+	                  )
+	                )
+	              ),
+	              React.createElement(
+	                'tr',
+	                null,
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  lang.DATE_FORMAT,
+	                  ':'
+	                ),
+	                React.createElement(
+	                  'td',
+	                  null,
+	                  React.createElement(
+	                    'select',
+	                    { ref: 'dateformat', valueLink: this.linkState('dateformat') },
+	                    function () {
+	                      var dateFormateList = acpData.dateFormates,
+	                          formatOptions = [];
+	                      for (var i in dateFormateList) {
+	                        var format = dateFormateList[i];
+	                        formatOptions.push(React.createElement(
+	                          'option',
+	                          { key: i, value: i },
+	                          format
+	                        ));
+	                      }
+	                      return formatOptions;
 	                    }()
 	                  )
 	                )

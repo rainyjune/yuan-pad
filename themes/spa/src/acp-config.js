@@ -13,6 +13,7 @@ let ACPConfig = React.createClass({
       theme: 'spa',
       timezone: 0,
       lang: 'en',
+      dateformat: '',
       filter_words: '',
       valid_code_open: 0,
       page_on: 0,
@@ -141,6 +142,21 @@ let ACPConfig = React.createClass({
                     </select>
                   </td>
                 </tr>
+                <tr>
+                  <td>{lang.DATE_FORMAT}:</td>
+                  <td>
+                    <select ref="dateformat" valueLink={this.linkState('dateformat')}>
+                      {(()=>{
+                        let dateFormateList = acpData.dateFormates, formatOptions = [];
+                        for (let i in dateFormateList) {
+                          let format = dateFormateList[i];
+                          formatOptions.push(<option key={i} value={i}>{format}</option>);
+                        }
+                        return formatOptions;
+                      })()}
+                    </select>
+                  </td>
+                </tr>
               </tbody>
             </table>
           </fieldset>
@@ -195,7 +211,7 @@ let ACPConfig = React.createClass({
           </fieldset>
           <fieldset>
             <legend>{lang.ADMIN_CONF}</legend>
-            <table  className="table">
+            <table className="table">
               <tbody>
                 <tr>
                   <td>{lang.CHANGE_PWD}:</td>

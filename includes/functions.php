@@ -323,6 +323,9 @@ function parse_tbprefix($str)
  * @return array
  */
 function formatComments($data, $filter_words=true, $stripTags=true) {
+    $messages=getLangArray();
+    $dateFormat = getConfigVar('dateformat');
+    //die($dateFormat);
     foreach ($data as &$_data) {
         if ($stripTags && ZFramework::app()->filter_type == constant('FILTER_TRIPTAGS')) {
             $_data['post_content'] = strip_tags($_data['post_content'], ZFramework::app()->allowed_tags);
@@ -335,10 +338,25 @@ function formatComments($data, $filter_words=true, $stripTags=true) {
             $_data['post_content']=filter_words($_data['post_content']);
         }
         $_data['id'] = (int)$_data['id'];
-        $_data['time']=date('m-d H:i',$_data['time']+ZFramework::app()->timezone*60*60);
+        //$_data['time']=date('m-d H:i',$_data['time']+ZFramework::app()->timezone*60*60);
+        $_data['time'] = formatDate($_data['time']+ZFramework::app()->timezone*60*60, $dateFormat);
         $_data['reply_time']=date('m-d H:i',$_data['reply_time']+ZFramework::app()->timezone*60*60);
     }
     return $data;
+}
+
+function formatDate($timestamp, $IntlDateFormat='y-MM-dd HH:mm') {
+  if (class_exists("IntlDateFormatter")) {
+    $lang = getConfigVar('lang');
+    $locale = 'en_US';
+    if ($lang == "zh_cn") {
+      $locale = "zh_CN";
+    }
+    $formatter = new IntlDateFormatter($locale, IntlDateFormatter::FULL, 
+        IntlDateFormatter::FULL, date_default_timezone_get(), IntlDateFormatter::GREGORIAN, $IntlDateFormat); 
+    return $formatter->format($timestamp);
+  }
+  return date('Y-m-d H:i', $timestamp);
 }
 
 /**
@@ -449,6 +467,16 @@ function get_all_langs()
     }
     $d->close();
     return array_filter($langs,'_removeIndex');
+}
+
+function get_all_dateFormats() {
+  $lang = include APPROOT.'/languages/'.getConfigVar('lang').'.php';
+  $result = array();
+  $now = time() + ZFramework::app()->timezone*60*60;
+  foreach($lang["DATE_FORMAT_LIST"] as $format) {
+    $result[$format] = formatDate($now, $format);
+  }
+  return $result;
 }
 
 function _removeIndex($var){

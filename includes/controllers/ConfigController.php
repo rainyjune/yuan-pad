@@ -63,6 +63,7 @@ class ConfigController extends BaseController{
         $this->set_theme();
         $this->set_admin_password();
         $this->set_lang();
+        $this->set_date_format();
         $this->set_time_zone();
 
         $this->set_filter_type();
@@ -143,5 +144,9 @@ class ConfigController extends BaseController{
 
     private function set_allowed_tags(){
         $this->_model->query(sprintf(parse_tbprefix("UPDATE <sysvar> SET varvalue='%s' WHERE varname='allowed_tags'"),  $this->_model->escape_string($_POST['allowed_tags'])));
+    }
+    
+    private function set_date_format() {
+        $this->_model->query(sprintf(parse_tbprefix("UPDATE <sysvar> SET varvalue='%s' WHERE varname='dateformat'"),$_POST['dateformat']));
     }
 }
