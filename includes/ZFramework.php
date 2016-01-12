@@ -53,7 +53,7 @@ class ZFramework{
                 $rc=new ReflectionClass($thisController);
                 if($rc->isSubclassOf('BaseController')) {
                     if($rc->hasMethod($thisAction)) {
-                        get_alll_plugins(TRUE);
+                        get_all_plugins(TRUE);
                         $controller=$rc->newInstance();
                         $method=$rc->getMethod($thisAction);
                         $method->invoke($controller);

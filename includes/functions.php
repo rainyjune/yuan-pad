@@ -488,7 +488,7 @@ function getLangArray($userSpecifiedLanguage=null) {
  * @param boolean $loadPlugin
  * @return array
  */
-function get_alll_plugins($loadPlugin=FALSE) {
+function get_all_plugins($loadPlugin=FALSE) {
     $plugins=array();
     $d=dir(PLUGINDIR);
     while(false!==($entry=$d->read())){
