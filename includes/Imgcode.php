@@ -13,7 +13,7 @@ class FLEA_Helper_ImgCode
     var $imagetype = 'jpeg';
     var $keepCode = false;
 
-    function FLEA_Helper_ImgCode()
+    function __construct()
     {
         @session_start();
 
