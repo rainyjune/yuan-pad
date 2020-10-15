@@ -19,6 +19,7 @@ require 'functions.php';
 ini_set('arg_separator.output',     '&amp;');
 ini_set('magic_quotes_runtime',     0);
 ini_set('magic_quotes_sybase',      0);
+/*
 if(get_magic_quotes_gpc())
 {
     $_POST	=array_map('stripslashes_deep',$_POST);
@@ -26,6 +27,7 @@ if(get_magic_quotes_gpc())
     $_COOKIE=array_map('stripslashes_deep',$_COOKIE);
     $_REQUEST=array_map('stripslashes_deep',$_REQUEST);
 }
+*/
 
 maple_unset_globals();
 
