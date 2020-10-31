@@ -2,7 +2,7 @@
 class Ymysqli extends YDBBase {
     public $lnk;
     protected $database;
-    public function Ymysqli($url){
+    public function __construct($url){
         $url = parse_url($url);
 
         // Check if mysqli extension support is present in PHP
@@ -23,7 +23,7 @@ class Ymysqli extends YDBBase {
         }else{
             $url['port'] = 3306;
         }
-        
+
         @$connection = new mysqli($url['host'],$url['user'],$url['pass'],substr($url['path'], 1),$url['port']);
         if (mysqli_connect_errno()) {
             throw new Exception(mysqli_connect_error());
