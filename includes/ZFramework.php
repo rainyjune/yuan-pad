@@ -6,7 +6,11 @@ class BaseController{
         }
         $tplDir='themes/'.ZFramework::app()->theme.'/templates/';
         $file=$tplDir.$tplFile;
-        include $file.'.php';
+        if (file_exists($file.'.php')) {
+            include $file.'.php';
+        } else if (file_exists($file.'.html')) {
+            include $file.'.html';
+        }
     }
 }
 
