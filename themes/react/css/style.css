@@ -1,0 +1,156 @@
+#content {
+  border: 2px solid #069;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 5px;
+}
+
+@media (max-width: 767px) {
+  .form-inline .form-control {
+    display: inline-block;
+    width: auto;
+    vertical-align: middle;
+  }
+}
+@media (max-width: 767px) {
+  .form-inline .form-group {
+    display: inline-block;
+    margin-bottom: 0;
+    vertical-align: middle;
+  }
+}
+#inputCaptcha {
+  width: 100px;
+  float: left;
+}
+
+@media (max-width: 767px) {
+  #content {
+    width: 90%;
+  }
+}
+@media (min-width: 768px) {
+  #content {
+    width: 700px;
+  }
+}
+@media (min-width: 992px) {
+  #content {
+    width: 900px;
+  }
+}
+@media (min-width: 1200px) {
+  #content {
+    width: 960px;
+  }
+}
+.header {
+  overflow: auto;
+}
+.header .signIn,
+.header .signUp,
+.header .updateUser,
+.header .signOutButton {
+  display: inline-block;
+  float: left;
+  margin-right: 5px;
+}
+
+.commentBox h1 {
+  text-align: center;
+}
+.commentBox .statistics {
+  padding-bottom: 5px;
+}
+.commentBox .commentForm {
+  width: 90%;
+  margin: 20px auto 10px auto;
+}
+
+.searchbar {
+  text-align: center;
+  margin-top: 15px;
+}
+.searchbar input[type=image] {
+  margin-left: 5px;
+}
+
+.commentList span.keyword {
+  background-color: yellow;
+}
+
+.pagination .pagination-item {
+  height: 22px;
+  padding: 0 8px;
+  background-color: #fff;
+  line-height: 22px;
+  margin: 0 1px 0 2px;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  vertical-align: middle;
+  background: gray;
+  margin-right: 5px;
+  text-decoration: none;
+}
+.pagination .pagination-item.currentPage {
+  background-color: red;
+}
+
+.statistics {
+  background: #4A7DAC;
+}
+
+.comment {
+  background: #F3F3F3;
+  border: 1px solid #757575;
+  padding: 4px;
+  margin-bottom: 5px;
+}
+.comment .reply {
+  margin-left: 20px;
+  padding: 8px 19px;
+  margin-top: 10px;
+  line-height: 20px;
+  border: 1px solid #dedede;
+}
+.comment .reply p {
+  margin: 0;
+}
+
+.commentAuthor {
+  font-weight: bold;
+  color: #C30;
+  font-size: 14px;
+  float: left;
+}
+
+.commentDate {
+  color: #C30;
+  font-size: 14px;
+  float: right;
+}
+
+.commentText {
+  clear: both;
+}
+
+.captchaImg {
+  cursor: pointer;
+  vertical-align: -webkit-baseline-middle;
+  margin-left: 5px;
+}
+
+footer {
+  border-top: 1px dotted blue;
+  margin-top: 15px;
+  text-align: center;
+}
+
+/* React Modal */
+.ReactModal__Overlay > div {
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+/*# sourceMappingURL=style.css.map */
