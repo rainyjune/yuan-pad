@@ -4,8 +4,8 @@
   "description": "YuanPad is a PHP-based guestbook script.",
   "main": "index.js",
   "scripts": {
-    "dev": "parcel index.html admin.html -d templates --public-url ./themes/react/templates/",
-    "build": "parcel build index.html admin.html -d templates --public-url ./themes/react/templates/"
+    "dev": "parcel index.html admin.html error.html -d ../../ --public-url ./",
+    "build": "parcel build index.html admin.html error.html -d ../../ --public-url ./"
   },
   "repository": {
     "type": "git",
