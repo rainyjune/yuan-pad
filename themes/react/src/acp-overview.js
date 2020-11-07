@@ -30,12 +30,6 @@ let ACPOverview = (props) => {
           <tr>
             <td>{lang.GD_VERSION}： </td><td align="right">{sysInfo.gdVersion}</td>
           </tr>
-          <tr>
-            <td>Register_Globals：</td><td align="right">{sysInfo.registerGlobals}</td>
-          </tr>
-          <tr>
-            <td>Magic_Quotes_Gpc：</td><td align="right">{sysInfo.magicQuotesGPC}</td>
-          </tr>
         </tbody>
       </table>
     </div>
