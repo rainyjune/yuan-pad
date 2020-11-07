@@ -11,7 +11,11 @@ class YDB {
             try {
                 return new $DBClass($url);
             } catch (Exception $e) {
-                require('./error.html');
+                if (file_exists('error.html')) {
+                    include 'error.html';
+                } else {
+                    die('Service unavailable.');
+                }
                 exit;
             }
         }else{
