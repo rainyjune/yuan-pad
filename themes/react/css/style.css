@@ -92,6 +92,7 @@ html {
 .commentBox .inputContainer input,
 .commentBox .inputContainer textarea {
   width: 100%;
+  max-width: 100%;
 }
 
 .searchbar {
