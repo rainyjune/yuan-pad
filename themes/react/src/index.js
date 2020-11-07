@@ -90,6 +90,8 @@ let App = React.createClass({
         // TODO Tell the user what's wrong.
         alert(res.statusText);
       }
+    }, (status, xhr) => {
+      alert(xhr.responseText);
     });
   },
   /**

@@ -588,8 +588,18 @@
               successCallBack(resultXML, xhr);
             }
           } else if(dataType === "json" || resultType === "application/json") {
-            if (successCallBack) {
-              successCallBack(JSON.parse(resultText), xhr);
+            var jsonData = null;
+            try {
+              jsonData = JSON.parse(resultText);
+            } catch (error) {
+              if (errorCallBack) {
+                errorCallBack(status, xhr);
+              }
+              dtd.reject(xhr);
+              return false;
+            }
+            if (successCallBack && jsonData) {
+              successCallBack(jsonData, xhr);
             }
           }else{
             if (successCallBack) {
