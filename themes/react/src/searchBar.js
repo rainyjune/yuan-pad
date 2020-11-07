@@ -27,10 +27,8 @@ let SearchBar = React.createClass({
               onChange={this.handleChange}
               className="form-control" 
             />
+            <input type="submit" />
           </div>
-          <button type="button" className="btn btn-default btn-sm" aria-label="Submit">
-            <span className="glyphicon glyphicon-search" aria-hidden="true"></span>
-          </button>
         </form>
       </div>
     );

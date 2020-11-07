@@ -151,7 +151,7 @@ let Captcha = React.createClass({
     return (
       <div className="form-group">
         <label htmlFor="inputCaptcha" className="col-sm-2 col-lg-2 control-label">{this.props.lang.CAPTCHA}</label>
-        <div className="col-sm-5 col-lg-5">
+        <div className="">
           <input
             id="inputCaptcha"
             ref="captchaInput" 
@@ -234,8 +234,8 @@ let CommentForm = React.createClass({
     return (
       <form onSubmit={this.handleSubmit} className="commentForm form-horizontal" >
         <div className="form-group">
-          <label htmlFor="inputUser" className="col-sm-2 col-lg-2 control-label">{this.props.lang.NICKNAME}</label>
-          <div className="col-sm-5 col-lg-5">
+          <label htmlFor="inputUser" className="leftLabel">{this.props.lang.NICKNAME}</label>
+          <div className="inputContainer" style={{display: "inline-block"}}>
             <input
               id="inputUser"
               ref="user" 
@@ -249,8 +249,8 @@ let CommentForm = React.createClass({
           </div>
         </div>
         <div className="form-group">
-          <label htmlFor="inputContent" className="col-sm-2 col-lg-2 control-label">{this.props.lang.CONTENT}</label>
-          <div className="col-sm-10 col-lg-10">
+          <label htmlFor="inputContent" className="leftLabel">{this.props.lang.CONTENT}</label>
+          <div className="inputContainer">
             <textarea id="inputContent" className="form-control" rows="3" ref="content" onChange={this.handleTextChange} value={this.state.text}></textarea>
           </div>
         </div>
