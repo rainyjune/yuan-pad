@@ -4,7 +4,7 @@
   "description": "YuanPad is a PHP-based guestbook script.",
   "main": "index.js",
   "scripts": {
-    "dev": "parcel index.html admin.html error.html -d ../../ --public-url ./",
+    "dev": "parcel index.html admin.html error.html -d ../../ --public-url ./ --log-level 4",
     "build": "parcel build index.html admin.html error.html -d ../../ --public-url ./"
   },
   "repository": {
@@ -21,10 +21,10 @@
   },
   "homepage": "https://github.com/rainyjune/yuan-pad#readme",
   "dependencies": {
-    "react": "^0.14.3",
-    "react-addons-linked-state-mixin": "^0.14.3",
-    "react-dom": "^0.14.3",
-    "react-modal": "^0.6.1"
+    "create-react-class": "^15.7.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "react-modal": "^3.11.2"
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.4"
