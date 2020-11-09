@@ -5,7 +5,7 @@ let SignIn = require('./signIn.js'),
     UpdateUser = require('./updateUser.js'),
     SignOutButton = require('./signOut.js');
 
-let Header = React.createClass({
+class Header extends React.Component {
   render() {
     let props = {
       user: this.props.user,
@@ -28,6 +28,6 @@ let Header = React.createClass({
       </div>
     );
   }
-});
+}
 
 module.exports = Header;

@@ -13,7 +13,7 @@ const customStyles = {
 };
 
 
-let Progress = React.createClass({
+class Progress extends React.Component {
   render() {
     return (
       <Modal isOpen={this.props.loadingModalIsOpen} style={customStyles} >
@@ -21,6 +21,6 @@ let Progress = React.createClass({
       </Modal>
     );
   }
-});
+}
 
 module.exports = Progress;

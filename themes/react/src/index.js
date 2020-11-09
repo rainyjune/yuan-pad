@@ -9,9 +9,10 @@ let SearchBar = require('./searchBar.js'),
     Progress = require('./progress.js'),
     OfflineWarning = require('./offlineMode.js');
 
-let App = React.createClass({
-  getInitialState() {
-    return {
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       loadingModalIsOpen: true,
       appConfig: {},
       comments: [],
@@ -22,7 +23,7 @@ let App = React.createClass({
       searchText: '', // The search keyword
       translations: {}
     };
-  },
+  }
   /**
    * Tested 1.
    *
@@ -34,28 +35,24 @@ let App = React.createClass({
       if (res.statusCode !== 200) {
         return ;
       }
-      if (this.isMounted()) {
-        this.setState({currentUser: res.response});
-        this.loadCommentsFromServer();
-      }
+      this.setState({currentUser: res.response});
+      this.loadCommentsFromServer();
     }, function(){
     }.bind(this));
-  },
+  }
   /**
    * Test 1
    */
   // Load comments to be displayed on page by page number.
   loadCommentsFromServer() {
     dataProvider.loadCommentsFromServer(this.state.currentPage, res => {
-        if (this.isMounted()) {
-          this.setState({
-            comments: res.response.comments,
-            commentsTotalNumber: res.response.total,
-            commentListType: 1
-          });
-        }
+      this.setState({
+        comments: res.response.comments,
+        commentsTotalNumber: res.response.total,
+        commentListType: 1
+      });
     });
-  },
+  }
   /**
    * Tested 1.
    *
@@ -63,15 +60,13 @@ let App = React.createClass({
   // Get comments from server according to the keyword user has entered.
   handleSearch(keyword) {
     dataProvider.search(keyword, res => {
-        if (this.isMounted()) {
-          this.setState({
-            comments: res.response.comments,
-            commentsTotalNumber: res.response.total,
-            commentListType: 2
-          });
-        }
+      this.setState({
+        comments: res.response.comments,
+        commentsTotalNumber: res.response.total,
+        commentListType: 2
+      });
     });
-  },
+  }
   /**
    * Tested 1.
    */
@@ -81,9 +76,7 @@ let App = React.createClass({
       if (res.statusCode === 200) {
         let siteConfig = res.response;
         dataProvider.getTranslations(res => {
-          if (this.isMounted()) {
-            this.setState({translations: res.response, appConfig: siteConfig});
-          }
+          this.setState({translations: res.response, appConfig: siteConfig});
           this.getUserInfo();
         });
       } else {
@@ -93,7 +86,7 @@ let App = React.createClass({
     }, (status, xhr) => {
       alert(xhr.responseText);
     });
-  },
+  }
   /**
    * Tested 1.
    */
@@ -101,7 +94,7 @@ let App = React.createClass({
   handlePageChange(pageNumber) {
     pageNumber = parseInt(pageNumber);
     this.setState({currentPage: pageNumber}, this.loadCommentsFromServer);
-  },
+  }
   /**
    * Tested 1.
    */
@@ -110,10 +103,10 @@ let App = React.createClass({
     this.setState({
       searchText: searchText
     });
-  },
+  }
   setCurrentUser(userData) {
     this.setState({currentUser: userData});
-  },
+  }
   render() {
     let state = this.state;
     let props = {
@@ -159,7 +152,7 @@ let App = React.createClass({
       </div>
     );
   }
-});
+}
 
 ReactDOM.render(
   <App />,

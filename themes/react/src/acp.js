@@ -29,9 +29,7 @@ let ACPBox = React.createClass({
       if (res.statusCode === 200) {
         let siteConfig = res.response;
         dataProvider.getTranslations(res => {
-          if (this.isMounted()) {
-            this.setState({translations: res.response, appConfig: siteConfig});
-          }
+          this.setState({translations: res.response, appConfig: siteConfig});
           this.getUserInfo();
         });
       } else {
@@ -73,20 +71,16 @@ let ACPBox = React.createClass({
   },
   // Update the `currentUser` state to default value.
   handleLogout() {
-    if (this.isMounted()) {
-      // Navigates to the index.php page after signed out.
-      this.setState({ currentUser: {}, appConfig: {} }, function(){
-        window.location = "index.php";
-      });
-    }
+    // Navigates to the index.php page after signed out.
+    this.setState({ currentUser: {}, appConfig: {} }, function(){
+      window.location = "index.php";
+    });
   },
   // Get current user identity from server.
   getUserInfo() {
     dataProvider.getUserInfo(res => {
       this.setState({loadingModalIsOpen: false});
-      if (this.isMounted()) {
-        this.handleUserSignedIn(res.response);
-      }
+      this.handleUserSignedIn(res.response);
     });
   },
   updateActiveTab(newTabName) {

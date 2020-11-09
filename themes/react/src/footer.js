@@ -1,6 +1,6 @@
 let React = require('react');
 
-let AppFooter = React.createClass({
+class AppFooter extends React.Component {
   ACPMarkup() {
     let ACP = (this.props.user && this.props.user.user_type === "admin") ? 
               "<a href='index.php?action=control_panel'>"+ this.props.lang.ACP+"</a>" 
@@ -8,7 +8,7 @@ let AppFooter = React.createClass({
     return {
       __html: ACP
     };
-  },
+  }
   render() {
     return (
       <footer>
@@ -24,6 +24,6 @@ let AppFooter = React.createClass({
       </footer>
     );
   }
-});
+}
 
 module.exports = AppFooter;

@@ -1,6 +1,6 @@
 let React = require('react');
 
-let Offline = React.createClass({
+class Offline extends React.Component {
   render() {
     let prop = this.props;
     let offlineStyle = {
@@ -10,6 +10,6 @@ let Offline = React.createClass({
       <p className="bg-warning" style={offlineStyle}>{prop.lang.OFFLINE_WARNING}</p>
     );
   }
-});
+}
 
 module.exports = Offline;

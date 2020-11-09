@@ -13,19 +13,19 @@ const customStyles = {
   }
 };
 
-let UserUpdate = React.createClass({
+class UserUpdate extends React.Component {
   getInitialState() {
     return {
       errorMsg: '',
       modalIsOpen: false
     };
-  },
+  }
   openModal() {
     this.setState({modalIsOpen: true});
-  },
+  }
   closeModal() {
     this.setState({modalIsOpen: false});
-  },
+  }
   handleSubmit(e) {
     e.preventDefault();
     let uid = this.refs.uid.value.trim(),
@@ -34,18 +34,16 @@ let UserUpdate = React.createClass({
         email = this.refs.email.value.trim();
     if (!uid || !user || !email) return;
     dataProvider.updateUser({ uid, user, pwd, email},  res => {
-      if (this.isMounted()) {
-        if (res.statusCode === 200) {
-          this.setState({errorMsg: '', modalIsOpen: false});
-          this.props.onCurrentUserUpdated(res.response);
-        } else {
-          alert(res.response);
-          this.setState({errorMsg: res.response});
-        }
+      if (res.statusCode === 200) {
+        this.setState({errorMsg: '', modalIsOpen: false});
+        this.props.onCurrentUserUpdated(res.response);
+      } else {
+        alert(res.response);
+        this.setState({errorMsg: res.response});
       }
     });
     return false;
-  },
+  }
   render() {
     let language = this.props.lang,
         state = this.state,
@@ -77,6 +75,6 @@ let UserUpdate = React.createClass({
       </div>
     );
   }
-});
+}
 
 module.exports = UserUpdate;

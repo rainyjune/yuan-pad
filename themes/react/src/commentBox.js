@@ -2,7 +2,7 @@ let React = require('react');
 var yuanjs = require('./yuan');
 let dataProvider = require('./dataProvider.js');
 
-let Pagination = React.createClass({
+class Pagination extends React.Component {
   handleClick(e) {
     e.preventDefault();
     let pageNumber = e.target.getAttribute("data-pagenumber");
@@ -10,7 +10,7 @@ let Pagination = React.createClass({
       return false;
     }
     this.props.onPageChanged(pageNumber);
-  },
+  }
   render() {
     return (
       <div className="pagination">
@@ -32,9 +32,9 @@ let Pagination = React.createClass({
       </div>
     );
   }
-});
+};
 
-let CommentStatistics = React.createClass({
+class CommentStatistics extends React.Component {
   rawMarkup() {
     let pagenavText, text;
     if (this.props.commentListType === 1) {
@@ -49,7 +49,7 @@ let CommentStatistics = React.createClass({
       }
     }
     return { __html: text };
-  },
+  }
   render() {
     return (
       <div className="statistics">
@@ -67,9 +67,9 @@ let CommentStatistics = React.createClass({
       </div>
     );
   }
-});
+}
 
-let CommentList = React.createClass({
+class CommentList extends React.Component {
   render() {
     let lang = this.props.lang,
         searchText = this.props.searchText,
@@ -94,9 +94,9 @@ let CommentList = React.createClass({
       </div>
     );
   }
-});
+}
 
-let Reply = React.createClass({
+class Reply extends React.Component {
   rawMarkup() {
     let mapObj = {
       '{admin_name}': this.props.appConfig.admin,
@@ -104,19 +104,19 @@ let Reply = React.createClass({
       '{reply_content}': this.props.content
     };
     return { __html: yuanjs.replaceAll(this.props.lang.ADMIN_REPLIED, mapObj) };
-  },
+  }
   render() {
     return (<div className="reply" dangerouslySetInnerHTML={this.rawMarkup()}></div>);
   }
-});
+}
 
-let Comment = React.createClass({
+class Comment extends React.Component {
   rawMarkup() {
     return { __html: this.props.children.toString() };
-  },
+  }
   rawAuthorMarkup() {
     return { __html: parseInt(this.props.data.uid) ? this.props.data.b_username : this.props.data.uname};
-  },
+  }
   render() {    
     return (
       <div className="comment">
@@ -135,18 +135,18 @@ let Comment = React.createClass({
       </div>
     );
   }
-});
+}
 
-let Captcha = React.createClass({
+class Captcha extends React.Component {
   refreshCaptch(e) {
     e.preventDefault();
     this.refresh();
-  },
+  }
   refresh() {
     let img = this.refs.captchaImg;
     let url = img.getAttribute('data-src');
     img.src = url + '&v=' + Math.random();
-  },
+  }
   render() {
     return (
       <div className="form-group">
@@ -175,13 +175,14 @@ let Captcha = React.createClass({
       </div>
     );
   }
-});
+}
 
-let CommentForm = React.createClass({
-  getInitialState() {
-    return {userInputType: 'text', labelContent: "", username: 'anonymous', text: '', valid_code: ''};
-  },
-  componentWillReceiveProps(nextProps) {
+class CommentForm extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {userInputType: 'text', labelContent: "", username: 'anonymous', text: '', valid_code: ''};
+  }
+  static getDerivedStateFromProps(nextProps, state) {
     let computedState = {};
     let propUser = nextProps.user;
     switch (propUser.user_type) {
@@ -198,8 +199,9 @@ let CommentForm = React.createClass({
         computedState.labelContent = '';
         break;
     }
-    this.setState(computedState);
-  },
+    //this.setState(computedState);
+    return computedState;
+  }
   handleSubmit(e) {
     e.preventDefault();
     let author = this.state.username.trim(),
@@ -220,16 +222,16 @@ let CommentForm = React.createClass({
         this.props.onCommentCreated();
     });
     return false;
-  },
+  }
   handleUsernameChange(e) {
     this.setState({username: e.target.value});
-  },
+  }
   handleTextChange(e) {
     this.setState({text: e.target.value});
-  },
+  }
   handleCaptchaChange(e) {
     this.setState({valid_code: e.target.value});
-  },
+  }
   render() {
     return (
       <form onSubmit={this.handleSubmit} className="commentForm form-horizontal" >
@@ -271,9 +273,9 @@ let CommentForm = React.createClass({
       </form>
     );
   }
-});
+}
     
-let CommentBox = React.createClass({
+class CommentBox extends React.Component {
   render() {
     var props = {
       commentListType: this.props.commentListType,
@@ -308,5 +310,5 @@ let CommentBox = React.createClass({
       </div>
     );
   }
-});
+}
 module.exports = CommentBox;

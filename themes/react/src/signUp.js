@@ -13,21 +13,22 @@ const customStyles = {
   }
 };
 
-let SignUp = React.createClass({
-  getInitialState() {
-    return {
+class SignUp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       errorMsg: '',
       modalIsOpen: false
     };
-  },
+  }
   openModal(e) {
     e && e.preventDefault();
     this.setState({modalIsOpen: true});
-  },
+  }
   closeModal(e) {
     e && e.preventDefault();
     this.setState({modalIsOpen: false});
-  },
+  }
   handleSubmit(e) {
     e.preventDefault();
     let user = this.refs.user.value.trim(),
@@ -36,17 +37,15 @@ let SignUp = React.createClass({
     if (!user || !pwd || !email) return;
     
     dataProvider.signUp({user, pwd, email}, res => {
-      if (this.isMounted()) {
-        if (res.statusCode !== 200) {
-          this.setState({errorMsg: res.response});
-        } else {
-          this.setState({errorMsg: '', modalIsOpen: false});
-          this.props.onCurrentUserUpdated(res.response);
-        }
+      if (res.statusCode !== 200) {
+        this.setState({errorMsg: res.response});
+      } else {
+        this.setState({errorMsg: '', modalIsOpen: false});
+        this.props.onCurrentUserUpdated(res.response);
       }
     });
     return false;
-  },
+  }
   render() {
     let language = this.props.lang,
         state = this.state;
@@ -79,6 +78,6 @@ let SignUp = React.createClass({
       </div>
     );
   }
-});
+}
 
 module.exports = SignUp;
