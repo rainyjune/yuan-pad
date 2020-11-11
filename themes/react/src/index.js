@@ -81,6 +81,7 @@ class App extends React.Component {
       if (res.statusCode === 200) {
         let siteConfig = res.response;
         dataProvider.getTranslations(res => {
+          document.title = res.response.WELCOME.replace('{site_name}', siteConfig.board_name);
           this.setState({translations: res.response, appConfig: siteConfig});
           this.getUserInfo();
         });
