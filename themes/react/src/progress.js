@@ -12,6 +12,7 @@ const customStyles = {
   }
 };
 
+Modal.setAppElement('#content');
 
 class Progress extends React.Component {
   render() {

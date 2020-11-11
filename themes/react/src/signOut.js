@@ -2,6 +2,10 @@ let React = require('react');
 let dataProvider = require('./dataProvider.js');
 
 class LogoutButton extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleSignOut = this.handleSignOut.bind(this);
+  }
   handleSignOut(e) {
     e.preventDefault();
     dataProvider.signOut(() => {

@@ -23,6 +23,11 @@ class App extends React.Component {
       searchText: '', // The search keyword
       translations: {}
     };
+
+    this.setCurrentUser = this.setCurrentUser.bind(this);
+    this.handleKeywordInput = this.handleKeywordInput.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+    this.loadCommentsFromServer = this.loadCommentsFromServer.bind(this);
   }
   /**
    * Tested 1.

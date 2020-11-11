@@ -13,6 +13,8 @@ const customStyles = {
   }
 };
 
+Modal.setAppElement('#content');
+
 class SignIn extends React.Component {
   constructor(props) {
     super(props);
@@ -20,6 +22,10 @@ class SignIn extends React.Component {
       errorMsg: '',
       modalIsOpen: false
     };
+
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   openModal() {
     this.setState({modalIsOpen: true});

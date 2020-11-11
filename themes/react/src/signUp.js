@@ -13,6 +13,8 @@ const customStyles = {
   }
 };
 
+Modal.setAppElement('#content');
+
 class SignUp extends React.Component {
   constructor(props) {
     super(props);

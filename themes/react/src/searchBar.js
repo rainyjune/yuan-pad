@@ -14,7 +14,7 @@ class SearchBar extends React.Component {
   render() {
     return (
       <div className="searchbar">
-        <form onSubmit={this.handleSearch} className="form-inline">
+        <form onSubmit={this.handleSearch.bind(this)} className="form-inline">
           <div className="form-group">
             <label className="sr-only" htmlFor="inputSearch">Search</label>
             <input
@@ -24,7 +24,7 @@ class SearchBar extends React.Component {
               placeholder="Search" 
               ref="s" 
               value={this.props.searchText}
-              onChange={this.handleChange}
+              onChange={this.handleChange.bind(this)}
               className="form-control" 
             />
             <input type="submit" />
