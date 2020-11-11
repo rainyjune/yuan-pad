@@ -22,6 +22,10 @@ class SignUp extends React.Component {
       errorMsg: '',
       modalIsOpen: false
     };
+
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   openModal(e) {
     e && e.preventDefault();
