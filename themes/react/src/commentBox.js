@@ -181,6 +181,11 @@ class CommentForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {userInputType: 'text', labelContent: "", username: 'anonymous', text: '', valid_code: ''};
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleUsernameChange = this.handleUsernameChange.bind(this);
+    this.handleTextChange = this.handleTextChange.bind(this);
+    this.handleCaptchaChange = this.handleCaptchaChange.bind(this);
   }
   static getDerivedStateFromProps(nextProps, state) {
     let computedState = {};

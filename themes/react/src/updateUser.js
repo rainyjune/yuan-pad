@@ -16,11 +16,16 @@ const customStyles = {
 Modal.setAppElement('#content');
 
 class UserUpdate extends React.Component {
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       errorMsg: '',
       modalIsOpen: false
     };
+
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   openModal() {
     this.setState({modalIsOpen: true});
