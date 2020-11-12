@@ -272,7 +272,7 @@ class CommentForm extends React.Component {
         }
         <div className="form-group">
           <div className="col-sm-offset-2 col-sm-10 col-lg-offset-2 col-lg-10">
-            <button className="btn btn-default" type="submit">{this.props.lang.SUBMIT}</button>
+            <button className="btn btn-default" id="postCommentSubmit" type="submit">{this.props.lang.SUBMIT}</button>
           </div>
         </div>
       </form>

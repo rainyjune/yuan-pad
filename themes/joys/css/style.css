@@ -5,10 +5,24 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
-#content {
+body {
+  background-image: url('../images/twinklingstarcopy.jpg');
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  margin: 0;
+}
+
+#appbox {
   margin: 1em auto;
   padding: 5px;
   width: 90%;
+}
+
+.commentList,
+.statistics {
+  background-image: url('../images/bg_dots2.gif');
+  background-repeat: repeat;
 }
 
 @media (max-width: 767px) {
@@ -31,28 +45,49 @@ html {
 }
 
 @media (min-width: 768px) {
-  #content {
+  #appbox {
     width: 700px;
   }
 }
 @media (min-width: 992px) {
-  #content {
+  #appbox {
     width: 900px;
   }
 }
 @media (min-width: 1200px) {
-  #content {
+  #appbox {
     width: 960px;
   }
 }
 @media (min-width: 1340px) {
-  #content {
+  #appbox {
     width: 1260px;
   }
 }
 .header {
   overflow: auto;
+  position: fixed;
+  width: 100%;
+  height: 30px;
+  left: 0;
+  top: 0;
+  background-color: #333333;
+
+  padding: 0 5rem;
+  color: #fff;
 }
+
+.header a {
+  color: #aaa;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.header a:hover {
+  color: #fff;
+  text-decoration: underline;
+}
+
 .header .signIn,
 .header .signUp,
 .header .updateUser,
@@ -126,12 +161,11 @@ html {
 }
 
 .statistics {
-  background: #61dafb;
   overflow: auto;
+  text-align: center;
 }
 
 .comment {
-  background: #F3F3F3;
   border: 1px solid #757575;
   padding: 4px;
   margin-bottom: 5px;
@@ -170,6 +204,13 @@ html {
   cursor: pointer;
   vertical-align: -webkit-baseline-middle;
   margin-left: 5px;
+}
+
+#postCommentSubmit {
+  background-color: #4d90f0;
+  border: 1px solid #3079ed;
+  color: #fff;
+  font-weight: bold;
 }
 
 footer {

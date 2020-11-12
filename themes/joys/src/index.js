@@ -125,11 +125,12 @@ class App extends React.Component {
       return <div>{state.appConfig.close_reason}</div>;
     }
     return (
+      <React.Fragment>
+      <Header
+        {...props}
+        onCurrentUserUpdated={this.setCurrentUser}
+      />
       <div id="appbox">
-        <Header
-          {...props}
-          onCurrentUserUpdated={this.setCurrentUser}
-        />
         <OfflineWarning 
           appConfig={state.appConfig}
           lang={state.translations}
@@ -156,6 +157,7 @@ class App extends React.Component {
         />
         <Progress loadingModalIsOpen={this.state.loadingModalIsOpen} />
       </div>
+      </React.Fragment>
     );
   }
 }
