@@ -14,3 +14,4 @@ sites/default/config.php
 *.woff2
 *.svg
 *.gif
+*.jpg
