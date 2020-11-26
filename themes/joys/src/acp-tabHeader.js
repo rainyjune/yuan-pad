@@ -8,7 +8,7 @@ class ACPTabHeader extends React.Component {
       menuIsOpen: false
     };
   }
-  updateActiveTab(e) {
+  updateActiveTab = (e) => {
     e.preventDefault();
     let tabLink = e.target;
     let newTabName = tabLink.getAttribute('data-tabname');

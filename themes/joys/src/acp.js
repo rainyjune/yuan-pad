@@ -84,7 +84,7 @@ class ACPBox extends React.Component {
       this.handleUserSignedIn(res.response);
     });
   }
-  updateActiveTab(newTabName) {
+  updateActiveTab = (newTabName) => {
     this.setState({activeTab: newTabName});
   }
   // Update the `currentUser` state after a user signed in.
