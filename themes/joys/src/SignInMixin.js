@@ -4,13 +4,13 @@ let dataProvider = require('./dataProvider.js');
 /**
  * Tested 1
  */
-let SignInMixIn = {
+let SignInMixIn = Base => class extends Base {
   openModal() {
     this.setState({modalIsOpen: true});
-  },
+  }
   closeModal() {
     this.setState({modalIsOpen: false});
-  },
+  }
   handleSignIn(loginData) {
     dataProvider.signIn(loginData, res => {
       if (res.statusCode === 200) {

@@ -36,7 +36,8 @@ class ACPConfig extends React.Component {
     }
     this.setState(computedState);
   }
-  handleSubmit(e) {
+  handleSubmit = (e) => {
+    debugger;
     e.preventDefault();
     dataProvider.updateSiteConfig(this.state, res => {
       console.log('ACPConfig state:', this.state);
@@ -51,21 +52,10 @@ class ACPConfig extends React.Component {
       }
     });
   }
-  toggleSiteClose(e) {
-    this.setState({site_close: e.target.value});
-  }
-  toggleCaptcha(e) {
-    this.setState({valid_code_open: e.target.value});
-  }
-  togglePagination(e) {
-    this.setState({page_on: e.target.value});
-  }
-  toggleFilterType(e) {
-    this.setState({filter_type: e.target.value});
-  }
-  handleChange(event) {
-    debugger;
-    //this.setState();
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value
+    });
   }
   render() {
     let appConfig = this.state,
@@ -82,31 +72,31 @@ class ACPConfig extends React.Component {
               <tbody>
                 <tr>
                   <td>{lang.BOARD_NAME}:</td>
-                  <td><input ref="board_name" type="text" size="20" value={this.state.board_name} onChange={this.handleChange} /></td>
+                  <td><input name="board_name" type="text" size="20" value={this.state.board_name} onChange={this.handleChange} /></td>
                 </tr>
                 <tr>
                   <td>{lang.CLOSE_BOARD}:</td>
                   <td>
-                    <input ref="site_close" type="radio" value="1" checked={appConfig.site_close == 1} onChange={this.toggleSiteClose} />{lang.YES}
-                    <input ref="site_close" type="radio" value="0" checked={appConfig.site_close != 1} onChange={this.toggleSiteClose} />{lang.NO}
+                    <input name="site_close" type="radio" value="1" checked={appConfig.site_close == 1} onChange={this.handleChange} />{lang.YES}
+                    <input name="site_close" type="radio" value="0" checked={appConfig.site_close != 1} onChange={this.handleChange} />{lang.NO}
                   </td>
                 </tr>
                 <tr>
                   <td>{lang.CLOSE_REASON}:</td>
-                  <td><textarea ref="close_reason" cols="30" rows="3" value={this.state.close_reason} onChange={this.handleChange} ></textarea></td>
+                  <td><textarea name="close_reason" cols="30" rows="3" value={this.state.close_reason} onChange={this.handleChange} ></textarea></td>
                 </tr>
                 <tr>
                   <td>{lang.ADMIN_EMAIL}:</td>
-                  <td><input ref="admin_email" type="text" size="20" value={this.state.admin_email} onChange={this.handleChange}  /></td>
+                  <td><input name="admin_email" type="text" size="20" value={this.state.admin_email} onChange={this.handleChange}  /></td>
                 </tr>
                 <tr>
                   <td>{lang.COPY_INFO}:</td>
-                  <td><textarea ref="copyright_info" cols="30" rows="3" value={this.state.copyright_info} onChange={this.handleChange}  ></textarea></td>
+                  <td><textarea name="copyright_info" cols="30" rows="3" value={this.state.copyright_info} onChange={this.handleChange} ></textarea></td>
                 </tr>
                 <tr>
                   <td>{lang.SYS_THEME}:</td>
                   <td>
-                    <select ref="theme" value={this.state.theme} onChange={this.handleChange}>
+                    <select name="theme" value={this.state.theme} onChange={this.handleChange}>
                       {(()=>{
                         let themes = acpData.themes, themeOptions = [];
                         for (let i in themes) {
@@ -121,7 +111,7 @@ class ACPConfig extends React.Component {
                 <tr>
                   <td>{lang.TIMEZONE}:</td>
                   <td>
-                    <select ref="timezone" value={this.state.timezone} onChange={this.handleChange}>
+                    <select name="timezone" value={this.state.timezone} onChange={this.handleChange}>
                       {(()=>{
                         let timeZones = acpData.timezones, timezoneOptions = [];
                         for (let i in timeZones) {
@@ -136,7 +126,7 @@ class ACPConfig extends React.Component {
                 <tr>
                   <td>{lang.LANG}:</td>
                   <td>
-                    <select ref="lang" value={this.state.lang} onChange={this.handleChange}>
+                    <select name="lang" value={this.state.lang} onChange={this.handleChange}>
                       {(()=>{
                         let languages = acpData.languages, languageOptions = [];
                         for (let i in languages) {
@@ -151,7 +141,7 @@ class ACPConfig extends React.Component {
                 <tr>
                   <td>{lang.DATE_FORMAT}:</td>
                   <td>
-                    <select ref="dateformat" value={this.state.dateformat} onChange={this.handleChange}>
+                    <select name="dateformat" value={this.state.dateformat} onChange={this.handleChange}>
                       {(()=>{
                         let dateFormateList = acpData.dateFormates, formatOptions = [];
                         for (let i in dateFormateList) {
@@ -172,7 +162,7 @@ class ACPConfig extends React.Component {
               <tbody>
                 <tr>
                   <td>{lang.FILTER_WORDS}：</td>
-                  <td><textarea ref="filter_words" cols="20" rows="3" value={this.state.filter_words} onChange={this.handleChange}></textarea></td>
+                  <td><textarea name="filter_words" cols="20" rows="3" value={this.state.filter_words} onChange={this.handleChange}></textarea></td>
                 </tr>
                 <tr>
                   <td>{lang.ENABLE_CAPTCHA}：</td>
@@ -180,11 +170,11 @@ class ACPConfig extends React.Component {
                     {(()=>{
                       let captchaInputs = [];
                       if (acpData.gd_loaded) {
-                        captchaInputs.push(<label key="1"><input type="radio" value="1" defaultChecked={appConfig.valid_code_open == 1} onChange={this.toggleCaptcha} />{lang.YES}</label>);
-                        captchaInputs.push(<label key="0"><input type="radio" value="0" defaultChecked={appConfig.valid_code_open != 1} onChange={this.toggleCaptcha} />{lang.NO}</label>);
+                        captchaInputs.push(<label key="1"><input name="valid_code_open" type="radio" value="1" defaultChecked={appConfig.valid_code_open == 1} onChange={this.handleChange} />{lang.YES}</label>);
+                        captchaInputs.push(<label key="0"><input name="valid_code_open" type="radio" value="0" defaultChecked={appConfig.valid_code_open != 1} onChange={this.handleChange} />{lang.NO}</label>);
                       } else {
-                        captchaInputs.push(<label key="1"><input type="radio" value="1" onChange={this.toggleCaptcha} />{lang.YES}</label>);
-                        captchaInputs.push(<label key="0"><input type="radio" value="0" defaultChecked={true} onChange={this.toggleCaptcha} />{lang.NO}{lang.GD_DISABLED_NOTICE}</label>);
+                        captchaInputs.push(<label key="1"><input name="valid_code_open" type="radio" value="1" onChange={this.handleChange} />{lang.YES}</label>);
+                        captchaInputs.push(<label key="0"><input name="valid_code_open" type="radio" value="0" defaultChecked={true} onChange={this.handleChange} />{lang.NO}{lang.GD_DISABLED_NOTICE}</label>);
                       }
                       return captchaInputs;
                     })()}
@@ -193,24 +183,24 @@ class ACPConfig extends React.Component {
                 <tr>
                   <td>{lang.ENABLE_PAGE}</td>
                   <td>
-                    <label><input ref="page_on" type="radio" value="1" defaultChecked={appConfig.page_on == 1} onChange={this.togglePagination} />{lang.YES}</label>
-                    <label><input ref="page_on" type="radio" value="0" defaultChecked={appConfig.page_on != 1} onChange={this.togglePagination} />{lang.NO}</label>
+                    <label><input name="page_on" type="radio" value="1" defaultChecked={appConfig.page_on == 1} onChange={this.togglePagination} />{lang.YES}</label>
+                    <label><input name="page_on" type="radio" value="0" defaultChecked={appConfig.page_on != 1} onChange={this.togglePagination} />{lang.NO}</label>
                   </td>
                 </tr>
                 <tr>
                     <td>{lang.POST_PERPAGE}：</td>
-                    <td><input ref="num_perpage" type="text" value={this.state.num_perpage} onChange={this.handleChange} />{lang.PAGINATION_TIP}</td>
+                    <td><input name="num_perpage" type="text" value={this.state.num_perpage} onChange={this.handleChange} />{lang.PAGINATION_TIP}</td>
                 </tr>
                 <tr>
                   <td>{lang.FILTER_HTML_TAGS}：</td>
                   <td>
-                    <label><input ref="filter_type" type="radio" value="1" defaultChecked={appConfig.filter_type == 1} onChange={this.toggleFilterType} />{lang.STRIP_DISALLOWED_TAGS}</label>
-                    <label><input ref="filter_type" type="radio" value="2" defaultChecked={appConfig.filter_type == 2} onChange={this.toggleFilterType} />{lang.ESCAPE_ALL_TAGS}</label>
+                    <label><input name="filter_type" type="radio" value="1" defaultChecked={appConfig.filter_type == 1} onChange={this.handleChange} />{lang.STRIP_DISALLOWED_TAGS}</label>
+                    <label><input name="filter_type" type="radio" value="2" defaultChecked={appConfig.filter_type == 2} onChange={this.handleChange} />{lang.ESCAPE_ALL_TAGS}</label>
                   </td>
                 </tr>
                 <tr>
                   <td>{lang.ALLOWED_HTML_TAGS}：</td>
-                  <td><input ref="allowed_tags" type="text" value={this.state.allowed_tags} onChange={this.handleChange}  /></td>
+                  <td><input name="allowed_tags" type="text" value={this.state.allowed_tags} onChange={this.handleChange}  /></td>
                 </tr>
               </tbody>
             </table>
@@ -221,7 +211,7 @@ class ACPConfig extends React.Component {
               <tbody>
                 <tr>
                   <td>{lang.CHANGE_PWD}:</td>
-                  <td><input ref="password" type="password" value={this.state.password} onChange={this.handleChange}  />&nbsp;{lang.PWD_TIP}</td>
+                  <td><input name="password" type="password" value={this.state.password} onChange={this.handleChange}  />&nbsp;{lang.PWD_TIP}</td>
                 </tr>
               </tbody>
             </table>

@@ -40,7 +40,7 @@ class ACPBox extends React.Component {
     });
   }
 
-  loadApplicationConfiguration(successCallback) {
+  loadApplicationConfiguration = (successCallback) => {
     dataProvider.getAppConfigACP(res => {
       if (res.statusCode !== 200) {
         return ;
@@ -48,14 +48,14 @@ class ACPBox extends React.Component {
       this.setState({appConfig: res.response}, successCallback);
     });
   }
-  loadApplicationTranslation(successCallback) {
+  loadApplicationTranslation = (successCallback) => {
     dataProvider.getTranslations(res => {
       if (res.statusCode === 200) {
         this.setState({translations: res.response}, successCallback);
       }
     });
   }
-  loadApplicationSystemInformation(successCallback) {
+  loadApplicationSystemInformation = (successCallback) => {
     dataProvider.getSystemInformation(res => {
       if (res.statusCode === 200) {
         this.setState({systemInformation: res.response}, successCallback);
@@ -67,18 +67,18 @@ class ACPBox extends React.Component {
    * Tested 1.
    */
   // Reload site configuration after being updated by admin user.
-  handleConfigUpdate() {
+  handleConfigUpdate = () => {
     this.loadApplicationConfiguration();
   }
   // Update the `currentUser` state to default value.
-  handleLogout() {
+  handleLogout = () => {
     // Navigates to the index.php page after signed out.
     this.setState({ currentUser: {}, appConfig: {} }, function(){
       window.location = "index.php";
     });
   }
   // Get current user identity from server.
-  getUserInfo() {
+  getUserInfo = () => {
     dataProvider.getUserInfo(res => {
       this.setState({loadingModalIsOpen: false});
       this.handleUserSignedIn(res.response);
@@ -88,7 +88,7 @@ class ACPBox extends React.Component {
     this.setState({activeTab: newTabName});
   }
   // Update the `currentUser` state after a user signed in.
-  handleUserSignedIn(userData) {
+  handleUserSignedIn = (userData) => {
     if (userData.user_type === "admin") {
       this.setState({currentUser: userData}, () => {this.loadApplicationConfiguration(this.loadApplicationSystemInformation);});
     } else if (userData.user_type === "regular") {
@@ -97,7 +97,7 @@ class ACPBox extends React.Component {
       this.setState({currentUser: userData});
     }
   }
-  handleCommentDeleted() {
+  handleCommentDeleted = () => {
     this.loadApplicationSystemInformation();
   }
   render() {

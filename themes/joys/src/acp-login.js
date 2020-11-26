@@ -14,7 +14,7 @@ const customStyles = {
   }
 };
 
-class ACPLogin extends React.Component {
+const ACPLogin = SignInMixIn(class extends React.Component {
   //mixins: [SignInMixIn], // Use the mixin
   constructor(props) {
     super(props);
@@ -23,7 +23,7 @@ class ACPLogin extends React.Component {
       modalIsOpen: true
     };
   }
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     let user = this.refs.user.value.trim(),
         pwd = this.refs.password.value.trim();
@@ -34,7 +34,7 @@ class ACPLogin extends React.Component {
   goToHome() {
     window.location.href = 'index.php';
   }
-  dismissAlert() {
+  dismissAlert = () => {
     this.setState({errorMsg: ''});
   }
   render() {
@@ -67,6 +67,6 @@ class ACPLogin extends React.Component {
       </div>
     );
   }
-}
+});
 
 module.exports = ACPLogin;

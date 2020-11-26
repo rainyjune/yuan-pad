@@ -18,7 +18,7 @@ class ACPTabHeader extends React.Component {
     this.props.onTabSelected(newTabName);
     this.setState({menuIsOpen: false});
   }
-  handleSignOut(e) {
+  handleSignOut = (e) => {
     e.preventDefault();
     dataProvider.signOut(response => {
       if (response.statusCode === 200) {
