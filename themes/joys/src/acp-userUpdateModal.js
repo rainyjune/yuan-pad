@@ -13,15 +13,16 @@ const customStyles = {
   }
 };
 
-let UserUpdateModal = React.createClass({
-  getInitialState() {
-    return {
+class UserUpdateModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       uid: '',
       user: '',
       pwd: '',
       email: ''
     };
-  },
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.userData) {
       let userData = nextProps.userData;
@@ -32,7 +33,7 @@ let UserUpdateModal = React.createClass({
         email: userData.email
       });
     }
-  },
+  }
   handleSubmit(e) {
     e.preventDefault();
     let user = this.state.user.trim(),
@@ -41,17 +42,17 @@ let UserUpdateModal = React.createClass({
     if (!user || !email) return;
     this.props.onUpdateSubmit(this.state);
     return false;
-  },
+  }
   updatePassword(e) {
     this.setState({
       pwd: e.target.value
     });
-  },
+  }
   updateEmail(e) {
     this.setState({
       email: e.target.value
     });
-  },
+  }
   render(){
     let lang = this.props.lang;
     return (
@@ -81,6 +82,6 @@ let UserUpdateModal = React.createClass({
       </Modal>
     );
   }
-});
+}
 
 module.exports = UserUpdateModal;

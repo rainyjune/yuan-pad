@@ -2,10 +2,10 @@ let React = require('react');
 let dataProvider = require('./dataProvider.js');
 let FormItemMixin = require('./formItemMixin.js');
 
-let IPItem = React.createClass({
+class IPItem extends React.Component {
   toggleItem() {
     this.props.onItemToggled(this.props.data);
-  },
+  }
   render() {
     return (
       <tr className='admin_message'>
@@ -14,34 +14,35 @@ let IPItem = React.createClass({
       </tr>
     );
   }
-});
+}
 
-let ACPIpConfig = React.createClass({
-  getInitialState() {
-    return {
+const ACPIpConfig = FormItemMixin(class ACPIpConfig extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       IPs: []
     };
-  },
-  mixins: [FormItemMixin],
+  }
+  //mixins: [FormItemMixin],
   getMixinAttr() {
     return 'IPs';
-  },
+  }
   getItemKey() {
     return 'ip';
-  },
+  }
   setMixState(data) {
     this.setState({IPs: data});
-  },
+  }
   componentDidMount() {
     this.loadBlackList();
-  },
+  }
   loadBlackList() {
     dataProvider.getIPBlackList(res => {
       if (res.statusCode === 200) {
         this.setState({IPs: res.response});
       }
     });
-  },
+  }
   handleSubmit(e) {
     e.preventDefault();
     let checkedItems = this.getCheckedItems();
@@ -58,10 +59,10 @@ let ACPIpConfig = React.createClass({
         alert('delete error');
       }
     });
-  },
+  }
   handleToggleItem(item) {
     this.toggle(item);
-  },
+  }
   render() {
     let IPList = this.state.IPs;
     let lang = this.props.lang;

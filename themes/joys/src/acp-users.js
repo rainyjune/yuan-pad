@@ -3,7 +3,7 @@ let UserUpdateModal = require('./acp-userUpdateModal.js');
 let dataProvider = require('./dataProvider.js');
 let FormItemMixin = require('./formItemMixin.js');
 
-let UserItem = React.createClass({
+class UserItem extends React.Component {
   /**
    * Tested 1.
    */
@@ -17,20 +17,20 @@ let UserItem = React.createClass({
         this.props.onUserDeleted();
       }
     });
-  },
+  }
   /**
    * Tested 1.
    */
   updateUser(e) {
     e.preventDefault();
     this.props.onOpenUserUpdateModal(this.props.data);
-  },
+  }
   /**
    * Tested 1.
    */
   toggleItem() {
     this.props.onToggleItem(this.props.data);
-  },
+  }
   render() {
     let user = this.props.data;
     let lang = this.props.lang;
@@ -46,36 +46,37 @@ let UserItem = React.createClass({
       </tr>
     );
   }
-});
+}
 
-let ACPUser = React.createClass({
-  mixins: [FormItemMixin],
+const ACPUser = FormItemMixin(class ACPUser extends React.Component {
+  //mixins: [FormItemMixin],
   /**
    * Tested 1.
    */
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props);
+    this.state = {
       users: [],
       updateErrorMsg: '',
       updateModalIsOpen: false,
       updatedModalUserData: null,
     };
-  },
+  }
   getMixinAttr() {
     return 'users';
-  },
+  }
   getItemKey() {
     return 'uid';
-  },
+  }
   setMixState(data) {
     this.setState({users: data});
-  },
+  }
   /**
    * Tested 1
    */
   componentDidMount() {
     this.loadAllUsersFromServer();
-  },
+  }
   /**
    * Tested 1.
    */
@@ -87,13 +88,13 @@ let ACPUser = React.createClass({
         this.setState({users: data});
       }
     });
-  },
+  }
   /**
    * Tested 1.
    */
   handleUserDeleted() {
     this.loadAllUsersFromServer();
-  },
+  }
   /**
    * Tested 1.
    */
@@ -108,7 +109,7 @@ let ACPUser = React.createClass({
         this.loadAllUsersFromServer();
       }
     });
-  },
+  }
   /**
    * Tested 1.
    */
@@ -118,7 +119,7 @@ let ACPUser = React.createClass({
       updatedModalUserData: null,
       updateModalIsOpen: false
     });
-  },
+  }
   /**
    * Tested 1.
    */
@@ -128,7 +129,7 @@ let ACPUser = React.createClass({
         updatedModalUserData: userData,
         updateModalIsOpen: true
       });
-  },
+  }
   /**
    * Tested 1.
    */
@@ -142,7 +143,7 @@ let ACPUser = React.createClass({
         this.loadAllUsersFromServer();
       }
     });
-  },
+  }
   /**
    * Tested 1.
    */
@@ -162,13 +163,13 @@ let ACPUser = React.createClass({
         alert('delete error');
       }
     });
-  },
+  }
   /**
    * Tested 1
    */
   handleToggleItem(userItem) {
     this.toggle(userItem);
-  },
+  }
   render() {
     let lang = this.props.lang;
     let cssClass = this.props.activeTab === "user" ? "user_container selectTag" : "user_container";

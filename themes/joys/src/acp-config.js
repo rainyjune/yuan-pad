@@ -1,10 +1,11 @@
 let React = require('react');
 let dataProvider = require('./dataProvider.js');
-let LinkedStateMixin = require('react-addons-linked-state-mixin');
+//let LinkedStateMixin = require('react-addons-linked-state-mixin');
 
-let ACPConfig = React.createClass({
-  getInitialState() {
-    return {
+class ACPConfig extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       board_name: '',
       site_close: 0,
       close_reason: '',
@@ -22,8 +23,8 @@ let ACPConfig = React.createClass({
       allowed_tags: '',
       password: ''
     };
-  },
-  mixins: [LinkedStateMixin],
+  }
+  //mixins: [LinkedStateMixin],
   componentWillReceiveProps(nextProps) {
     let propAppConfig = nextProps.appConfig;
     let computedState = {};
@@ -33,7 +34,7 @@ let ACPConfig = React.createClass({
       }
     }
     this.setState(computedState);
-  },
+  }
   handleSubmit(e) {
     e.preventDefault();
     dataProvider.updateSiteConfig(this.state, res => {
@@ -48,19 +49,19 @@ let ACPConfig = React.createClass({
         alert('failed');
       }
     });
-  },
+  }
   toggleSiteClose(e) {
     this.setState({site_close: e.target.value});
-  },
+  }
   toggleCaptcha(e) {
     this.setState({valid_code_open: e.target.value});
-  },
+  }
   togglePagination(e) {
     this.setState({page_on: e.target.value});
-  },
+  }
   toggleFilterType(e) {
     this.setState({filter_type: e.target.value});
-  },
+  }
   render() {
     let appConfig = this.state,
         props = this.props,
@@ -76,7 +77,7 @@ let ACPConfig = React.createClass({
               <tbody>
                 <tr>
                   <td>{lang.BOARD_NAME}:</td>
-                  <td><input ref="board_name" type="text" size="20" valueLink={this.linkState('board_name')} /></td>
+                  <td><input ref="board_name" type="text" size="20" value={this.board_name} /></td>
                 </tr>
                 <tr>
                   <td>{lang.CLOSE_BOARD}:</td>
@@ -87,20 +88,20 @@ let ACPConfig = React.createClass({
                 </tr>
                 <tr>
                   <td>{lang.CLOSE_REASON}:</td>
-                  <td><textarea ref="close_reason" cols="30" rows="3" valueLink={this.linkState('close_reason')}></textarea></td>
+                  <td><textarea ref="close_reason" cols="30" rows="3" value={this.close_reason}></textarea></td>
                 </tr>
                 <tr>
                   <td>{lang.ADMIN_EMAIL}:</td>
-                  <td><input ref="admin_email" type="text" size="20" valueLink={this.linkState('admin_email')} /></td>
+                  <td><input ref="admin_email" type="text" size="20" value={this.admin_email} /></td>
                 </tr>
                 <tr>
                   <td>{lang.COPY_INFO}:</td>
-                  <td><textarea ref="copyright_info" cols="30" rows="3" valueLink={this.linkState('copyright_info')} ></textarea></td>
+                  <td><textarea ref="copyright_info" cols="30" rows="3" value={this.copyright_info} ></textarea></td>
                 </tr>
                 <tr>
                   <td>{lang.SYS_THEME}:</td>
                   <td>
-                    <select ref="theme" valueLink={this.linkState('theme')}>
+                    <select ref="theme" value={this.theme}>
                       {(()=>{
                         let themes = acpData.themes, themeOptions = [];
                         for (let i in themes) {
@@ -115,7 +116,7 @@ let ACPConfig = React.createClass({
                 <tr>
                   <td>{lang.TIMEZONE}:</td>
                   <td>
-                    <select ref="timezone" valueLink={this.linkState('timezone')}>
+                    <select ref="timezone" value={this.timezone}>
                       {(()=>{
                         let timeZones = acpData.timezones, timezoneOptions = [];
                         for (let i in timeZones) {
@@ -130,7 +131,7 @@ let ACPConfig = React.createClass({
                 <tr>
                   <td>{lang.LANG}:</td>
                   <td>
-                    <select ref="lang" valueLink={this.linkState('lang')}>
+                    <select ref="lang" value={this.lang}>
                       {(()=>{
                         let languages = acpData.languages, languageOptions = [];
                         for (let i in languages) {
@@ -145,7 +146,7 @@ let ACPConfig = React.createClass({
                 <tr>
                   <td>{lang.DATE_FORMAT}:</td>
                   <td>
-                    <select ref="dateformat" valueLink={this.linkState('dateformat')}>
+                    <select ref="dateformat" value={this.dateformat}>
                       {(()=>{
                         let dateFormateList = acpData.dateFormates, formatOptions = [];
                         for (let i in dateFormateList) {
@@ -166,7 +167,7 @@ let ACPConfig = React.createClass({
               <tbody>
                 <tr>
                   <td>{lang.FILTER_WORDS}：</td>
-                  <td><textarea ref="filter_words" cols="20" rows="3" valueLink={this.linkState('filter_words')}></textarea></td>
+                  <td><textarea ref="filter_words" cols="20" rows="3" value={this.filter_words}></textarea></td>
                 </tr>
                 <tr>
                   <td>{lang.ENABLE_CAPTCHA}：</td>
@@ -193,7 +194,7 @@ let ACPConfig = React.createClass({
                 </tr>
                 <tr>
                     <td>{lang.POST_PERPAGE}：</td>
-                    <td><input ref="num_perpage" type="text" valueLink={this.linkState('num_perpage')} />{lang.PAGINATION_TIP}</td>
+                    <td><input ref="num_perpage" type="text" value={this.num_perpage} />{lang.PAGINATION_TIP}</td>
                 </tr>
                 <tr>
                   <td>{lang.FILTER_HTML_TAGS}：</td>
@@ -204,7 +205,7 @@ let ACPConfig = React.createClass({
                 </tr>
                 <tr>
                   <td>{lang.ALLOWED_HTML_TAGS}：</td>
-                  <td><input ref="allowed_tags" type="text" valueLink={this.linkState('allowed_tags')} /></td>
+                  <td><input ref="allowed_tags" type="text" value={this.allowed_tags} /></td>
                 </tr>
               </tbody>
             </table>
@@ -215,7 +216,7 @@ let ACPConfig = React.createClass({
               <tbody>
                 <tr>
                   <td>{lang.CHANGE_PWD}:</td>
-                  <td><input ref="password" type="password" valueLink={this.linkState('password')} />&nbsp;{lang.PWD_TIP}</td>
+                  <td><input ref="password" type="password" value={this.password} />&nbsp;{lang.PWD_TIP}</td>
                 </tr>
               </tbody>
             </table>
@@ -225,6 +226,6 @@ let ACPConfig = React.createClass({
       </div>
     );
   }
-});
+}
 
 module.exports = ACPConfig;

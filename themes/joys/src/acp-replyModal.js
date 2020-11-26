@@ -13,15 +13,16 @@ const customStyles = {
   }
 };
 
-let ReplyModal = React.createClass({
-  getInitialState() {
-    return {
+class ReplyModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       rid: '',
       pid: '',
       content: '',
       r_time: ''
     };
-  },
+  }
   componentWillReceiveProps(nextProps) {
     let commentData = nextProps.comment;
     if (commentData) {
@@ -31,7 +32,7 @@ let ReplyModal = React.createClass({
         content: commentData.reply_content
       });
     }
-  },
+  }
   handleSubmit(e) {
     e.preventDefault();
     if (!this.state.pid || !this.state.content.trim()) return;
@@ -42,10 +43,10 @@ let ReplyModal = React.createClass({
       }
     });
     return false;
-  },
+  }
   changeContent(e) {
     this.setState({content: e.target.value});
-  },
+  }
   render(){
     return (
       <Modal isOpen={this.props.modalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
@@ -57,6 +58,6 @@ let ReplyModal = React.createClass({
       </Modal>
     );
   }
-});
+}
 
 module.exports = ReplyModal;

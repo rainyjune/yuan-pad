@@ -5,13 +5,13 @@ let ACPOverview = require('./acp-overview.js'),
     ACPIpConfig = require('./acp-ipconfig.js'),
     ACPUsers = require('./acp-users.js');
 
-let ACPTabContent = React.createClass({
+class ACPTabContent extends React.Component {
   handleActiveChange(newTab) {
     this.refs.blackListPanel.loadBlackList();
     setTimeout(()=>{
       this.props.onActiveTabChanged(newTab);
     }, 0);
-  },
+  }
   render() {
     if (this.props.user.user_type !== "admin") return null;
 
@@ -49,6 +49,6 @@ let ACPTabContent = React.createClass({
       </div>
     );
   }
-});
+}
 
 module.exports = ACPTabContent;

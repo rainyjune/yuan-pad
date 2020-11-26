@@ -4,9 +4,10 @@ let ReplyModal = require('./acp-replyModal.js');
 let CommentUpdateModal = require('./acp-updateCommentModal.js');
 let FormItemMixin = require('./formItemMixin.js');
 
-let Reply = React.createClass({
-  getInitialState() {
-    return {
+class Reply extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       b_username: null,
       id: 0,
       ip: "::1",
@@ -18,7 +19,7 @@ let Reply = React.createClass({
       uname: "",
       user: ""
     };
-  },
+  }
   componentWillReceiveProps(nextProps) {
     let data = nextProps.data;
     if (data) {
@@ -35,7 +36,7 @@ let Reply = React.createClass({
         user: data.user
       });
     }
-  },
+  }
   deleteReply(e) {
     e.preventDefault();
     if (!confirm(this.props.lang.DEL_REPLY_CONFIRM)) {
@@ -44,7 +45,7 @@ let Reply = React.createClass({
     dataProvider.deleteReply(this.state.id, response => {
       this.setState({reply_content: ''});
     });
-  },
+  }
   render() {
     let lang = this.props.lang,
         data = this.state;
@@ -58,9 +59,9 @@ let Reply = React.createClass({
       </div>
     );
   }
-});
+}
 
-let Comment = React.createClass({
+class Comment extends React.Component {
   banIP(e) {
     let dom = e.target;
     e.preventDefault();
@@ -68,7 +69,7 @@ let Comment = React.createClass({
     dataProvider.banIP(ip, () => {
       this.props.onActiveTabChanged('ban_ip');
     });
-  },
+  }
   deleteComment(e) {
     e.preventDefault();
     let data = this.props.data;
@@ -81,18 +82,18 @@ let Comment = React.createClass({
     dataProvider.deleteComment(commentId, reply, response => {
       this.props.onCommentDeleted();
     });
-  },
+  }
   replyComment(e) {
     e.preventDefault();
     this.props.onReplyComment(this.props.data);
-  },
+  }
   updateComment(e) {
     e.preventDefault();
     this.props.onUpdateComment(this.props.data);
-  },
+  }
   toggleItem() {
     this.props.onToggleItem(this.props.data);
-  },
+  }
   render() {
     let data = this.props.data;
     let lang = this.props.lang;
@@ -126,28 +127,29 @@ let Comment = React.createClass({
       </tr>
     );
   }
-});
+}
 
-let ACPMessages = React.createClass({
-  mixins: [FormItemMixin],
-  getInitialState() {
-    return {
+const ACPMessages = FormItemMixin(class ACPMessages extends React.Component {
+  //mixins: [FormItemMixin],
+  constructor(props) {
+    super(props);
+    this.state = {
       comments: [],
       modalIsOpen: false,
       modalType: '', // "reply" or "update" 
       modalCommentModel: null,
       modalErrorMsg: ''
     };
-  },
+  }
   getMixinAttr() {
     return 'comments';
-  },
+  }
   getItemKey() {
     return 'id';
-  },
+  }
   setMixState(data) {
     this.setState({comments: data});
-  },
+  }
   deleteAllComments(e) {
     e.preventDefault();
     if (!confirm(this.props.lang.DEL_ALL_CONFIRM)) {
@@ -160,7 +162,7 @@ let ACPMessages = React.createClass({
         alert('Error');
       }
     });
-  },
+  }
   /**
    * Tested 1
    */
@@ -176,7 +178,7 @@ let ACPMessages = React.createClass({
         alert('ERROR')
       }
     });
-  },
+  }
   deleteSelected(e) {
     e.preventDefault();
     let checkedItems = this.getCheckedItems();
@@ -193,10 +195,10 @@ let ACPMessages = React.createClass({
         alert('delete error');
       }
     });
-  },
+  }
   handleReplyComment(commentTobeReplied) {
     this.openModal('reply', commentTobeReplied);
-  },
+  }
   closeModal() {
     this.setState({
       modalIsOpen: false,
@@ -204,7 +206,7 @@ let ACPMessages = React.createClass({
       modalCommentModel: null,
       modalErrorMsg: ''
     });
-  },
+  }
   openModal(type = 'reply', commentData) {
     this.setState({
       modalIsOpen: true,
@@ -212,18 +214,18 @@ let ACPMessages = React.createClass({
       modalCommentModel: commentData,
       modalErrorMsg: ''
     });
-  },
+  }
   handleReplyFormSubmitted() {
     this.closeModal();
     this.loadCommentsFromServer();
-  },
+  }
   handleUpdateComment(commentTobeUpdated) {
     this.openModal('update', commentTobeUpdated);
-  },
+  }
   handleCommentUpdated() {
     this.closeModal();
     this.loadCommentsFromServer();
-  },
+  }
   loadCommentsFromServer() {
     dataProvider.loadAllCommentsFromServer(res => {
       if (res.statusCode === 200 || res.statusCode === 404) {
@@ -235,17 +237,17 @@ let ACPMessages = React.createClass({
         alert('error');
       }
     });
-  },
+  }
   componentDidMount() {
     this.loadCommentsFromServer();
-  },
+  }
   handleToggleItem(item) {
     this.toggle(item);
-  },
+  }
   handleCommentDeleted() {
     this.loadCommentsFromServer();
     this.props.onCommentDeleted();
-  },
+  }
   render() {
     let state = this.state,
         props = this.props,

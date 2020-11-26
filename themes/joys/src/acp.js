@@ -10,9 +10,10 @@ let ACPLogin = require('./acp-login.js'),
     Progress = require('./progress.js'),
     OfflineWarning = require('./offlineMode.js');
 
-let ACPBox = React.createClass({
-  getInitialState() {
-    return {
+class ACPBox extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       loadingModalIsOpen: true,
       systemInformation: {}, // System information
       activeTab: 'overview',
@@ -20,7 +21,7 @@ let ACPBox = React.createClass({
       currentUser: {},
       translations: {}
     };
-  },
+  }
   /**
    * Load application data after we verified the root user.
    */
@@ -37,7 +38,7 @@ let ACPBox = React.createClass({
         alert(res.statusText);
       }
     });
-  },
+  }
 
   loadApplicationConfiguration(successCallback) {
     dataProvider.getAppConfigACP(res => {
@@ -46,21 +47,21 @@ let ACPBox = React.createClass({
       }
       this.setState({appConfig: res.response}, successCallback);
     });
-  },
+  }
   loadApplicationTranslation(successCallback) {
     dataProvider.getTranslations(res => {
       if (res.statusCode === 200) {
         this.setState({translations: res.response}, successCallback);
       }
     });
-  },
+  }
   loadApplicationSystemInformation(successCallback) {
     dataProvider.getSystemInformation(res => {
       if (res.statusCode === 200) {
         this.setState({systemInformation: res.response}, successCallback);
       }
     });
-  },
+  }
   
   /**
    * Tested 1.
@@ -68,24 +69,24 @@ let ACPBox = React.createClass({
   // Reload site configuration after being updated by admin user.
   handleConfigUpdate() {
     this.loadApplicationConfiguration();
-  },
+  }
   // Update the `currentUser` state to default value.
   handleLogout() {
     // Navigates to the index.php page after signed out.
     this.setState({ currentUser: {}, appConfig: {} }, function(){
       window.location = "index.php";
     });
-  },
+  }
   // Get current user identity from server.
   getUserInfo() {
     dataProvider.getUserInfo(res => {
       this.setState({loadingModalIsOpen: false});
       this.handleUserSignedIn(res.response);
     });
-  },
+  }
   updateActiveTab(newTabName) {
     this.setState({activeTab: newTabName});
-  },
+  }
   // Update the `currentUser` state after a user signed in.
   handleUserSignedIn(userData) {
     if (userData.user_type === "admin") {
@@ -95,10 +96,10 @@ let ACPBox = React.createClass({
     } else {
       this.setState({currentUser: userData});
     }
-  },
+  }
   handleCommentDeleted() {
     this.loadApplicationSystemInformation();
-  },
+  }
   render() {
     let state = this.state,
         translations = state.translations,
@@ -149,7 +150,7 @@ let ACPBox = React.createClass({
       </div>
     );
   }
-});
+}
 
 ReactDOM.render(
   <ACPBox />,

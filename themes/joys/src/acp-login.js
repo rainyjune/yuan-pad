@@ -14,14 +14,15 @@ const customStyles = {
   }
 };
 
-let ACPLogin = React.createClass({
-  mixins: [SignInMixIn], // Use the mixin
-  getInitialState() {
-    return {
+class ACPLogin extends React.Component {
+  //mixins: [SignInMixIn], // Use the mixin
+  constructor(props) {
+    super(props);
+    this.state = {
       errorMsg: '',
       modalIsOpen: true
     };
-  },
+  }
   handleSubmit(e) {
     e.preventDefault();
     let user = this.refs.user.value.trim(),
@@ -29,13 +30,13 @@ let ACPLogin = React.createClass({
     if (!user || !pwd) return;
     this.handleSignIn({ user, password: pwd});
     return false;
-  },
+  }
   goToHome() {
     window.location.href = 'index.php';
-  },
-  dismissAlert: function() {
+  }
+  dismissAlert() {
     this.setState({errorMsg: ''});
-  },
+  }
   render() {
     let language = this.props.lang,
         state = this.state;
@@ -66,6 +67,6 @@ let ACPLogin = React.createClass({
       </div>
     );
   }
-});
+}
 
 module.exports = ACPLogin;
