@@ -15,7 +15,6 @@ const customStyles = {
 };
 
 const ACPLogin = SignInMixIn(class extends React.Component {
-  //mixins: [SignInMixIn], // Use the mixin
   constructor(props) {
     super(props);
     this.state = {

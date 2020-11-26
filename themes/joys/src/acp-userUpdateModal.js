@@ -34,7 +34,7 @@ class UserUpdateModal extends React.Component {
       });
     }
   }
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     let user = this.state.user.trim(),
         pwd = this.state.pwd.trim(),

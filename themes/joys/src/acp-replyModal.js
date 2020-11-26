@@ -33,7 +33,7 @@ class ReplyModal extends React.Component {
       });
     }
   }
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     if (!this.state.pid || !this.state.content.trim()) return;
     let action = this.state.rid ? 'updateReply' : 'createReply';
@@ -44,7 +44,7 @@ class ReplyModal extends React.Component {
     });
     return false;
   }
-  changeContent(e) {
+  changeContent = (e) => {
     this.setState({content: e.target.value});
   }
   render(){

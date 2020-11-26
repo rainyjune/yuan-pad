@@ -21,7 +21,7 @@ let FormItemMixIn = Base => class extends Base {
     });
     this.setMixState(data);
   }
-  toggleInputClicked(e) {
+  toggleInputClicked = (e) => {
     this.toggleAll(e.target.checked);
   }
   toggleAll(checked) {
@@ -32,15 +32,15 @@ let FormItemMixIn = Base => class extends Base {
     });
     this.setMixState(data);
   }
-  checkAll(e) {
+  checkAll = (e) => {
     e.preventDefault();
     this.toggleAll(true);
   }
-  checkNone(e) {
+  checkNone = (e) => {
     e.preventDefault();
     this.toggleAll(false);
   }
-  checkXAll(e) {
+  checkXAll = (e) => {
     e.preventDefault();
     this.toggleXAll();
   }

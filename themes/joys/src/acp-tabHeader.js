@@ -28,7 +28,7 @@ class ACPTabHeader extends React.Component {
       }
     });
   }
-  toggleMenu() {
+  toggleMenu = () => {
     this.setState({menuIsOpen: !this.state.menuIsOpen});
   }
   render() {

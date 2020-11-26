@@ -37,7 +37,7 @@ class Reply extends React.Component {
       });
     }
   }
-  deleteReply(e) {
+  deleteReply = (e) => {
     e.preventDefault();
     if (!confirm(this.props.lang.DEL_REPLY_CONFIRM)) {
       return false;
@@ -62,7 +62,7 @@ class Reply extends React.Component {
 }
 
 class Comment extends React.Component {
-  banIP(e) {
+  banIP = (e) => {
     let dom = e.target;
     e.preventDefault();
     let ip = this.props.data.ip;
@@ -70,7 +70,7 @@ class Comment extends React.Component {
       this.props.onActiveTabChanged('ban_ip');
     });
   }
-  deleteComment(e) {
+  deleteComment = (e) => {
     e.preventDefault();
     let data = this.props.data;
     let commentId = data.id;
@@ -83,15 +83,15 @@ class Comment extends React.Component {
       this.props.onCommentDeleted();
     });
   }
-  replyComment(e) {
+  replyComment = (e) => {
     e.preventDefault();
     this.props.onReplyComment(this.props.data);
   }
-  updateComment(e) {
+  updateComment = (e) => {
     e.preventDefault();
     this.props.onUpdateComment(this.props.data);
   }
-  toggleItem() {
+  toggleItem = () => {
     this.props.onToggleItem(this.props.data);
   }
   render() {
@@ -130,7 +130,6 @@ class Comment extends React.Component {
 }
 
 const ACPMessages = FormItemMixin(class ACPMessages extends React.Component {
-  //mixins: [FormItemMixin],
   constructor(props) {
     super(props);
     this.state = {
@@ -150,7 +149,7 @@ const ACPMessages = FormItemMixin(class ACPMessages extends React.Component {
   setMixState(data) {
     this.setState({comments: data});
   }
-  deleteAllComments(e) {
+  deleteAllComments = (e) => {
     e.preventDefault();
     if (!confirm(this.props.lang.DEL_ALL_CONFIRM)) {
       return false;
@@ -166,7 +165,7 @@ const ACPMessages = FormItemMixin(class ACPMessages extends React.Component {
   /**
    * Tested 1
    */
-  deleteAllReplies(e) {
+  deleteAllReplies = (e) => {
     e.preventDefault();
     if (!confirm(this.props.lang.DEL_ALL_REPLY_CONFIRM)) {
       return false;
@@ -179,7 +178,7 @@ const ACPMessages = FormItemMixin(class ACPMessages extends React.Component {
       }
     });
   }
-  deleteSelected(e) {
+  deleteSelected = (e) => {
     e.preventDefault();
     let checkedItems = this.getCheckedItems();
     if (checkedItems.length === 0) {
@@ -196,10 +195,10 @@ const ACPMessages = FormItemMixin(class ACPMessages extends React.Component {
       }
     });
   }
-  handleReplyComment(commentTobeReplied) {
+  handleReplyComment = (commentTobeReplied) => {
     this.openModal('reply', commentTobeReplied);
   }
-  closeModal() {
+  closeModal = () => {
     this.setState({
       modalIsOpen: false,
       modalType: '', 
@@ -219,7 +218,7 @@ const ACPMessages = FormItemMixin(class ACPMessages extends React.Component {
     this.closeModal();
     this.loadCommentsFromServer();
   }
-  handleUpdateComment(commentTobeUpdated) {
+  handleUpdateComment = (commentTobeUpdated) => {
     this.openModal('update', commentTobeUpdated);
   }
   handleCommentUpdated() {
@@ -241,7 +240,7 @@ const ACPMessages = FormItemMixin(class ACPMessages extends React.Component {
   componentDidMount() {
     this.loadCommentsFromServer();
   }
-  handleToggleItem(item) {
+  handleToggleItem = (item) => {
     this.toggle(item);
   }
   handleCommentDeleted() {

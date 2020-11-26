@@ -1,6 +1,5 @@
 let React = require('react');
 let dataProvider = require('./dataProvider.js');
-//let LinkedStateMixin = require('react-addons-linked-state-mixin');
 
 class ACPConfig extends React.Component {
   constructor(props) {
@@ -25,7 +24,6 @@ class ACPConfig extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
   }
-  //mixins: [LinkedStateMixin],
   componentWillReceiveProps(nextProps) {
     let propAppConfig = nextProps.appConfig;
     let computedState = {};

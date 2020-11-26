@@ -3,7 +3,7 @@ let dataProvider = require('./dataProvider.js');
 let FormItemMixin = require('./formItemMixin.js');
 
 class IPItem extends React.Component {
-  toggleItem() {
+  toggleItem = () => {
     this.props.onItemToggled(this.props.data);
   }
   render() {
@@ -23,7 +23,6 @@ const ACPIpConfig = FormItemMixin(class ACPIpConfig extends React.Component {
       IPs: []
     };
   }
-  //mixins: [FormItemMixin],
   getMixinAttr() {
     return 'IPs';
   }
@@ -43,7 +42,7 @@ const ACPIpConfig = FormItemMixin(class ACPIpConfig extends React.Component {
       }
     });
   }
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     let checkedItems = this.getCheckedItems();
     if (checkedItems.length === 0) {

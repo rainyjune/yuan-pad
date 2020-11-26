@@ -6,7 +6,7 @@ let ACPOverview = require('./acp-overview.js'),
     ACPUsers = require('./acp-users.js');
 
 class ACPTabContent extends React.Component {
-  handleActiveChange(newTab) {
+  handleActiveChange = (newTab) => {
     this.refs.blackListPanel.loadBlackList();
     setTimeout(()=>{
       this.props.onActiveTabChanged(newTab);

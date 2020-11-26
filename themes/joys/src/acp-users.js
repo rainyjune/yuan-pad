@@ -7,7 +7,7 @@ class UserItem extends React.Component {
   /**
    * Tested 1.
    */
-  deleteUser(e) {
+  deleteUser = (e) => {
     e.preventDefault();
     if (!confirm(this.props.lang.DEL_SINGLEUSER_CONFIRM)) {
       return false;
@@ -21,14 +21,14 @@ class UserItem extends React.Component {
   /**
    * Tested 1.
    */
-  updateUser(e) {
+  updateUser = (e) => {
     e.preventDefault();
     this.props.onOpenUserUpdateModal(this.props.data);
   }
   /**
    * Tested 1.
    */
-  toggleItem() {
+  toggleItem = () => {
     this.props.onToggleItem(this.props.data);
   }
   render() {
@@ -49,7 +49,6 @@ class UserItem extends React.Component {
 }
 
 const ACPUser = FormItemMixin(class ACPUser extends React.Component {
-  //mixins: [FormItemMixin],
   /**
    * Tested 1.
    */
@@ -133,7 +132,7 @@ const ACPUser = FormItemMixin(class ACPUser extends React.Component {
   /**
    * Tested 1.
    */
-  deleteAllUsers(e) {
+  deleteAllUsers = (e) => {
     e.preventDefault();
     if (!confirm(this.props.lang.DEL_ALLUSER_CONFIRM)) {
       return false;
@@ -147,7 +146,7 @@ const ACPUser = FormItemMixin(class ACPUser extends React.Component {
   /**
    * Tested 1.
    */
-  handleDeleteMulti(e) {
+  handleDeleteMulti = (e) => {
     e.preventDefault();
     let checkedUids = this.getCheckedItems();
     if (checkedUids.length === 0) {

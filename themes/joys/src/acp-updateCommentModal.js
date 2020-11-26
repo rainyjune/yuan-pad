@@ -30,7 +30,7 @@ class UpdateCommentModal extends React.Component {
       });
     }
   }
-  handleSubmit(e) {
+  handleSubmit = (e) => {
     e.preventDefault();
     if (!this.state.mid || !this.state.update_content.trim()) return;
     dataProvider.updateComment(this.state, res => {
@@ -42,7 +42,7 @@ class UpdateCommentModal extends React.Component {
     }.bind(this));
     return false;
   }
-  changeContent(e) {
+  changeContent = (e) => {
     this.setState({update_content: e.target.value});
   }
   render(){
