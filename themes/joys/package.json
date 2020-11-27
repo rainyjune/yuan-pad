@@ -4,6 +4,7 @@
   "description": "YuanPad is a PHP-based guestbook script.",
   "main": "index.js",
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "dev": "parcel index.html admin.html error.html -d ../../ --public-url ./ --log-level 4",
     "build": "parcel build index.html admin.html error.html -d ../../ --public-url ./"
   },
@@ -28,5 +29,8 @@
   },
   "devDependencies": {
     "parcel-bundler": "^1.12.4"
+  },
+  "resolutions": {
+    "node-forge": "0.10.0"
   }
 }
