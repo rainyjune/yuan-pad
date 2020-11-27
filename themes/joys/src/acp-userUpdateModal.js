@@ -23,16 +23,17 @@ class UserUpdateModal extends React.Component {
       email: ''
     };
   }
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.userData) {
-      let userData = nextProps.userData;
-      this.setState({
+  static getDerivedStateFromProps(props, state) {
+    if (props.userData) {
+      let userData = props.userData;
+      return {
         uid: userData.uid,
         user: userData.username,
         pwd: userData.password,
         email: userData.email
-      });
+      };
     }
+    return null;
   }
   handleSubmit = (e) => {
     e.preventDefault();

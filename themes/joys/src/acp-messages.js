@@ -20,10 +20,10 @@ class Reply extends React.Component {
       user: ""
     };
   }
-  componentWillReceiveProps(nextProps) {
-    let data = nextProps.data;
+  static getDerivedStateFromProps(props, state) {
+    let data = props.data;
     if (data) {
-      this.setState({
+      return {
         b_username: data.b_username,
         id: data.id,
         ip: data.ip,
@@ -34,8 +34,9 @@ class Reply extends React.Component {
         uid: data.uid,
         uname: data.uname,
         user: data.user
-      });
+      };
     }
+    return null;
   }
   deleteReply = (e) => {
     e.preventDefault();

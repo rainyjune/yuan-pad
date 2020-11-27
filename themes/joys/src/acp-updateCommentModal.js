@@ -21,14 +21,15 @@ class UpdateCommentModal extends React.Component {
       update_content: '',
     };
   }
-  componentWillReceiveProps(nextProps) {
-    let commentData = nextProps.comment;
+  static getDerivedStateFromProps(props, state) {
+    let commentData = props.comment;
     if (commentData) {
-      this.setState({
+      return {
         mid: commentData.id,
         update_content: commentData.post_content
-      });
+      };
     }
+    return null;
   }
   handleSubmit = (e) => {
     e.preventDefault();

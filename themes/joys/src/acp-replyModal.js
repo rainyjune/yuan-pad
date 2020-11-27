@@ -23,15 +23,16 @@ class ReplyModal extends React.Component {
       r_time: ''
     };
   }
-  componentWillReceiveProps(nextProps) {
-    let commentData = nextProps.comment;
+  static getDerivedStateFromProps(props, state) {
+    let commentData = props.comment;
     if (commentData) {
-      this.setState({
+      return {
         rid: commentData.reply_id,
         pid: commentData.id,
         content: commentData.reply_content
-      });
+      };
     }
+    return null;
   }
   handleSubmit = (e) => {
     e.preventDefault();

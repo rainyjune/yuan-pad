@@ -24,15 +24,15 @@ class ACPConfig extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
   }
-  componentWillReceiveProps(nextProps) {
-    let propAppConfig = nextProps.appConfig;
+  static getDerivedStateFromProps(props, state) {
+    let propAppConfig = props.appConfig;
     let computedState = {};
     for (let i in propAppConfig) {
-      if (this.state.hasOwnProperty(i)) {
+      if (state.hasOwnProperty(i)) {
         computedState[i] = propAppConfig[i] === null ? 0 : propAppConfig[i];
       }
     }
-    this.setState(computedState);
+    return computedState;
   }
   handleSubmit = (e) => {
     debugger;
