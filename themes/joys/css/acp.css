@@ -174,4 +174,10 @@ tfoot button {
   margin-right: 5px;
 }
 
-/*# sourceMappingURL=acp.css.map */
+nav.navbar-default {
+  box-shadow: none;
+}
+
+.nav-pills > li.active > a, .nav-pills > li.active > a:hover, .nav-pills > li.active > a:focus {
+  background-color: #CCCCCC;
+}
