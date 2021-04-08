@@ -32,14 +32,18 @@ a:hover {
   *height: 1.73em;
 }
 #content .tabs li {
+  /*
   background: url(../images/tagleft.gif) no-repeat left bottom;
+  */
   list-style-type: none;
   float: left;
 }
 #content .tabs li a {
   padding: 0em 1em 0em 1em;
   color: #999999;
+  /*
   background: url(../images/tagright.gif) no-repeat right bottom;
+  */
   float: left;
   height: 1.7em;
   text-decoration: none;
@@ -54,7 +58,9 @@ a:hover {
   color: #000000;
 }
 #content .tagContent {
+  /*
   background: url(../images/bg.gif) repeat-x;
+  */
   border: #aecbd4 1px solid;
   padding: 0em 0em;
   background-color: #fff;
