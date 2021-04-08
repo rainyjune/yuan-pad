@@ -1,5 +1,7 @@
 @use 'base';
 
+$header-bgcolor: #333;
+
 @mixin transform($property) {
   -webkit-transform: $property;
   -ms-transform: $property;
@@ -66,7 +68,7 @@
   height: 30px;
   left: 0;
   top: 0;
-  background-color: #333333;
+  background-color: $header-bgcolor;
 
   padding: 0 5rem;
   color: #fff;
