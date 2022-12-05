@@ -329,7 +329,7 @@ function formatComments($data, $filter_words=true, $stripTags=true) {
     foreach ($data as &$_data) {
         if ($stripTags && ZFramework::app()->filter_type == constant('FILTER_TRIPTAGS')) {
             $_data['post_content'] = strip_tags($_data['post_content'], ZFramework::app()->allowed_tags);
-            $_data['reply_content'] = strip_tags($_data['reply_content'], ZFramework::app()->allowed_tags);
+            $_data['reply_content'] = strip_tags(isset($_data['reply_content']) ? $_data['reply_content'] : "", ZFramework::app()->allowed_tags);
         } else {
             $_data['post_content'] =  htmlentities($_data['post_content'],ENT_COMPAT,'UTF-8');
             $_data['reply_content'] = htmlentities($_data['reply_content'],ENT_COMPAT,'UTF-8');
