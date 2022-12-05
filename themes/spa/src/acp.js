@@ -1,6 +1,7 @@
 let React = require('react'),
     ReactDOM = require('react-dom');
 let Modal = require('react-modal');
+const createReactClass = require('create-react-class');
 
 let ACPLogin = require('./acp-login.js'),
     ACPTabHeader = require('./acp-tabHeader.js'),
@@ -10,7 +11,7 @@ let ACPLogin = require('./acp-login.js'),
     Progress = require('./progress.js'),
     OfflineWarning = require('./offlineMode.js');
 
-let ACPBox = React.createClass({
+let ACPBox = createReactClass({
   getInitialState() {
     return {
       loadingModalIsOpen: true,

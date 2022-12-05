@@ -4,8 +4,9 @@ let ACPOverview = require('./acp-overview.js'),
     ACPMessages = require('./acp-messages.js'),
     ACPIpConfig = require('./acp-ipconfig.js'),
     ACPUsers = require('./acp-users.js');
+const createReactClass = require('create-react-class');
 
-let ACPTabContent = React.createClass({
+let ACPTabContent = createReactClass({
   handleActiveChange(newTab) {
     this.refs.blackListPanel.loadBlackList();
     setTimeout(()=>{

@@ -1,5 +1,6 @@
 let React = require('react');
 let Modal = require('react-modal');
+const createReactClass = require('create-react-class');
 let dataProvider = require('./dataProvider.js');
 
 const customStyles = {
@@ -13,7 +14,7 @@ const customStyles = {
   }
 };
 
-let ReplyModal = React.createClass({
+let ReplyModal = createReactClass({
   getInitialState() {
     return {
       rid: '',

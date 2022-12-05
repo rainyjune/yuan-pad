@@ -1,6 +1,7 @@
 let React = require('react');
+const createReactClass = require('create-react-class');
 
-let SearchBar = React.createClass({
+let SearchBar = createReactClass({
   handleSearch(e) {
     e.preventDefault();
     let keyword = this.refs.s.value.trim();

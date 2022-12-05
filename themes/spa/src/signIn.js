@@ -1,4 +1,5 @@
 let React = require('react');
+const createReactClass = require('create-react-class');
 let dataProvider = require('./dataProvider.js');
 let SignInMixIn = require('./SignInMixin.js');
 let Modal = require('react-modal');
@@ -14,7 +15,7 @@ const customStyles = {
   }
 };
 
-let SignIn = React.createClass({
+let SignIn = createReactClass({
   mixins: [SignInMixIn], // Use the mixin
   getInitialState() {
     return {

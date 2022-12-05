@@ -1,5 +1,6 @@
 let React = require('react'),
     ReactDOM = require('react-dom');
+const createReactClass = require('create-react-class');
     
 let SearchBar = require('./searchBar.js'),
     CommentBox = require('./commentBox.js'),
@@ -9,7 +10,7 @@ let SearchBar = require('./searchBar.js'),
     Progress = require('./progress.js'),
     OfflineWarning = require('./offlineMode.js');
 
-let App = React.createClass({
+let App = createReactClass({
   getInitialState() {
     return {
       loadingModalIsOpen: true,

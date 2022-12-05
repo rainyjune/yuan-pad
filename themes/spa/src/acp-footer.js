@@ -1,6 +1,7 @@
 let React = require('react');
+const createReactClass = require('create-react-class');
 
-let ACPFooter = React.createClass({
+let ACPFooter = createReactClass({
   render() {
     if (this.props.user.user_type !== "admin") return null;
     return (

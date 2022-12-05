@@ -2,8 +2,9 @@ let React = require('react');
 let UserUpdateModal = require('./acp-userUpdateModal.js');
 let dataProvider = require('./dataProvider.js');
 let FormItemMixin = require('./formItemMixin.js');
+const createReactClass = require('create-react-class');
 
-let UserItem = React.createClass({
+let UserItem = createReactClass({
   /**
    * Tested 1.
    */
@@ -48,7 +49,7 @@ let UserItem = React.createClass({
   }
 });
 
-let ACPUser = React.createClass({
+let ACPUser = createReactClass({
   mixins: [FormItemMixin],
   /**
    * Tested 1.

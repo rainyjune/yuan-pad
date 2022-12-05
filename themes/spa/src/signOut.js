@@ -1,7 +1,8 @@
 let React = require('react');
+const createReactClass = require('create-react-class');
 let dataProvider = require('./dataProvider.js');
 
-let LogoutButton = React.createClass({
+let LogoutButton = createReactClass({
   handleSignOut(e) {
     e.preventDefault();
     dataProvider.signOut(() => {

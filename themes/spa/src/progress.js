@@ -1,5 +1,6 @@
 let React = require('react'),
     Modal = require('react-modal');
+const createReactClass = require('create-react-class');
 
 const customStyles = {
   content : {
@@ -13,7 +14,7 @@ const customStyles = {
 };
 
 
-let Progress = React.createClass({
+let Progress = createReactClass({
   render() {
     return (
       <Modal isOpen={this.props.loadingModalIsOpen} style={customStyles} >

@@ -1,4 +1,5 @@
 let React = require('react');
+const createReactClass = require('create-react-class');
 let Modal = require('react-modal');
 let dataProvider = require('./dataProvider.js');
 
@@ -13,7 +14,7 @@ const customStyles = {
   }
 };
 
-let SignUp = React.createClass({
+let SignUp = createReactClass({
   getInitialState() {
     return {
       errorMsg: '',

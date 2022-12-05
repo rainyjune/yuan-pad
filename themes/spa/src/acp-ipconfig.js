@@ -1,8 +1,9 @@
 let React = require('react');
 let dataProvider = require('./dataProvider.js');
 let FormItemMixin = require('./formItemMixin.js');
+const createReactClass = require('create-react-class');
 
-let IPItem = React.createClass({
+let IPItem = createReactClass({
   toggleItem() {
     this.props.onItemToggled(this.props.data);
   },
@@ -16,7 +17,7 @@ let IPItem = React.createClass({
   }
 });
 
-let ACPIpConfig = React.createClass({
+let ACPIpConfig = createReactClass({
   getInitialState() {
     return {
       IPs: []

@@ -1,7 +1,8 @@
 let React = require('react');
 let dataProvider = require('./dataProvider.js');
+const createReactClass = require('create-react-class');
 
-let Pagination = React.createClass({
+let Pagination = createReactClass({
   handleClick(e) {
     e.preventDefault();
     let pageNumber = e.target.getAttribute("data-pagenumber");
@@ -33,7 +34,7 @@ let Pagination = React.createClass({
   }
 });
 
-let CommentStatistics = React.createClass({
+let CommentStatistics = createReactClass({
   rawMarkup() {
     let pagenavText, text;
     if (this.props.commentListType === 1) {
@@ -68,7 +69,7 @@ let CommentStatistics = React.createClass({
   }
 });
 
-let CommentList = React.createClass({
+let CommentList = createReactClass({
   render() {
     let lang = this.props.lang,
         searchText = this.props.searchText,
@@ -95,7 +96,7 @@ let CommentList = React.createClass({
   }
 });
 
-let Reply = React.createClass({
+let Reply = createReactClass({
   rawMarkup() {
     let mapObj = {
       '{admin_name}': this.props.appConfig.admin,
@@ -109,7 +110,7 @@ let Reply = React.createClass({
   }
 });
 
-let Comment = React.createClass({
+let Comment = createReactClass({
   rawMarkup() {
     return { __html: this.props.children.toString() };
   },
@@ -136,7 +137,7 @@ let Comment = React.createClass({
   }
 });
 
-let Captcha = React.createClass({
+let Captcha = createReactClass({
   refreshCaptch(e) {
     e.preventDefault();
     this.refresh();
@@ -176,7 +177,7 @@ let Captcha = React.createClass({
   }
 });
 
-let CommentForm = React.createClass({
+let CommentForm = createReactClass({
   getInitialState() {
     return {userInputType: 'text', labelContent: "", username: 'anonymous', text: '', valid_code: ''};
   },
@@ -272,7 +273,7 @@ let CommentForm = React.createClass({
   }
 });
     
-let CommentBox = React.createClass({
+let CommentBox = createReactClass({
   render() {
     var props = {
       commentListType: this.props.commentListType,

@@ -3,8 +3,9 @@ let dataProvider = require('./dataProvider.js');
 let ReplyModal = require('./acp-replyModal.js');
 let CommentUpdateModal = require('./acp-updateCommentModal.js');
 let FormItemMixin = require('./formItemMixin.js');
+const createReactClass = require('create-react-class');
 
-let Reply = React.createClass({
+let Reply = createReactClass({
   getInitialState() {
     return {
       b_username: null,
@@ -60,7 +61,7 @@ let Reply = React.createClass({
   }
 });
 
-let Comment = React.createClass({
+let Comment = createReactClass({
   banIP(e) {
     let dom = e.target;
     e.preventDefault();
@@ -128,7 +129,7 @@ let Comment = React.createClass({
   }
 });
 
-let ACPMessages = React.createClass({
+let ACPMessages = createReactClass({
   mixins: [FormItemMixin],
   getInitialState() {
     return {

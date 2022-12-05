@@ -1,6 +1,7 @@
 let React = require('react');
 let Modal = require('react-modal');
 let dataProvider = require('./dataProvider.js');
+const createReactClass = require('create-react-class');
 
 const customStyles = {
   content : {
@@ -13,7 +14,7 @@ const customStyles = {
   }
 };
 
-let UpdateCommentModal = React.createClass({
+let UpdateCommentModal = createReactClass({
   getInitialState() {
     return {
       mid: '',

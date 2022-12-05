@@ -1,6 +1,7 @@
 let React = require('react');
+const createReactClass = require('create-react-class');
 
-let Offline = React.createClass({
+let Offline = createReactClass({
   render() {
     let prop = this.props;
     let offlineStyle = {

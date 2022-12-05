@@ -1,11 +1,12 @@
 let React = require('react');
+const createReactClass = require('create-react-class');
 
 let SignIn = require('./signIn.js'),
     SignUp = require('./signUp.js'),
     UpdateUser = require('./updateUser.js'),
     SignOutButton = require('./signOut.js');
 
-let Header = React.createClass({
+let Header = createReactClass({
   render() {
     let props = {
       user: this.props.user,

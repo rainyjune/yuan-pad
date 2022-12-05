@@ -2,6 +2,7 @@ let React = require('react');
 let dataProvider = require('./dataProvider.js');
 let SignInMixIn = require('./SignInMixin.js');
 let Modal = require('react-modal');
+const createReactClass = require('create-react-class');
 
 const customStyles = {
   content : {
@@ -14,7 +15,7 @@ const customStyles = {
   }
 };
 
-let ACPLogin = React.createClass({
+let ACPLogin = createReactClass({
   mixins: [SignInMixIn], // Use the mixin
   getInitialState() {
     return {

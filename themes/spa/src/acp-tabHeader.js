@@ -1,7 +1,9 @@
 let React = require('react'),
     dataProvider = require('./dataProvider.js');
 
-let ACPTabHeader = React.createClass({
+const createReactClass = require('create-react-class');
+
+let ACPTabHeader = createReactClass({
   getInitialState() {
     return {
       menuIsOpen: false

@@ -1,8 +1,9 @@
 let React = require('react');
 let dataProvider = require('./dataProvider.js');
 let LinkedStateMixin = require('react-addons-linked-state-mixin');
+const createReactClass = require('create-react-class');
 
-let ACPConfig = React.createClass({
+let ACPConfig = createReactClass({
   getInitialState() {
     return {
       board_name: '',
