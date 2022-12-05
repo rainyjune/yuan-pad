@@ -136,7 +136,7 @@ function gd_loaded()
 {
     if ( ! extension_loaded('gd'))
     {
-        if ( ! @dl('gd.so')) {
+        if (function_exists('dl') && ! @dl('gd.so')) {
             return FALSE;
         }
     }
