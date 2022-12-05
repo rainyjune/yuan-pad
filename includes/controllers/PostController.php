@@ -20,7 +20,7 @@ class PostController extends BaseController{
         $new_data_error_msg='';
         if ( !strlen(trim($_POST['user'])) || !strlen(trim($_POST['content']))) {
             $new_data_error_msg=t('FILL_NOT_COMPLETE');
-        } elseif(strlen($_POST['content']>580)) {
+        } elseif(strlen($_POST['content']) > 580) {
             $new_data_error_msg=t('WORDS_TOO_LONG');
         } elseif (ZFramework::app()->valid_code_open==1 && gd_loaded() && !$this->_verifyCode->check(@$_POST['valid_code'])) {
             $new_data_error_msg=t('CAPTCHA_WRONG');
