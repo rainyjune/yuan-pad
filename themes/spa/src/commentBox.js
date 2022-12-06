@@ -1,6 +1,7 @@
 let React = require('react');
 let dataProvider = require('./dataProvider.js');
 const createReactClass = require('create-react-class');
+const yuanjs = require('../build/yuan');
 
 let Pagination = createReactClass({
   handleClick(e) {
@@ -181,7 +182,7 @@ let CommentForm = createReactClass({
   getInitialState() {
     return {userInputType: 'text', labelContent: "", username: 'anonymous', text: '', valid_code: ''};
   },
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     let computedState = {};
     let propUser = nextProps.user;
     switch (propUser.user_type) {

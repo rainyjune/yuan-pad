@@ -1,0 +1,187 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`CommentBox renders correctly 1`] = `
+<div
+  className="commentBox"
+>
+  <h1>
+    Welcome to Our site
+  </h1>
+  <div
+    className="commentList"
+  >
+    <div
+      className="comment"
+    >
+      <span
+        className="commentAuthor"
+        dangerouslySetInnerHTML={
+          {
+            "__html": "admin",
+          }
+        }
+      />
+      <span
+        className="commentDate"
+      >
+        2022-12-05 22:44
+      </span>
+      <div
+        className="commentText"
+      >
+        <p
+          dangerouslySetInnerHTML={
+            {
+              "__html": "abc",
+            }
+          }
+        />
+      </div>
+    </div>
+    <div
+      className="comment"
+    >
+      <span
+        className="commentAuthor"
+        dangerouslySetInnerHTML={
+          {
+            "__html": "admin",
+          }
+        }
+      />
+      <span
+        className="commentDate"
+      >
+        2022-12-05 16:02
+      </span>
+      <div
+        className="commentText"
+      >
+        <p
+          dangerouslySetInnerHTML={
+            {
+              "__html": "k",
+            }
+          }
+        />
+      </div>
+      <div
+        className="reply"
+        dangerouslySetInnerHTML={
+          {
+            "__html": "<font color="red"> undefined replied at 12-05 16:22 :</font> k reply",
+          }
+        }
+      />
+    </div>
+    <div
+      className="comment"
+    >
+      <span
+        className="commentAuthor"
+        dangerouslySetInnerHTML={
+          {
+            "__html": "rainyjune",
+          }
+        }
+      />
+      <span
+        className="commentDate"
+      >
+        2022-12-05 15:57
+      </span>
+      <div
+        className="commentText"
+      >
+        <p
+          dangerouslySetInnerHTML={
+            {
+              "__html": "Welcome to our site.",
+            }
+          }
+        />
+      </div>
+    </div>
+  </div>
+  <div
+    className="statistics"
+  >
+    
+    <p
+      dangerouslySetInnerHTML={
+        {
+          "__html": "We have <span id="totalNum"> 3 </span> post(s), <span id="totalPages"> 1 </span> page(s)",
+        }
+      }
+    />
+    
+  </div>
+  <form
+    className="commentForm form-horizontal"
+    onSubmit={[Function]}
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="col-sm-2 col-lg-2 control-label"
+        htmlFor="inputUser"
+      >
+        NickName
+      </label>
+      <div
+        className="col-sm-5 col-lg-5"
+      >
+        <input
+          className="form-control"
+          id="inputUser"
+          maxLength="10"
+          onChange={[Function]}
+          type="text"
+          value="anonymous"
+        />
+        <label
+          className="control-label"
+        >
+          
+        </label>
+      </div>
+    </div>
+    <div
+      className="form-group"
+    >
+      <label
+        className="col-sm-2 col-lg-2 control-label"
+        htmlFor="inputContent"
+      >
+        Content
+      </label>
+      <div
+        className="col-sm-10 col-lg-10"
+      >
+        <textarea
+          className="form-control"
+          id="inputContent"
+          onChange={[Function]}
+          rows="3"
+          value=""
+        />
+      </div>
+    </div>
+    <div
+      className="form-group"
+    >
+      <div
+        className="col-sm-offset-2 col-sm-10 col-lg-offset-2 col-lg-10"
+      >
+        <button
+          className="btn btn-default"
+          type="submit"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+`;

@@ -1,3 +1,5 @@
+const yuanjs = require('../build/yuan');
+
 /**
  * Tested 1.
  */
