@@ -1,4 +1,4 @@
-const yuanjs = require('../build/yuan');
+const yuanjs = require('@rainyjune/yuanjs');
 
 /**
  * Tested 1.

@@ -1,7 +1,7 @@
 let React = require('react');
 let dataProvider = require('./dataProvider.js');
 const createReactClass = require('create-react-class');
-const yuanjs = require('../build/yuan');
+const yuanjs = require('@rainyjune/yuanjs');
 
 let Pagination = createReactClass({
   handleClick(e) {
