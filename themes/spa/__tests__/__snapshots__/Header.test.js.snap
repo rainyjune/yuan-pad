@@ -1,0 +1,79 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render Header correctly 1`] = `
+<div
+  className="header"
+>
+  <div>
+    <div
+      className="signIn"
+    >
+      <a
+        className="btn btn-default"
+        href="javascript:void(0);"
+        onClick={[Function]}
+        role="button"
+      >
+        Login
+      </a>
+    </div>
+     
+    <div
+      className="signUp"
+    >
+      <a
+        className="btn btn-default"
+        href="#"
+        onClick={[Function]}
+        role="button"
+      >
+        Register
+      </a>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Render Header correctly 2`] = `
+<div
+  className="header"
+>
+  <a
+    className="btn btn-default signOutButton"
+    href="#"
+    onClick={[Function]}
+    role="button"
+  >
+    Logout
+  </a>
+</div>
+`;
+
+exports[`Render Header correctly 3`] = `
+<div
+  className="header"
+>
+  <div>
+    <div
+      className="updateUser"
+    >
+      <a
+        className="btn btn-default"
+        href="javascript:void(0);"
+        onClick={[Function]}
+        role="button"
+      >
+        Update
+      </a>
+    </div>
+    <a
+      className="btn btn-default signOutButton"
+      href="#"
+      onClick={[Function]}
+      role="button"
+    >
+      Logout
+    </a>
+  </div>
+</div>
+`;
