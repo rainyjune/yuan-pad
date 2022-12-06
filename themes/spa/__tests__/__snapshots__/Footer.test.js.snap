@@ -1,0 +1,124 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer renders correctly 1`] = `
+<footer>
+  <p>
+    Copyright © MySite
+     
+    <a
+      href="mailto:rainyjune@live.cn"
+    >
+      Email
+    </a>
+     
+    <span
+      dangerouslySetInnerHTML={
+        {
+          "__html": "",
+        }
+      }
+    />
+  </p>
+  <p>
+    Powered by 
+    <a
+      href="https://github.com/rainyjune/yuan-pad"
+      target="_blank"
+      title="Find More"
+    >
+      YuanPad
+    </a>
+     
+    <a
+      href="index.php?action=rss"
+    >
+      <img
+        alt="rss"
+        src="misc/images/rss-icon.png"
+      />
+    </a>
+  </p>
+</footer>
+`;
+
+exports[`Footer renders correctly 2`] = `
+<footer>
+  <p>
+    Copyright © MySite
+     
+    <a
+      href="mailto:rainyjune@live.cn"
+    >
+      Email
+    </a>
+     
+    <span
+      dangerouslySetInnerHTML={
+        {
+          "__html": "",
+        }
+      }
+    />
+  </p>
+  <p>
+    Powered by 
+    <a
+      href="https://github.com/rainyjune/yuan-pad"
+      target="_blank"
+      title="Find More"
+    >
+      YuanPad
+    </a>
+     
+    <a
+      href="index.php?action=rss"
+    >
+      <img
+        alt="rss"
+        src="misc/images/rss-icon.png"
+      />
+    </a>
+  </p>
+</footer>
+`;
+
+exports[`Footer renders correctly 3`] = `
+<footer>
+  <p>
+    Copyright © MySite
+     
+    <a
+      href="mailto:rainyjune@live.cn"
+    >
+      Email
+    </a>
+     
+    <span
+      dangerouslySetInnerHTML={
+        {
+          "__html": "<a href='index.php?action=control_panel'>Admin</a>",
+        }
+      }
+    />
+  </p>
+  <p>
+    Powered by 
+    <a
+      href="https://github.com/rainyjune/yuan-pad"
+      target="_blank"
+      title="Find More"
+    >
+      YuanPad
+    </a>
+     
+    <a
+      href="index.php?action=rss"
+    >
+      <img
+        alt="rss"
+        src="misc/images/rss-icon.png"
+      />
+    </a>
+  </p>
+</footer>
+`;
