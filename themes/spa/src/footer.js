@@ -22,6 +22,7 @@ let AppFooter = createReactClass({
           Powered by <a href="https://github.com/rainyjune/yuan-pad" target="_blank" title="Find More">YuanPad</a>&nbsp;
           <a href="index.php?action=rss"><img src="misc/images/rss-icon.png" alt="rss" /></a>
         </p>
+        <p>sss</p>
       </footer>
     );
   }

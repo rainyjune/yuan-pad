@@ -1,13 +1,13 @@
-let React = require('react'),
-    ReactDOM = require('react-dom');
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-let SearchBar = require('./searchBar.js'),
-    CommentBox = require('./commentBox.js'),
-    Header = require('./header.js'),
-    Footer = require('./footer.js'),
-    dataProvider = require('./dataProvider.js'),
-    Progress = require('./progress.js'),
-    OfflineWarning = require('./offlineMode.js');
+import SearchBar from './searchBar.js';
+import CommentBox from './commentBox.js';
+import Header from './header.js';
+import Footer from './footer.js';
+import dataProvider from './dataProvider.js';
+import Progress from './progress.js';
+import OfflineWarning from './offlineMode.js';
 
 class App extends React.Component {
   constructor(props) {
@@ -24,6 +24,7 @@ class App extends React.Component {
       translations: {}
     };
     this._isMounted = false;
+    this.setCurrentUser = this.setCurrentUser.bind(this);
   }
 
   // Get current user identity from server.

@@ -1,17 +1,16 @@
-let React = require('react');
-const createReactClass = require('create-react-class');
+import React from 'react';
 
-let SearchBar = createReactClass({
+class SearchBar extends React.Component {
   handleSearch(e) {
     e.preventDefault();
     let keyword = this.refs.s.value.trim();
     if (!keyword) return ;
     this.props.onSubmit(keyword);
     return false;
-  },
+  }
   handleChange() {
     this.props.onUserInput(this.refs.s.value.trim());
-  },
+  }
   render() {
     return (
       <div className="searchbar">
@@ -36,6 +35,6 @@ let SearchBar = createReactClass({
       </div>
     );
   }
-});
+}
 
-module.exports = SearchBar;
+export default SearchBar;

@@ -1,8 +1,6 @@
-let React = require('react');
-const createReactClass = require('create-react-class');
-let dataProvider = require('./dataProvider.js');
-let SignInMixIn = require('./SignInMixin.js');
-let Modal = require('react-modal');
+import React from 'react';
+import Modal from 'react-modal';
+import dataProvider from './dataProvider';
 
 const customStyles = {
   content : {
@@ -15,14 +13,45 @@ const customStyles = {
   }
 };
 
-let SignIn = createReactClass({
-  mixins: [SignInMixIn], // Use the mixin
-  getInitialState() {
-    return {
+class SignIn extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       errorMsg: '',
       modalIsOpen: false
     };
-  },
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.handleSignIn = this.handleSignIn.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this._isMounted = false;
+  }
+  componentDidMount() {
+    this._isMounted = true;
+  }
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+  openModal() {
+    this.setState({modalIsOpen: true});
+  }
+  closeModal() {
+    this.setState({modalIsOpen: false});
+  }
+  handleSignIn(loginData) {
+    dataProvider.signIn(loginData, res => {
+      if (this._isMounted) {
+        if (res.statusCode === 200) {
+          this.setState({errorMsg: '', modalIsOpen: false});
+          this.props.onCurrentUserUpdated(res.response);
+        } else if (res.statusCode === 304) {
+          // The user had signed in before.
+        } else {
+          this.setState({errorMsg: res.response});
+        }
+      }
+    });
+  }
   handleSubmit(e) {
     e.preventDefault();
     let user = this.refs.user.value.trim(),
@@ -30,7 +59,7 @@ let SignIn = createReactClass({
     if (!user || !pwd) return;
     this.handleSignIn({ user, password: pwd});
     return false;
-  },
+  }
   render() {
     let language = this.props.lang,
         state = this.state;
@@ -55,6 +84,6 @@ let SignIn = createReactClass({
       </div>
     );
   }
-});
+}
 
-module.exports = SignIn;
+export default SignIn;

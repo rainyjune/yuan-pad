@@ -1,12 +1,11 @@
-let React = require('react');
-const createReactClass = require('create-react-class');
+import React from 'react';
 
-let SignIn = require('./signIn.js'),
-    SignUp = require('./signUp.js'),
-    UpdateUser = require('./updateUser.js'),
-    SignOutButton = require('./signOut.js');
+import SignIn from './signIn.js';
+import SignUp from './signUp.js';
+import UpdateUser from './updateUser.js';
+import SignOutButton from './signOut.js';
 
-let Header = createReactClass({
+class Header extends React.Component {
   render() {
     let props = {
       user: this.props.user,
@@ -29,6 +28,6 @@ let Header = createReactClass({
       </div>
     );
   }
-});
+}
 
 module.exports = Header;
