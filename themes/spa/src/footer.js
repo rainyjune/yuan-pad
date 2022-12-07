@@ -1,7 +1,6 @@
-let React = require('react');
-const createReactClass = require('create-react-class');
+import React from 'react';
 
-let AppFooter = createReactClass({
+class AppFooter extends React.Component {
   ACPMarkup() {
     let ACP = (this.props.user && this.props.user.user_type === "admin") ? 
               "<a href='index.php?action=control_panel'>"+ this.props.lang.ACP+"</a>" 
@@ -9,7 +8,7 @@ let AppFooter = createReactClass({
     return {
       __html: ACP
     };
-  },
+  }
   render() {
     return (
       <footer>
@@ -22,10 +21,9 @@ let AppFooter = createReactClass({
           Powered by <a href="https://github.com/rainyjune/yuan-pad" target="_blank" title="Find More">YuanPad</a>&nbsp;
           <a href="index.php?action=rss"><img src="misc/images/rss-icon.png" alt="rss" /></a>
         </p>
-        <p>sss</p>
       </footer>
     );
   }
-});
+}
 
-module.exports = AppFooter;
+export default AppFooter;

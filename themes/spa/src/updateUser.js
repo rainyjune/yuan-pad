@@ -1,7 +1,6 @@
-let React = require('react');
-const createReactClass = require('create-react-class');
-let Modal = require('react-modal');
-let dataProvider = require('./dataProvider.js');
+import React from 'react';
+import Modal from 'react-modal';
+import dataProvider from './dataProvider.js';
 
 const customStyles = {
   content : {
@@ -14,19 +13,30 @@ const customStyles = {
   }
 };
 
-let UserUpdate = createReactClass({
-  getInitialState() {
-    return {
+class UserUpdate extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       errorMsg: '',
       modalIsOpen: false
     };
-  },
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this._isMounted = false;
+  }
+  componentDidMount() {
+    this._isMounted = true;
+  }
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
   openModal() {
     this.setState({modalIsOpen: true});
-  },
+  }
   closeModal() {
     this.setState({modalIsOpen: false});
-  },
+  }
   handleSubmit(e) {
     e.preventDefault();
     let uid = this.refs.uid.value.trim(),
@@ -35,7 +45,7 @@ let UserUpdate = createReactClass({
         email = this.refs.email.value.trim();
     if (!uid || !user || !email) return;
     dataProvider.updateUser({ uid, user, pwd, email},  res => {
-      if (this.isMounted()) {
+      if (this._isMounted) {
         if (res.statusCode === 200) {
           this.setState({errorMsg: '', modalIsOpen: false});
           this.props.onCurrentUserUpdated(res.response);
@@ -46,7 +56,7 @@ let UserUpdate = createReactClass({
       }
     });
     return false;
-  },
+  }
   render() {
     let language = this.props.lang,
         state = this.state,
@@ -78,6 +88,6 @@ let UserUpdate = createReactClass({
       </div>
     );
   }
-});
+}
 
-module.exports = UserUpdate;
+export default UserUpdate;

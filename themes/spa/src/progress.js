@@ -1,6 +1,5 @@
-let React = require('react'),
-    Modal = require('react-modal');
-const createReactClass = require('create-react-class');
+import React from 'react';
+import Modal from 'react-modal';
 
 const customStyles = {
   content : {
@@ -13,8 +12,7 @@ const customStyles = {
   }
 };
 
-
-let Progress = createReactClass({
+class Progress extends React.Component {
   render() {
     return (
       <Modal isOpen={this.props.loadingModalIsOpen} style={customStyles} >
@@ -22,6 +20,6 @@ let Progress = createReactClass({
       </Modal>
     );
   }
-});
+}
 
-module.exports = Progress;
+export default Progress;

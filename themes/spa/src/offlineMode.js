@@ -1,7 +1,6 @@
-let React = require('react');
-const createReactClass = require('create-react-class');
+import React from 'react';
 
-let Offline = createReactClass({
+class Offline extends React.Component {
   render() {
     let prop = this.props;
     let offlineStyle = {
@@ -11,6 +10,6 @@ let Offline = createReactClass({
       <p className="bg-warning" style={offlineStyle}>{prop.lang.OFFLINE_WARNING}</p>
     );
   }
-});
+}
 
-module.exports = Offline;
+export default Offline;

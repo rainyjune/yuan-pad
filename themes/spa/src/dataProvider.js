@@ -528,7 +528,7 @@ function getIPBlackList(successCallback, errorCallback) {
   });
 }
 
-module.exports = {
+export default {
   banIP,
   createPost,
   createReply,

@@ -1,17 +1,20 @@
-let React = require('react');
-const createReactClass = require('create-react-class');
-let dataProvider = require('./dataProvider.js');
+import React from 'react';
+import dataProvider from './dataProvider.js';
 
-let LogoutButton = createReactClass({
+class LogoutButton extends React.Component{
+  constructor(props) {
+    super(props);
+    this.handleSignOut = this.handleSignOut.bind(this);
+  }
   handleSignOut(e) {
     e.preventDefault();
     dataProvider.signOut(() => {
       this.props.onCurrentUserUpdated({});
     });
-  },
+  }
   render() {
     return (<a role="button" className="btn btn-default signOutButton" href='#' onClick={this.handleSignOut}>{this.props.lang.LOGOUT}</a>);
   }
-});
+}
 
-module.exports = LogoutButton;
+export default LogoutButton;
