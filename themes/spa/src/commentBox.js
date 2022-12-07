@@ -1,6 +1,5 @@
 import React from 'react';
 import dataProvider from './dataProvider.js';
-import createReactClass from 'create-react-class';
 const yuanjs = require('@rainyjune/yuanjs');
 
 class Pagination extends React.Component {

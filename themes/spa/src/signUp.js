@@ -1,7 +1,6 @@
-let React = require('react');
-const createReactClass = require('create-react-class');
-let Modal = require('react-modal');
-let dataProvider = require('./dataProvider.js');
+import React from 'react';
+import Modal from 'react-modal';
+import dataProvider from './dataProvider.js';
 
 const customStyles = {
   content : {
@@ -14,21 +13,32 @@ const customStyles = {
   }
 };
 
-let SignUp = createReactClass({
-  getInitialState() {
-    return {
+class SignUp extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       errorMsg: '',
       modalIsOpen: false
     };
-  },
+    this.openModal = this.openModal.bind(this);
+    this.closeModal = this.closeModal.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this._isMounted = false;
+  }
+  componentDidMount() {
+    this._isMounted = true;
+  }
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
   openModal(e) {
     e && e.preventDefault();
     this.setState({modalIsOpen: true});
-  },
+  }
   closeModal(e) {
     e && e.preventDefault();
     this.setState({modalIsOpen: false});
-  },
+  }
   handleSubmit(e) {
     e.preventDefault();
     let user = this.refs.user.value.trim(),
@@ -37,7 +47,7 @@ let SignUp = createReactClass({
     if (!user || !pwd || !email) return;
     
     dataProvider.signUp({user, pwd, email}, res => {
-      if (this.isMounted()) {
+      if (this._isMounted) {
         if (res.statusCode !== 200) {
           this.setState({errorMsg: res.response});
         } else {
@@ -47,7 +57,7 @@ let SignUp = createReactClass({
       }
     });
     return false;
-  },
+  }
   render() {
     let language = this.props.lang,
         state = this.state;
@@ -80,6 +90,6 @@ let SignUp = createReactClass({
       </div>
     );
   }
-});
+}
 
-module.exports = SignUp;
+export default SignUp;
