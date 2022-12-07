@@ -1,7 +1,6 @@
 let React = require('react'),
     ReactDOM = require('react-dom');
-const createReactClass = require('create-react-class');
-    
+
 let SearchBar = require('./searchBar.js'),
     CommentBox = require('./commentBox.js'),
     Header = require('./header.js'),
@@ -10,9 +9,10 @@ let SearchBar = require('./searchBar.js'),
     Progress = require('./progress.js'),
     OfflineWarning = require('./offlineMode.js');
 
-let App = createReactClass({
-  getInitialState() {
-    return {
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       loadingModalIsOpen: true,
       appConfig: {},
       comments: [],
@@ -23,11 +23,9 @@ let App = createReactClass({
       searchText: '', // The search keyword
       translations: {}
     };
-  },
-  /**
-   * Tested 1.
-   *
-   */
+    this._isMounted = false;
+  }
+
   // Get current user identity from server.
   getUserInfo() {
     dataProvider.getUserInfo(res => {
@@ -35,20 +33,18 @@ let App = createReactClass({
       if (res.statusCode !== 200) {
         return ;
       }
-      if (this.isMounted()) {
+      if (this._isMounted) {
         this.setState({currentUser: res.response});
         this.loadCommentsFromServer();
       }
     }, function(){
     }.bind(this));
-  },
-  /**
-   * Test 1
-   */
+  }
+
   // Load comments to be displayed on page by page number.
   loadCommentsFromServer() {
     dataProvider.loadCommentsFromServer(this.state.currentPage, res => {
-        if (this.isMounted()) {
+        if (this._isMounted) {
           this.setState({
             comments: res.response.comments,
             commentsTotalNumber: res.response.total,
@@ -56,15 +52,12 @@ let App = createReactClass({
           });
         }
     });
-  },
-  /**
-   * Tested 1.
-   *
-   */
+  }
+
   // Get comments from server according to the keyword user has entered.
   handleSearch(keyword) {
     dataProvider.search(keyword, res => {
-        if (this.isMounted()) {
+        if (this._isMounted) {
           this.setState({
             comments: res.response.comments,
             commentsTotalNumber: res.response.total,
@@ -72,17 +65,16 @@ let App = createReactClass({
           });
         }
     });
-  },
-  /**
-   * Tested 1.
-   */
+  }
+
   // When the component is rendered, load the site configuration from server, and then try to indentify current user.
   componentDidMount() {
+    this._isMounted = true;
     dataProvider.getAppConfig(res => {
       if (res.statusCode === 200) {
         let siteConfig = res.response;
         dataProvider.getTranslations(res => {
-          if (this.isMounted()) {
+          if (this._isMounted) {
             this.setState({translations: res.response, appConfig: siteConfig});
           }
           this.getUserInfo();
@@ -92,27 +84,29 @@ let App = createReactClass({
         alert(res.statusText);
       }
     });
-  },
-  /**
-   * Tested 1.
-   */
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
+
   // Reload comments from server if the `currentPage` state changed.
   handlePageChange(pageNumber) {
     pageNumber = parseInt(pageNumber);
     this.setState({currentPage: pageNumber}, this.loadCommentsFromServer);
-  },
-  /**
-   * Tested 1.
-   */
+  }
+
   // Update the `searchText` state.
   handleKeywordInput(searchText) {
     this.setState({
       searchText: searchText
     });
-  },
+  }
+
   setCurrentUser(userData) {
     this.setState({currentUser: userData});
-  },
+  }
+
   render() {
     let state = this.state;
     let props = {
@@ -158,7 +152,7 @@ let App = createReactClass({
       </div>
     );
   }
-});
+}
 
 ReactDOM.render(
   <App />,
