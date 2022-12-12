@@ -65,8 +65,8 @@ class SignIn extends React.Component {
         state = this.state;
     return (
       <div className="signIn">
-        <a href='javascript:void(0);' onClick={this.openModal} role="button" className="btn btn-default">{language.LOGIN}</a>
-        <Modal isOpen={state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles}>
+        <a href='#' onClick={this.openModal} role="button" className="btn btn-default">{language.LOGIN}</a>
+        <Modal ariaHideApp={false} isOpen={state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles}>
           <p>{state.errorMsg}</p>
           <button onClick={this.closeModal}>close</button>
           <form onSubmit={this.handleSubmit} action="#" method="post">

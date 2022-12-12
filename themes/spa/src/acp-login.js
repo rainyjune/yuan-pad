@@ -46,7 +46,7 @@ let ACPLogin = createReactClass({
     };
     return (
       <div className="signIn">
-        <Modal isOpen={state.modalIsOpen} style={customStyles}>
+        <Modal ariaHideApp={false} isOpen={state.modalIsOpen} style={customStyles}>
           <div style={alertStyle} className="alert alert-danger" role="alert">
             <button onClick={this.dismissAlert} type="button" className="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <p>{state.errorMsg}</p>

@@ -49,7 +49,7 @@ let ReplyModal = createReactClass({
   },
   render(){
     return (
-      <Modal isOpen={this.props.modalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
+      <Modal ariaHideApp={false} isOpen={this.props.modalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
         <div>{this.props.modalErrorMsg}</div>
         <form onSubmit={this.handleSubmit} action="#" method="post">
           <textarea value={this.state.content} onChange={this.changeContent}></textarea>

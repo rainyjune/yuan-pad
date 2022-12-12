@@ -15,7 +15,7 @@ const customStyles = {
 class Progress extends React.Component {
   render() {
     return (
-      <Modal isOpen={this.props.loadingModalIsOpen} style={customStyles} >
+      <Modal ariaHideApp={false} isOpen={this.props.loadingModalIsOpen} style={customStyles} >
         <progress></progress>
       </Modal>
     );

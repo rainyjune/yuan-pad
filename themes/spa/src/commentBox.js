@@ -53,7 +53,7 @@ class CommentStatistics extends React.Component {
   render() {
     return (
       <div className="statistics">
-        {(this.props.commentListType === 2) ? <a href="javascript:void(0)" onClick={this.props.onCloseSearch}>Close</a> : ''}
+        {(this.props.commentListType === 2) ? <a href="#" onClick={this.props.onCloseSearch}>Close</a> : ''}
         <p dangerouslySetInnerHTML={this.rawMarkup()} />
         { (!parseInt(this.props.appConfig.page_on) || this.props.commentListType !== 1) ? '' :
           <Pagination 

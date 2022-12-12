@@ -56,7 +56,7 @@ let UserUpdateModal = createReactClass({
   render(){
     let lang = this.props.lang;
     return (
-      <Modal isOpen={this.props.modalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
+      <Modal ariaHideApp={false} isOpen={this.props.modalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
         <div>{this.props.errorMsg}</div>
         <form onSubmit={this.handleSubmit} action="index.php?controller=user&amp;action=update&amp;uid=<?php echo $_GET['uid'];?>" method="post">
           <div className="inputbox">

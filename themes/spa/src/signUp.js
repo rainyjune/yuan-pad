@@ -65,7 +65,7 @@ class SignUp extends React.Component {
     return (
       <div className="signUp">
         <a role="button" className="btn btn-default" href='#' onClick={this.openModal}>{language.REGISTER}</a>
-        <Modal isOpen={state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles}>
+        <Modal ariaHideApp={false} isOpen={state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles}>
           <p>{state.errorMsg}</p>
           <button onClick={this.closeModal}>close</button>
           <form onSubmit={this.handleSubmit} action="#" method="post">
