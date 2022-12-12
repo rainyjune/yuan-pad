@@ -3,6 +3,12 @@ import UserUpdateModal from './acp-userUpdateModal.js';
 import dataProvider from './dataProvider.js';
 
 class UserItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.toggleItem = this.toggleItem.bind(this);
+    this.updateUser = this.updateUser.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+  }
   /**
    * Tested 1.
    */
@@ -48,6 +54,23 @@ class UserItem extends React.Component {
 }
 
 class ACPUser extends React.Component {
+  /**
+   * Tested 1.
+   */
+  constructor(props) {
+    super(props)
+    this.state = {
+      users: [],
+      updateErrorMsg: '',
+      updateModalIsOpen: false,
+      updatedModalUserData: null,
+    };
+    this.toggleInputClicked = this.toggleInputClicked.bind(this);
+    this.handleToggleItem = this.handleToggleItem.bind(this);
+    this.handleDeleteMulti = this.handleDeleteMulti.bind(this);
+    this.openUserUpdateModal = this.openUserUpdateModal.bind(this);
+    this.handleUpdateSubmit = this.handleUpdateSubmit.bind(this);
+  }
   addSelectedFlag(arr) {
     if (Array.isArray(arr)) {
       arr.forEach((currentValue, index) => {
@@ -106,18 +129,6 @@ class ACPUser extends React.Component {
       }
     });
     return arr;
-  }
-  /**
-   * Tested 1.
-   */
-  constructor(props) {
-    super(props)
-    this.state = {
-      users: [],
-      updateErrorMsg: '',
-      updateModalIsOpen: false,
-      updatedModalUserData: null,
-    };
   }
   getMixinAttr() {
     return 'users';

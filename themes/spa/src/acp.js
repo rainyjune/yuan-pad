@@ -24,6 +24,7 @@ class ACPBox extends React.Component {
     this.updateActiveTab = this.updateActiveTab.bind(this);
     this.handleConfigUpdate = this.handleConfigUpdate.bind(this);
     this.handleLogout = this.handleLogout.bind(this);
+    this.handleCommentDeleted = this.handleCommentDeleted.bind(this);
   }
   /**
    * Load application data after we verified the root user.

@@ -21,6 +21,9 @@ class UserUpdateModal extends React.Component {
       pwd: '',
       email: ''
     };
+    this.updateEmail = this.updateEmail.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.updatePassword = this.updatePassword.bind(this);
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.userData) {

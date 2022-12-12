@@ -5,6 +5,7 @@ class IPItem extends React.Component {
   constructor(props) {
     super(props);
     this.toggleItem = this.toggleItem.bind(this);
+    this.toggleInputClicked = this.toggleInputClicked.bind(this);
   }
   toggleItem() {
     this.props.onItemToggled(this.props.data);
@@ -84,6 +85,9 @@ class ACPIpConfig extends React.Component {
     this.state = {
       IPs: []
     };
+    this.toggleInputClicked = this.toggleInputClicked.bind(this);
+    this.handleToggleItem = this.handleToggleItem.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   addSelectedFlag(arr) {
     if (Array.isArray(arr)) {

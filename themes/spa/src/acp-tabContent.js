@@ -6,6 +6,10 @@ import ACPIpConfig from './acp-ipconfig.js';
 import ACPUsers from './acp-users.js';
 
 class ACPTabContent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleActiveChange = this.handleActiveChange.bind(this);
+  }
   handleActiveChange(newTab) {
     this.refs.blackListPanel.loadBlackList();
     setTimeout(()=>{

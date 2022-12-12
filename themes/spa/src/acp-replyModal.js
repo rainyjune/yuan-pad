@@ -22,6 +22,8 @@ class ReplyModal extends React.Component {
       content: '',
       r_time: ''
     };
+    this.changeContent = this.changeContent.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentWillReceiveProps(nextProps) {
     let commentData = nextProps.comment;

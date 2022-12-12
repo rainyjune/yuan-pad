@@ -61,6 +61,13 @@ class Reply extends React.Component {
 }
 
 class Comment extends React.Component {
+  constructor(props) {
+    super(props);
+    this.deleteComment = this.deleteComment.bind(this);
+    this.replyComment = this.replyComment.bind(this);
+    this.updateComment = this.updateComment.bind(this);
+    this.banIP = this.banIP.bind(this);
+  }
   banIP(e) {
     let dom = e.target;
     e.preventDefault();
@@ -197,6 +204,11 @@ class ACPMessages extends React.Component {
       modalCommentModel: null,
       modalErrorMsg: ''
     };
+    this.handleCommentDeleted = this.handleCommentDeleted.bind(this);
+    this.handleReplyComment = this.handleReplyComment.bind(this);
+    this.handleReplyFormSubmitted = this.handleReplyFormSubmitted.bind(this);
+    this.handleUpdateComment = this.handleUpdateComment.bind(this);
+    this.handleCommentUpdated = this.handleCommentUpdated.bind(this);
   }
   getMixinAttr() {
     return 'comments';

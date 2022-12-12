@@ -20,6 +20,8 @@ class UpdateCommentModal extends React.Component {
       mid: '',
       update_content: '',
     };
+    this.changeContent = this.changeContent.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
   componentWillReceiveProps(nextProps) {
     let commentData = nextProps.comment;

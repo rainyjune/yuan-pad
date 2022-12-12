@@ -3,6 +3,10 @@ import dataProvider from './dataProvider.js';
 const yuanjs = require('@rainyjune/yuanjs');
 
 class Pagination extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleClick = this.handleClick.bind(this);
+  }
   handleClick(e) {
     e.preventDefault();
     let pageNumber = e.target.getAttribute("data-pagenumber");
@@ -138,6 +142,10 @@ class Comment extends React.Component {
 }
 
 class Captcha extends React.Component {
+  constructor(props) {
+    super(props);
+    this.refreshCaptch = this.refreshCaptch.bind(this);
+  }
   refreshCaptch(e) {
     e.preventDefault();
     this.refresh();
