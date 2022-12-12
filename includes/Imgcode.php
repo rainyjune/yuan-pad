@@ -65,7 +65,7 @@ class FLEA_Helper_ImgCode
             if ($length <= 0) { $length = 4; }
             $code = '';
             list($usec, $sec) = explode(" ", microtime());
-            srand($sec + $usec * 100000);
+            @srand($sec + $usec * 100000);
             $len = strlen($seed) - 1;
             for ($i = 0; $i < $length; $i++) {
                 $code .= substr($seed, rand(0, $len), 1);

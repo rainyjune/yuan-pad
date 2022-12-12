@@ -332,7 +332,7 @@ function formatComments($data, $filter_words=true, $stripTags=true) {
             $_data['reply_content'] = strip_tags(isset($_data['reply_content']) ? $_data['reply_content'] : "", ZFramework::app()->allowed_tags);
         } else {
             $_data['post_content'] =  htmlentities($_data['post_content'],ENT_COMPAT,'UTF-8');
-            $_data['reply_content'] = htmlentities($_data['reply_content'],ENT_COMPAT,'UTF-8');
+            $_data['reply_content'] = htmlentities(isset($_data['reply_content']) ? $_data['reply_content'] : "",ENT_COMPAT,'UTF-8');
         }
         if($filter_words) {
             $_data['post_content']=filter_words($_data['post_content']);

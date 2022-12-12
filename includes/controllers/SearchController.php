@@ -14,7 +14,7 @@ class SearchController extends BaseController{
         $result_array=$this->_db->queryAll($sql);
         $numRows = count($result_array);
         $statusCode = $numRows ? 200 : 404;
-        $result['comments'] = $result_array;
+        $result['comments'] = formatComments($result_array);
         $result['total'] = $numRows;
         exitWithResponse($statusCode, $result);
     }
