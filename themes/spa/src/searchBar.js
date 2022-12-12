@@ -1,6 +1,11 @@
 import React from 'react';
 
 class SearchBar extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
+  }
   handleSearch(e) {
     e.preventDefault();
     let keyword = this.refs.s.value.trim();
@@ -28,7 +33,7 @@ class SearchBar extends React.Component {
               className="form-control" 
             />
           </div>
-          <button type="button" className="btn btn-default btn-sm" aria-label="Submit">
+          <button type="button" className="btn btn-default btn-sm" aria-label="Submit" onClick={this.handleSearch}>
             <span className="glyphicon glyphicon-search" aria-hidden="true"></span>
           </button>
         </form>

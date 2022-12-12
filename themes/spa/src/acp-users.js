@@ -70,6 +70,7 @@ class ACPUser extends React.Component {
     this.handleDeleteMulti = this.handleDeleteMulti.bind(this);
     this.openUserUpdateModal = this.openUserUpdateModal.bind(this);
     this.handleUpdateSubmit = this.handleUpdateSubmit.bind(this);
+    this.deleteAllUsers = this.deleteAllUsers.bind(this);
   }
   addSelectedFlag(arr) {
     if (Array.isArray(arr)) {

@@ -27,6 +27,8 @@ class App extends React.Component {
     this.setCurrentUser = this.setCurrentUser.bind(this);
     this.loadCommentsFromServer = this.loadCommentsFromServer.bind(this);
     this.handlePageChange = this.handlePageChange.bind(this);
+    this.handleKeywordInput = this.handleKeywordInput.bind(this);
+    this.handleSearch = this.handleSearch.bind(this);
   }
 
   // Get current user identity from server.

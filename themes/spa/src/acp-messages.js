@@ -67,6 +67,7 @@ class Comment extends React.Component {
     this.replyComment = this.replyComment.bind(this);
     this.updateComment = this.updateComment.bind(this);
     this.banIP = this.banIP.bind(this);
+    this.toggleItem = this.toggleItem.bind(this);
   }
   banIP(e) {
     let dom = e.target;
@@ -136,6 +137,26 @@ class Comment extends React.Component {
 }
 
 class ACPMessages extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      comments: [],
+      modalIsOpen: false,
+      modalType: '', // "reply" or "update" 
+      modalCommentModel: null,
+      modalErrorMsg: ''
+    };
+    this.handleCommentDeleted = this.handleCommentDeleted.bind(this);
+    this.handleReplyComment = this.handleReplyComment.bind(this);
+    this.handleReplyFormSubmitted = this.handleReplyFormSubmitted.bind(this);
+    this.handleUpdateComment = this.handleUpdateComment.bind(this);
+    this.handleCommentUpdated = this.handleCommentUpdated.bind(this);
+    this.toggleInputClicked = this.toggleInputClicked.bind(this);
+    this.handleToggleItem = this.handleToggleItem.bind(this);
+    this.deleteAllReplies = this.deleteAllReplies.bind(this);
+    this.deleteAllComments = this.deleteAllComments.bind(this);
+    this.deleteSelected = this.deleteSelected.bind(this);
+  }
   addSelectedFlag(arr) {
     if (Array.isArray(arr)) {
       arr.forEach((currentValue, index) => {
@@ -194,21 +215,6 @@ class ACPMessages extends React.Component {
       }
     });
     return arr;
-  }
-  constructor(props) {
-    super(props);
-    this.state = {
-      comments: [],
-      modalIsOpen: false,
-      modalType: '', // "reply" or "update" 
-      modalCommentModel: null,
-      modalErrorMsg: ''
-    };
-    this.handleCommentDeleted = this.handleCommentDeleted.bind(this);
-    this.handleReplyComment = this.handleReplyComment.bind(this);
-    this.handleReplyFormSubmitted = this.handleReplyFormSubmitted.bind(this);
-    this.handleUpdateComment = this.handleUpdateComment.bind(this);
-    this.handleCommentUpdated = this.handleCommentUpdated.bind(this);
   }
   getMixinAttr() {
     return 'comments';
