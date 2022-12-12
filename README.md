@@ -13,7 +13,7 @@ YuanPad is a PHP-based guestbook script.
 
 ```
 cd yuan-pad/themes/spa
-npm install
+npm install --legacy-peer-deps
 ```
 
 On the develop stage, run:
