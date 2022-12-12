@@ -22,6 +22,12 @@ class ACPConfig extends React.Component {
       allowed_tags: '',
       password: ''
     };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.toggleSiteClose = this.toggleSiteClose.bind(this);
+    this.toggleCaptcha = this.toggleCaptcha.bind(this);
+    this.togglePagination = this.togglePagination.bind(this);
+    this.toggleFilterType = this.toggleFilterType.bind(this);
+    this.handleInput = this.handleInput.bind(this);
   }
   componentWillReceiveProps(nextProps) {
     let propAppConfig = nextProps.appConfig;
@@ -60,6 +66,12 @@ class ACPConfig extends React.Component {
   toggleFilterType(e) {
     this.setState({filter_type: e.target.value});
   }
+  handleInput(e) {
+    const target = e.target;
+    this.setState({
+      [target.name]: target.value.trim()
+    });
+  }
   render() {
     let appConfig = this.state,
         props = this.props,
@@ -75,7 +87,7 @@ class ACPConfig extends React.Component {
               <tbody>
                 <tr>
                   <td>{lang.BOARD_NAME}:</td>
-                  <td><input ref="board_name" type="text" size="20" /*valueLink={this.linkState('board_name')}*/ /></td>
+                  <td><input ref="board_name" name='board_name' type="text" size="20" value={this.state.board_name} onChange={this.handleInput} /></td>
                 </tr>
                 <tr>
                   <td>{lang.CLOSE_BOARD}:</td>
@@ -86,20 +98,20 @@ class ACPConfig extends React.Component {
                 </tr>
                 <tr>
                   <td>{lang.CLOSE_REASON}:</td>
-                  <td><textarea ref="close_reason" cols="30" rows="3" /*valueLink={this.linkState('close_reason')}*/></textarea></td>
+                  <td><textarea ref="close_reason" name='close_reason' value={appConfig.close_reason} onChange={this.handleInput} cols="30" rows="3"></textarea></td>
                 </tr>
                 <tr>
                   <td>{lang.ADMIN_EMAIL}:</td>
-                  <td><input ref="admin_email" type="text" size="20" /*valueLink={this.linkState('admin_email')}*/ /></td>
+                  <td><input ref="admin_email" name='admin_email' value={appConfig.admin_email} type="text" size="20" onChange={this.handleInput} /></td>
                 </tr>
                 <tr>
                   <td>{lang.COPY_INFO}:</td>
-                  <td><textarea ref="copyright_info" cols="30" rows="3" /*valueLink={this.linkState('copyright_info')}*/ ></textarea></td>
+                  <td><textarea ref="copyright_info" name='copyright_info' value={appConfig.copyright_info} cols="30" rows="3" onChange={this.handleInput} ></textarea></td>
                 </tr>
                 <tr>
                   <td>{lang.SYS_THEME}:</td>
                   <td>
-                    <select ref="theme" /*valueLink={this.linkState('theme')}*/>
+                    <select ref="theme" name='theme' value={this.state.theme} onChange={this.handleInput}>
                       {(()=>{
                         let themes = acpData.themes, themeOptions = [];
                         for (let i in themes) {
@@ -114,7 +126,7 @@ class ACPConfig extends React.Component {
                 <tr>
                   <td>{lang.TIMEZONE}:</td>
                   <td>
-                    <select ref="timezone" /*valueLink={this.linkState('timezone')}*/>
+                    <select ref="timezone" name='timezone' value={this.state.timezone} onChange={this.handleInput}>
                       {(()=>{
                         let timeZones = acpData.timezones, timezoneOptions = [];
                         for (let i in timeZones) {
@@ -129,7 +141,7 @@ class ACPConfig extends React.Component {
                 <tr>
                   <td>{lang.LANG}:</td>
                   <td>
-                    <select ref="lang" /*valueLink={this.linkState('lang')}*/>
+                    <select ref="lang" name='lang' value={this.state.lang} onChange={this.handleInput}>
                       {(()=>{
                         let languages = acpData.languages, languageOptions = [];
                         for (let i in languages) {
@@ -144,7 +156,7 @@ class ACPConfig extends React.Component {
                 <tr>
                   <td>{lang.DATE_FORMAT}:</td>
                   <td>
-                    <select ref="dateformat" /*valueLink={this.linkState('dateformat')}*/>
+                    <select ref="dateformat" name='dateformat' value={this.state.dateformat} onChange={this.handleInput}>
                       {(()=>{
                         let dateFormateList = acpData.dateFormates, formatOptions = [];
                         for (let i in dateFormateList) {
@@ -165,7 +177,7 @@ class ACPConfig extends React.Component {
               <tbody>
                 <tr>
                   <td>{lang.FILTER_WORDS}：</td>
-                  <td><textarea ref="filter_words" cols="20" rows="3" /*valueLink={this.linkState('filter_words')}*/></textarea></td>
+                  <td><textarea ref="filter_words" name='filter_words' value={this.state.filter_words} onChange={this.handleInput} cols="20" rows="3"></textarea></td>
                 </tr>
                 <tr>
                   <td>{lang.ENABLE_CAPTCHA}：</td>
@@ -192,7 +204,7 @@ class ACPConfig extends React.Component {
                 </tr>
                 <tr>
                     <td>{lang.POST_PERPAGE}：</td>
-                    <td><input ref="num_perpage" type="text" /*valueLink={this.linkState('num_perpage')}*/ />{lang.PAGINATION_TIP}</td>
+                    <td><input ref="num_perpage" name='num_perpage' value={this.state.num_perpage} onChange={this.handleInput} type="text" />{lang.PAGINATION_TIP}</td>
                 </tr>
                 <tr>
                   <td>{lang.FILTER_HTML_TAGS}：</td>
@@ -203,7 +215,7 @@ class ACPConfig extends React.Component {
                 </tr>
                 <tr>
                   <td>{lang.ALLOWED_HTML_TAGS}：</td>
-                  <td><input ref="allowed_tags" type="text" /*valueLink={this.linkState('allowed_tags')}*/ /></td>
+                  <td><input ref="allowed_tags" name='allowed_tags' value={this.state.allowed_tags} onChange={this.handleInput} type="text" /></td>
                 </tr>
               </tbody>
             </table>
@@ -214,7 +226,7 @@ class ACPConfig extends React.Component {
               <tbody>
                 <tr>
                   <td>{lang.CHANGE_PWD}:</td>
-                  <td><input ref="password" type="password" /*valueLink={this.linkState('password')}*/ />&nbsp;{lang.PWD_TIP}</td>
+                  <td><input ref="password" type="password" name='password' value={this.state.password} onChange={this.handleInput} />&nbsp;{lang.PWD_TIP}</td>
                 </tr>
               </tbody>
             </table>

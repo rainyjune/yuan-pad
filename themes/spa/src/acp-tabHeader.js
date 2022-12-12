@@ -7,6 +7,9 @@ class ACPTabHeader extends React.Component{
     this.state = {
       menuIsOpen: false
     };
+    this.updateActiveTab = this.updateActiveTab.bind(this);
+    this.handleSignOut = this.handleSignOut.bind(this);
+    this.toggleMenu = this.toggleMenu.bind(this);
   }
   updateActiveTab(e) {
     e.preventDefault();

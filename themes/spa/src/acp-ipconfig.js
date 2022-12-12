@@ -2,6 +2,10 @@ import React from 'react';
 import dataProvider from './dataProvider.js';
 
 class IPItem extends React.Component {
+  constructor(props) {
+    super(props);
+    this.toggleItem = this.toggleItem.bind(this);
+  }
   toggleItem() {
     this.props.onItemToggled(this.props.data);
   }

@@ -25,6 +25,7 @@ class App extends React.Component {
     };
     this._isMounted = false;
     this.setCurrentUser = this.setCurrentUser.bind(this);
+    this.loadCommentsFromServer = this.loadCommentsFromServer.bind(this);
   }
 
   // Get current user identity from server.
