@@ -1,7 +1,6 @@
-let React = require('react');
-let Modal = require('react-modal');
-let dataProvider = require('./dataProvider.js');
-const createReactClass = require('create-react-class');
+import React from 'react';
+import Modal from 'react-modal';
+import dataProvider from './dataProvider.js';
 
 const customStyles = {
   content : {
@@ -14,13 +13,14 @@ const customStyles = {
   }
 };
 
-let UpdateCommentModal = createReactClass({
-  getInitialState() {
-    return {
+class UpdateCommentModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       mid: '',
       update_content: '',
     };
-  },
+  }
   componentWillReceiveProps(nextProps) {
     let commentData = nextProps.comment;
     if (commentData) {
@@ -29,7 +29,7 @@ let UpdateCommentModal = createReactClass({
         update_content: commentData.post_content
       });
     }
-  },
+  }
   handleSubmit(e) {
     e.preventDefault();
     if (!this.state.mid || !this.state.update_content.trim()) return;
@@ -41,10 +41,10 @@ let UpdateCommentModal = createReactClass({
       debugger;
     }.bind(this));
     return false;
-  },
+  }
   changeContent(e) {
     this.setState({update_content: e.target.value});
-  },
+  }
   render(){
     return (
       <Modal ariaHideApp={false} isOpen={this.props.modalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
@@ -56,6 +56,6 @@ let UpdateCommentModal = createReactClass({
       </Modal>
     );
   }
-});
+}
 
-module.exports = UpdateCommentModal;
+export default UpdateCommentModal;

@@ -1,19 +1,18 @@
-let React = require('react'),
-    ReactDOM = require('react-dom');
-let Modal = require('react-modal');
-const createReactClass = require('create-react-class');
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-let ACPLogin = require('./acp-login.js'),
-    ACPTabHeader = require('./acp-tabHeader.js'),
-    ACPTabContent = require('./acp-tabContent.js'),
-    ACPFooter = require('./acp-footer.js'),
-    dataProvider = require('./dataProvider.js'),
-    Progress = require('./progress.js'),
-    OfflineWarning = require('./offlineMode.js');
+import ACPLogin from './acp-login.js';
+import ACPTabHeader from './acp-tabHeader.js';
+import ACPTabContent from './acp-tabContent.js';
+import ACPFooter from './acp-footer.js';
+import dataProvider from './dataProvider.js';
+import Progress from './progress.js';
+import OfflineWarning from './offlineMode.js';
 
-let ACPBox = createReactClass({
-  getInitialState() {
-    return {
+class ACPBox extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
       loadingModalIsOpen: true,
       systemInformation: {}, // System information
       activeTab: 'overview',
@@ -21,16 +20,18 @@ let ACPBox = createReactClass({
       currentUser: {},
       translations: {}
     };
-  },
+    this._isMounted = false;
+  }
   /**
    * Load application data after we verified the root user.
    */
   componentDidMount() {
+    this._isMounted = true;
     dataProvider.getAppConfig(res => {
       if (res.statusCode === 200) {
         let siteConfig = res.response;
         dataProvider.getTranslations(res => {
-          if (this.isMounted()) {
+          if (this._isMounted) {
             this.setState({translations: res.response, appConfig: siteConfig});
           }
           this.getUserInfo();
@@ -40,7 +41,11 @@ let ACPBox = createReactClass({
         alert(res.statusText);
       }
     });
-  },
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
 
   loadApplicationConfiguration(successCallback) {
     dataProvider.getAppConfigACP(res => {
@@ -49,21 +54,21 @@ let ACPBox = createReactClass({
       }
       this.setState({appConfig: res.response}, successCallback);
     });
-  },
+  }
   loadApplicationTranslation(successCallback) {
     dataProvider.getTranslations(res => {
       if (res.statusCode === 200) {
         this.setState({translations: res.response}, successCallback);
       }
     });
-  },
+  }
   loadApplicationSystemInformation(successCallback) {
     dataProvider.getSystemInformation(res => {
       if (res.statusCode === 200) {
         this.setState({systemInformation: res.response}, successCallback);
       }
     });
-  },
+  }
   
   /**
    * Tested 1.
@@ -71,28 +76,28 @@ let ACPBox = createReactClass({
   // Reload site configuration after being updated by admin user.
   handleConfigUpdate() {
     this.loadApplicationConfiguration();
-  },
+  }
   // Update the `currentUser` state to default value.
   handleLogout() {
-    if (this.isMounted()) {
+    if (this._isMounted) {
       // Navigates to the index.php page after signed out.
       this.setState({ currentUser: {}, appConfig: {} }, function(){
         window.location = "index.php";
       });
     }
-  },
+  }
   // Get current user identity from server.
   getUserInfo() {
     dataProvider.getUserInfo(res => {
       this.setState({loadingModalIsOpen: false});
-      if (this.isMounted()) {
+      if (this._isMounted) {
         this.handleUserSignedIn(res.response);
       }
     });
-  },
+  }
   updateActiveTab(newTabName) {
     this.setState({activeTab: newTabName});
-  },
+  }
   // Update the `currentUser` state after a user signed in.
   handleUserSignedIn(userData) {
     if (userData.user_type === "admin") {
@@ -102,10 +107,10 @@ let ACPBox = createReactClass({
     } else {
       this.setState({currentUser: userData});
     }
-  },
+  }
   handleCommentDeleted() {
     this.loadApplicationSystemInformation();
-  },
+  }
   render() {
     let state = this.state,
         translations = state.translations,
@@ -156,7 +161,7 @@ let ACPBox = createReactClass({
       </div>
     );
   }
-});
+}
 
 ReactDOM.render(
   <ACPBox />,

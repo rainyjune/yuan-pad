@@ -1,7 +1,5 @@
-let React = require('react');
-let Modal = require('react-modal');
-let dataProvider = require('./dataProvider.js');
-const createReactClass = require('create-react-class');
+import React from 'react';
+import Modal from 'react-modal';
 
 const customStyles = {
   content : {
@@ -14,15 +12,16 @@ const customStyles = {
   }
 };
 
-let UserUpdateModal = createReactClass({
-  getInitialState() {
-    return {
+class UserUpdateModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       uid: '',
       user: '',
       pwd: '',
       email: ''
     };
-  },
+  }
   componentWillReceiveProps(nextProps) {
     if (nextProps.userData) {
       let userData = nextProps.userData;
@@ -33,7 +32,7 @@ let UserUpdateModal = createReactClass({
         email: userData.email
       });
     }
-  },
+  }
   handleSubmit(e) {
     e.preventDefault();
     let user = this.state.user.trim(),
@@ -42,17 +41,17 @@ let UserUpdateModal = createReactClass({
     if (!user || !email) return;
     this.props.onUpdateSubmit(this.state);
     return false;
-  },
+  }
   updatePassword(e) {
     this.setState({
       pwd: e.target.value
     });
-  },
+  }
   updateEmail(e) {
     this.setState({
       email: e.target.value
     });
-  },
+  }
   render(){
     let lang = this.props.lang;
     return (
@@ -82,6 +81,6 @@ let UserUpdateModal = createReactClass({
       </Modal>
     );
   }
-});
+}
 
-module.exports = UserUpdateModal;
+export default UserUpdateModal;

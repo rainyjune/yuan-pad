@@ -1,10 +1,8 @@
-let React = require('react');
-let UserUpdateModal = require('./acp-userUpdateModal.js');
-let dataProvider = require('./dataProvider.js');
-let FormItemMixin = require('./formItemMixin.js');
-const createReactClass = require('create-react-class');
+import React from 'react';
+import UserUpdateModal from './acp-userUpdateModal.js';
+import dataProvider from './dataProvider.js';
 
-let UserItem = createReactClass({
+class UserItem extends React.Component {
   /**
    * Tested 1.
    */
@@ -18,20 +16,20 @@ let UserItem = createReactClass({
         this.props.onUserDeleted();
       }
     });
-  },
+  }
   /**
    * Tested 1.
    */
   updateUser(e) {
     e.preventDefault();
     this.props.onOpenUserUpdateModal(this.props.data);
-  },
+  }
   /**
    * Tested 1.
    */
   toggleItem() {
     this.props.onToggleItem(this.props.data);
-  },
+  }
   render() {
     let user = this.props.data;
     let lang = this.props.lang;
@@ -47,36 +45,95 @@ let UserItem = createReactClass({
       </tr>
     );
   }
-});
+}
 
-let ACPUser = createReactClass({
-  mixins: [FormItemMixin],
+class ACPUser extends React.Component {
+  addSelectedFlag(arr) {
+    if (Array.isArray(arr)) {
+      arr.forEach((currentValue, index) => {
+        currentValue['checked'] = false;
+      });
+    }
+  }
+  toggle(itemToToggle) {
+    let field = this.getMixinAttr();
+    let data = this.state[field].map((currentValue, index) => {
+      if (currentValue === itemToToggle) {
+        currentValue['checked'] = !currentValue['checked'];
+      }
+      return currentValue;
+    });
+    this.setMixState(data);
+  }
+  toggleInputClicked(e) {
+    this.toggleAll(e.target.checked);
+  }
+  toggleAll(checked) {
+    let field = this.getMixinAttr();
+    let data = this.state[field].map((currentValue, index) => {
+      currentValue['checked'] = checked;
+      return currentValue;
+    });
+    this.setMixState(data);
+  }
+  checkAll(e) {
+    e.preventDefault();
+    this.toggleAll(true);
+  }
+  checkNone(e) {
+    e.preventDefault();
+    this.toggleAll(false);
+  }
+  checkXAll(e) {
+    e.preventDefault();
+    this.toggleXAll();
+  }
+  toggleXAll() {
+    let field = this.getMixinAttr();
+    let data = this.state[field].map((currentValue, index) => {
+      currentValue['checked'] = !currentValue['checked'];
+      return currentValue;
+    });
+    this.setMixState(data);
+  }
+  getCheckedItems() {
+    let arr = [];
+    let key = this.getItemKey();
+    let field = this.getMixinAttr();
+    this.state[field].forEach((currentValue, index) => {
+      if (currentValue.checked) {
+        arr.push(currentValue[key]);
+      }
+    });
+    return arr;
+  }
   /**
    * Tested 1.
    */
-  getInitialState() {
-    return {
+  constructor(props) {
+    super(props)
+    this.state = {
       users: [],
       updateErrorMsg: '',
       updateModalIsOpen: false,
       updatedModalUserData: null,
     };
-  },
+  }
   getMixinAttr() {
     return 'users';
-  },
+  }
   getItemKey() {
     return 'uid';
-  },
+  }
   setMixState(data) {
     this.setState({users: data});
-  },
+  }
   /**
    * Tested 1
    */
   componentDidMount() {
     this.loadAllUsersFromServer();
-  },
+  }
   /**
    * Tested 1.
    */
@@ -88,13 +145,13 @@ let ACPUser = createReactClass({
         this.setState({users: data});
       }
     });
-  },
+  }
   /**
    * Tested 1.
    */
   handleUserDeleted() {
     this.loadAllUsersFromServer();
-  },
+  }
   /**
    * Tested 1.
    */
@@ -109,7 +166,7 @@ let ACPUser = createReactClass({
         this.loadAllUsersFromServer();
       }
     });
-  },
+  }
   /**
    * Tested 1.
    */
@@ -119,7 +176,7 @@ let ACPUser = createReactClass({
       updatedModalUserData: null,
       updateModalIsOpen: false
     });
-  },
+  }
   /**
    * Tested 1.
    */
@@ -129,7 +186,7 @@ let ACPUser = createReactClass({
         updatedModalUserData: userData,
         updateModalIsOpen: true
       });
-  },
+  }
   /**
    * Tested 1.
    */
@@ -143,7 +200,7 @@ let ACPUser = createReactClass({
         this.loadAllUsersFromServer();
       }
     });
-  },
+  }
   /**
    * Tested 1.
    */
@@ -163,13 +220,13 @@ let ACPUser = createReactClass({
         alert('delete error');
       }
     });
-  },
+  }
   /**
    * Tested 1
    */
   handleToggleItem(userItem) {
     this.toggle(userItem);
-  },
+  }
   render() {
     let lang = this.props.lang;
     let cssClass = this.props.activeTab === "user" ? "user_container selectTag" : "user_container";
@@ -221,6 +278,6 @@ let ACPUser = createReactClass({
       </div>
     );
   }
-});
+}
 
-module.exports = ACPUser;
+export default ACPUser;

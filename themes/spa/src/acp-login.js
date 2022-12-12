@@ -1,8 +1,5 @@
-let React = require('react');
-let dataProvider = require('./dataProvider.js');
-let SignInMixIn = require('./SignInMixin.js');
-let Modal = require('react-modal');
-const createReactClass = require('create-react-class');
+import React from 'react';
+import Modal from 'react-modal';
 
 const customStyles = {
   content : {
@@ -15,14 +12,41 @@ const customStyles = {
   }
 };
 
-let ACPLogin = createReactClass({
-  mixins: [SignInMixIn], // Use the mixin
-  getInitialState() {
-    return {
+class ACPLogin extends React.Component {
+  openModal() {
+    this.setState({modalIsOpen: true});
+  }
+  closeModal() {
+    this.setState({modalIsOpen: false});
+  }
+  handleSignIn(loginData) {
+    dataProvider.signIn(loginData, res => {
+      if (this._isMounted) {
+        if (res.statusCode === 200) {
+          this.setState({errorMsg: '', modalIsOpen: false});
+          this.props.onCurrentUserUpdated(res.response);
+        } else if (res.statusCode === 304) {
+          // The user had signed in before.
+        } else {
+          this.setState({errorMsg: res.response});
+        }
+      }
+    });
+  }
+  constructor(props) {
+    super(props);
+    this.state = {
       errorMsg: '',
       modalIsOpen: true
     };
-  },
+    this._isMounted = false;
+  }
+  componentDidMount() {
+    this._isMounted = true;
+  }
+  componentWillUnmount() {
+    this._isMounted = false;
+  }
   handleSubmit(e) {
     e.preventDefault();
     let user = this.refs.user.value.trim(),
@@ -30,13 +54,13 @@ let ACPLogin = createReactClass({
     if (!user || !pwd) return;
     this.handleSignIn({ user, password: pwd});
     return false;
-  },
+  }
   goToHome() {
     window.location.href = 'index.php';
-  },
-  dismissAlert: function() {
+  }
+  dismissAlert() {
     this.setState({errorMsg: ''});
-  },
+  }
   render() {
     let language = this.props.lang,
         state = this.state;
@@ -67,6 +91,6 @@ let ACPLogin = createReactClass({
       </div>
     );
   }
-});
+}
 
-module.exports = ACPLogin;
+export default ACPLogin;

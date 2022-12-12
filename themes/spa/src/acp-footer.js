@@ -1,7 +1,6 @@
-let React = require('react');
-const createReactClass = require('create-react-class');
+import React from 'react';
 
-let ACPFooter = createReactClass({
+class ACPFooter extends React.Component {
   render() {
     if (this.props.user.user_type !== "admin") return null;
     return (
@@ -12,6 +11,6 @@ let ACPFooter = createReactClass({
       </footer>
     );
   }
-});
+}
 
-module.exports = ACPFooter;
+export default ACPFooter;

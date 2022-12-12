@@ -1,13 +1,12 @@
-let React = require('react');
-let dataProvider = require('./dataProvider.js');
-let ReplyModal = require('./acp-replyModal.js');
-let CommentUpdateModal = require('./acp-updateCommentModal.js');
-let FormItemMixin = require('./formItemMixin.js');
-const createReactClass = require('create-react-class');
+import React from 'react';
+import dataProvider from './dataProvider.js';
+import ReplyModal from './acp-replyModal.js';
+import CommentUpdateModal from './acp-updateCommentModal.js';
 
-let Reply = createReactClass({
-  getInitialState() {
-    return {
+class Reply extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       b_username: null,
       id: 0,
       ip: "::1",
@@ -19,7 +18,7 @@ let Reply = createReactClass({
       uname: "",
       user: ""
     };
-  },
+  }
   componentWillReceiveProps(nextProps) {
     let data = nextProps.data;
     if (data) {
@@ -36,7 +35,7 @@ let Reply = createReactClass({
         user: data.user
       });
     }
-  },
+  }
   deleteReply(e) {
     e.preventDefault();
     if (!confirm(this.props.lang.DEL_REPLY_CONFIRM)) {
@@ -45,7 +44,7 @@ let Reply = createReactClass({
     dataProvider.deleteReply(this.state.id, response => {
       this.setState({reply_content: ''});
     });
-  },
+  }
   render() {
     let lang = this.props.lang,
         data = this.state;
@@ -59,9 +58,9 @@ let Reply = createReactClass({
       </div>
     );
   }
-});
+}
 
-let Comment = createReactClass({
+class Comment extends React.Component {
   banIP(e) {
     let dom = e.target;
     e.preventDefault();
@@ -69,7 +68,7 @@ let Comment = createReactClass({
     dataProvider.banIP(ip, () => {
       this.props.onActiveTabChanged('ban_ip');
     });
-  },
+  }
   deleteComment(e) {
     e.preventDefault();
     let data = this.props.data;
@@ -82,18 +81,18 @@ let Comment = createReactClass({
     dataProvider.deleteComment(commentId, reply, response => {
       this.props.onCommentDeleted();
     });
-  },
+  }
   replyComment(e) {
     e.preventDefault();
     this.props.onReplyComment(this.props.data);
-  },
+  }
   updateComment(e) {
     e.preventDefault();
     this.props.onUpdateComment(this.props.data);
-  },
+  }
   toggleItem() {
     this.props.onToggleItem(this.props.data);
-  },
+  }
   render() {
     let data = this.props.data;
     let lang = this.props.lang;
@@ -127,28 +126,87 @@ let Comment = createReactClass({
       </tr>
     );
   }
-});
+}
 
-let ACPMessages = createReactClass({
-  mixins: [FormItemMixin],
-  getInitialState() {
-    return {
+class ACPMessages extends React.Component {
+  addSelectedFlag(arr) {
+    if (Array.isArray(arr)) {
+      arr.forEach((currentValue, index) => {
+        currentValue['checked'] = false;
+      });
+    }
+  }
+  toggle(itemToToggle) {
+    let field = this.getMixinAttr();
+    let data = this.state[field].map((currentValue, index) => {
+      if (currentValue === itemToToggle) {
+        currentValue['checked'] = !currentValue['checked'];
+      }
+      return currentValue;
+    });
+    this.setMixState(data);
+  }
+  toggleInputClicked(e) {
+    this.toggleAll(e.target.checked);
+  }
+  toggleAll(checked) {
+    let field = this.getMixinAttr();
+    let data = this.state[field].map((currentValue, index) => {
+      currentValue['checked'] = checked;
+      return currentValue;
+    });
+    this.setMixState(data);
+  }
+  checkAll(e) {
+    e.preventDefault();
+    this.toggleAll(true);
+  }
+  checkNone(e) {
+    e.preventDefault();
+    this.toggleAll(false);
+  }
+  checkXAll(e) {
+    e.preventDefault();
+    this.toggleXAll();
+  }
+  toggleXAll() {
+    let field = this.getMixinAttr();
+    let data = this.state[field].map((currentValue, index) => {
+      currentValue['checked'] = !currentValue['checked'];
+      return currentValue;
+    });
+    this.setMixState(data);
+  }
+  getCheckedItems() {
+    let arr = [];
+    let key = this.getItemKey();
+    let field = this.getMixinAttr();
+    this.state[field].forEach((currentValue, index) => {
+      if (currentValue.checked) {
+        arr.push(currentValue[key]);
+      }
+    });
+    return arr;
+  }
+  constructor(props) {
+    super(props);
+    this.state = {
       comments: [],
       modalIsOpen: false,
       modalType: '', // "reply" or "update" 
       modalCommentModel: null,
       modalErrorMsg: ''
     };
-  },
+  }
   getMixinAttr() {
     return 'comments';
-  },
+  }
   getItemKey() {
     return 'id';
-  },
+  }
   setMixState(data) {
     this.setState({comments: data});
-  },
+  }
   deleteAllComments(e) {
     e.preventDefault();
     if (!confirm(this.props.lang.DEL_ALL_CONFIRM)) {
@@ -161,7 +219,7 @@ let ACPMessages = createReactClass({
         alert('Error');
       }
     });
-  },
+  }
   /**
    * Tested 1
    */
@@ -177,7 +235,7 @@ let ACPMessages = createReactClass({
         alert('ERROR')
       }
     });
-  },
+  }
   deleteSelected(e) {
     e.preventDefault();
     let checkedItems = this.getCheckedItems();
@@ -194,10 +252,10 @@ let ACPMessages = createReactClass({
         alert('delete error');
       }
     });
-  },
+  }
   handleReplyComment(commentTobeReplied) {
     this.openModal('reply', commentTobeReplied);
-  },
+  }
   closeModal() {
     this.setState({
       modalIsOpen: false,
@@ -205,7 +263,7 @@ let ACPMessages = createReactClass({
       modalCommentModel: null,
       modalErrorMsg: ''
     });
-  },
+  }
   openModal(type = 'reply', commentData) {
     this.setState({
       modalIsOpen: true,
@@ -213,18 +271,18 @@ let ACPMessages = createReactClass({
       modalCommentModel: commentData,
       modalErrorMsg: ''
     });
-  },
+  }
   handleReplyFormSubmitted() {
     this.closeModal();
     this.loadCommentsFromServer();
-  },
+  }
   handleUpdateComment(commentTobeUpdated) {
     this.openModal('update', commentTobeUpdated);
-  },
+  }
   handleCommentUpdated() {
     this.closeModal();
     this.loadCommentsFromServer();
-  },
+  }
   loadCommentsFromServer() {
     dataProvider.loadAllCommentsFromServer(res => {
       if (res.statusCode === 200 || res.statusCode === 404) {
@@ -236,17 +294,17 @@ let ACPMessages = createReactClass({
         alert('error');
       }
     });
-  },
+  }
   componentDidMount() {
     this.loadCommentsFromServer();
-  },
+  }
   handleToggleItem(item) {
     this.toggle(item);
-  },
+  }
   handleCommentDeleted() {
     this.loadCommentsFromServer();
     this.props.onCommentDeleted();
-  },
+  }
   render() {
     let state = this.state,
         props = this.props,
@@ -316,6 +374,6 @@ let ACPMessages = createReactClass({
       </div>
     );
   }
-});
+}
 
-module.exports = ACPMessages;
+export default ACPMessages;

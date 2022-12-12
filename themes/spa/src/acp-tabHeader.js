@@ -1,14 +1,13 @@
-let React = require('react'),
-    dataProvider = require('./dataProvider.js');
+import React from 'react';
+import dataProvider from './dataProvider.js';
 
-const createReactClass = require('create-react-class');
-
-let ACPTabHeader = createReactClass({
-  getInitialState() {
-    return {
+class ACPTabHeader extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = {
       menuIsOpen: false
     };
-  },
+  }
   updateActiveTab(e) {
     e.preventDefault();
     let tabLink = e.target;
@@ -18,7 +17,7 @@ let ACPTabHeader = createReactClass({
     }
     this.props.onTabSelected(newTabName);
     this.setState({menuIsOpen: false});
-  },
+  }
   handleSignOut(e) {
     e.preventDefault();
     dataProvider.signOut(response => {
@@ -28,10 +27,10 @@ let ACPTabHeader = createReactClass({
         alert(response.statusText);
       }
     });
-  },
-  toggleMenu: function() {
+  }
+  toggleMenu() {
     this.setState({menuIsOpen: !this.state.menuIsOpen});
-  },
+  }
   render() {
     if (this.props.user.user_type !== "admin") return null;
     let activeTab = this.props.activeTab;
@@ -68,6 +67,6 @@ let ACPTabHeader = createReactClass({
       </div>
     );
   }
-});
+}
 
-module.exports = ACPTabHeader;
+export default ACPTabHeader;

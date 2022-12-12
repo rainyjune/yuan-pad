@@ -1,18 +1,17 @@
-let React = require('react');
-let ACPOverview = require('./acp-overview.js'),
-    ACPConfig = require('./acp-config.js'),
-    ACPMessages = require('./acp-messages.js'),
-    ACPIpConfig = require('./acp-ipconfig.js'),
-    ACPUsers = require('./acp-users.js');
-const createReactClass = require('create-react-class');
+import React from 'react';
+import ACPOverview from './acp-overview.js';
+import ACPConfig from './acp-config.js';
+import ACPMessages from './acp-messages.js';
+import ACPIpConfig from './acp-ipconfig.js';
+import ACPUsers from './acp-users.js';
 
-let ACPTabContent = createReactClass({
+class ACPTabContent extends React.Component {
   handleActiveChange(newTab) {
     this.refs.blackListPanel.loadBlackList();
     setTimeout(()=>{
       this.props.onActiveTabChanged(newTab);
     }, 0);
-  },
+  }
   render() {
     if (this.props.user.user_type !== "admin") return null;
 
@@ -50,6 +49,6 @@ let ACPTabContent = createReactClass({
       </div>
     );
   }
-});
+}
 
-module.exports = ACPTabContent;
+export default ACPTabContent;

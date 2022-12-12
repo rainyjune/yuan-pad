@@ -1,7 +1,6 @@
-let React = require('react');
-let Modal = require('react-modal');
-const createReactClass = require('create-react-class');
-let dataProvider = require('./dataProvider.js');
+import React from 'react';
+import Modal from 'react-modal';
+import dataProvider from './dataProvider.js';
 
 const customStyles = {
   content : {
@@ -14,15 +13,16 @@ const customStyles = {
   }
 };
 
-let ReplyModal = createReactClass({
-  getInitialState() {
-    return {
+class ReplyModal extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
       rid: '',
       pid: '',
       content: '',
       r_time: ''
     };
-  },
+  }
   componentWillReceiveProps(nextProps) {
     let commentData = nextProps.comment;
     if (commentData) {
@@ -32,7 +32,7 @@ let ReplyModal = createReactClass({
         content: commentData.reply_content
       });
     }
-  },
+  }
   handleSubmit(e) {
     e.preventDefault();
     if (!this.state.pid || !this.state.content.trim()) return;
@@ -43,10 +43,10 @@ let ReplyModal = createReactClass({
       }
     });
     return false;
-  },
+  }
   changeContent(e) {
     this.setState({content: e.target.value});
-  },
+  }
   render(){
     return (
       <Modal ariaHideApp={false} isOpen={this.props.modalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
@@ -58,6 +58,6 @@ let ReplyModal = createReactClass({
       </Modal>
     );
   }
-});
+}
 
-module.exports = ReplyModal;
+export default ReplyModal;
