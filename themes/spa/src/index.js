@@ -134,7 +134,6 @@ class App extends React.Component {
           lang={state.translations}
         />
         <CommentBox
-          ref="commentBox"
           {...props}
           onCommentCreated={this.loadCommentsFromServer}
           onCloseSearch={this.loadCommentsFromServer}
