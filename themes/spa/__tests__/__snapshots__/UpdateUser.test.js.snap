@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UpdateUser renders correctly 1`] = `
+<div
+  className="updateUser"
+>
+  <a
+    className="btn btn-default"
+    href="#"
+    onClick={[Function]}
+    role="button"
+  >
+    Update
+  </a>
+</div>
+`;
+
+exports[`UpdateUser renders correctly 2`] = `
+<div
+  className="updateUser"
+>
+  <a
+    className="btn btn-default"
+    href="#"
+    onClick={[Function]}
+    role="button"
+  >
+    Update
+  </a>
+</div>
+`;

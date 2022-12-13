@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SignUp renders correctly 1`] = `
+<div
+  className="signUp"
+>
+  <a
+    className="btn btn-default"
+    href="#"
+    onClick={[Function]}
+    role="button"
+  >
+    Register
+  </a>
+</div>
+`;

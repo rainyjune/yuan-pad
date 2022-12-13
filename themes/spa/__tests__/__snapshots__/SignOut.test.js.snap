@@ -1,0 +1,23 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SignOut renders correctly 1`] = `
+<a
+  className="btn btn-default signOutButton"
+  href="#"
+  onClick={[Function]}
+  role="button"
+>
+  Logout
+</a>
+`;
+
+exports[`SignOut renders correctly 2`] = `
+<a
+  className="btn btn-default signOutButton"
+  href="#"
+  onClick={[Function]}
+  role="button"
+>
+  Logout
+</a>
+`;
