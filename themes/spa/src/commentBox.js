@@ -73,31 +73,29 @@ class CommentStatistics extends React.Component {
   }
 }
 
-class CommentList extends React.Component {
-  render() {
-    let lang = this.props.lang,
-        searchText = this.props.searchText,
-        appConfig = this.props.appConfig,
-        isSearchResult = this.props.commentListType === 2;
+function CommentList(props) {
+  let lang = props.lang,
+      searchText = props.searchText,
+      appConfig = props.appConfig,
+      isSearchResult = props.commentListType === 2;
 
-    let createCommentNodes = function(comment) {
-      let text = isSearchResult ? comment.post_content.replace(searchText, "<span class='keyword'>" + searchText + "</span>") : comment.post_content;
-      return (
-        <Comment
-          key={comment.id}
-          appConfig={appConfig}
-          data = {comment}
-          lang = {lang}>
-          {text}
-        </Comment>
-      );
-    };
+  let createCommentNodes = function(comment) {
+    let text = isSearchResult ? comment.post_content.replace(searchText, "<span class='keyword'>" + searchText + "</span>") : comment.post_content;
     return (
-      <div className="commentList">
-        {this.props.data.map(createCommentNodes)}
-      </div>
+      <Comment
+        key={comment.id}
+        appConfig={appConfig}
+        data = {comment}
+        lang = {lang}>
+        {text}
+      </Comment>
     );
-  }
+  };
+  return (
+    <div className="commentList">
+      {props.data.map(createCommentNodes)}
+    </div>
+  );
 }
 
 class Reply extends React.Component {
@@ -286,41 +284,37 @@ class CommentForm extends React.Component {
   }
 }
 
-class CommentBox extends React.Component {
-  render() {
-    var props = {
-      commentListType: this.props.commentListType,
-      lang: this.props.lang,
-      appConfig: this.props.appConfig
-    }
-    return (
-      <div className="commentBox">
-        <h1>{this.props.lang.WELCOME_POST}</h1>
-        <CommentList
-          {...props}
-          data={this.props.comments}
-          searchText={this.props.searchText}
-        />
-        <CommentStatistics
-          {...props}
-          onCloseSearch={this.props.onCloseSearch}
-          onPageChanged={this.props.onPageChanged}
-          total={this.props.commentsTotalNumber} 
-          currentPage = {this.props.currentPage}
-          pagenum={this.props.appConfig.page_on ? Math.ceil(this.props.commentsTotalNumber/this.props.appConfig.num_perpage) : 1} />
-        {
-          this.props.commentListType !== 1 ? '' :
-          <CommentForm
-            {...props}
-            ref="commentForm"
-            user={this.props.user} 
-            onCommentCreated={this.props.onCommentCreated}
-          />
-        }
-        
-      </div>
-    );
+function CommentBox(props) {
+  var propsObj = {
+    commentListType: props.commentListType,
+    lang: props.lang,
+    appConfig: props.appConfig
   }
+  return (
+    <div className="commentBox">
+      <h1>{props.lang.WELCOME_POST}</h1>
+      <CommentList
+        {...propsObj}
+        data={props.comments}
+        searchText={props.searchText}
+      />
+      <CommentStatistics
+        {...propsObj}
+        onCloseSearch={props.onCloseSearch}
+        onPageChanged={props.onPageChanged}
+        total={props.commentsTotalNumber} 
+        currentPage = {props.currentPage}
+        pagenum={props.appConfig.page_on ? Math.ceil(props.commentsTotalNumber/props.appConfig.num_perpage) : 1} />
+      {
+        props.commentListType !== 1 ? '' :
+        <CommentForm
+          {...propsObj}
+          user={props.user}
+          onCommentCreated={props.onCommentCreated}
+        />
+      }
+    </div>
+  );
 }
 
 export default CommentBox;
