@@ -12,14 +12,12 @@ const customStyles = {
   }
 };
 
-class Progress extends React.Component {
-  render() {
-    return (
-      <Modal ariaHideApp={false} isOpen={this.props.loadingModalIsOpen} style={customStyles} >
-        <progress></progress>
-      </Modal>
-    );
-  }
+function Progress(props) {
+  return (
+    <Modal ariaHideApp={false} isOpen={props.loadingModalIsOpen} style={customStyles} >
+      <progress></progress>
+    </Modal>
+  );
 }
 
 export default Progress;
