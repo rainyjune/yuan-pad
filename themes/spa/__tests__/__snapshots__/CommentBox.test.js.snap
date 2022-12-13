@@ -106,7 +106,6 @@ exports[`CommentBox renders correctly 1`] = `
   <div
     className="statistics"
   >
-    
     <p
       dangerouslySetInnerHTML={
         {
@@ -114,7 +113,6 @@ exports[`CommentBox renders correctly 1`] = `
         }
       }
     />
-    
   </div>
   <form
     className="commentForm form-horizontal"
@@ -142,9 +140,7 @@ exports[`CommentBox renders correctly 1`] = `
         />
         <label
           className="control-label"
-        >
-          
-        </label>
+        />
       </div>
     </div>
     <div
