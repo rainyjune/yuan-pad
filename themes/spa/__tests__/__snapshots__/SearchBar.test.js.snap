@@ -30,6 +30,7 @@ exports[`SearchBar renders correctly 1`] = `
     <button
       aria-label="Submit"
       className="btn btn-default btn-sm"
+      onClick={[Function]}
       type="button"
     >
       <span
@@ -71,6 +72,7 @@ exports[`SearchBar renders correctly 2`] = `
     <button
       aria-label="Submit"
       className="btn btn-default btn-sm"
+      onClick={[Function]}
       type="button"
     >
       <span
