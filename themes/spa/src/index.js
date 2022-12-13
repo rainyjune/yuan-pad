@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import SearchBar from './searchBar.js';
 import CommentBox from './commentBox.js';
@@ -159,7 +159,6 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('content')
+createRoot(document.getElementById('content')).render(
+  <App />
 );
