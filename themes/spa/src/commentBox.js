@@ -175,6 +175,7 @@ function CommentForm(props) {
   useEffect(() => {
     let computedState = {};
     let propUser = props.user;
+    if (!propUser) return;
     switch (propUser.user_type) {
       case "admin" :
       case "regular":

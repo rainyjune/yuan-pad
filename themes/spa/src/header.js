@@ -5,29 +5,27 @@ import SignUp from './signUp.js';
 import UpdateUser from './updateUser.js';
 import SignOutButton from './signOut.js';
 
-class Header extends React.Component {
-  render() {
-    let props = {
-      user: this.props.user,
-      lang: this.props.lang,
-      onCurrentUserUpdated: this.props.onCurrentUserUpdated
-    };
-    return (
-      <div className="header">
-        {(()=> {
-          switch (this.props.user.user_type) {
-            case "regular":
-              return <div><UpdateUser {...props} /><SignOutButton {...props} /></div>;
-            case "admin":
-              return <SignOutButton {...props} />;
-            case "guest":
-            default:
-              return <div><SignIn {...props} /> <SignUp {...props} /></div>;
-          }
-        })()}
-      </div>
-    );
-  }
+function Header(props) {
+  let propsObj = {
+    user: props.user,
+    lang: props.lang,
+    onCurrentUserUpdated: props.onCurrentUserUpdated
+  };
+  return (
+    <div className="header">
+      {(()=> {
+        switch (props.user.user_type) {
+          case "regular":
+            return <div><UpdateUser {...propsObj} /><SignOutButton {...propsObj} /></div>;
+          case "admin":
+            return <SignOutButton {...propsObj} />;
+          case "guest":
+          default:
+            return <div><SignIn {...propsObj} /> <SignUp {...propsObj} /></div>;
+        }
+      })()}
+    </div>
+  );
 }
 
-module.exports = Header;
+export default Header;
