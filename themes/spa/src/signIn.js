@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import Modal from 'react-modal';
 import dataProvider from './dataProvider';
 
@@ -13,77 +13,60 @@ const customStyles = {
   }
 };
 
-class SignIn extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      errorMsg: '',
-      modalIsOpen: false
-    };
-    this.openModal = this.openModal.bind(this);
-    this.closeModal = this.closeModal.bind(this);
-    this.handleSignIn = this.handleSignIn.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this._isMounted = false;
-  }
-  componentDidMount() {
-    this._isMounted = true;
-  }
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-  openModal() {
-    this.setState({modalIsOpen: true});
-  }
-  closeModal() {
-    this.setState({modalIsOpen: false});
-  }
-  handleSignIn(loginData) {
+function SignIn(props) {
+  const { lang: language } = props;
+  const userRef = useRef(null);
+  const passRef = useRef(null);
+  const [errorMsg, setErrorMsg] = useState('');
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const openModal = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setModalIsOpen(true)
+  };
+  const closeModal = () => setModalIsOpen(false);
+  const handleSignIn = (loginData) => {
     dataProvider.signIn(loginData, res => {
-      if (this._isMounted) {
-        if (res.statusCode === 200) {
-          this.setState({errorMsg: '', modalIsOpen: false});
-          this.props.onCurrentUserUpdated(res.response);
-        } else if (res.statusCode === 304) {
-          // The user had signed in before.
-        } else {
-          this.setState({errorMsg: res.response});
-        }
+      if (res.statusCode === 200) {
+        setErrorMsg('');
+        setModalIsOpen(false);
+        props.onCurrentUserUpdated(res.response);
+      } else if (res.statusCode === 304) {
+        // The user had signed in before.
+      } else {
+        //this.setState({errorMsg: res.response});
+        setErrorMsg(res.response);
       }
     });
-  }
-  handleSubmit(e) {
+  };
+  const handleSubmit = (e) => {
     e.preventDefault();
-    let user = this.refs.user.value.trim(),
-        pwd = this.refs.password.value.trim();
+    let user = userRef.current.value.trim(),
+        pwd = passRef.current.value.trim();
     if (!user || !pwd) return;
-    this.handleSignIn({ user, password: pwd});
+    handleSignIn({ user, password: pwd});
     return false;
-  }
-  render() {
-    let language = this.props.lang,
-        state = this.state;
-    return (
-      <div className="signIn">
-        <a href='#' onClick={this.openModal} role="button" className="btn btn-default">{language.LOGIN}</a>
-        <Modal ariaHideApp={false} isOpen={state.modalIsOpen} onRequestClose={this.closeModal} style={customStyles}>
-          <p>{state.errorMsg}</p>
-          <button onClick={this.closeModal}>close</button>
-          <form onSubmit={this.handleSubmit} action="#" method="post">
-            <div className="form-group">
-              <label htmlFor="inputUsername">{language.USERNAME}</label>
-              <input ref="user" type="text" className="form-control" id="inputUsername" placeholder="" />
-            </div>
-            <div className="form-group">
-              <label htmlFor="inputPassword">{language.ADMIN_PWD}</label>
-              <input ref="password" type="password" className="form-control" id="inputPassword" placeholder="" />
-            </div>
-            <button type="submit" className="btn btn-default">{language.SUBMIT}</button>
-          </form>
-        </Modal>
-      </div>
-    );
-  }
+  };
+  return (
+    <div className="signIn">
+      <a href='#' onClick={openModal} role="button" className="btn btn-default">{language.LOGIN}</a>
+      <Modal ariaHideApp={false} isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles}>
+        <p>{errorMsg}</p>
+        <button onClick={closeModal}>close</button>
+        <form onSubmit={handleSubmit} action="#" method="post">
+          <div className="form-group">
+            <label htmlFor="inputUsername">{language.USERNAME}</label>
+            <input ref={userRef} type="text" className="form-control" id="inputUsername" placeholder="" />
+          </div>
+          <div className="form-group">
+            <label htmlFor="inputPassword">{language.ADMIN_PWD}</label>
+            <input ref={passRef} type="password" className="form-control" id="inputPassword" placeholder="" />
+          </div>
+          <button type="submit" className="btn btn-default">{language.SUBMIT}</button>
+        </form>
+      </Modal>
+    </div>
+  );
 }
 
 export default SignIn;
