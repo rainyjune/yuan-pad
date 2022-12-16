@@ -26,7 +26,7 @@ class FLEA_Helper_ImgCode
     function check($code)
     {
         $time = time();
-        if ($time >= $this->_expired || strtoupper($code) != strtoupper($this->_code)) {
+        if ($time >= $this->_expired || @strtoupper($code) != @strtoupper($this->_code)) {
             return false;
        }
         return true;
