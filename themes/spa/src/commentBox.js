@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState, useImperativeHandle } from 'react';
 import dataProvider from './dataProvider.js';
 const yuanjs = require('@rainyjune/yuanjs');
 
@@ -127,7 +127,7 @@ function Comment(props) {
   );
 }
 
-function Captcha(props) {
+const Captcha = forwardRef((props, ref) => {
   const picRef = useRef(null);
   const refreshCaptch = (e) => {
     e.preventDefault();
@@ -138,6 +138,7 @@ function Captcha(props) {
     let url = img.getAttribute('data-src');
     img.src = url + '&v=' + Math.random();
   };
+  useImperativeHandle(ref, () => ({refresh}), []);
   return (
     <div className="form-group">
       <label htmlFor="inputCaptcha" className="col-sm-2 col-lg-2 control-label">{props.lang.CAPTCHA}</label>
@@ -163,7 +164,7 @@ function Captcha(props) {
       </div>
     </div>
   );
-}
+});
 
 function CommentForm(props) {
   const captchaRef = useRef(null);
@@ -197,18 +198,18 @@ function CommentForm(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
     let author = username.trim(),
-        text = text.trim(),
-        valid_code = valid_code.trim();
-    if (!author || !text) return;
+        text1 = text.trim(),
+        valid_code1 = valid_code.trim();
+    if (!author || !text1) return;
 
     setValid_code('');
     
-    dataProvider.createPost({ user: author, content: text, valid_code}, res => {
+    dataProvider.createPost({ user: author, content: text1, valid_code: valid_code1}, res => {
         if (res.statusCode !== 200) {
           alert(res.response);
           return;
         }
-        captchaRef.refresh();
+        captchaRef.current.refresh();
         // Clear the text in the textarea.
         setText('');
         props.onCommentCreated();
