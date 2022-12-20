@@ -379,13 +379,11 @@ class ACPMessages extends React.Component {
         </form>
         <ReplyModal
           {...modalProps}
-          ref="replyModal"
           modalIsOpen = {state.modalIsOpen && state.modalType === "reply"}
           onReplySubmit={this.handleReplyFormSubmitted}
         />
         <CommentUpdateModal
           {...modalProps}
-          ref="updateModal"
           modalIsOpen = {state.modalIsOpen && state.modalType === "update"}
           onCommentUpdated={this.handleCommentUpdated}
         />

@@ -1,5 +1,5 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot  } from 'react-dom/client';
 
 import ACPLogin from './acp-login.js';
 import ACPTabHeader from './acp-tabHeader.js';
@@ -167,7 +167,4 @@ class ACPBox extends React.Component {
   }
 }
 
-ReactDOM.render(
-  <ACPBox />,
-  document.getElementById('content')
-);
+createRoot(document.getElementById('content')).render(<ACPBox />);

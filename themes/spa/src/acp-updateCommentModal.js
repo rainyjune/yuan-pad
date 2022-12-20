@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import dataProvider from './dataProvider.js';
 
@@ -13,51 +13,40 @@ const customStyles = {
   }
 };
 
-class UpdateCommentModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      mid: '',
-      update_content: '',
-    };
-    this.changeContent = this.changeContent.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  componentWillReceiveProps(nextProps) {
-    let commentData = nextProps.comment;
+function UpdateCommentModal(props) {
+  const [mid, setMid] = useState('');
+  const [update_content, setUpdate_content] = useState('');
+  useEffect(() => {
+    let commentData = props.comment;
     if (commentData) {
-      this.setState({
-        mid: commentData.id,
-        update_content: commentData.post_content
-      });
+      setMid(commentData.id);
+      setUpdate_content(commentData.post_content);
     }
-  }
-  handleSubmit(e) {
+  }, [props.comment]);
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!this.state.mid || !this.state.update_content.trim()) return;
-    dataProvider.updateComment(this.state, res => {
+    if (!mid || !update_content.trim()) return;
+    dataProvider.updateComment({mid, update_content}, res => {
       if (res.statusCode === 200) {
-        this.props.onCommentUpdated();
+        props.onCommentUpdated();
       }
     }, function(e){
       debugger;
-    }.bind(this));
+    });
     return false;
-  }
-  changeContent(e) {
-    this.setState({update_content: e.target.value});
-  }
-  render(){
-    return (
-      <Modal ariaHideApp={false} isOpen={this.props.modalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
-        <div>{this.props.modalErrorMsg}</div>
-        <form onSubmit={this.handleSubmit} action="#" method="post">
-          <textarea value={this.state.update_content} onChange={this.changeContent}></textarea>
-          <input type="submit" />
-        </form>
-      </Modal>
-    );
-  }
+  };
+  const changeContent = (e) => {
+    setUpdate_content(e.target.value);
+  };
+  return (
+    <Modal ariaHideApp={false} isOpen={props.modalIsOpen} onRequestClose={props.onRequestClose} style={customStyles} >
+      <div>{props.modalErrorMsg}</div>
+      <form onSubmit={handleSubmit} action="#" method="post">
+        <textarea value={update_content} onChange={changeContent}></textarea>
+        <input type="submit" />
+      </form>
+    </Modal>
+  );
 }
 
 export default UpdateCommentModal;
