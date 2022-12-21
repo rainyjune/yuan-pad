@@ -2,55 +2,47 @@ import React from 'react';
 import UserUpdateModal from './acp-userUpdateModal.js';
 import dataProvider from './dataProvider.js';
 
-class UserItem extends React.Component {
-  constructor(props) {
-    super(props);
-    this.toggleItem = this.toggleItem.bind(this);
-    this.updateUser = this.updateUser.bind(this);
-    this.deleteUser = this.deleteUser.bind(this);
-  }
+function UserItem(props) {
   /**
    * Tested 1.
    */
-  deleteUser(e) {
+  const deleteUser = (e) => {
     e.preventDefault();
-    if (!confirm(this.props.lang.DEL_SINGLEUSER_CONFIRM)) {
+    if (!confirm(props.lang.DEL_SINGLEUSER_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteUser(this.props.data.uid, res=> {
+    dataProvider.deleteUser(props.data.uid, res=> {
       if (res.statusCode === 200) {
-        this.props.onUserDeleted();
+        props.onUserDeleted();
       }
     });
-  }
+  };
   /**
    * Tested 1.
    */
-  updateUser(e) {
+  const updateUser = (e) => {
     e.preventDefault();
-    this.props.onOpenUserUpdateModal(this.props.data);
-  }
+    props.onOpenUserUpdateModal(props.data);
+  };
   /**
    * Tested 1.
    */
-  toggleItem() {
-    this.props.onToggleItem(this.props.data);
-  }
-  render() {
-    let user = this.props.data;
-    let lang = this.props.lang;
-    return (
-      <tr className="row">
-        <td className="col-xs-1 col-sm-1 col-md-1"><input type='checkbox' checked={this.props.data.checked} onChange={this.toggleItem} /></td>
-        <td className="col-xs-3 col-sm-3 col-md-3">{user.username}</td>
-        <td className="col-xs-6 col-sm-6 col-md-6">{user.email}</td>
-        <td className="col-xs-2 col-sm-2 col-md-2">
-          <a className="btn btn-danger btn-sm" onClick={this.deleteUser} href="#">{lang.DELETE}</a>
-          <a className="btn btn-default btn-sm" onClick={this.updateUser} href='#'>{lang.UPDATE}</a>
-        </td>
-      </tr>
-    );
-  }
+  const toggleItem = () => {
+    props.onToggleItem(props.data);
+  };
+  let user = props.data;
+  let lang = props.lang;
+  return (
+    <tr className="row">
+      <td className="col-xs-1 col-sm-1 col-md-1"><input type='checkbox' checked={props.data.checked} onChange={toggleItem} /></td>
+      <td className="col-xs-3 col-sm-3 col-md-3">{user.username}</td>
+      <td className="col-xs-6 col-sm-6 col-md-6">{user.email}</td>
+      <td className="col-xs-2 col-sm-2 col-md-2">
+        <a className="btn btn-danger btn-sm" onClick={deleteUser} href="#">{lang.DELETE}</a>
+        <a className="btn btn-default btn-sm" onClick={updateUser} href='#'>{lang.UPDATE}</a>
+      </td>
+    </tr>
+  );
 }
 
 class ACPUser extends React.Component {
@@ -71,6 +63,9 @@ class ACPUser extends React.Component {
     this.openUserUpdateModal = this.openUserUpdateModal.bind(this);
     this.handleUpdateSubmit = this.handleUpdateSubmit.bind(this);
     this.deleteAllUsers = this.deleteAllUsers.bind(this);
+    this.closeUpdateModal = this.closeUpdateModal.bind(this);
+    this.loadAllUsersFromServer = this.loadAllUsersFromServer.bind(this);
+    this.handleUserDeleted = this.handleUserDeleted.bind(this);
   }
   addSelectedFlag(arr) {
     if (Array.isArray(arr)) {

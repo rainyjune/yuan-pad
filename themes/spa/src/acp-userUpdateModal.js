@@ -28,15 +28,15 @@ function UserUpdateModal(props) {
   }, [props.userData]);
   const handleSubmit = (e) => {
     e.preventDefault();
-    let user = user.trim(),
-        pwd = pwd.trim(),
-        email = email.trim();
-    if (!user || !email) return;
+    let user1 = user.trim(),
+        pwd1 = pwd.trim(),
+        email1 = email.trim();
+    if (!user1 || !email1) return;
     props.onUpdateSubmit({
       uid,
-      user,
-      pwd,
-      email
+      user: user1,
+      pwd: pwd1,
+      email: email1
     });
     return false;
   };
