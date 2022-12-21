@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot  } from 'react-dom/client';
 
 import ACPLogin from './acp-login.js';
@@ -8,163 +8,155 @@ import ACPFooter from './acp-footer.js';
 import dataProvider from './dataProvider.js';
 import Progress from './progress.js';
 import OfflineWarning from './offlineMode.js';
+import useStateCallback from './useStateCallback';
 
-class ACPBox extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      loadingModalIsOpen: true,
-      systemInformation: {}, // System information
-      activeTab: 'overview',
-      appConfig: {}, // App config, including filter words.
-      currentUser: {},
-      translations: {}
-    };
-    this._isMounted = false;
-    this.updateActiveTab = this.updateActiveTab.bind(this);
-    this.handleConfigUpdate = this.handleConfigUpdate.bind(this);
-    this.handleLogout = this.handleLogout.bind(this);
-    this.handleCommentDeleted = this.handleCommentDeleted.bind(this);
-  }
+function ACPBox(props) {
+  const [loadingModalIsOpen, setLoadingModalIsOpen] = useStateCallback(true);
+  const [systemInformation, setSystemInformation] = useStateCallback({});
+  const [activeTab, setActiveTab] = useState('overview');
+  const [appConfig, setAppConfig] = useStateCallback({});
+  const [currentUser, setCurrentUser] = useStateCallback({});
+  const [translations, setTranslations] = useStateCallback({});
   /**
    * Load application data after we verified the root user.
    */
-  componentDidMount() {
-    this._isMounted = true;
+  useEffect(() => {
     dataProvider.getAppConfig(res => {
       if (res.statusCode === 200) {
         let siteConfig = res.response;
         dataProvider.getTranslations(res => {
-          if (this._isMounted) {
-            this.setState({translations: res.response, appConfig: siteConfig});
-          }
-          this.getUserInfo();
+          setTranslations(res.response);
+          setAppConfig(siteConfig);
+          getUserInfo();
         });
       } else {
         // TODO Tell the user what's wrong.
         alert(res.statusText);
       }
     });
-  }
+  }, [])
 
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
-  loadApplicationConfiguration(successCallback) {
+  const loadApplicationConfiguration = (successCallback) => {
     dataProvider.getAppConfigACP(res => {
       if (res.statusCode !== 200) {
         return ;
       }
-      this.setState({appConfig: res.response}, successCallback);
+      //this.setState({appConfig: }, successCallback);
+      setAppConfig(res.response, s => {
+        successCallback && successCallback();
+      });
     });
-  }
-  loadApplicationTranslation(successCallback) {
+  };
+  const loadApplicationTranslation = (successCallback) => {
     dataProvider.getTranslations(res => {
       if (res.statusCode === 200) {
-        this.setState({translations: res.response}, successCallback);
+        //this.setState({translations: res.response}, successCallback);
+        setTranslations(res.response, s => {
+          successCallback && successCallback();
+        })
       }
     });
-  }
-  loadApplicationSystemInformation(successCallback) {
+  };
+  const loadApplicationSystemInformation = (successCallback) => {
     dataProvider.getSystemInformation(res => {
       if (res.statusCode === 200) {
-        this.setState({systemInformation: res.response}, successCallback);
+        //this.setState({systemInformation: res.response}, successCallback);
+        setSystemInformation(res.response, s => {
+          successCallback && successCallback();
+        })
       }
     });
-  }
+  };
   
   /**
    * Tested 1.
    */
   // Reload site configuration after being updated by admin user.
-  handleConfigUpdate() {
-    this.loadApplicationConfiguration();
-  }
+  const handleConfigUpdate = () => {
+    loadApplicationConfiguration();
+  };
   // Update the `currentUser` state to default value.
-  handleLogout() {
-    if (this._isMounted) {
-      // Navigates to the index.php page after signed out.
-      this.setState({ currentUser: {}, appConfig: {} }, function(){
-        window.location = "index.php";
-      });
-    }
-  }
+  const handleLogout = () => {
+    // Navigates to the index.php page after signed out.
+    setCurrentUser({});
+    setAppConfig({}, s => {
+      window.location = "index.php";
+    })
+  };
   // Get current user identity from server.
-  getUserInfo() {
+  const getUserInfo = () => {
     dataProvider.getUserInfo(res => {
-      this.setState({loadingModalIsOpen: false});
-      if (this._isMounted) {
-        this.handleUserSignedIn(res.response);
-      }
+      setLoadingModalIsOpen(false, s => {
+        handleUserSignedIn(res.response);
+      })
     });
-  }
-  updateActiveTab(newTabName) {
-    this.setState({activeTab: newTabName});
-  }
+  };
+  const updateActiveTab = (newTabName) => {
+    setActiveTab(newTabName);
+    //this.setState({activeTab: newTabName});
+  };
   // Update the `currentUser` state after a user signed in.
-  handleUserSignedIn(userData) {
+  const handleUserSignedIn = (userData) => {
     if (userData.user_type === "admin") {
-      this.setState({currentUser: userData}, () => {this.loadApplicationConfiguration(this.loadApplicationSystemInformation);});
+      setCurrentUser(userData, (s) => {
+        loadApplicationConfiguration(loadApplicationSystemInformation);
+      });
     } else if (userData.user_type === "regular") {
       window.location = "index.php";
     } else {
-      this.setState({currentUser: userData});
+      //this.setState({currentUser: userData});
+      setCurrentUser(userData);
     }
-  }
-  handleCommentDeleted() {
-    this.loadApplicationSystemInformation();
-  }
-  render() {
-    let state = this.state,
-        translations = state.translations,
-        tabs = [
-          {text: translations.ACP_OVERVIEW,value: "overview"},
-          {text: translations.ACP_CONFSET,value: "siteset"},
-          {text: translations.ACP_MANAGE_POST,value: "message"},
-          {text: translations.ACP_MANAGE_IP,value: "ban_ip"},
-          {text: translations.USER_ADMIN,value: "user"}
-        ],
-        props = {
-          user: state.currentUser,
-          lang: state.translations
-        };
-    return (
-      <div id="acpBox">
-        {
-          (state.currentUser.user_type === undefined || state.currentUser.user_type === "guest") ?
-            <ACPLogin
-              {...props}
-              onCurrentUserUpdated={this.handleUserSignedIn}
-            /> : null
-        }
-        <ACPTabHeader
-          {...props}
-          activeTab={this.state.activeTab}
-          tabs={tabs}
-          onTabSelected={this.updateActiveTab}
-          onUserLogout={this.handleLogout}
-        />
-        <OfflineWarning 
-          appConfig={state.appConfig}
-          lang={translations}
-        />
-        <ACPTabContent
-          {...props}
-          activeTab={this.state.activeTab}
-          systemInformation={this.state.systemInformation}
-          appConfig={this.state.appConfig}
-          onActiveTabChanged={this.updateActiveTab}
-          onConfigUpdated={this.handleConfigUpdate}
-          onCommentDeleted={this.handleCommentDeleted}
-        />
-        <ACPFooter
-          {...props}
-        />
-        <Progress loadingModalIsOpen={this.state.loadingModalIsOpen} />
-      </div>
-    );
-  }
+  };
+  const handleCommentDeleted = () => {
+    loadApplicationSystemInformation();
+  };
+  const tabs = [
+    {text: translations.ACP_OVERVIEW,value: "overview"},
+    {text: translations.ACP_CONFSET,value: "siteset"},
+    {text: translations.ACP_MANAGE_POST,value: "message"},
+    {text: translations.ACP_MANAGE_IP,value: "ban_ip"},
+    {text: translations.USER_ADMIN,value: "user"}
+  ];
+  const propsObj = {
+    user: currentUser,
+    lang: translations
+  };
+  return (
+    <div id="acpBox">
+      {
+        (currentUser.user_type === undefined || currentUser.user_type === "guest") ?
+          <ACPLogin
+            {...propsObj}
+            onCurrentUserUpdated={handleUserSignedIn}
+          /> : null
+      }
+      <ACPTabHeader
+        {...propsObj}
+        activeTab={activeTab}
+        tabs={tabs}
+        onTabSelected={updateActiveTab}
+        onUserLogout={handleLogout}
+      />
+      <OfflineWarning
+        appConfig={appConfig}
+        lang={translations}
+      />
+      <ACPTabContent
+        {...propsObj}
+        activeTab={activeTab}
+        systemInformation={systemInformation}
+        appConfig={appConfig}
+        onActiveTabChanged={updateActiveTab}
+        onConfigUpdated={handleConfigUpdate}
+        onCommentDeleted={handleCommentDeleted}
+      />
+      <ACPFooter
+        {...propsObj}
+      />
+      <Progress loadingModalIsOpen={loadingModalIsOpen} />
+    </div>
+  );
 }
 
 createRoot(document.getElementById('content')).render(<ACPBox />);
