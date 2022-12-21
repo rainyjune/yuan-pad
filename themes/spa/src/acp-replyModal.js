@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
 import Modal from 'react-modal';
 import dataProvider from './dataProvider.js';
 
@@ -13,53 +14,47 @@ const customStyles = {
   }
 };
 
-class ReplyModal extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      rid: '',
-      pid: '',
-      content: '',
-      r_time: ''
-    };
-    this.changeContent = this.changeContent.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
-  componentWillReceiveProps(nextProps) {
-    let commentData = nextProps.comment;
+function ReplyModal(props) {
+  const [state, setState] = useState({
+    rid: '',
+    pid: '',
+    content: '',
+    r_time: ''
+  });
+  useEffect(() => {
+    let commentData = props.comment;
     if (commentData) {
-      this.setState({
+      setState(_.extend({}, state, {
         rid: commentData.reply_id,
         pid: commentData.id,
         content: commentData.reply_content
-      });
+      }));
     }
-  }
-  handleSubmit(e) {
+  }, [props.comment]);
+
+  const handleSubmit = (e) => {
     e.preventDefault();
-    if (!this.state.pid || !this.state.content.trim()) return;
-    let action = this.state.rid ? 'updateReply' : 'createReply';
-    dataProvider[action](this.state, res => {
+    if (!state.pid || !state.content.trim()) return;
+    let action = state.rid ? 'updateReply' : 'createReply';
+    dataProvider[action](state, res => {
       if (res.statusCode === 200) {
-        this.props.onReplySubmit();
+        props.onReplySubmit();
       }
     });
     return false;
-  }
-  changeContent(e) {
-    this.setState({content: e.target.value});
-  }
-  render(){
-    return (
-      <Modal ariaHideApp={false} isOpen={this.props.modalIsOpen} onRequestClose={this.props.onRequestClose} style={customStyles} >
-        <div>{this.props.modalErrorMsg}</div>
-        <form onSubmit={this.handleSubmit} action="#" method="post">
-          <textarea value={this.state.content} onChange={this.changeContent}></textarea>
-          <input type="submit" />
-        </form>
-      </Modal>
-    );
-  }
+  };
+  const changeContent = (e) => {
+    setState(_.extend({}, state, {content: e.target.value}));
+  };
+  return (
+    <Modal ariaHideApp={false} isOpen={props.modalIsOpen} onRequestClose={props.onRequestClose} style={customStyles} >
+      <div>{props.modalErrorMsg}</div>
+      <form onSubmit={handleSubmit} action="#" method="post">
+        <textarea value={state.content} onChange={changeContent}></textarea>
+        <input type="submit" />
+      </form>
+    </Modal>
+  );
 }
 
 export default ReplyModal;

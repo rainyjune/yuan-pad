@@ -1,28 +1,26 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import _ from 'lodash';
 import dataProvider from './dataProvider.js';
 import ReplyModal from './acp-replyModal.js';
 import CommentUpdateModal from './acp-updateCommentModal.js';
 
-class Reply extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      b_username: null,
-      id: 0,
-      ip: "::1",
-      post_content: "",
-      reply_content: "",
-      reply_time: "",
-      time: "",
-      uid: null,
-      uname: "",
-      user: ""
-    };
-  }
-  componentWillReceiveProps(nextProps) {
-    let data = nextProps.data;
+function Reply(props) {
+  const [state, setState] = useState({
+    b_username: null,
+    id: 0,
+    ip: "::1",
+    post_content: "",
+    reply_content: "",
+    reply_time: "",
+    time: "",
+    uid: null,
+    uname: "",
+    user: ""
+  });
+  useEffect(() => {
+    let data = props.data;
     if (data) {
-      this.setState({
+      setState({
         b_username: data.b_username,
         id: data.id,
         ip: data.ip,
@@ -35,361 +33,310 @@ class Reply extends React.Component {
         user: data.user
       });
     }
-  }
-  deleteReply(e) {
+  }, [props.data]);
+
+  const deleteReply = (e) => {
     e.preventDefault();
-    if (!confirm(this.props.lang.DEL_REPLY_CONFIRM)) {
+    if (!confirm(props.lang.DEL_REPLY_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteReply(this.state.id, response => {
-      this.setState({reply_content: ''});
+    dataProvider.deleteReply(state.id, response => {
+      setState(_.extend({}, state, { reply_content: '' }));
     });
   }
-  render() {
-    let lang = this.props.lang,
-        data = this.state;
-    if (!data || !data.reply_content) {
-      return null;
-    }
-    return (
-      <div>
-        {lang.YOU_REPLIED && lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content)}
-        <span>&nbsp;<a onClick={this.deleteReply} href="#">{lang.DELETE_THIS_REPLY}</a></span>
-      </div>
-    );
+  let lang = props.lang,
+      data = state;
+  if (!data || !data.reply_content) {
+    return null;
   }
+  return (
+    <div>
+      {lang.YOU_REPLIED && lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content)}
+      <span>&nbsp;<a onClick={deleteReply} href="#">{lang.DELETE_THIS_REPLY}</a></span>
+    </div>
+  );
 }
 
-class Comment extends React.Component {
-  constructor(props) {
-    super(props);
-    this.deleteComment = this.deleteComment.bind(this);
-    this.replyComment = this.replyComment.bind(this);
-    this.updateComment = this.updateComment.bind(this);
-    this.banIP = this.banIP.bind(this);
-    this.toggleItem = this.toggleItem.bind(this);
-  }
-  banIP(e) {
+function Comment(props) {
+  const banIP = (e) => {
     let dom = e.target;
     e.preventDefault();
-    let ip = this.props.data.ip;
+    let ip = props.data.ip;
     dataProvider.banIP(ip, () => {
-      this.props.onActiveTabChanged('ban_ip');
+      props.onActiveTabChanged('ban_ip');
     });
-  }
-  deleteComment(e) {
+  };
+  const deleteComment = (e) => {
     e.preventDefault();
-    let data = this.props.data;
+    let data = props.data;
     let commentId = data.id;
     let reply = data.reply ? "1" : "0";
-    if (!confirm(this.props.lang.DEL_COMMENT_CONFIRM)) {
+    if (!confirm(props.lang.DEL_COMMENT_CONFIRM)) {
       return false;
     }
     // TODO
     dataProvider.deleteComment(commentId, reply, response => {
-      this.props.onCommentDeleted();
+      props.onCommentDeleted();
     });
-  }
-  replyComment(e) {
+  };
+  const replyComment = (e) => {
     e.preventDefault();
-    this.props.onReplyComment(this.props.data);
-  }
-  updateComment(e) {
+    props.onReplyComment(props.data);
+  };
+  const updateComment = (e) => {
     e.preventDefault();
-    this.props.onUpdateComment(this.props.data);
-  }
-  toggleItem() {
-    this.props.onToggleItem(this.props.data);
-  }
-  render() {
-    let data = this.props.data;
-    let lang = this.props.lang;
-    return (
-      <tr className="row">
-        <td className="col-xs-1 col-sm-1 col-md-1">
-          <input type='checkbox' checked={this.props.data.checked} onChange={this.toggleItem} />
-          <input type='hidden' name={this.props.data.id} value={data.reply ? 1 : 0} />
-        </td>
-        <td className="col-xs-3 col-sm-3 col-md-3">
-          {parseInt(data.uid) ? data.b_username : data.uname}
-        </td>
-        <td className='col-xs-6 col-sm-6 col-md-6'>
-          {data.post_content}<br />{lang.TIME}：{data.time}
-          <Reply lang={lang} data={data} />
-        </td>
-        <td className="col-xs-2 col-sm-2 col-md-2">
-          <button className="btn btn-danger btn-sm" onClick={this.deleteComment}>
-            <span className="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
-          </button>
-          <button className="btn btn-default btn-sm" onClick={this.replyComment}>
-            <img src="./themes/spa/images/reply.png" width="12" height="12" />
-          </button>
-          <button className="btn btn-default btn-sm" onClick={this.updateComment}>
-            <span className="glyphicon glyphicon-pencil" aria-hidden="true"></span>
-          </button>
-          <button className="btn btn-default btn-sm" onClick={this.banIP} data-ip={data.ip}>
-            <span className="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
-          </button>
-        </td>
-      </tr>
-    );
-  }
+    props.onUpdateComment(props.data);
+  };
+  const toggleItem = () => {
+    props.onToggleItem(props.data);
+  };
+  let data = props.data;
+  let lang = props.lang;
+  return (
+    <tr className="row">
+      <td className="col-xs-1 col-sm-1 col-md-1">
+        <input type='checkbox' checked={props.data.checked} onChange={toggleItem} />
+        <input type='hidden' name={props.data.id} value={data.reply ? 1 : 0} />
+      </td>
+      <td className="col-xs-3 col-sm-3 col-md-3">
+        {parseInt(data.uid) ? data.b_username : data.uname}
+      </td>
+      <td className='col-xs-6 col-sm-6 col-md-6'>
+        {data.post_content}<br />{lang.TIME}：{data.time}
+        <Reply lang={lang} data={data} />
+      </td>
+      <td className="col-xs-2 col-sm-2 col-md-2">
+        <button className="btn btn-danger btn-sm" onClick={deleteComment}>
+          <span className="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
+        </button>
+        <button className="btn btn-default btn-sm" onClick={replyComment}>
+          <img src="./themes/spa/images/reply.png" width="12" height="12" />
+        </button>
+        <button className="btn btn-default btn-sm" onClick={updateComment}>
+          <span className="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+        </button>
+        <button className="btn btn-default btn-sm" onClick={banIP} data-ip={data.ip}>
+          <span className="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
+        </button>
+      </td>
+    </tr>
+  );
 }
 
-class ACPMessages extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      comments: [],
-      modalIsOpen: false,
-      modalType: '', // "reply" or "update" 
-      modalCommentModel: null,
-      modalErrorMsg: ''
-    };
-    this.handleCommentDeleted = this.handleCommentDeleted.bind(this);
-    this.handleReplyComment = this.handleReplyComment.bind(this);
-    this.handleReplyFormSubmitted = this.handleReplyFormSubmitted.bind(this);
-    this.handleUpdateComment = this.handleUpdateComment.bind(this);
-    this.handleCommentUpdated = this.handleCommentUpdated.bind(this);
-    this.toggleInputClicked = this.toggleInputClicked.bind(this);
-    this.handleToggleItem = this.handleToggleItem.bind(this);
-    this.deleteAllReplies = this.deleteAllReplies.bind(this);
-    this.deleteAllComments = this.deleteAllComments.bind(this);
-    this.deleteSelected = this.deleteSelected.bind(this);
-  }
-  addSelectedFlag(arr) {
+function ACPMessages(props) {
+  const [comments, setComments] = useState([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [modalType, setModalType] = useState(''); // "reply" or "update" 
+  const [modalCommentModel, setModalCommentModel] = useState(null);
+  const [modalErrorMsg, setModalErrorMsg] = useState('');
+  const addSelectedFlag = (arr) => {
     if (Array.isArray(arr)) {
       arr.forEach((currentValue, index) => {
         currentValue['checked'] = false;
       });
     }
-  }
-  toggle(itemToToggle) {
-    let field = this.getMixinAttr();
-    let data = this.state[field].map((currentValue, index) => {
+  };
+  const toggle = (itemToToggle) => {
+    let data = comments.map((currentValue, index) => {
       if (currentValue === itemToToggle) {
         currentValue['checked'] = !currentValue['checked'];
       }
       return currentValue;
     });
-    this.setMixState(data);
-  }
-  toggleInputClicked(e) {
-    this.toggleAll(e.target.checked);
-  }
-  toggleAll(checked) {
-    let field = this.getMixinAttr();
-    let data = this.state[field].map((currentValue, index) => {
+    setMixState(data);
+  };
+  const toggleInputClicked = (e) => {
+    toggleAll(e.target.checked);
+  };
+  const toggleAll = (checked) => {
+    let data = comments.map((currentValue, index) => {
       currentValue['checked'] = checked;
       return currentValue;
     });
-    this.setMixState(data);
-  }
-  checkAll(e) {
+    setMixState(data);
+  };
+  const checkAll = (e) => {
     e.preventDefault();
-    this.toggleAll(true);
-  }
-  checkNone(e) {
-    e.preventDefault();
-    this.toggleAll(false);
-  }
-  checkXAll(e) {
-    e.preventDefault();
-    this.toggleXAll();
-  }
-  toggleXAll() {
-    let field = this.getMixinAttr();
-    let data = this.state[field].map((currentValue, index) => {
-      currentValue['checked'] = !currentValue['checked'];
-      return currentValue;
-    });
-    this.setMixState(data);
-  }
-  getCheckedItems() {
+    toggleAll(true);
+  };
+  const getCheckedItems = () => {
     let arr = [];
-    let key = this.getItemKey();
-    let field = this.getMixinAttr();
-    this.state[field].forEach((currentValue, index) => {
+    let key = getItemKey();
+    let field = getMixinAttr();
+    comments.forEach((currentValue, index) => {
       if (currentValue.checked) {
         arr.push(currentValue[key]);
       }
     });
     return arr;
-  }
-  getMixinAttr() {
+  };
+  const getMixinAttr = () => {
     return 'comments';
-  }
-  getItemKey() {
+  };
+  const getItemKey = () => {
     return 'id';
-  }
-  setMixState(data) {
-    this.setState({comments: data});
-  }
-  deleteAllComments(e) {
+  };
+  const setMixState = (data) => {
+    setComments(data);
+  };
+  const deleteAllComments = (e) => {
     e.preventDefault();
-    if (!confirm(this.props.lang.DEL_ALL_CONFIRM)) {
+    if (!confirm(props.lang.DEL_ALL_CONFIRM)) {
       return false;
     }
     dataProvider.deleteAllComments(res => {
       if (res.statusCode === 200) {
-        this.setState({comments: []});
+        setComments([]);
       } else {
         alert('Error');
       }
     });
-  }
+  };
   /**
    * Tested 1
    */
-  deleteAllReplies(e) {
+  const deleteAllReplies = (e) => {
     e.preventDefault();
-    if (!confirm(this.props.lang.DEL_ALL_REPLY_CONFIRM)) {
+    if (!confirm(props.lang.DEL_ALL_REPLY_CONFIRM)) {
       return false;
     }
     dataProvider.deleteAllReplies(res => {
       if (res.statusCode === 200) {
-        this.loadCommentsFromServer();
+        loadCommentsFromServer();
       } else {
         alert('ERROR')
       }
     });
-  }
-  deleteSelected(e) {
+  };
+  const deleteSelected = (e) => {
     e.preventDefault();
-    let checkedItems = this.getCheckedItems();
+    let checkedItems = getCheckedItems();
     if (checkedItems.length === 0) {
       return false;
     }
-    if (!confirm(this.props.lang.DEL_SELECTEDCOMMENTS_CONFIRM)) {
+    if (!confirm(props.lang.DEL_SELECTEDCOMMENTS_CONFIRM)) {
       return false;
     }
     dataProvider.deleteMutiComments(checkedItems, res => {
       if (res.statusCode === 200) {
-        this.loadCommentsFromServer();
+        loadCommentsFromServer();
       } else {
         alert('delete error');
       }
     });
-  }
-  handleReplyComment(commentTobeReplied) {
-    this.openModal('reply', commentTobeReplied);
-  }
-  closeModal() {
-    this.setState({
-      modalIsOpen: false,
-      modalType: '', 
-      modalCommentModel: null,
-      modalErrorMsg: ''
-    });
-  }
-  openModal(type = 'reply', commentData) {
-    this.setState({
-      modalIsOpen: true,
-      modalType: type, 
-      modalCommentModel: commentData,
-      modalErrorMsg: ''
-    });
-  }
-  handleReplyFormSubmitted() {
-    this.closeModal();
-    this.loadCommentsFromServer();
-  }
-  handleUpdateComment(commentTobeUpdated) {
-    this.openModal('update', commentTobeUpdated);
-  }
-  handleCommentUpdated() {
-    this.closeModal();
-    this.loadCommentsFromServer();
-  }
-  loadCommentsFromServer() {
+  };
+  const handleReplyComment = (commentTobeReplied) => {
+    openModal('reply', commentTobeReplied);
+  };
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setModalType('');
+    setModalCommentModel(null);
+    setModalErrorMsg('')
+  };
+  const openModal = (type = 'reply', commentData) => {
+    setModalIsOpen(true);
+    setModalType(type);
+    setModalCommentModel(commentData);
+    setModalErrorMsg('');
+  };
+  const handleReplyFormSubmitted = () => {
+    closeModal();
+    loadCommentsFromServer();
+  };
+  const handleUpdateComment = (commentTobeUpdated) => {
+    openModal('update', commentTobeUpdated);
+  };
+  const handleCommentUpdated = () => {
+    closeModal();
+    loadCommentsFromServer();
+  };
+  const loadCommentsFromServer = () => {
     dataProvider.loadAllCommentsFromServer(res => {
       if (res.statusCode === 200 || res.statusCode === 404) {
         let data = res.response.comments;
-        this.addSelectedFlag(data)
-        this.setState({comments: data});
+        addSelectedFlag(data)
+        //setState({comments: data});
+        setComments(data);
       } else {
         // TODO .
         alert('error');
       }
     });
-  }
-  componentDidMount() {
-    this.loadCommentsFromServer();
-  }
-  handleToggleItem(item) {
-    this.toggle(item);
-  }
-  handleCommentDeleted() {
-    this.loadCommentsFromServer();
-    this.props.onCommentDeleted();
-  }
-  render() {
-    let state = this.state,
-        props = this.props,
-        lang = props.lang;
-    
-    let modalProps = {
-      comment: state.modalCommentModel,
-      modalErrorMsg: state.modalErrorMsg,
-      onRequestClose: this.closeModal
-    };
-    return (
-      <div className={props.activeTab === "message" ? "message_container selectTag" : "message_container"}>
-        <form onSubmit={this.deleteSelected} action="#" method="post">
-          <table className="table table-striped table-hover">
-            <thead>
-              <tr className="header row">
-                <th className="col-xs-1 col-sm-1 col-md-1"><input type="checkbox" onClick={this.toggleInputClicked} /></th>
-                <th className="col-xs-3 col-sm-3 col-md-3">{lang.NICKNAME}</th>
-                <th className="col-xs-6 col-sm-6 col-md-6">{lang.MESSAGE}</th>
-                <th className="col-xs-2 col-sm-2 col-md-2">{lang.OPERATION}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {(() => {
-                let comments = state.comments, commentArr = [];
-                let createComment = function(comment) {
-                  commentArr.push(
-                    <Comment
-                      lang={lang}
-                      data={comment}
-                      key={comment.id}
-                      onActiveTabChanged={props.onActiveTabChanged}
-                      onReplyComment={this.handleReplyComment}
-                      onCommentDeleted={this.handleCommentDeleted}
-                      onUpdateComment={this.handleUpdateComment}
-                      onToggleItem={this.handleToggleItem}
-                    />
-                  );
-                };
-                comments && comments.map(createComment, this);
-                return commentArr;
-              })()}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan='4'>
-                  <input type='submit' value={lang.DELETE_CHECKED} />
-                  <button onClick={this.deleteAllComments}>{lang.DELETE_ALL}</button>
-                  <button onClick={this.deleteAllReplies}>{lang.DELETE_ALL_REPLY}</button>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-        </form>
-        <ReplyModal
-          {...modalProps}
-          modalIsOpen = {state.modalIsOpen && state.modalType === "reply"}
-          onReplySubmit={this.handleReplyFormSubmitted}
-        />
-        <CommentUpdateModal
-          {...modalProps}
-          modalIsOpen = {state.modalIsOpen && state.modalType === "update"}
-          onCommentUpdated={this.handleCommentUpdated}
-        />
-      </div>
-    );
-  }
+  };
+  useEffect(() => {
+    loadCommentsFromServer();
+  }, []);
+  const handleToggleItem = (item) => {
+    toggle(item);
+  };
+  const handleCommentDeleted = () => {
+    loadCommentsFromServer();
+    props.onCommentDeleted();
+  };
+  const lang = props.lang;
+  
+  let modalProps = {
+    comment: modalCommentModel,
+    modalErrorMsg: modalErrorMsg,
+    onRequestClose: closeModal
+  };
+  return (
+    <div className={props.activeTab === "message" ? "message_container selectTag" : "message_container"}>
+      <form onSubmit={deleteSelected} action="#" method="post">
+        <table className="table table-striped table-hover">
+          <thead>
+            <tr className="header row">
+              <th className="col-xs-1 col-sm-1 col-md-1"><input type="checkbox" onClick={toggleInputClicked} /></th>
+              <th className="col-xs-3 col-sm-3 col-md-3">{lang.NICKNAME}</th>
+              <th className="col-xs-6 col-sm-6 col-md-6">{lang.MESSAGE}</th>
+              <th className="col-xs-2 col-sm-2 col-md-2">{lang.OPERATION}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {(() => {
+              let commentArr = [];
+              let createComment = function(comment) {
+                commentArr.push(
+                  <Comment
+                    lang={lang}
+                    data={comment}
+                    key={comment.id}
+                    onActiveTabChanged={props.onActiveTabChanged}
+                    onReplyComment={handleReplyComment}
+                    onCommentDeleted={handleCommentDeleted}
+                    onUpdateComment={handleUpdateComment}
+                    onToggleItem={handleToggleItem}
+                  />
+                );
+              };
+              comments && comments.map(createComment, this);
+              return commentArr;
+            })()}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan='4'>
+                <input type='submit' value={lang.DELETE_CHECKED} />
+                <button onClick={deleteAllComments}>{lang.DELETE_ALL}</button>
+                <button onClick={deleteAllReplies}>{lang.DELETE_ALL_REPLY}</button>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </form>
+      <ReplyModal
+        {...modalProps}
+        modalIsOpen = {modalIsOpen && modalType === "reply"}
+        onReplySubmit={handleReplyFormSubmitted}
+      />
+      <CommentUpdateModal
+        {...modalProps}
+        modalIsOpen = {modalIsOpen && modalType === "update"}
+        onCommentUpdated={handleCommentUpdated}
+      />
+    </div>
+  );
 }
 
 export default ACPMessages;
