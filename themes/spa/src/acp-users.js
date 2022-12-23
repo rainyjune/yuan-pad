@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import UserUpdateModal from './acp-userUpdateModal.js';
 import dataProvider from './dataProvider.js';
 
@@ -45,246 +45,199 @@ function UserItem(props) {
   );
 }
 
-class ACPUser extends React.Component {
-  /**
-   * Tested 1.
-   */
-  constructor(props) {
-    super(props)
-    this.state = {
-      users: [],
-      updateErrorMsg: '',
-      updateModalIsOpen: false,
-      updatedModalUserData: null,
-    };
-    this.toggleInputClicked = this.toggleInputClicked.bind(this);
-    this.handleToggleItem = this.handleToggleItem.bind(this);
-    this.handleDeleteMulti = this.handleDeleteMulti.bind(this);
-    this.openUserUpdateModal = this.openUserUpdateModal.bind(this);
-    this.handleUpdateSubmit = this.handleUpdateSubmit.bind(this);
-    this.deleteAllUsers = this.deleteAllUsers.bind(this);
-    this.closeUpdateModal = this.closeUpdateModal.bind(this);
-    this.loadAllUsersFromServer = this.loadAllUsersFromServer.bind(this);
-    this.handleUserDeleted = this.handleUserDeleted.bind(this);
-  }
-  addSelectedFlag(arr) {
+function ACPUser(props) {
+  const [users, setUsers] = useState([]);
+  const [modalInfo, setModalInfo] = useState({
+    updateErrorMsg: '',
+    updateModalIsOpen: false,
+    updatedModalUserData: null,
+  });
+  const addSelectedFlag = (arr) => {
     if (Array.isArray(arr)) {
       arr.forEach((currentValue, index) => {
         currentValue['checked'] = false;
       });
     }
-  }
-  toggle(itemToToggle) {
-    let field = this.getMixinAttr();
-    let data = this.state[field].map((currentValue, index) => {
+  };
+  const toggle = (itemToToggle) => {
+    let data = users.map((currentValue, index) => {
       if (currentValue === itemToToggle) {
         currentValue['checked'] = !currentValue['checked'];
       }
       return currentValue;
     });
-    this.setMixState(data);
-  }
-  toggleInputClicked(e) {
-    this.toggleAll(e.target.checked);
-  }
-  toggleAll(checked) {
-    let field = this.getMixinAttr();
-    let data = this.state[field].map((currentValue, index) => {
+    setUsers(data);
+  };
+  const toggleInputClicked = (e) => {
+    toggleAll(e.target.checked);
+  };
+  const toggleAll = (checked) => {
+    let data = users.map((currentValue, index) => {
       currentValue['checked'] = checked;
       return currentValue;
     });
-    this.setMixState(data);
-  }
-  checkAll(e) {
-    e.preventDefault();
-    this.toggleAll(true);
-  }
-  checkNone(e) {
-    e.preventDefault();
-    this.toggleAll(false);
-  }
-  checkXAll(e) {
-    e.preventDefault();
-    this.toggleXAll();
-  }
-  toggleXAll() {
-    let field = this.getMixinAttr();
-    let data = this.state[field].map((currentValue, index) => {
-      currentValue['checked'] = !currentValue['checked'];
-      return currentValue;
-    });
-    this.setMixState(data);
-  }
-  getCheckedItems() {
+    setUsers(data);
+  };
+  const getCheckedItems = () => {
     let arr = [];
-    let key = this.getItemKey();
-    let field = this.getMixinAttr();
-    this.state[field].forEach((currentValue, index) => {
+    let key = getItemKey();
+    users.forEach((currentValue, index) => {
       if (currentValue.checked) {
         arr.push(currentValue[key]);
       }
     });
     return arr;
-  }
-  getMixinAttr() {
+  };
+  const getMixinAttr = () => {
     return 'users';
-  }
-  getItemKey() {
+  };
+  const getItemKey = () => {
     return 'uid';
-  }
-  setMixState(data) {
-    this.setState({users: data});
-  }
-  /**
-   * Tested 1
-   */
-  componentDidMount() {
-    this.loadAllUsersFromServer();
-  }
-  /**
-   * Tested 1.
-   */
-  loadAllUsersFromServer() {
+  };
+
+  useEffect(() => {
+    loadAllUsersFromServer();
+  }, []);
+
+  const loadAllUsersFromServer = () => {
     dataProvider.getAllUsers(res => {
       if (res.statusCode === 200) {
         let data = res.response;
-        this.addSelectedFlag(data);
-        this.setState({users: data});
+        addSelectedFlag(data);
+        setUsers(data);
       }
     });
-  }
+  };
   /**
    * Tested 1.
    */
-  handleUserDeleted() {
-    this.loadAllUsersFromServer();
-  }
+  const handleUserDeleted = () => {
+    loadAllUsersFromServer();
+  };
   /**
    * Tested 1.
    */
-  handleUpdateSubmit(newUserData) {
+  const handleUpdateSubmit = (newUserData) => {
     dataProvider.updateUser(newUserData, res => {
       if (res.statusCode === 200) {
-        this.setState({
+        setModalInfo({
           updateErrorMsg: '',
           updatedModalUserData: null,
           updateModalIsOpen: false
         });
-        this.loadAllUsersFromServer();
+        loadAllUsersFromServer();
       }
     });
-  }
+  };
   /**
    * Tested 1.
    */
-  closeUpdateModal() {
-    this.setState({
+  const closeUpdateModal = () => {
+    setModalInfo({
       updateErrorMsg: '',
       updatedModalUserData: null,
       updateModalIsOpen: false
     });
-  }
+  };
   /**
    * Tested 1.
    */
-  openUserUpdateModal(userData) {
-    this.setState({
-        updateErrorMsg: '',
-        updatedModalUserData: userData,
-        updateModalIsOpen: true
-      });
-  }
+  const openUserUpdateModal = (userData) => {
+    setModalInfo({
+      updateErrorMsg: '',
+      updatedModalUserData: userData,
+      updateModalIsOpen: true
+    });
+  };
   /**
    * Tested 1.
    */
-  deleteAllUsers(e) {
+  const deleteAllUsers = (e) => {
     e.preventDefault();
-    if (!confirm(this.props.lang.DEL_ALLUSER_CONFIRM)) {
+    if (!confirm(props.lang.DEL_ALLUSER_CONFIRM)) {
       return false;
     }
     dataProvider.deleteAllUsers(res => {
       if (res.statusCode === 200) {
-        this.loadAllUsersFromServer();
+        loadAllUsersFromServer();
       }
     });
-  }
+  };
   /**
    * Tested 1.
    */
-  handleDeleteMulti(e) {
+  const handleDeleteMulti = (e) => {
     e.preventDefault();
-    let checkedUids = this.getCheckedItems();
+    let checkedUids = getCheckedItems();
     if (checkedUids.length === 0) {
       return false;
     }
-    if (!confirm(this.props.lang.DEL_SELECTEDUSERS_CONFIRM)) {
+    if (!confirm(props.lang.DEL_SELECTEDUSERS_CONFIRM)) {
       return false;
     }
     dataProvider.deleteMutiUsers(checkedUids, res => {
       if (res.statusCode === 200) {
-        this.loadAllUsersFromServer();
+        loadAllUsersFromServer();
       } else {
         alert('delete error');
       }
     });
-  }
+  };
   /**
    * Tested 1
    */
-  handleToggleItem(userItem) {
-    this.toggle(userItem);
-  }
-  render() {
-    let lang = this.props.lang;
-    let cssClass = this.props.activeTab === "user" ? "user_container selectTag" : "user_container";
-    let createUserItem = function(user) {
-      return (
-        <UserItem
-          data={user}
-          lang={lang}
-          key={user.uid}
-          onOpenUserUpdateModal={this.openUserUpdateModal}
-          onUserDeleted={this.handleUserDeleted}
-          onToggleItem={this.handleToggleItem}
-        />
-      );
-    };
+  const handleToggleItem = (userItem) => {
+    toggle(userItem);
+  };
+  let lang = props.lang;
+  let cssClass = props.activeTab === "user" ? "user_container selectTag" : "user_container";
+  let createUserItem = function(user) {
     return (
-      <div className={cssClass}>
-        <form onSubmit={this.handleDeleteMulti} action="#" method="post">
-          <table className="table table-striped table-hover">
-            <thead>
-              <tr className="header row">
-                <th className="col-xs-1 col-sm-1 col-md-1"><input type="checkbox" onClick={this.toggleInputClicked} /></th>
-                <th className="col-xs-3 col-sm-3 col-md-3">{lang.NICKNAME}</th>
-                <th className="col-xs-6 col-sm-6 col-md-6">{lang.EMAIL}</th>
-                <th className="col-xs-2 col-sm-2 col-md-2">{lang.OPERATION}</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.state.users.map(createUserItem, this)}
-            </tbody>
-            <tfoot>
-              <tr>
-                <td colSpan='4'>
-                  <input type='submit' value={lang.DELETE_CHECKED} />
-                  <button onClick={this.deleteAllUsers}>{lang.DELETE_ALL}</button>
-                </td>
-              </tr>
-            </tfoot>
-          </table>
-          <UserUpdateModal
-            userData={this.state.updatedModalUserData}
-            errorMsg={this.state.updateErrorMsg} 
-            modalIsOpen={this.state.updateModalIsOpen} 
-            onRequestClose={this.closeUpdateModal}
-            onUpdateSubmit={this.handleUpdateSubmit}
-            lang={this.props.lang} 
-          />
-        </form>
-      </div>
+      <UserItem
+        data={user}
+        lang={lang}
+        key={user.uid}
+        onOpenUserUpdateModal={openUserUpdateModal}
+        onUserDeleted={handleUserDeleted}
+        onToggleItem={handleToggleItem}
+      />
     );
-  }
+  };
+  return (
+    <div className={cssClass}>
+      <form onSubmit={handleDeleteMulti} action="#" method="post">
+        <table className="table table-striped table-hover">
+          <thead>
+            <tr className="header row">
+              <th className="col-xs-1 col-sm-1 col-md-1"><input type="checkbox" onClick={toggleInputClicked} /></th>
+              <th className="col-xs-3 col-sm-3 col-md-3">{lang.NICKNAME}</th>
+              <th className="col-xs-6 col-sm-6 col-md-6">{lang.EMAIL}</th>
+              <th className="col-xs-2 col-sm-2 col-md-2">{lang.OPERATION}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.map(createUserItem, this)}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan='4'>
+                <input type='submit' value={lang.DELETE_CHECKED} />
+                <button onClick={deleteAllUsers}>{lang.DELETE_ALL}</button>
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+        <UserUpdateModal
+          userData={modalInfo.updatedModalUserData}
+          errorMsg={modalInfo.updateErrorMsg} 
+          modalIsOpen={modalInfo.updateModalIsOpen} 
+          onRequestClose={closeUpdateModal}
+          onUpdateSubmit={handleUpdateSubmit}
+          lang={props.lang} 
+        />
+      </form>
+    </div>
+  );
 }
 
 export default ACPUser;
