@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import dataProvider from './dataProvider.js';
+import LanguageContext from './languageContext.js';
 
 function LogoutButton(props) {
   const handleSignOut = (e) => {
@@ -8,7 +9,8 @@ function LogoutButton(props) {
       props.onCurrentUserUpdated({});
     });
   };
-  return (<a role="button" className="btn btn-default signOutButton" href='#' onClick={handleSignOut}>{props.lang.LOGOUT}</a>);
+  const lang = useContext(LanguageContext);
+  return (<a role="button" className="btn btn-default signOutButton" href='#' onClick={handleSignOut}>{lang.LOGOUT}</a>);
 }
 
 export default LogoutButton;

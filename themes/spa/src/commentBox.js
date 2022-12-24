@@ -1,5 +1,7 @@
-import React, { forwardRef, useEffect, useRef, useState, useImperativeHandle } from 'react';
+import React, { forwardRef, useEffect, useRef, useState, useImperativeHandle, useContext } from 'react';
 import dataProvider from './dataProvider.js';
+import LanguageContext from './languageContext.js';
+import AppConfigContext from './appConfigContext.js';
 const yuanjs = require('@rainyjune/yuanjs');
 
 function Pagination(props) {
@@ -33,17 +35,19 @@ function Pagination(props) {
 }
 
 function CommentStatistics(props) {
+  const appConfig = useContext(AppConfigContext);
+  const lang = useContext(LanguageContext);
   const rawMarkup = () => {
     let pagenavText, text;
     if (props.commentListType === 1) {
-      pagenavText = props.lang.PAGE_NAV;
+      pagenavText = lang.PAGE_NAV;
       text = pagenavText ? pagenavText.replace('{num_of_post}', props.total).replace('{num_of_page}', props.pagenum) : '';
     } else if (props.commentListType === 2) {
       if (props.total) {
-        pagenavText = props.lang.SEARCH_FOUND;
+        pagenavText = lang.SEARCH_FOUND;
         text = pagenavText ? pagenavText.replace('{result_num}', props.total) : '';
       } else {
-        text = props.lang.SEARCH_NOTFOUND;
+        text = lang.SEARCH_NOTFOUND;
       }
     }
     return { __html: text };
@@ -52,13 +56,12 @@ function CommentStatistics(props) {
     <div className="statistics">
       {(props.commentListType === 2) ? <a href="#" onClick={props.onCloseSearch}>Close</a> : ''}
       <p dangerouslySetInnerHTML={rawMarkup()} />
-      { (!parseInt(props.appConfig.page_on) || props.commentListType !== 1) ? '' :
+      { (!parseInt(appConfig.page_on) || props.commentListType !== 1) ? '' :
         <Pagination 
           onPageChanged={props.onPageChanged} 
           currentPage = {props.currentPage}  
-          appConfig={props.appConfig}
           commentListType={props.commentListType}
-          total={Math.ceil(props.total/props.appConfig.num_perpage)} 
+          total={Math.ceil(props.total/appConfig.num_perpage)} 
         />
       }
     </div>
@@ -66,9 +69,7 @@ function CommentStatistics(props) {
 }
 
 function CommentList(props) {
-  let lang = props.lang,
-      searchText = props.searchText,
-      appConfig = props.appConfig,
+  let searchText = props.searchText,
       isSearchResult = props.commentListType === 2;
 
   let createCommentNodes = function(comment) {
@@ -76,9 +77,7 @@ function CommentList(props) {
     return (
       <Comment
         key={comment.id}
-        appConfig={appConfig}
-        data = {comment}
-        lang = {lang}>
+        data = {comment}>
         {text}
       </Comment>
     );
@@ -91,13 +90,15 @@ function CommentList(props) {
 }
 
 function Reply(props) {
+  const lang = useContext(LanguageContext);
+  const appConfig = useContext(AppConfigContext);
   const rawMarkup = () => {
     let mapObj = {
-      '{admin_name}': props.appConfig.admin,
+      '{admin_name}': appConfig.admin,
       '{reply_time}': props.date,
       '{reply_content}': props.content
     };
-    return { __html: yuanjs.replaceAll(props.lang.ADMIN_REPLIED, mapObj) };
+    return { __html: yuanjs.replaceAll(lang.ADMIN_REPLIED, mapObj) };
   };
   return (<div className="reply" dangerouslySetInnerHTML={rawMarkup()}></div>);
 }
@@ -117,8 +118,6 @@ function Comment(props) {
         <p dangerouslySetInnerHTML={rawMarkup()} />
       </div>
       {props.data.reply_content ? <Reply
-        appConfig={props.appConfig}
-        lang={props.lang}
         content={props.data.reply_content}
         date={props.data.reply_time}
         /> : null
@@ -128,6 +127,7 @@ function Comment(props) {
 }
 
 const Captcha = forwardRef((props, ref) => {
+  const lang = useContext(LanguageContext);
   const picRef = useRef(null);
   const refreshCaptch = (e) => {
     e.preventDefault();
@@ -141,7 +141,7 @@ const Captcha = forwardRef((props, ref) => {
   useImperativeHandle(ref, () => ({refresh}), []);
   return (
     <div className="form-group">
-      <label htmlFor="inputCaptcha" className="col-sm-2 col-lg-2 control-label">{props.lang.CAPTCHA}</label>
+      <label htmlFor="inputCaptcha" className="col-sm-2 col-lg-2 control-label">{lang.CAPTCHA}</label>
       <div className="col-sm-5 col-lg-5">
         <input
           id="inputCaptcha"
@@ -159,7 +159,7 @@ const Captcha = forwardRef((props, ref) => {
           data-src="index.php?action=captcha"
           onClick={refreshCaptch}
           alt="Captcha"
-          title={props.lang.CLICK_TO_REFRESH}
+          title={lang.CLICK_TO_REFRESH}
         />
       </div>
     </div>
@@ -173,6 +173,8 @@ function CommentForm(props) {
   const [username, setUsername] = useState('anonymous');
   const [text, setText] = useState('');
   const [valid_code, setValid_code] = useState('');
+  const lang = useContext(LanguageContext);
+  const appConfig = useContext(AppConfigContext);
   useEffect(() => {
     let computedState = {};
     let propUser = props.user;
@@ -228,7 +230,7 @@ function CommentForm(props) {
   return (
     <form onSubmit={handleSubmit} className="commentForm form-horizontal" >
       <div className="form-group">
-        <label htmlFor="inputUser" className="col-sm-2 col-lg-2 control-label">{props.lang.NICKNAME}</label>
+        <label htmlFor="inputUser" className="col-sm-2 col-lg-2 control-label">{lang.NICKNAME}</label>
         <div className="col-sm-5 col-lg-5">
           <input
             id="inputUser"
@@ -242,23 +244,22 @@ function CommentForm(props) {
         </div>
       </div>
       <div className="form-group">
-        <label htmlFor="inputContent" className="col-sm-2 col-lg-2 control-label">{props.lang.CONTENT}</label>
+        <label htmlFor="inputContent" className="col-sm-2 col-lg-2 control-label">{lang.CONTENT}</label>
         <div className="col-sm-10 col-lg-10">
           <textarea id="inputContent" className="form-control" rows="3" onChange={handleTextChange} value={text}></textarea>
         </div>
       </div>
       {
-        (props.appConfig.valid_code_open == 1) ?
+        (appConfig.valid_code_open == 1) ?
           <Captcha
             ref={captchaRef}
             valid_code={valid_code}
-            lang={props.lang}
             onCaptchaChange={handleCaptchaChange}
           /> : null
       }
       <div className="form-group">
         <div className="col-sm-offset-2 col-sm-10 col-lg-offset-2 col-lg-10">
-          <button className="btn btn-default" type="submit">{props.lang.SUBMIT}</button>
+          <button className="btn btn-default" type="submit">{lang.SUBMIT}</button>
         </div>
       </div>
     </form>
@@ -268,12 +269,12 @@ function CommentForm(props) {
 function CommentBox(props) {
   var propsObj = {
     commentListType: props.commentListType,
-    lang: props.lang,
-    appConfig: props.appConfig
-  }
+  };
+  const lang = useContext(LanguageContext);
+  const appConfig = useContext(AppConfigContext);
   return (
     <div className="commentBox">
-      <h1>{props.lang.WELCOME_POST}</h1>
+      <h1>{lang.WELCOME_POST}</h1>
       <CommentList
         {...propsObj}
         data={props.comments}
@@ -285,7 +286,7 @@ function CommentBox(props) {
         onPageChanged={props.onPageChanged}
         total={props.commentsTotalNumber} 
         currentPage = {props.currentPage}
-        pagenum={props.appConfig.page_on ? Math.ceil(props.commentsTotalNumber/props.appConfig.num_perpage) : 1} />
+        pagenum={appConfig.page_on ? Math.ceil(props.commentsTotalNumber/appConfig.num_perpage) : 1} />
       {
         props.commentListType !== 1 ? '' :
         <CommentForm

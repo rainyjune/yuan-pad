@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import AppConfigContext from './appConfigContext';
+import UserContext from './userContext';
+import LanguageContext from './languageContext';
 
 function AppFooter(props) {
+  const appConfig = useContext(AppConfigContext);
+  const user = useContext(UserContext);
+  const lang = useContext(LanguageContext);
   const ACPMarkup = () => {
-    let ACP = (props.user && props.user.user_type === "admin") ? 
-              "<a href='index.php?action=control_panel'>"+ props.lang.ACP+"</a>" 
+    let ACP = (user && user.user_type === "admin") ? 
+              "<a href='index.php?action=control_panel'>"+ lang.ACP+"</a>" 
               : '';
     return {
       __html: ACP
@@ -12,8 +18,8 @@ function AppFooter(props) {
   return (
     <footer>
       <p>
-        {props.appConfig.copyright_info}&nbsp;
-        <a href={"mailto:" + props.appConfig.admin_email}>{props.lang.ADMIN_EMAIL}</a>&nbsp;
+        {appConfig.copyright_info}&nbsp;
+        <a href={"mailto:" + appConfig.admin_email}>{lang.ADMIN_EMAIL}</a>&nbsp;
         <span dangerouslySetInnerHTML={ACPMarkup()}></span>
       </p>
       <p>

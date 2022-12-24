@@ -1,6 +1,8 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import dataProvider from './dataProvider.js';
+import UserContext from './userContext.js';
+import LanguageContext from './languageContext.js';
 
 const customStyles = {
   content : {
@@ -20,7 +22,8 @@ function UserUpdate(props) {
   const emailRef = useRef(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const { lang: language, user } = props;
+  const language = useContext(LanguageContext);
+  const user = useContext(UserContext);
   const openModal = (e) => {
     e.preventDefault();
     setModalIsOpen(true);

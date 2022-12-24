@@ -8,6 +8,9 @@ import Footer from './footer.js';
 import dataProvider from './dataProvider.js';
 import Progress from './progress.js';
 import OfflineWarning from './offlineMode.js';
+import AppConfigContext from './appConfigContext.js';
+import UserContext from './userContext.js';
+import LanguageContext from './languageContext.js';
 
 function App(props) {
   const didMount = useRef(false);
@@ -90,47 +93,43 @@ function App(props) {
   const setCurrentUser = (userData) => {
     setCurrentUser1(userData);
   };
-
-  let propsObj = {
-    user: currentUser,
-    appConfig: appConfig,
-    lang: translations
-  };
   
   if (currentUser.user_type !== "admin" && appConfig.site_close == 1) {
     return <div>{appConfig.close_reason}</div>;
   }
   return (
-    <div id="appbox">
-      <Header
-        {...propsObj}
-        onCurrentUserUpdated={setCurrentUser}
-      />
-      <OfflineWarning 
-        appConfig={appConfig}
-        lang={translations}
-      />
-      <CommentBox
-        {...propsObj}
-        onCommentCreated={loadCommentsFromServer}
-        onCloseSearch={loadCommentsFromServer}
-        onPageChanged={handlePageChange}
-        currentPage = {currentPage}
-        commentListType={commentListType} 
-        comments={comments} 
-        commentsTotalNumber={commentsTotalNumber}
-        searchText={searchText}
-      />
-      <SearchBar 
-        onSubmit={handleSearch} 
-        onUserInput={handleKeywordInput}
-        searchText={searchText}
-      />
-      <Footer
-        {...propsObj}
-      />
-      <Progress loadingModalIsOpen={loadingModalIsOpen} />
-    </div>
+    <AppConfigContext.Provider value={appConfig}>
+      <UserContext.Provider value={currentUser}>
+        <LanguageContext.Provider value={translations}>
+          <div id="appbox">
+            <Header
+              onCurrentUserUpdated={setCurrentUser}
+            />
+            <OfflineWarning 
+              appConfig={appConfig}
+              lang={translations}
+            />
+            <CommentBox
+              onCommentCreated={loadCommentsFromServer}
+              onCloseSearch={loadCommentsFromServer}
+              onPageChanged={handlePageChange}
+              currentPage = {currentPage}
+              commentListType={commentListType} 
+              comments={comments} 
+              commentsTotalNumber={commentsTotalNumber}
+              searchText={searchText}
+            />
+            <SearchBar 
+              onSubmit={handleSearch} 
+              onUserInput={handleKeywordInput}
+              searchText={searchText}
+            />
+            <Footer />
+            <Progress loadingModalIsOpen={loadingModalIsOpen} />
+          </div>
+        </LanguageContext.Provider>
+      </UserContext.Provider>
+    </AppConfigContext.Provider>
   );
 }
 

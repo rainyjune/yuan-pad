@@ -1,20 +1,20 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import SignIn from './signIn.js';
 import SignUp from './signUp.js';
 import UpdateUser from './updateUser.js';
 import SignOutButton from './signOut.js';
+import UserContext from './userContext.js';
 
 function Header(props) {
   let propsObj = {
-    user: props.user,
-    lang: props.lang,
     onCurrentUserUpdated: props.onCurrentUserUpdated
   };
+  const user = useContext(UserContext);
   return (
     <div className="header">
       {(()=> {
-        switch (props.user.user_type) {
+        switch (user.user_type) {
           case "regular":
             return <div><UpdateUser {...propsObj} /><SignOutButton {...propsObj} /></div>;
           case "admin":

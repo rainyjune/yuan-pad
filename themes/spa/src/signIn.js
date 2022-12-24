@@ -1,6 +1,7 @@
-import React, { useRef, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import dataProvider from './dataProvider';
+import LanguageContext from './languageContext';
 
 const customStyles = {
   content : {
@@ -14,7 +15,7 @@ const customStyles = {
 };
 
 function SignIn(props) {
-  const { lang: language } = props;
+  const language = useContext(LanguageContext);
   const userRef = useRef(null);
   const passRef = useRef(null);
   const [errorMsg, setErrorMsg] = useState('');
