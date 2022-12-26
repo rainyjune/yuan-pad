@@ -2,12 +2,15 @@ var path = require("path");
 module.exports = {
   mode: 'development',
   entry: {
-    index: "./src/index.js",
+    index: "./src/index.tsx",
     acp: "./src/acp.js",
   },
   output: {
     path: path.resolve(__dirname, 'build'),
     filename: "[name].js"
+  },
+  resolve: {
+    extensions: ['.tsx', '.ts', '.js'],
   },
   module: {
     rules: [
@@ -44,6 +47,11 @@ module.exports = {
             presets: ['@babel/preset-react', '@babel/preset-env']
           }
         }
+      },
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
       },
     ],
   },
