@@ -211,7 +211,7 @@ function CommentForm(props) {
           alert(res.response);
           return;
         }
-        captchaRef.current.refresh();
+        captchaRef.current && captchaRef.current.refresh();
         // Clear the text in the textarea.
         setText('');
         props.onCommentCreated();
