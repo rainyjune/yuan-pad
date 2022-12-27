@@ -3,7 +3,7 @@ module.exports = {
   mode: 'development',
   entry: {
     index: "./src/index.tsx",
-    acp: "./src/acp.js",
+    acp: "./src/acp.tsx",
   },
   output: {
     path: path.resolve(__dirname, 'build'),
