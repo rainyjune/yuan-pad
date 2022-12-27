@@ -28,18 +28,7 @@ interface PostListResponse {
   statusText: string;
   response: {
     total: number,
-    comments: Array<{
-      id: number;
-      ip: string;
-      uid: any;
-      uname: string;
-      post_content: string;
-      time: string;
-      reply_id: any;
-      reply_content: string;
-      reply_time: string;
-      b_username: any;
-    }>
+    comments: Array<IComment>
   }
 }
 
@@ -47,18 +36,7 @@ interface SearchResponse {
   statusCode: number;
   statusText: string;
   response: {
-    comments: Array<{
-      id: number;
-      ip: string;
-      uid: any;
-      uname: string;
-      post_content: string;
-      time: string;
-      reply_id: any;
-      reply_content: string;
-      reply_time: string;
-      b_username: any;
-    }>;
+    comments: Array<IComment>;
     total: number;
   }
 }
@@ -99,6 +77,19 @@ interface IUser {
   email: string;
 }
 
+interface IComment {
+  id: number;
+  ip: string;
+  uid: any;
+  uname: string;
+  post_content: string;
+  time: string;
+  reply_id: any;
+  reply_content: string;
+  reply_time: string;
+  b_username: any;
+}
+
 function App(props: any) {
   const didMount = useRef(false);
   const [loadingModalIsOpen, setLoadingModalIsOpen] = useState(true);
@@ -117,7 +108,7 @@ function App(props: any) {
     timezone: '0',
     filter_type: 1,
     allowed_tags: ''});
-  const [comments, setComments] = useState([]);
+  const [comments, setComments] = useState<Array<IComment>>([]);
   const [commentsTotalNumber, setcommentsTotalNumber] = useState(0); // The total number of all comments or filtered comments.
   const [commentListType, setCommentListType] = useState(1); // 1: Default list. 2: Search Result list
   const [currentPage, setCurrentPage] = useState(0);
@@ -233,6 +224,6 @@ function App(props: any) {
   );
 }
 
-createRoot(document.getElementById('content')).render(
+createRoot(document.getElementById('content') as Element).render(
   <App />
 );
