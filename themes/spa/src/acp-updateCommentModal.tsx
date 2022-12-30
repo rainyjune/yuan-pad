@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import Modal from 'react-modal';
-import dataProvider from './dataProvider.ts';
+import dataProvider from './dataProvider';
 
 const customStyles = {
   content : {
@@ -13,7 +13,7 @@ const customStyles = {
   }
 };
 
-function UpdateCommentModal(props) {
+function UpdateCommentModal(props: any) {
   const [mid, setMid] = useState('');
   const [update_content, setUpdate_content] = useState('');
   useEffect(() => {
@@ -23,10 +23,10 @@ function UpdateCommentModal(props) {
       setUpdate_content(commentData.post_content);
     }
   }, [props.comment]);
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!mid || !update_content.trim()) return;
-    dataProvider.updateComment({mid, update_content}, res => {
+    dataProvider.updateComment({mid: parseInt(mid), update_content}, res => {
       if (res.statusCode === 200) {
         props.onCommentUpdated();
       }
@@ -35,7 +35,7 @@ function UpdateCommentModal(props) {
     });
     return false;
   };
-  const changeContent = (e) => {
+  const changeContent = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setUpdate_content(e.target.value);
   };
   return (

@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import UserUpdateModal from './acp-userUpdateModal.js';
-import dataProvider from './dataProvider.ts';
+import UserUpdateModal from './acp-userUpdateModal';
+import dataProvider from './dataProvider';
 
-function UserItem(props) {
+function UserItem(props: any) {
   /**
    * Tested 1.
    */
-  const deleteUser = (e) => {
+  const deleteUser = (e: any) => {
     e.preventDefault();
     if (!confirm(props.lang.DEL_SINGLEUSER_CONFIRM)) {
       return false;
@@ -20,7 +20,7 @@ function UserItem(props) {
   /**
    * Tested 1.
    */
-  const updateUser = (e) => {
+  const updateUser = (e: any) => {
     e.preventDefault();
     props.onOpenUserUpdateModal(props.data);
   };
@@ -45,22 +45,22 @@ function UserItem(props) {
   );
 }
 
-function ACPUser(props) {
-  const [users, setUsers] = useState([]);
+function ACPUser(props: any) {
+  const [users, setUsers] = useState<any>([]);
   const [modalInfo, setModalInfo] = useState({
     updateErrorMsg: '',
     updateModalIsOpen: false,
     updatedModalUserData: null,
   });
-  const addSelectedFlag = (arr) => {
+  const addSelectedFlag = (arr: Array<any>) => {
     if (Array.isArray(arr)) {
       arr.forEach((currentValue, index) => {
         currentValue['checked'] = false;
       });
     }
   };
-  const toggle = (itemToToggle) => {
-    let data = users.map((currentValue, index) => {
+  const toggle = (itemToToggle: any) => {
+    let data: Array<any> = users.map((currentValue: any) => {
       if (currentValue === itemToToggle) {
         currentValue['checked'] = !currentValue['checked'];
       }
@@ -68,20 +68,20 @@ function ACPUser(props) {
     });
     setUsers(data);
   };
-  const toggleInputClicked = (e) => {
+  const toggleInputClicked = (e: any) => {
     toggleAll(e.target.checked);
   };
-  const toggleAll = (checked) => {
-    let data = users.map((currentValue, index) => {
+  const toggleAll = (checked: boolean) => {
+    let data = users.map((currentValue: any) => {
       currentValue['checked'] = checked;
       return currentValue;
     });
     setUsers(data);
   };
   const getCheckedItems = () => {
-    let arr = [];
+    let arr: any = [];
     let key = getItemKey();
-    users.forEach((currentValue, index) => {
+    users.forEach((currentValue: any) => {
       if (currentValue.checked) {
         arr.push(currentValue[key]);
       }
@@ -117,7 +117,7 @@ function ACPUser(props) {
   /**
    * Tested 1.
    */
-  const handleUpdateSubmit = (newUserData) => {
+  const handleUpdateSubmit = (newUserData: any) => {
     dataProvider.updateUser(newUserData, res => {
       if (res.statusCode === 200) {
         setModalInfo({
@@ -142,7 +142,7 @@ function ACPUser(props) {
   /**
    * Tested 1.
    */
-  const openUserUpdateModal = (userData) => {
+  const openUserUpdateModal = (userData: any) => {
     setModalInfo({
       updateErrorMsg: '',
       updatedModalUserData: userData,
@@ -152,7 +152,7 @@ function ACPUser(props) {
   /**
    * Tested 1.
    */
-  const deleteAllUsers = (e) => {
+  const deleteAllUsers = (e: any) => {
     e.preventDefault();
     if (!confirm(props.lang.DEL_ALLUSER_CONFIRM)) {
       return false;
@@ -166,7 +166,7 @@ function ACPUser(props) {
   /**
    * Tested 1.
    */
-  const handleDeleteMulti = (e) => {
+  const handleDeleteMulti = (e: any) => {
     e.preventDefault();
     let checkedUids = getCheckedItems();
     if (checkedUids.length === 0) {
@@ -186,12 +186,12 @@ function ACPUser(props) {
   /**
    * Tested 1
    */
-  const handleToggleItem = (userItem) => {
+  const handleToggleItem = (userItem: any) => {
     toggle(userItem);
   };
   let lang = props.lang;
   let cssClass = props.activeTab === "user" ? "user_container selectTag" : "user_container";
-  let createUserItem = function(user) {
+  let createUserItem = function(user: any) {
     return (
       <UserItem
         data={user}
@@ -220,7 +220,7 @@ function ACPUser(props) {
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan='4'>
+              <td colSpan={4}>
                 <input type='submit' value={lang.DELETE_CHECKED} />
                 <button onClick={deleteAllUsers}>{lang.DELETE_ALL}</button>
               </td>

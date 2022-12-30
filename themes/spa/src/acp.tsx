@@ -4,7 +4,7 @@ import { createRoot  } from 'react-dom/client';
 import ACPLogin from './acp-login';
 import ACPTabHeader from './acp-tabHeader';
 import ACPTabContent from './acp-tabContent';
-import ACPFooter from './acp-footer.js';
+import ACPFooter from './acp-footer';
 import dataProvider from './dataProvider';
 import Progress from './progress';
 import OfflineWarning from './offlineMode';

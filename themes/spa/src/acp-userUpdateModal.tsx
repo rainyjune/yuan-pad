@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 
 const customStyles = {
@@ -12,7 +12,7 @@ const customStyles = {
   }
 };
 
-function UserUpdateModal(props) {
+function UserUpdateModal(props: any) {
   const [uid, setUid] = useState('');
   const [user, setUser] = useState('');
   const [pwd, setPwd] = useState('');
@@ -26,7 +26,7 @@ function UserUpdateModal(props) {
       setEmail(userData.email);
     }
   }, [props.userData]);
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     let user1 = user.trim(),
         pwd1 = pwd.trim(),
@@ -40,10 +40,10 @@ function UserUpdateModal(props) {
     });
     return false;
   };
-  const updatePassword = (e) => {
+  const updatePassword = (e: ChangeEvent<HTMLInputElement>) => {
     setPwd(e.target.value);
   };
-  const updateEmail = (e) => {
+  const updateEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
   };
   let lang = props.lang;
@@ -54,15 +54,15 @@ function UserUpdateModal(props) {
         <div className="inputbox">
           <dl>
             <dt>{lang.USERNAME}</dt>
-            <dd><input type="text" readOnly="readonly" value={user} name="user" size="20" /></dd>
+            <dd><input type="text" readOnly={true} value={user} name="user" size={20} /></dd>
           </dl>
           <dl>
             <dt>{lang.PASSWORD}</dt>
-            <dd><input type="password" value={pwd} onChange={updatePassword} name="pwd" size="20" /></dd>
+            <dd><input type="password" value={pwd} onChange={updatePassword} name="pwd" size={20} /></dd>
           </dl>
           <dl>
             <dt>{lang.EMAIL}</dt>
-            <dd><input type="text" value={email} onChange={updateEmail} name="email" size="20" /></dd>
+            <dd><input type="text" value={email} onChange={updateEmail} name="email" size={20} /></dd>
           </dl>
         </div>
         <div className="butbox">

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import dataProvider from './dataProvider.ts';
+import dataProvider from './dataProvider';
 
-function IPItem(props) {
+function IPItem(props: any) {
   const toggleItem = () => {
     props.onItemToggled(props.data);
   };
@@ -13,10 +13,10 @@ function IPItem(props) {
   );
 }
 
-function ACPIpConfig(props) {
+function ACPIpConfig(props: any) {
   const [IPs, setIPs] = useState([]);
-  const toggle = (itemToToggle) => {
-    let data = IPs.map((currentValue) => {
+  const toggle = (itemToToggle: any) => {
+    let data = IPs.map((currentValue: any) => {
       if (currentValue === itemToToggle) {
         currentValue['checked'] = !currentValue['checked'];
       }
@@ -24,20 +24,20 @@ function ACPIpConfig(props) {
     });
     setMixState(data);
   };
-  const toggleInputClicked = (e) => {
+  const toggleInputClicked = (e:any) => {
     toggleAll(e.target.checked);
   };
-  const toggleAll = (checked) => {
-    let data = IPs.map((currentValue) => {
+  const toggleAll = (checked: boolean) => {
+    let data = IPs.map((currentValue: any) => {
       currentValue['checked'] = checked;
       return currentValue;
     });
     setMixState(data);
   };
   const getCheckedItems = () => {
-    let arr = [];
+    let arr: Array<any> = [];
     let key = getItemKey();
-    IPs.forEach((currentValue) => {
+    IPs.forEach((currentValue: any) => {
       if (currentValue.checked) {
         arr.push(currentValue[key]);
       }
@@ -47,7 +47,7 @@ function ACPIpConfig(props) {
   const getItemKey = () => {
     return 'ip';
   };
-  const setMixState = (data) => {
+  const setMixState = (data: any) => {
     setIPs(data);
   };
   useEffect(() => {
@@ -60,7 +60,7 @@ function ACPIpConfig(props) {
       }
     });
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     let checkedItems = getCheckedItems();
     if (checkedItems.length === 0) {
@@ -77,13 +77,13 @@ function ACPIpConfig(props) {
       }
     });
   };
-  const handleToggleItem = (item) => {
+  const handleToggleItem = (item: any) => {
     toggle(item);
   };
   let IPList = IPs;
   let lang = props.lang;
   let cssClass = props.activeTab === "ban_ip" ? "ip_container selectTag" : "ip_container";
-  let createIPItem = function(ip) {
+  let createIPItem = function(ip: any) {
     return (
       <IPItem
         data={ip}
@@ -105,7 +105,7 @@ function ACPIpConfig(props) {
           <tbody>
             {IPList && IPList.map(createIPItem, this)}
             <tr>
-              <td colSpan='2' align='left'>
+              <td colSpan={2} align='left'>
                 <input type='submit' value={lang.DELETE_CHECKED} /></td>
             </tr>
           </tbody>

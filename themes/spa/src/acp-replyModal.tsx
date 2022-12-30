@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import _ from 'lodash';
 import Modal from 'react-modal';
-import dataProvider from './dataProvider.ts';
+import dataProvider from './dataProvider';
 
 const customStyles = {
   content : {
@@ -14,7 +14,7 @@ const customStyles = {
   }
 };
 
-function ReplyModal(props) {
+function ReplyModal(props: any) {
   const [state, setState] = useState({
     rid: '',
     pid: '',
@@ -32,18 +32,18 @@ function ReplyModal(props) {
     }
   }, [props.comment]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!state.pid || !state.content.trim()) return;
-    let action = state.rid ? 'updateReply' : 'createReply';
-    dataProvider[action](state, res => {
+    let action = state.rid ? dataProvider['updateReply'] : dataProvider['createReply'];
+    action(state, (res: any) => {
       if (res.statusCode === 200) {
         props.onReplySubmit();
       }
     });
     return false;
   };
-  const changeContent = (e) => {
+  const changeContent = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setState(_.extend({}, state, {content: e.target.value}));
   };
   return (

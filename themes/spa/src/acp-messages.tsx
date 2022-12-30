@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import dataProvider from './dataProvider';
-import ReplyModal from './acp-replyModal.js';
-import CommentUpdateModal from './acp-updateCommentModal.js';
+import ReplyModal from './acp-replyModal';
+import CommentUpdateModal from './acp-updateCommentModal';
 
 function Reply(props: any) {
   const [state, setState] = useState({

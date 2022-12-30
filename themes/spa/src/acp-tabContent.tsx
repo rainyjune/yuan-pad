@@ -2,8 +2,8 @@ import React, { useRef } from 'react';
 import ACPOverview from './acp-overview';
 import ACPConfig from './acp-config';
 import ACPMessages from './acp-messages';
-import ACPIpConfig from './acp-ipconfig.js';
-import ACPUsers from './acp-users.js';
+import ACPIpConfig from './acp-ipconfig';
+import ACPUsers from './acp-users';
 
 function ACPTabContent(props: any) {
   const blackListRef: any = useRef(null);
