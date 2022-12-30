@@ -1,5 +1,5 @@
 import React, { forwardRef, useEffect, useRef, useState, useImperativeHandle, useContext } from 'react';
-import dataProvider from './dataProvider.js';
+import dataProvider from './dataProvider.ts';
 import LanguageContext from './languageContext.js';
 import AppConfigContext from './appConfigContext.js';
 const yuanjs = require('@rainyjune/yuanjs');

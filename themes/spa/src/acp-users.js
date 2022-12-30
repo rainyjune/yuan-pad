@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import UserUpdateModal from './acp-userUpdateModal.js';
-import dataProvider from './dataProvider.js';
+import dataProvider from './dataProvider.ts';
 
 function UserItem(props) {
   /**

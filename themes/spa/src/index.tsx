@@ -5,7 +5,7 @@ import SearchBar from './searchBar.js';
 import CommentBox from './commentBox.js';
 import Header from './header.js';
 import Footer from './footer.js';
-import dataProvider from './dataProvider.js';
+import dataProvider from './dataProvider';
 import Progress from './progress.js';
 import OfflineWarning from './offlineMode.js';
 import AppConfigContext from './appConfigContext.js';

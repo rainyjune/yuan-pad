@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
 import Modal from 'react-modal';
-import dataProvider from './dataProvider.js';
+import dataProvider from './dataProvider.ts';
 
 const customStyles = {
   content : {

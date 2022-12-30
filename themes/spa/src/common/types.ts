@@ -75,3 +75,14 @@ export interface IComment {
   reply_time: string;
   b_username: any;
 }
+
+export interface UpdateCommentObj {
+  mid: number;
+  update_content: string;
+}
+
+export interface ReplyObj {
+  pid: number;
+  mid: number;
+  content: string;
+}

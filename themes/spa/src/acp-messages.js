@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import dataProvider from './dataProvider.js';
+import dataProvider from './dataProvider.ts';
 import ReplyModal from './acp-replyModal.js';
 import CommentUpdateModal from './acp-updateCommentModal.js';
 

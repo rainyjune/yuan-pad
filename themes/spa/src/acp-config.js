@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import dataProvider from './dataProvider.js';
+import dataProvider from './dataProvider.ts';
 
 function ACPConfig(props) {
   const [state, setState] = useState({

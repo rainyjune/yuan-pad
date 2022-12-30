@@ -5,7 +5,7 @@ import ACPLogin from './acp-login.js';
 import ACPTabHeader from './acp-tabHeader.js';
 import ACPTabContent from './acp-tabContent.js';
 import ACPFooter from './acp-footer.js';
-import dataProvider from './dataProvider.js';
+import dataProvider from './dataProvider';
 import Progress from './progress.js';
 import OfflineWarning from './offlineMode.js';
 import useStateCallback from './useStateCallback';

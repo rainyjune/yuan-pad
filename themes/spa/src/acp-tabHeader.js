@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import dataProvider from './dataProvider.js';
+import dataProvider from './dataProvider.ts';
 
 function ACPTabHeader(props) {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
