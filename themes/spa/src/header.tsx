@@ -1,16 +1,16 @@
 import React, { useContext } from 'react';
 
-import SignIn from './signIn.js';
+import SignIn from './signIn';
 import SignUp from './signUp.js';
 import UpdateUser from './updateUser.js';
 import SignOutButton from './signOut.js';
-import UserContext from './userContext.js';
+import UserContext from './userContext';
 
-function Header(props) {
+function Header(props: any) {
   let propsObj = {
     onCurrentUserUpdated: props.onCurrentUserUpdated
   };
-  const user = useContext(UserContext);
+  const user: any = useContext(UserContext);
   return (
     <div className="header">
       {(()=> {

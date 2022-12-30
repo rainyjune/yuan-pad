@@ -1,17 +1,17 @@
-import React, { useRef } from 'react';
+import React, { FormEvent, useRef } from 'react';
 
-function SearchBar(props) {
-  const keywordRef = useRef(null);
-  const handleSearch = (e) => {
+function SearchBar(props: any) {
+  const keywordRef = useRef<HTMLInputElement>(null);
+  const handleSearch = (e: FormEvent) => {
     e.preventDefault();
-    let keyword = keywordRef.current.value.trim();
+    let keyword = keywordRef.current?.value.trim();
     if (!keyword) return ;
     props.onSubmit(keyword);
     return false;
   };
-  const handleChange = (e) => {
-    props.onUserInput(keywordRef.current.value.trim());
-  }
+  const handleChange = () => {
+    props.onUserInput(keywordRef.current?.value.trim());
+  };
   return (
     <div className="searchbar">
       <form onSubmit={handleSearch} className="form-inline">
@@ -20,7 +20,7 @@ function SearchBar(props) {
           <input
             id="inputSearch"
             type="text" 
-            size="10" 
+            size={10}
             placeholder="Search" 
             ref={keywordRef} 
             value={props.searchText}

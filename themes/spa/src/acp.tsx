@@ -6,8 +6,8 @@ import ACPTabHeader from './acp-tabHeader.js';
 import ACPTabContent from './acp-tabContent.js';
 import ACPFooter from './acp-footer.js';
 import dataProvider from './dataProvider';
-import Progress from './progress.js';
-import OfflineWarning from './offlineMode.js';
+import Progress from './progress';
+import OfflineWarning from './offlineMode';
 import useStateCallback from './useStateCallback';
 import { GetUserInfoResponse, PostListResponse, SearchResponse, IConfigParams, ConfigResponse, TranslationResponse, IUser, IComment} from './common/types';
 

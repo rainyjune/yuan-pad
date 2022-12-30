@@ -1,14 +1,14 @@
-import React, { forwardRef, useEffect, useRef, useState, useImperativeHandle, useContext } from 'react';
-import dataProvider from './dataProvider.ts';
-import LanguageContext from './languageContext.js';
-import AppConfigContext from './appConfigContext.js';
+import React, { forwardRef, MouseEvent, useEffect, useRef, useState, useImperativeHandle, useContext, FormEvent, ChangeEvent } from 'react';
+import dataProvider from './dataProvider';
+import LanguageContext from './languageContext';
+import AppConfigContext from './appConfigContext';
 const yuanjs = require('@rainyjune/yuanjs');
 
-function Pagination(props) {
-  const handleClick = (e) => {
+function Pagination(props: any) {
+  const handleClick = (e: MouseEvent) => {
     e.preventDefault();
-    let pageNumber = e.target.getAttribute("data-pagenumber");
-    if (parseInt(pageNumber) == props.currentPage) {
+    let pageNumber = (e.target as HTMLLinkElement).getAttribute("data-pagenumber");
+    if (pageNumber == props.currentPage) {
       return false;
     }
     props.onPageChanged(pageNumber);
@@ -24,7 +24,7 @@ function Pagination(props) {
             className={className} 
             href="#" 
             data-pagenumber={i}
-            onClick = {handleClick}
+            onClick={handleClick}
             >{i+1}</a>
           );
         }
@@ -34,9 +34,9 @@ function Pagination(props) {
   )
 }
 
-function CommentStatistics(props) {
-  const appConfig = useContext(AppConfigContext);
-  const lang = useContext(LanguageContext);
+function CommentStatistics(props: any) {
+  const appConfig: any = useContext(AppConfigContext);
+  const lang: any = useContext(LanguageContext);
   const rawMarkup = () => {
     let pagenavText, text;
     if (props.commentListType === 1) {
@@ -68,11 +68,11 @@ function CommentStatistics(props) {
   );
 }
 
-function CommentList(props) {
+function CommentList(props: any) {
   let searchText = props.searchText,
       isSearchResult = props.commentListType === 2;
 
-  let createCommentNodes = function(comment) {
+  let createCommentNodes = function(comment: any) {
     let text = isSearchResult ? comment.post_content.replace(searchText, "<span class='keyword'>" + searchText + "</span>") : comment.post_content;
     return (
       <Comment
@@ -89,9 +89,9 @@ function CommentList(props) {
   );
 }
 
-function Reply(props) {
-  const lang = useContext(LanguageContext);
-  const appConfig = useContext(AppConfigContext);
+function Reply(props: any) {
+  const lang: any = useContext(LanguageContext);
+  const appConfig: any = useContext(AppConfigContext);
   const rawMarkup = () => {
     let mapObj = {
       '{admin_name}': appConfig.admin,
@@ -103,7 +103,7 @@ function Reply(props) {
   return (<div className="reply" dangerouslySetInnerHTML={rawMarkup()}></div>);
 }
 
-function Comment(props) {
+function Comment(props: any) {
   const rawMarkup = () => {
     return { __html: props.children.toString() };
   };
@@ -126,15 +126,15 @@ function Comment(props) {
   );
 }
 
-const Captcha = forwardRef((props, ref) => {
-  const lang = useContext(LanguageContext);
-  const picRef = useRef(null);
-  const refreshCaptch = (e) => {
+const Captcha = forwardRef((props: any, ref) => {
+  const lang: any = useContext(LanguageContext);
+  const picRef = useRef<HTMLImageElement>(null);
+  const refreshCaptch = (e: MouseEvent) => {
     e.preventDefault();
     refresh();
   };
   const refresh = () => {
-    let img = picRef.current;
+    let img = picRef.current as HTMLImageElement;
     let url = img.getAttribute('data-src');
     img.src = url + '&v=' + Math.random();
   };
@@ -146,8 +146,8 @@ const Captcha = forwardRef((props, ref) => {
         <input
           id="inputCaptcha"
           type="text" 
-          maxLength="10"
-          size="20"
+          maxLength={10}
+          size={20}
           className="form-control"
           value={props.valid_code}
           onChange={props.onCaptchaChange}
@@ -166,17 +166,17 @@ const Captcha = forwardRef((props, ref) => {
   );
 });
 
-function CommentForm(props) {
-  const captchaRef = useRef(null);
+function CommentForm(props: any) {
+  const captchaRef = useRef<any>(null);
   const [userInputType, setUserInputType] = useState('text');
   const [labelContent, setLabelContent] = useState('');
   const [username, setUsername] = useState('anonymous');
   const [text, setText] = useState('');
   const [valid_code, setValid_code] = useState('');
-  const lang = useContext(LanguageContext);
-  const appConfig = useContext(AppConfigContext);
+  const lang: any = useContext(LanguageContext);
+  const appConfig: any = useContext(AppConfigContext);
   useEffect(() => {
-    let computedState = {};
+    let computedState: any = {};
     let propUser = props.user;
     if (!propUser) return;
     switch (propUser.user_type) {
@@ -197,7 +197,7 @@ function CommentForm(props) {
     setUsername(computedState.username);
     setLabelContent(computedState.labelContent);
   });
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     let author = username.trim(),
         text1 = text.trim(),
@@ -218,13 +218,13 @@ function CommentForm(props) {
     });
     return false;
   };
-  const handleUsernameChange = (e) => {
+  const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
   };
-  const handleTextChange = (e) => {
+  const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
   };
-  const handleCaptchaChange = (e) => {
+  const handleCaptchaChange = (e: any) => {
     setValid_code(e.target.value);
   };
   return (
@@ -235,7 +235,7 @@ function CommentForm(props) {
           <input
             id="inputUser"
             type={userInputType} 
-            maxLength="10"
+            maxLength={10}
             className="form-control"
             value={username}
             onChange={handleUsernameChange}
@@ -246,7 +246,7 @@ function CommentForm(props) {
       <div className="form-group">
         <label htmlFor="inputContent" className="col-sm-2 col-lg-2 control-label">{lang.CONTENT}</label>
         <div className="col-sm-10 col-lg-10">
-          <textarea id="inputContent" className="form-control" rows="3" onChange={handleTextChange} value={text}></textarea>
+          <textarea id="inputContent" className="form-control" rows={3} onChange={handleTextChange} value={text}></textarea>
         </div>
       </div>
       {
@@ -266,12 +266,12 @@ function CommentForm(props) {
   );
 }
 
-function CommentBox(props) {
+function CommentBox(props: any) {
   var propsObj = {
     commentListType: props.commentListType,
   };
-  const lang = useContext(LanguageContext);
-  const appConfig = useContext(AppConfigContext);
+  const lang: any = useContext(LanguageContext);
+  const appConfig: any = useContext(AppConfigContext);
   return (
     <div className="commentBox">
       <h1>{lang.WELCOME_POST}</h1>

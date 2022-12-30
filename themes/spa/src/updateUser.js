@@ -1,8 +1,8 @@
 import React, { useContext, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import dataProvider from './dataProvider.ts';
-import UserContext from './userContext.js';
-import LanguageContext from './languageContext.js';
+import UserContext from './userContext';
+import LanguageContext from './languageContext';
 
 const customStyles = {
   content : {

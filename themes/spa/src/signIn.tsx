@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef, useState, MouseEvent, FormEvent } from 'react';
 import Modal from 'react-modal';
 import dataProvider from './dataProvider';
 import LanguageContext from './languageContext';
@@ -14,19 +14,19 @@ const customStyles = {
   }
 };
 
-function SignIn(props) {
-  const language = useContext(LanguageContext);
-  const userRef = useRef(null);
-  const passRef = useRef(null);
+function SignIn(props: any) {
+  const language: any = useContext(LanguageContext);
+  const userRef = useRef<HTMLInputElement>(null);
+  const passRef = useRef<HTMLInputElement>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const openModal = (e) => {
+  const openModal = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     setModalIsOpen(true)
   };
   const closeModal = () => setModalIsOpen(false);
-  const handleSignIn = (loginData) => {
+  const handleSignIn = (loginData: any) => {
     dataProvider.signIn(loginData, res => {
       if (res.statusCode === 200) {
         setErrorMsg('');
@@ -40,10 +40,10 @@ function SignIn(props) {
       }
     });
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    let user = userRef.current.value.trim(),
-        pwd = passRef.current.value.trim();
+    let user = userRef.current?.value.trim(),
+        pwd = passRef.current?.value.trim();
     if (!user || !pwd) return;
     handleSignIn({ user, password: pwd});
     return false;

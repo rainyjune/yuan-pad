@@ -1,11 +1,11 @@
 const yuanjs = require('@rainyjune/yuanjs');
 
-import { ConfigResponse, GetUserInfoResponse, PostListResponse, ReplyObj, SearchResponse, TranslationResponse, UpdateCommentObj } from './common/types';
+import { AjaxErrCallback, AjaxSuccCallback, ConfigResponse, GetUserInfoResponse, PostListResponse, ReplyObj, SearchResponse, TranslationResponse, UpdateCommentObj } from './common/types';
 
 /**
  * Tested 1.
  */
-function banIP(ip: string, successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function banIP(ip: string, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: 'index.php?controller=badip&action=create',
@@ -22,7 +22,7 @@ function banIP(ip: string, successCallback?: (res: any) => void, errorCallback?:
 /**
  * Tested 1.
  */
-function deleteMultiIPs(ips: string[], successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function deleteMultiIPs(ips: string[], successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: 'index.php?controller=badip&action=update',
@@ -42,7 +42,7 @@ function deleteMultiIPs(ips: string[], successCallback?: (res: any) => void, err
  *
  *
  */
-function signIn(credentials: any, successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function signIn(credentials: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: "index.php?controller=user&action=login",
@@ -59,7 +59,7 @@ function signIn(credentials: any, successCallback?: (res: any) => void, errorCal
  *
  *
  */
-function loadUserDataFromServer(uid: number | string, successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function loadUserDataFromServer(uid: number | string, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
     url: 'index.php?controller=user&action=show&uid=' + uid,
@@ -75,7 +75,7 @@ function loadUserDataFromServer(uid: number | string, successCallback?: (res: an
  *
  *
  */
-function getUserInfo(successCallback: (res: GetUserInfoResponse) => void, errorCallback = () => {}) {
+function getUserInfo(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
     url: 'index.php?controller=user&action=getUserInfo',
@@ -91,7 +91,7 @@ function getUserInfo(successCallback: (res: GetUserInfoResponse) => void, errorC
  *
  *
  */
-function getAppConfig(successCallback: (res: ConfigResponse) => void , errorCallback = () => {}) {
+function getAppConfig(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
     url: 'index.php?controller=config&action=show',
@@ -107,7 +107,7 @@ function getAppConfig(successCallback: (res: ConfigResponse) => void , errorCall
  *
  *
  */
-function signOut(successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function signOut(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: 'index.php?controller=user&action=logout',
@@ -125,7 +125,7 @@ function signOut(successCallback?: (res: any) => void, errorCallback?: (e: any) 
  *
  *
  */
-function updateUser(userData: any, successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function updateUser(userData: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: "index.php?controller=user&action=update",
@@ -141,7 +141,7 @@ function updateUser(userData: any, successCallback?: (res: any) => void, errorCa
  *
  *
  */
-function signUp(userData: any, successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function signUp(userData: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: "index.php?controller=user&action=create",
@@ -157,7 +157,7 @@ function signUp(userData: any, successCallback?: (res: any) => void, errorCallba
  *
  *
  */
-function loadCommentsFromServer(pageId: number | string, successCallback: (res: PostListResponse) => void, errorCallback = () => {}) {
+function loadCommentsFromServer(pageId: number | string, successCallback: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     url: 'index.php',
     dataType: 'json',
@@ -172,7 +172,7 @@ function loadCommentsFromServer(pageId: number | string, successCallback: (res: 
 /**
  * Tested 1.
  */
-function loadAllCommentsFromServer(successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function loadAllCommentsFromServer(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     url: 'index.php',
     dataType: 'json',
@@ -193,7 +193,7 @@ function loadAllCommentsFromServer(successCallback?: (res: any) => void, errorCa
  *
  *
  */
-function search(keyword: string, successCallback: (res: SearchResponse) => void, errorCallback = () => {}) {
+function search(keyword: string, successCallback: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: "index.php?controller=search",
@@ -210,7 +210,7 @@ function search(keyword: string, successCallback: (res: SearchResponse) => void,
  *
  *
  */
-function createPost(comment: any, successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function createPost(comment: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   comment.ajax = true;
     yuanjs.ajax({
       type: "POST",
@@ -226,7 +226,7 @@ function createPost(comment: any, successCallback?: (res: any) => void, errorCal
  *
  *
  */
-function getAppConfigACP(successCallback: (res: ConfigResponse) => void, errorCallback = () => {}) {
+function getAppConfigACP(successCallback: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
     url: 'index.php?controller=config&action=showAll',
@@ -243,7 +243,7 @@ function getAppConfigACP(successCallback: (res: ConfigResponse) => void, errorCa
 /**
  * Tested 1.
  */
-function updateSiteConfig(configObj: any, successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function updateSiteConfig(configObj: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
       type: "POST",
       url: "index.php?controller=config&action=update",
@@ -260,7 +260,7 @@ function updateSiteConfig(configObj: any, successCallback?: (res: any) => void, 
 /**
  * Tested 1.
  */
-function getAllUsers(successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function getAllUsers(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
     url: 'index.php',
@@ -278,7 +278,7 @@ function getAllUsers(successCallback?: (res: any) => void, errorCallback?: (e: a
 /**
  * Tested 1.
  */
-function deleteAllReplies(successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function deleteAllReplies(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: 'index.php?controller=reply&action=deleteAll',
@@ -294,7 +294,7 @@ function deleteAllReplies(successCallback?: (res: any) => void, errorCallback?: 
 /**
  * Tested 1.
  */
-function deleteAllComments(successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function deleteAllComments(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: 'index.php?controller=post&action=deleteAll',
@@ -310,7 +310,7 @@ function deleteAllComments(successCallback?: (res: any) => void, errorCallback?:
 /**
  * Tested 1.
  */
-function deleteAllUsers(successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function deleteAllUsers(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: 'index.php?controller=user&action=deleteAll',
@@ -326,7 +326,7 @@ function deleteAllUsers(successCallback?: (res: any) => void, errorCallback?: (e
 /**
  * Tested 1.
  */
-function deleteComment(commentId: number, reply: string, successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function deleteComment(commentId: number, reply: string, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: 'index.php?controller=post&action=delete',
@@ -343,7 +343,7 @@ function deleteComment(commentId: number, reply: string, successCallback?: (res:
 /**
  * Tested 1.
  */
-function deleteMutiComments(dataObj: number[], successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function deleteMutiComments(dataObj: number[], successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: "index.php?controller=post&action=delete_multi_messages",
@@ -361,7 +361,7 @@ function deleteMutiComments(dataObj: number[], successCallback?: (res: any) => v
  * Tested 1.
  *
  */
-function deleteReply(commentId: number, successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function deleteReply(commentId: number, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: "index.php?controller=reply&action=delete",
@@ -378,7 +378,7 @@ function deleteReply(commentId: number, successCallback?: (res: any) => void, er
 /**
  * Tested 1.
  */
-function deleteUser(uid: number, successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function deleteUser(uid: number, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: "index.php?controller=user&action=delete",
@@ -395,7 +395,7 @@ function deleteUser(uid: number, successCallback?: (res: any) => void, errorCall
 /**
  * Tested 1.
  */
-function deleteMutiUsers(uids: Array<string | number>, successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function deleteMutiUsers(uids: Array<string | number>, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: "index.php?controller=user&action=delete_multi",
@@ -428,7 +428,7 @@ function getCookie(name: string) {
  *
  *
  */
-function getTranslations(successCallback: (res: TranslationResponse) => void, errorCallback = () => {}) {
+function getTranslations(successCallback: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
     url: 'index.php?controller=config&action=getTranslations',
@@ -443,7 +443,7 @@ function getTranslations(successCallback: (res: TranslationResponse) => void, er
  *
  *
  */
-function getSystemInformation(successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function getSystemInformation(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
     url: 'index.php?controller=site&action=getSystemInformation',
@@ -458,7 +458,7 @@ function getSystemInformation(successCallback?: (res: any) => void, errorCallbac
  * Create a reply.
  *
  */
-function createReply(replyData: any, successCallback?: (res: any) => void, errorCallback ?: (e: any) => void) {
+function createReply(replyData: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   let formData = {
     mid: replyData.pid,
     content: replyData.content
@@ -479,7 +479,7 @@ function createReply(replyData: any, successCallback?: (res: any) => void, error
 /**
  * Tested 1.
  */
-function updateReply(replyData: any, successCallback?: (res: any) => void, errorCallback?: (e: any) => void) {
+function updateReply(replyData: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   let formData = {
     mid: replyData.pid,
     content: replyData.content
@@ -500,7 +500,7 @@ function updateReply(replyData: any, successCallback?: (res: any) => void, error
 /**
  * Tested 1.
  */
-function updateComment(commentData: UpdateCommentObj, successCallback?: (res: any) => void, errorCallback ?: (e: any) => void) {
+function updateComment(commentData: UpdateCommentObj, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: "index.php?controller=post&action=update",
@@ -514,10 +514,7 @@ function updateComment(commentData: UpdateCommentObj, successCallback?: (res: an
   });
 }
 
-/**
- * Tested 1.
- */
-function getIPBlackList(successCallback: (res: any) => void, errorCallback?: (e: any) => void) {
+function getIPBlackList(successCallback: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
     url: "index.php?controller=badip&action=list",

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import dataProvider from './dataProvider.ts';
-import LanguageContext from './languageContext.js';
+import LanguageContext from './languageContext';
 
 function LogoutButton(props) {
   const handleSignOut = (e) => {

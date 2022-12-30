@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Offline(props) {
+function Offline(props: any) {
   let offlineStyle = {
     display: props.appConfig.site_close == 1 ? 'block' : 'none'
   };

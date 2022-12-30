@@ -12,7 +12,7 @@ const customStyles = {
   }
 };
 
-function Progress(props) {
+function Progress(props: any) {
   return (
     <Modal ariaHideApp={false} isOpen={props.loadingModalIsOpen} style={customStyles} >
       <progress></progress>

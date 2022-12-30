@@ -86,3 +86,6 @@ export interface ReplyObj {
   mid: number;
   content: string;
 }
+
+export type AjaxSuccCallback = (res: any) => void;
+export type AjaxErrCallback = (e: any) => void;

@@ -3,10 +3,10 @@ import AppConfigContext from './appConfigContext';
 import UserContext from './userContext';
 import LanguageContext from './languageContext';
 
-function AppFooter(props) {
-  const appConfig = useContext(AppConfigContext);
-  const user = useContext(UserContext);
-  const lang = useContext(LanguageContext);
+function AppFooter(props: any) {
+  const appConfig: any = useContext(AppConfigContext);
+  const user: any = useContext(UserContext);
+  const lang: any = useContext(LanguageContext);
   const ACPMarkup = () => {
     let ACP = (user && user.user_type === "admin") ? 
               "<a href='index.php?action=control_panel'>"+ lang.ACP+"</a>" 
