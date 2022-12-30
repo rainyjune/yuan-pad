@@ -1,10 +1,10 @@
 import { useState, useRef, useCallback, useEffect } from "react";
 
-function useStateCallback(initialState) {
+function useStateCallback(initialState: any) {
   const [state, setState] = useState(initialState);
-  const cbRef = useRef(null); // init mutable ref container for callbacks
+  const cbRef = useRef<any>(null); // init mutable ref container for callbacks
 
-  const setStateCallback = useCallback((state, cb) => {
+  const setStateCallback = useCallback((state: any, cb: any) => {
     cbRef.current = cb; // store current, passed callback in ref
     setState(state);
   }, []); // keep object reference stable, exactly like `useState`

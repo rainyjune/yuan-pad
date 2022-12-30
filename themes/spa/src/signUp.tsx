@@ -1,6 +1,6 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { ChangeEvent, FormEvent, useContext, useRef, useState } from 'react';
 import Modal from 'react-modal';
-import dataProvider from './dataProvider.ts';
+import dataProvider from './dataProvider';
 import LanguageContext from './languageContext';
 
 const customStyles = {
@@ -14,26 +14,26 @@ const customStyles = {
   }
 };
 
-function SignUp(props) {
-  const userRef = useRef(null);
-  const passRef = useRef(null);
-  const emailRef = useRef(null);
+function SignUp(props: any) {
+  const userRef = useRef<HTMLInputElement>(null);
+  const passRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const language = useContext(LanguageContext);
-  const openModal = (e) => {
+  const language: any = useContext(LanguageContext);
+  const openModal = (e: any) => {
     e.preventDefault();
     setModalIsOpen(true);
   };
-  const closeModal = (e) => {
+  const closeModal = (e: any) => {
     e.preventDefault();
     setModalIsOpen(false);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    let user = userRef.current.value.trim(),
-        pwd = passRef.current.value.trim(),
-        email = emailRef.current.value.trim();
+    let user = userRef.current?.value.trim(),
+        pwd = passRef.current?.value.trim(),
+        email = emailRef.current?.value.trim();
     if (!user || !pwd || !email) return;
     
     dataProvider.signUp({user, pwd, email}, res => {

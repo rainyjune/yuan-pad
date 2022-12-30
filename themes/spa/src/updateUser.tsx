@@ -1,6 +1,6 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { FormEvent, useContext, useRef, useState } from 'react';
 import Modal from 'react-modal';
-import dataProvider from './dataProvider.ts';
+import dataProvider from './dataProvider';
 import UserContext from './userContext';
 import LanguageContext from './languageContext';
 
@@ -15,28 +15,28 @@ const customStyles = {
   }
 };
 
-function UserUpdate(props) {
-  const idRef = useRef(null);
-  const userRef = useRef(null);
-  const passRef = useRef(null);
-  const emailRef = useRef(null);
+function UserUpdate(props: any) {
+  const idRef = useRef<HTMLInputElement>(null);
+  const userRef = useRef<HTMLInputElement>(null);
+  const passRef = useRef<HTMLInputElement>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const language = useContext(LanguageContext);
-  const user = useContext(UserContext);
-  const openModal = (e) => {
+  const language: any = useContext(LanguageContext);
+  const user: any = useContext(UserContext);
+  const openModal = (e: any) => {
     e.preventDefault();
     setModalIsOpen(true);
   };
-  const closeModal = (e) => {
+  const closeModal = () => {
     setModalIsOpen(false);
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    let uid = idRef.current.value.trim(),
-        user = userRef.current.value.trim(),
-        pwd = passRef.current.value.trim(),
-        email = emailRef.current.value.trim();
+    let uid = idRef.current?.value.trim(),
+        user = userRef.current?.value.trim(),
+        pwd = passRef.current?.value.trim(),
+        email = emailRef.current?.value.trim();
     if (!uid || !user || !email) return;
     dataProvider.updateUser({ uid, user, pwd, email},  res => {
       if (res.statusCode === 200) {
@@ -45,7 +45,7 @@ function UserUpdate(props) {
         props.onCurrentUserUpdated(res.response);
       } else {
         alert(res.response);
-        setState({errorMsg: res.response});
+        setErrorMsg(res.response);
       }
     });
     return false;
@@ -60,7 +60,7 @@ function UserUpdate(props) {
           <input type="hidden" ref={idRef} value={user.uid} />
           <div className="form-group">
             <label htmlFor="inputUser">{language.USERNAME}</label>
-            <input type="text" ref={userRef} readOnly="readonly" defaultValue={user.username} className="form-control" id="inputUser" />
+            <input type="text" ref={userRef} readOnly={true} defaultValue={user.username} className="form-control" id="inputUser" />
           </div>
           <div className="form-group">
             <label htmlFor="inputPassword">{language.PASSWORD}</label>

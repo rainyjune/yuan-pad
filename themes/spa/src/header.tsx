@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 
 import SignIn from './signIn';
-import SignUp from './signUp.js';
-import UpdateUser from './updateUser.js';
-import SignOutButton from './signOut.js';
+import SignUp from './signUp';
+import UpdateUser from './updateUser';
+import SignOutButton from './signOut';
 import UserContext from './userContext';
 
 function Header(props: any) {
