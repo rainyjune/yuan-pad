@@ -1,13 +1,13 @@
 import React, { useRef } from 'react';
-import ACPOverview from './acp-overview.js';
-import ACPConfig from './acp-config.js';
-import ACPMessages from './acp-messages.js';
+import ACPOverview from './acp-overview';
+import ACPConfig from './acp-config';
+import ACPMessages from './acp-messages';
 import ACPIpConfig from './acp-ipconfig.js';
 import ACPUsers from './acp-users.js';
 
-function ACPTabContent(props) {
-  const blackListRef = useRef(null);
-  const handleActiveChange = (newTab) => {
+function ACPTabContent(props: any) {
+  const blackListRef: any = useRef(null);
+  const handleActiveChange = (newTab: any) => {
     blackListRef.loadBlackList();
     setTimeout(()=>{
       props.onActiveTabChanged(newTab);

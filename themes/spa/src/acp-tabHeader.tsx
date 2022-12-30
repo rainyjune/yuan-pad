@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
-import dataProvider from './dataProvider.ts';
+import React, { MouseEvent, useState } from 'react';
+import dataProvider from './dataProvider';
 
-function ACPTabHeader(props) {
+function ACPTabHeader(props: any) {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const updateActiveTab = (e) => {
+  const updateActiveTab = (e: MouseEvent) => {
     e.preventDefault();
-    let tabLink = e.target;
+    let tabLink = e.target as HTMLAnchorElement;
     let newTabName = tabLink.getAttribute('data-tabname');
     if (newTabName === props.activeTab) {
       return false;
@@ -13,7 +13,7 @@ function ACPTabHeader(props) {
     props.onTabSelected(newTabName);
     setMenuIsOpen(false);
   };
-  const handleSignOut = (e) => {
+  const handleSignOut = (e: MouseEvent) => {
     e.preventDefault();
     dataProvider.signOut(response => {
       if (response.statusCode === 200) {
@@ -29,7 +29,7 @@ function ACPTabHeader(props) {
 
   if (props.user.user_type !== "admin") return null;
   let activeTab = props.activeTab;
-  let items = props.tabs.map(tab => {
+  let items = props.tabs.map((tab: any) => {
     return (
       <li key={tab.value} role="presentation" className={tab.value === activeTab ? "active" : ""}>
         <a href="#" data-tabname={tab.value} onClick={updateActiveTab}>{tab.text}</a>

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot  } from 'react-dom/client';
 
-import ACPLogin from './acp-login.js';
-import ACPTabHeader from './acp-tabHeader.js';
-import ACPTabContent from './acp-tabContent.js';
+import ACPLogin from './acp-login';
+import ACPTabHeader from './acp-tabHeader';
+import ACPTabContent from './acp-tabContent';
 import ACPFooter from './acp-footer.js';
 import dataProvider from './dataProvider';
 import Progress from './progress';

@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import _ from 'lodash';
-import dataProvider from './dataProvider.ts';
+import dataProvider from './dataProvider';
 import ReplyModal from './acp-replyModal.js';
 import CommentUpdateModal from './acp-updateCommentModal.js';
 
-function Reply(props) {
+function Reply(props: any) {
   const [state, setState] = useState({
     b_username: null,
     id: 0,
@@ -35,7 +35,7 @@ function Reply(props) {
     }
   }, [props.data]);
 
-  const deleteReply = (e) => {
+  const deleteReply = (e: any) => {
     e.preventDefault();
     if (!confirm(props.lang.DEL_REPLY_CONFIRM)) {
       return false;
@@ -57,8 +57,8 @@ function Reply(props) {
   );
 }
 
-function Comment(props) {
-  const banIP = (e) => {
+function Comment(props: any) {
+  const banIP = (e: any) => {
     let dom = e.target;
     e.preventDefault();
     let ip = props.data.ip;
@@ -66,7 +66,7 @@ function Comment(props) {
       props.onActiveTabChanged('ban_ip');
     });
   };
-  const deleteComment = (e) => {
+  const deleteComment = (e: any) => {
     e.preventDefault();
     let data = props.data;
     let commentId = data.id;
@@ -79,11 +79,11 @@ function Comment(props) {
       props.onCommentDeleted();
     });
   };
-  const replyComment = (e) => {
+  const replyComment = (e: any) => {
     e.preventDefault();
     props.onReplyComment(props.data);
   };
-  const updateComment = (e) => {
+  const updateComment = (e: any) => {
     e.preventDefault();
     props.onUpdateComment(props.data);
   };
@@ -123,21 +123,21 @@ function Comment(props) {
   );
 }
 
-function ACPMessages(props) {
+function ACPMessages(props: any) {
   const [comments, setComments] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalType, setModalType] = useState(''); // "reply" or "update" 
   const [modalCommentModel, setModalCommentModel] = useState(null);
   const [modalErrorMsg, setModalErrorMsg] = useState('');
-  const addSelectedFlag = (arr) => {
+  const addSelectedFlag = (arr: Array<any>) => {
     if (Array.isArray(arr)) {
       arr.forEach((currentValue, index) => {
         currentValue['checked'] = false;
       });
     }
   };
-  const toggle = (itemToToggle) => {
-    let data = comments.map((currentValue, index) => {
+  const toggle = (itemToToggle: any) => {
+    let data = comments.map((currentValue: any, index) => {
       if (currentValue === itemToToggle) {
         currentValue['checked'] = !currentValue['checked'];
       }
@@ -145,25 +145,21 @@ function ACPMessages(props) {
     });
     setMixState(data);
   };
-  const toggleInputClicked = (e) => {
+  const toggleInputClicked = (e: any) => {
     toggleAll(e.target.checked);
   };
-  const toggleAll = (checked) => {
-    let data = comments.map((currentValue, index) => {
+  const toggleAll = (checked: boolean) => {
+    let data = comments.map((currentValue: any, index) => {
       currentValue['checked'] = checked;
       return currentValue;
     });
     setMixState(data);
   };
-  const checkAll = (e) => {
-    e.preventDefault();
-    toggleAll(true);
-  };
   const getCheckedItems = () => {
-    let arr = [];
+    let arr: any = [];
     let key = getItemKey();
     let field = getMixinAttr();
-    comments.forEach((currentValue, index) => {
+    comments.forEach((currentValue: any, index) => {
       if (currentValue.checked) {
         arr.push(currentValue[key]);
       }
@@ -176,10 +172,10 @@ function ACPMessages(props) {
   const getItemKey = () => {
     return 'id';
   };
-  const setMixState = (data) => {
+  const setMixState = (data: any) => {
     setComments(data);
   };
-  const deleteAllComments = (e) => {
+  const deleteAllComments = (e: any) => {
     e.preventDefault();
     if (!confirm(props.lang.DEL_ALL_CONFIRM)) {
       return false;
@@ -195,7 +191,7 @@ function ACPMessages(props) {
   /**
    * Tested 1
    */
-  const deleteAllReplies = (e) => {
+  const deleteAllReplies = (e: any) => {
     e.preventDefault();
     if (!confirm(props.lang.DEL_ALL_REPLY_CONFIRM)) {
       return false;
@@ -208,7 +204,7 @@ function ACPMessages(props) {
       }
     });
   };
-  const deleteSelected = (e) => {
+  const deleteSelected = (e: any) => {
     e.preventDefault();
     let checkedItems = getCheckedItems();
     if (checkedItems.length === 0) {
@@ -225,7 +221,7 @@ function ACPMessages(props) {
       }
     });
   };
-  const handleReplyComment = (commentTobeReplied) => {
+  const handleReplyComment = (commentTobeReplied: any) => {
     openModal('reply', commentTobeReplied);
   };
   const closeModal = () => {
@@ -234,7 +230,7 @@ function ACPMessages(props) {
     setModalCommentModel(null);
     setModalErrorMsg('')
   };
-  const openModal = (type = 'reply', commentData) => {
+  const openModal = (type = 'reply', commentData: any) => {
     setModalIsOpen(true);
     setModalType(type);
     setModalCommentModel(commentData);
@@ -244,7 +240,7 @@ function ACPMessages(props) {
     closeModal();
     loadCommentsFromServer();
   };
-  const handleUpdateComment = (commentTobeUpdated) => {
+  const handleUpdateComment = (commentTobeUpdated: any) => {
     openModal('update', commentTobeUpdated);
   };
   const handleCommentUpdated = () => {
@@ -267,7 +263,7 @@ function ACPMessages(props) {
   useEffect(() => {
     loadCommentsFromServer();
   }, []);
-  const handleToggleItem = (item) => {
+  const handleToggleItem = (item: any) => {
     toggle(item);
   };
   const handleCommentDeleted = () => {
@@ -295,8 +291,8 @@ function ACPMessages(props) {
           </thead>
           <tbody>
             {(() => {
-              let commentArr = [];
-              let createComment = function(comment) {
+              let commentArr: any = [];
+              let createComment = function(comment: any) {
                 commentArr.push(
                   <Comment
                     lang={lang}
@@ -316,7 +312,7 @@ function ACPMessages(props) {
           </tbody>
           <tfoot>
             <tr>
-              <td colSpan='4'>
+              <td colSpan={4}>
                 <input type='submit' value={lang.DELETE_CHECKED} />
                 <button onClick={deleteAllComments}>{lang.DELETE_ALL}</button>
                 <button onClick={deleteAllReplies}>{lang.DELETE_ALL_REPLY}</button>

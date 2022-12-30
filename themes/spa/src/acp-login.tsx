@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { FormEvent, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import dataProvider from '../src/dataProvider';
 
@@ -13,12 +13,12 @@ const customStyles = {
   }
 };
 
-function ACPLogin(props) {
-  const userRef = useRef(null);
-  const passRef = useRef(null);
+function ACPLogin(props: any) {
+  const userRef = useRef<HTMLInputElement>(null);
+  const passRef = useRef<HTMLInputElement>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(true);
-  const handleSignIn = (loginData) => {
+  const handleSignIn = (loginData: any) => {
     dataProvider.signIn(loginData, res => {
       if (res.statusCode === 200) {
         setErrorMsg('');
@@ -31,11 +31,11 @@ function ACPLogin(props) {
       }
     });
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     // TODO
-    let user = userRef.current.value.trim(),
-        pwd = passRef.current.value.trim();
+    let user = userRef.current?.value.trim(),
+        pwd = passRef.current?.value.trim();
     if (!user || !pwd) return;
     handleSignIn({ user, password: pwd});
     return false;

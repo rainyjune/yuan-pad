@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import dataProvider from './dataProvider.ts';
+import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import _ from 'lodash';
+import dataProvider from './dataProvider';
 
-function ACPConfig(props) {
+function ACPConfig(props: any) {
   const [state, setState] = useState({
     board_name: '',
     site_close: 0,
@@ -23,23 +24,23 @@ function ACPConfig(props) {
 
   useEffect(() => {
     let propAppConfig = props.appConfig;
-    let computedState = {};
+    let computedState: any = {};
     for (let i in propAppConfig) {
       if (state.hasOwnProperty(i)) {
         computedState[i] = propAppConfig[i] === null ? 0 : propAppConfig[i];
       }
     }
-    setState(Object.create(state), computedState);
+    setState(_.extend({}, state, computedState));
   }, [props.appConfig]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     dataProvider.updateSiteConfig(state, res => {
       console.log('ACPConfig state:', state);
       if (res.statusCode === 200) {
         // TODO show friendly message.
         alert('OK');
-        setState(Object.create(state, {
+        setState(_.extend({}, state, {
           password: ''
         }));// Empty the password input value.
         props.onConfigUpdated();
@@ -49,29 +50,29 @@ function ACPConfig(props) {
       }
     });
   };
-  const toggleSiteClose = (e) => {
-    setState(Object.create({}, state, {
-      site_close: e.target.value
+  const toggleSiteClose = (e: ChangeEvent) => {
+    setState(_.extend({}, state, {
+      site_close: (e.target as HTMLInputElement).value
     }));
   };
-  const toggleCaptcha = (e) => {
-    setState(Object.create({}, state, {
-      valid_code_open: e.target.value
+  const toggleCaptcha = (e: ChangeEvent) => {
+    setState(_.extend({}, state, {
+      valid_code_open: (e.target as HTMLInputElement).value
     }));
   };
-  const togglePagination = (e) => {
-    setState(Object.create({}, state, {
-      page_on: e.target.value
+  const togglePagination = (e: ChangeEvent) => {
+    setState(_.extend({}, state, {
+      page_on: (e.target as HTMLInputElement).value
     }));
   };
-  const toggleFilterType = (e) => {
-    setState(Object.create({}, state, {
-      filter_type: e.target.value
+  const toggleFilterType = (e: ChangeEvent) => {
+    setState(_.extend({}, state, {
+      filter_type: (e.target as HTMLInputElement).value
     }));
   };
-  const handleInput = (e) => {
-    const target = e.target;
-    setState(Object.create({}, state, {
+  const handleInput = (e: ChangeEvent) => {
+    const target = e.target as HTMLInputElement | HTMLTextAreaElement;
+    setState(_.extend({}, state, {
       [target.name]: target.value.trim()
     }));
   };
@@ -88,7 +89,7 @@ function ACPConfig(props) {
             <tbody>
               <tr>
                 <td>{lang.BOARD_NAME}:</td>
-                <td><input name='board_name' type="text" size="20" value={state.board_name} onChange={handleInput} /></td>
+                <td><input name='board_name' type="text" size={20} value={state.board_name} onChange={handleInput} /></td>
               </tr>
               <tr>
                 <td>{lang.CLOSE_BOARD}:</td>
@@ -99,15 +100,15 @@ function ACPConfig(props) {
               </tr>
               <tr>
                 <td>{lang.CLOSE_REASON}:</td>
-                <td><textarea name='close_reason' value={appConfig.close_reason} onChange={handleInput} cols="30" rows="3"></textarea></td>
+                <td><textarea name='close_reason' value={appConfig.close_reason} onChange={handleInput} cols={30} rows={3}></textarea></td>
               </tr>
               <tr>
                 <td>{lang.ADMIN_EMAIL}:</td>
-                <td><input name='admin_email' value={appConfig.admin_email} type="text" size="20" onChange={handleInput} /></td>
+                <td><input name='admin_email' value={appConfig.admin_email} type="text" size={20} onChange={handleInput} /></td>
               </tr>
               <tr>
                 <td>{lang.COPY_INFO}:</td>
-                <td><textarea name='copyright_info' value={appConfig.copyright_info} cols="30" rows="3" onChange={handleInput} ></textarea></td>
+                <td><textarea name='copyright_info' value={appConfig.copyright_info} cols={30} rows={3} onChange={handleInput} ></textarea></td>
               </tr>
               <tr>
                 <td>{lang.SYS_THEME}:</td>
@@ -177,11 +178,11 @@ function ACPConfig(props) {
           <table className="table">
             <tbody>
               <tr>
-                <td>{lang.FILTER_WORDS}：</td>
-                <td><textarea name='filter_words' value={state.filter_words} onChange={handleInput} cols="20" rows="3"></textarea></td>
+                <td>{lang.FILTER_WORDS}:</td>
+                <td><textarea name='filter_words' value={state.filter_words} onChange={handleInput} cols={20} rows={3}></textarea></td>
               </tr>
               <tr>
-                <td>{lang.ENABLE_CAPTCHA}：</td>
+                <td>{lang.ENABLE_CAPTCHA}:</td>
                 <td>
                   {(()=>{
                     let captchaInputs = [];
@@ -190,7 +191,7 @@ function ACPConfig(props) {
                       captchaInputs.push(<label key="0"><input type="radio" value="0" checked={appConfig.valid_code_open != 1} onChange={toggleCaptcha} />{lang.NO}</label>);
                     } else {
                       captchaInputs.push(<label key="1"><input type="radio" value="1" onChange={toggleCaptcha} />{lang.YES}</label>);
-                      captchaInputs.push(<label key="0"><input type="radio" value="0" checked='checked' onChange={toggleCaptcha} />{lang.NO}{lang.GD_DISABLED_NOTICE}</label>);
+                      captchaInputs.push(<label key="0"><input type="radio" value="0" checked={true} onChange={toggleCaptcha} />{lang.NO}{lang.GD_DISABLED_NOTICE}</label>);
                     }
                     return captchaInputs;
                   })()}
@@ -204,18 +205,18 @@ function ACPConfig(props) {
                 </td>
               </tr>
               <tr>
-                  <td>{lang.POST_PERPAGE}：</td>
+                  <td>{lang.POST_PERPAGE}:</td>
                   <td><input name='num_perpage' value={state.num_perpage} onChange={handleInput} type="text" />{lang.PAGINATION_TIP}</td>
               </tr>
               <tr>
-                <td>{lang.FILTER_HTML_TAGS}：</td>
+                <td>{lang.FILTER_HTML_TAGS}:</td>
                 <td>
                   <label><input type="radio" value="1" checked={appConfig.filter_type == 1} onChange={toggleFilterType} />{lang.STRIP_DISALLOWED_TAGS}</label>
                   <label><input type="radio" value="2" checked={appConfig.filter_type == 2} onChange={toggleFilterType} />{lang.ESCAPE_ALL_TAGS}</label>
                 </td>
               </tr>
               <tr>
-                <td>{lang.ALLOWED_HTML_TAGS}：</td>
+                <td>{lang.ALLOWED_HTML_TAGS}:</td>
                 <td><input name='allowed_tags' value={state.allowed_tags} onChange={handleInput} type="text" /></td>
               </tr>
             </tbody>
