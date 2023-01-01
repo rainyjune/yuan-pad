@@ -87,5 +87,17 @@ export interface ReplyObj {
   content: string;
 }
 
+export interface SignInData {
+  user: string;
+  password: string;
+}
+
+export interface UserUpdateData {
+  uid: number | string;
+  user: string;
+  pwd: string;
+  email: string;
+}
+
 export type AjaxSuccCallback = (res: any) => void;
 export type AjaxErrCallback = (e: any) => void;

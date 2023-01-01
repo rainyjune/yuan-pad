@@ -1,10 +1,7 @@
 const yuanjs = require('@rainyjune/yuanjs');
 
-import { AjaxErrCallback, AjaxSuccCallback, ConfigResponse, GetUserInfoResponse, PostListResponse, ReplyObj, SearchResponse, TranslationResponse, UpdateCommentObj } from '../common/types';
+import { AjaxErrCallback, AjaxSuccCallback, ConfigResponse, GetUserInfoResponse, PostListResponse, ReplyObj, SearchResponse, TranslationResponse, SignInData, UserUpdateData, UpdateCommentObj } from '../common/types';
 
-/**
- * Tested 1.
- */
 function banIP(ip: string, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -19,9 +16,6 @@ function banIP(ip: string, successCallback?: AjaxSuccCallback, errorCallback?: A
   });
 }
 
-/**
- * Tested 1.
- */
 function deleteMultiIPs(ips: string[], successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -36,13 +30,7 @@ function deleteMultiIPs(ips: string[], successCallback?: AjaxSuccCallback, error
   });
 }
 
-/**
- * Tested 1.
- *
- *
- *
- */
-function signIn(credentials: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
+function signIn(credentials: SignInData, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: "index.php?controller=user&action=login",
@@ -53,12 +41,6 @@ function signIn(credentials: any, successCallback?: AjaxSuccCallback, errorCallb
   });
 }
 
-/**
- * Tested 1.
- *
- *
- *
- */
 function loadUserDataFromServer(uid: number | string, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
@@ -70,11 +52,6 @@ function loadUserDataFromServer(uid: number | string, successCallback?: AjaxSucc
   });
 }
 
-/**
- * Tested 1.
- *
- *
- */
 function getUserInfo(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
@@ -86,11 +63,6 @@ function getUserInfo(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErr
   });
 }
 
-/**
- * Tested 1.
- *
- *
- */
 function getAppConfig(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
@@ -101,12 +73,6 @@ function getAppConfig(successCallback?: AjaxSuccCallback, errorCallback?: AjaxEr
   });
 }
 
-/**
- * Tested 1
- *
- *
- *
- */
 function signOut(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -120,12 +86,7 @@ function signOut(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCall
   });
 }
 
-/***
- * Tested 1
- *
- *
- */
-function updateUser(userData: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
+function updateUser(userData: object, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: "index.php?controller=user&action=update",
@@ -136,12 +97,7 @@ function updateUser(userData: any, successCallback?: AjaxSuccCallback, errorCall
   });
 }
 
-/**
- * Tested 1
- *
- *
- */
-function signUp(userData: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
+function signUp(userData: object, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
     url: "index.php?controller=user&action=create",
@@ -152,11 +108,6 @@ function signUp(userData: any, successCallback?: AjaxSuccCallback, errorCallback
   });
 }
 
-/**
- * Tested 1.
- *
- *
- */
 function loadCommentsFromServer(pageId: number | string, successCallback: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     url: 'index.php',
@@ -169,9 +120,6 @@ function loadCommentsFromServer(pageId: number | string, successCallback: AjaxSu
   });
 }
 
-/**
- * Tested 1.
- */
 function loadAllCommentsFromServer(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     url: 'index.php',
@@ -187,12 +135,6 @@ function loadAllCommentsFromServer(successCallback?: AjaxSuccCallback, errorCall
   });
 }
 
-/**
- * Tested 1.
- *
- *
- *
- */
 function search(keyword: string, successCallback: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -204,28 +146,17 @@ function search(keyword: string, successCallback: AjaxSuccCallback, errorCallbac
   });
 }
 
-/**
- * Tested 1.
- *
- *
- *
- */
 function createPost(comment: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   comment.ajax = true;
-    yuanjs.ajax({
-      type: "POST",
-      url: "./index.php?controller=post&action=create",
-      data: comment,
-      success: successCallback,
-      error: errorCallback
-    });
+  yuanjs.ajax({
+    type: "POST",
+    url: "./index.php?controller=post&action=create",
+    data: comment,
+    success: successCallback,
+    error: errorCallback
+  });
 }
 
-/**
- * Tested 1.
- *
- *
- */
 function getAppConfigACP(successCallback: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
@@ -240,26 +171,20 @@ function getAppConfigACP(successCallback: AjaxSuccCallback, errorCallback?: Ajax
   });
 }
 
-/**
- * Tested 1.
- */
-function updateSiteConfig(configObj: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
+function updateSiteConfig(configObj: object, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
-      type: "POST",
-      url: "index.php?controller=config&action=update",
-      data: configObj,
-      dataType: "json",
-      headers: {
-        'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
-      },
-      success: successCallback,
-      error: errorCallback
-    });
+    type: "POST",
+    url: "index.php?controller=config&action=update",
+    data: configObj,
+    dataType: "json",
+    headers: {
+      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+    },
+    success: successCallback,
+    error: errorCallback
+  });
 }
 
-/**
- * Tested 1.
- */
 function getAllUsers(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
@@ -275,9 +200,6 @@ function getAllUsers(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErr
   });
 }
 
-/**
- * Tested 1.
- */
 function deleteAllReplies(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -291,9 +213,6 @@ function deleteAllReplies(successCallback?: AjaxSuccCallback, errorCallback?: Aj
   });
 }
 
-/**
- * Tested 1.
- */
 function deleteAllComments(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -307,9 +226,6 @@ function deleteAllComments(successCallback?: AjaxSuccCallback, errorCallback?: A
   });
 }
 
-/**
- * Tested 1.
- */
 function deleteAllUsers(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -323,9 +239,6 @@ function deleteAllUsers(successCallback?: AjaxSuccCallback, errorCallback?: Ajax
   });
 }
 
-/**
- * Tested 1.
- */
 function deleteComment(commentId: number, reply: string, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -340,9 +253,6 @@ function deleteComment(commentId: number, reply: string, successCallback?: AjaxS
   });
 }
 
-/**
- * Tested 1.
- */
 function deleteMutiComments(dataObj: number[], successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -357,10 +267,6 @@ function deleteMutiComments(dataObj: number[], successCallback?: AjaxSuccCallbac
   });
 }
 
-/**
- * Tested 1.
- *
- */
 function deleteReply(commentId: number, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -375,9 +281,6 @@ function deleteReply(commentId: number, successCallback?: AjaxSuccCallback, erro
   });
 }
 
-/**
- * Tested 1.
- */
 function deleteUser(uid: number, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -392,9 +295,6 @@ function deleteUser(uid: number, successCallback?: AjaxSuccCallback, errorCallba
   });
 }
 
-/**
- * Tested 1.
- */
 function deleteMutiUsers(uids: Array<string | number>, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
@@ -423,11 +323,6 @@ function getCookie(name: string) {
   }
 }
 
-/**
- * Tested 1.
- *
- *
- */
 function getTranslations(successCallback: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
@@ -438,11 +333,6 @@ function getTranslations(successCallback: AjaxSuccCallback, errorCallback?: Ajax
   });
 }
 
-/**
- * Tested 1.
- *
- *
- */
 function getSystemInformation(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "GET",
@@ -453,11 +343,6 @@ function getSystemInformation(successCallback?: AjaxSuccCallback, errorCallback?
   });
 }
 
-/**
- * Tested 1.
- * Create a reply.
- *
- */
 function createReply(replyData: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   let formData = {
     mid: replyData.pid,
@@ -476,9 +361,6 @@ function createReply(replyData: any, successCallback?: AjaxSuccCallback, errorCa
   });
 }
 
-/**
- * Tested 1.
- */
 function updateReply(replyData: any, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   let formData = {
     mid: replyData.pid,
@@ -497,9 +379,6 @@ function updateReply(replyData: any, successCallback?: AjaxSuccCallback, errorCa
   });
 }
 
-/**
- * Tested 1.
- */
 function updateComment(commentData: UpdateCommentObj, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({
     type: "POST",
