@@ -1,6 +1,6 @@
 import React, { FormEvent, useRef, useState } from 'react';
 import Modal from 'react-modal';
-import dataProvider from '../src/dataProvider';
+import dataProvider from '../common/dataProvider';
 
 const customStyles = {
   content : {

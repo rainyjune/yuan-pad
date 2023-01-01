@@ -1,16 +1,16 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 
-import SearchBar from './searchBar';
-import CommentBox from './commentBox';
-import Header from './header';
-import Footer from './footer';
-import dataProvider from './dataProvider';
-import Progress from './progress';
-import OfflineWarning from './offlineMode';
-import AppConfigContext from './appConfigContext';
-import UserContext from './userContext';
-import LanguageContext from './languageContext';
+import SearchBar from './front/searchBar';
+import CommentBox from './front/commentBox';
+import Header from './front/header';
+import Footer from './front/footer';
+import dataProvider from './common/dataProvider';
+import Progress from './common/progress';
+import OfflineWarning from './common/offlineMode';
+import AppConfigContext from './common/appConfigContext';
+import UserContext from './common/userContext';
+import LanguageContext from './common/languageContext';
 import { GetUserInfoResponse, PostListResponse, SearchResponse, IConfigParams, ConfigResponse, TranslationResponse, IUser, IComment} from './common/types';
 
 function App(props: any) {

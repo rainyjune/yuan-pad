@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import dataProvider from './dataProvider';
+import dataProvider from '../common/dataProvider';
 
 function IPItem(props: any) {
   const toggleItem = () => {

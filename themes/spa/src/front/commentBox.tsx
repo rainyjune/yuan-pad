@@ -1,7 +1,7 @@
 import React, { forwardRef, MouseEvent, useEffect, useRef, useState, useImperativeHandle, useContext, FormEvent, ChangeEvent } from 'react';
-import dataProvider from './dataProvider';
-import LanguageContext from './languageContext';
-import AppConfigContext from './appConfigContext';
+import dataProvider from '../common/dataProvider';
+import LanguageContext from '../common/languageContext';
+import AppConfigContext from '../common/appConfigContext';
 const yuanjs = require('@rainyjune/yuanjs');
 
 function Pagination(props: any) {

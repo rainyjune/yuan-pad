@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot  } from 'react-dom/client';
 
-import ACPLogin from './acp-login';
-import ACPTabHeader from './acp-tabHeader';
-import ACPTabContent from './acp-tabContent';
-import ACPFooter from './acp-footer';
-import dataProvider from './dataProvider';
-import Progress from './progress';
-import OfflineWarning from './offlineMode';
-import useStateCallback from './useStateCallback';
+import ACPLogin from './acp/acp-login';
+import ACPTabHeader from './acp/acp-tabHeader';
+import ACPTabContent from './acp/acp-tabContent';
+import ACPFooter from './acp/acp-footer';
+import dataProvider from './common/dataProvider';
+import Progress from './common/progress';
+import OfflineWarning from './common/offlineMode';
+import useStateCallback from './common/useStateCallback';
 import { GetUserInfoResponse, PostListResponse, SearchResponse, IConfigParams, ConfigResponse, TranslationResponse, IUser, IComment} from './common/types';
 
 function ACPBox(props: any) {

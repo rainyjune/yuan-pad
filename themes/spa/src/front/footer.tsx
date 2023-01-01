@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
-import AppConfigContext from './appConfigContext';
-import UserContext from './userContext';
-import LanguageContext from './languageContext';
+import AppConfigContext from '../common/appConfigContext';
+import UserContext from '../common/userContext';
+import LanguageContext from '../common/languageContext';
 
 function AppFooter(props: any) {
   const appConfig: any = useContext(AppConfigContext);

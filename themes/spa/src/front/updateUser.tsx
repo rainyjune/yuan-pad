@@ -1,8 +1,8 @@
 import React, { FormEvent, useContext, useRef, useState } from 'react';
 import Modal from 'react-modal';
-import dataProvider from './dataProvider';
-import UserContext from './userContext';
-import LanguageContext from './languageContext';
+import dataProvider from '../common/dataProvider';
+import UserContext from '../common/userContext';
+import LanguageContext from '../common/languageContext';
 
 const customStyles = {
   content : {

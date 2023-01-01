@@ -1,6 +1,6 @@
 import React, { MouseEvent, useContext } from 'react';
-import dataProvider from './dataProvider';
-import LanguageContext from './languageContext';
+import dataProvider from '../common/dataProvider';
+import LanguageContext from '../common/languageContext';
 
 function LogoutButton(props: any) {
   const handleSignOut = (e: MouseEvent) => {

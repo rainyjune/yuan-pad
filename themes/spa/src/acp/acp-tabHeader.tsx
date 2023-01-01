@@ -1,5 +1,5 @@
 import React, { MouseEvent, useState } from 'react';
-import dataProvider from './dataProvider';
+import dataProvider from '../common/dataProvider';
 
 function ACPTabHeader(props: any) {
   const [menuIsOpen, setMenuIsOpen] = useState(false);

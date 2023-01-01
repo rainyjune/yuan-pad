@@ -4,7 +4,7 @@ import SignIn from './signIn';
 import SignUp from './signUp';
 import UpdateUser from './updateUser';
 import SignOutButton from './signOut';
-import UserContext from './userContext';
+import UserContext from '../common/userContext';
 
 function Header(props: any) {
   let propsObj = {
