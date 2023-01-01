@@ -11,7 +11,7 @@ import OfflineWarning from './common/offlineMode';
 import useStateCallback from './common/useStateCallback';
 import { GetUserInfoResponse, PostListResponse, SearchResponse, IConfigParams, ConfigResponse, TranslationResponse, IUser, IComment} from './common/types';
 
-function ACPBox(props: any) {
+function ACPBox() {
   const [loadingModalIsOpen, setLoadingModalIsOpen] = useStateCallback(true);
   const [systemInformation, setSystemInformation] = useStateCallback({});
   const [activeTab, setActiveTab] = useState('overview');

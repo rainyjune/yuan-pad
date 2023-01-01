@@ -13,7 +13,7 @@ import UserContext from './common/userContext';
 import LanguageContext from './common/languageContext';
 import { GetUserInfoResponse, PostListResponse, SearchResponse, IConfigParams, ConfigResponse, TranslationResponse, IUser, IComment} from './common/types';
 
-function App(props: any) {
+function App() {
   const didMount = useRef(false);
   const [loadingModalIsOpen, setLoadingModalIsOpen] = useState(true);
   const [appConfig, setAppConfig] = useState<IConfigParams>({

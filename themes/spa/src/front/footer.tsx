@@ -3,7 +3,7 @@ import AppConfigContext from '../common/appConfigContext';
 import UserContext from '../common/userContext';
 import LanguageContext from '../common/languageContext';
 
-function AppFooter(props: any) {
+function AppFooter() {
   const appConfig: any = useContext(AppConfigContext);
   const user: any = useContext(UserContext);
   const lang: any = useContext(LanguageContext);
