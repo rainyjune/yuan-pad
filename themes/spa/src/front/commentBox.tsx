@@ -2,7 +2,7 @@ import React, { forwardRef, MouseEvent, useEffect, useRef, useState, useImperati
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';
 import AppConfigContext from '../common/appConfigContext';
-const yuanjs = require('@rainyjune/yuanjs');
+import * as yuanjs from '@rainyjune/yuanjs';
 
 function Pagination(props: any) {
   const handleClick = (e: MouseEvent) => {

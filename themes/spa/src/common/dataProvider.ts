@@ -1,4 +1,4 @@
-const yuanjs = require('@rainyjune/yuanjs');
+import * as yuanjs from '@rainyjune/yuanjs';
 
 import { AjaxErrCallback, AjaxSuccCallback, ConfigResponse, GetUserInfoResponse, PostListResponse, ReplyObj, SearchResponse, TranslationResponse, SignInData, UserUpdateData, UpdateCommentObj } from '../common/types';
 

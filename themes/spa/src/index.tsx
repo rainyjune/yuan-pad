@@ -1,6 +1,10 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/css/bootstrap-theme.css";
+import './css/style.css';
+
 import SearchBar from './front/searchBar';
 import CommentBox from './front/commentBox';
 import Header from './front/header';
