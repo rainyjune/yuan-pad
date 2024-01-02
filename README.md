@@ -13,7 +13,7 @@ YuanPad is a PHP-based guestbook script.
 
 ```
 cd yuan-pad/themes/spa
-npm install --legacy-peer-deps
+npm install
 ```
 
 On the develop stage, run:
@@ -25,5 +25,5 @@ npm run dev
 Run the following in your terminal when you want to generate the compressed files:
 
 ```
-grunt build
+npm run build
 ```
