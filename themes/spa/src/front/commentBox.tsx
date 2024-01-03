@@ -1,7 +1,10 @@
-import React, { forwardRef, MouseEvent, useEffect, useRef, useState, useImperativeHandle, useContext, FormEvent, ChangeEvent } from 'react';
+import { forwardRef, MouseEvent, useEffect, useRef, useState, useImperativeHandle, useContext, FormEvent, ChangeEvent } from 'react';
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';
 import AppConfigContext from '../common/appConfigContext';
+import userContext from '../common/userContext';
+
+//@ts-ignore
 import * as yuanjs from '@rainyjune/yuanjs';
 
 function Pagination(props: any) {
@@ -167,39 +170,15 @@ const Captcha = forwardRef((props: any, ref) => {
 });
 
 function CommentForm(props: any) {
+  const user = useContext(userContext);
   const captchaRef = useRef<any>(null);
-  const [userInputType, setUserInputType] = useState('text');
-  const [labelContent, setLabelContent] = useState('');
-  const [username, setUsername] = useState('anonymous');
   const [text, setText] = useState('');
   const [valid_code, setValid_code] = useState('');
   const lang: any = useContext(LanguageContext);
   const appConfig: any = useContext(AppConfigContext);
-  useEffect(() => {
-    let computedState: any = {};
-    let propUser = props.user;
-    if (!propUser) return;
-    switch (propUser.user_type) {
-      case "admin" :
-      case "regular":
-        computedState.userInputType = "hidden";
-        computedState.username = propUser.username;
-        computedState.labelContent = propUser.username;
-        break;
-      case "guest":
-      default:
-        computedState.userInputType = "text";
-        computedState.username = 'anonymous';
-        computedState.labelContent = '';
-        break;
-    }
-    setUserInputType(computedState.userInputType);
-    setUsername(computedState.username);
-    setLabelContent(computedState.labelContent);
-  });
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    let author = username.trim(),
+    let author = user?.username?.trim(),
         text1 = text.trim(),
         valid_code1 = valid_code.trim();
     if (!author || !text1) return;
@@ -218,9 +197,6 @@ function CommentForm(props: any) {
     });
     return false;
   };
-  const handleUsernameChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setUsername(e.target.value);
-  };
   const handleTextChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
     setText(e.target.value);
   };
@@ -234,13 +210,12 @@ function CommentForm(props: any) {
         <div className="col-sm-5 col-lg-5">
           <input
             id="inputUser"
-            type={userInputType} 
+            type='hidden'
             maxLength={10}
             className="form-control"
-            value={username}
-            onChange={handleUsernameChange}
+            value={user?.username}
           />
-          <label className="control-label">{userInputType === "hidden" ? username : ''}</label>
+          <label className="control-label">{ user?.username || 'anonymous'}</label>
         </div>
       </div>
       <div className="form-group">
