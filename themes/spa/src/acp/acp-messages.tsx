@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import _ from 'lodash';
 import dataProvider from '../common/dataProvider';
 import ReplyModal from './acp-replyModal';
@@ -40,7 +40,7 @@ function Reply(props: any) {
     if (!confirm(props.lang.DEL_REPLY_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteReply(state.id, response => {
+    dataProvider.deleteReply(state.id, () => {
       setState(_.extend({}, state, { reply_content: '' }));
     });
   }
@@ -59,7 +59,7 @@ function Reply(props: any) {
 
 function Comment(props: any) {
   const banIP = (e: any) => {
-    let dom = e.target;
+    //let dom = e.target;
     e.preventDefault();
     let ip = props.data.ip;
     dataProvider.banIP(ip, () => {
@@ -75,7 +75,7 @@ function Comment(props: any) {
       return false;
     }
     // TODO
-    dataProvider.deleteComment(commentId, reply, response => {
+    dataProvider.deleteComment(commentId, reply, () => {
       props.onCommentDeleted();
     });
   };
@@ -131,13 +131,13 @@ function ACPMessages(props: any) {
   const [modalErrorMsg, setModalErrorMsg] = useState('');
   const addSelectedFlag = (arr: Array<any>) => {
     if (Array.isArray(arr)) {
-      arr.forEach((currentValue, index) => {
+      arr.forEach((currentValue) => {
         currentValue['checked'] = false;
       });
     }
   };
   const toggle = (itemToToggle: any) => {
-    let data = comments.map((currentValue: any, index) => {
+    let data = comments.map((currentValue: any) => {
       if (currentValue === itemToToggle) {
         currentValue['checked'] = !currentValue['checked'];
       }
@@ -149,7 +149,7 @@ function ACPMessages(props: any) {
     toggleAll(e.target.checked);
   };
   const toggleAll = (checked: boolean) => {
-    let data = comments.map((currentValue: any, index) => {
+    let data = comments.map((currentValue: any) => {
       currentValue['checked'] = checked;
       return currentValue;
     });
@@ -158,17 +158,19 @@ function ACPMessages(props: any) {
   const getCheckedItems = () => {
     let arr: any = [];
     let key = getItemKey();
-    let field = getMixinAttr();
-    comments.forEach((currentValue: any, index) => {
+    //let field = getMixinAttr();
+    comments.forEach((currentValue: any) => {
       if (currentValue.checked) {
         arr.push(currentValue[key]);
       }
     });
     return arr;
   };
+  /*
   const getMixinAttr = () => {
     return 'comments';
   };
+  */
   const getItemKey = () => {
     return 'id';
   };
@@ -306,7 +308,7 @@ function ACPMessages(props: any) {
                   />
                 );
               };
-              comments && comments.map(createComment, this);
+              comments && comments.map(createComment);
               return commentArr;
             })()}
           </tbody>

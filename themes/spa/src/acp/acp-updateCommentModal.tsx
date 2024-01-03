@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 import dataProvider from '../common/dataProvider';
 
@@ -30,7 +30,7 @@ function UpdateCommentModal(props: any) {
       if (res.statusCode === 200) {
         props.onCommentUpdated();
       }
-    }, function(e){
+    }, function(){
       debugger;
     });
     return false;

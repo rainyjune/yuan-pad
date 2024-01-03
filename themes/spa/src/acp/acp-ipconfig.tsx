@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import dataProvider from '../common/dataProvider';
 
 function IPItem(props: any) {
@@ -103,7 +103,7 @@ function ACPIpConfig(props: any) {
             </tr>
           </thead>
           <tbody>
-            {IPList && IPList.map(createIPItem, this)}
+            {IPList && IPList.map(createIPItem)}
             <tr>
               <td colSpan={2} align='left'>
                 <input type='submit' value={lang.DELETE_CHECKED} /></td>

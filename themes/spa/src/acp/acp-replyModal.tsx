@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import _ from 'lodash';
 import Modal from 'react-modal';
 import dataProvider from '../common/dataProvider';

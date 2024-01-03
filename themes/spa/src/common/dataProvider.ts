@@ -1,6 +1,7 @@
+// @ts-ignore
 import * as yuanjs from '@rainyjune/yuanjs';
 
-import { AjaxErrCallback, AjaxSuccCallback, ConfigResponse, GetUserInfoResponse, PostListResponse, ReplyObj, SearchResponse, TranslationResponse, SignInData, UserUpdateData, UpdateCommentObj } from '../common/types';
+import { AjaxErrCallback, AjaxSuccCallback, SignInData, UpdateCommentObj } from '../common/types';
 
 function banIP(ip: string, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
   yuanjs.ajax({

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import AppConfigContext from '../common/appConfigContext';
 import UserContext from '../common/userContext';
 import LanguageContext from '../common/languageContext';

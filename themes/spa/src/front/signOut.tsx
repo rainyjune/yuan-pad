@@ -1,4 +1,4 @@
-import React, { MouseEvent, useContext } from 'react';
+import { MouseEvent, useContext } from 'react';
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';
 

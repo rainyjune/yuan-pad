@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import UserUpdateModal from './acp-userUpdateModal';
 import dataProvider from '../common/dataProvider';
 
@@ -54,7 +54,7 @@ function ACPUser(props: any) {
   });
   const addSelectedFlag = (arr: Array<any>) => {
     if (Array.isArray(arr)) {
-      arr.forEach((currentValue, index) => {
+      arr.forEach((currentValue) => {
         currentValue['checked'] = false;
       });
     }
@@ -88,9 +88,11 @@ function ACPUser(props: any) {
     });
     return arr;
   };
+  /*
   const getMixinAttr = () => {
     return 'users';
   };
+  */
   const getItemKey = () => {
     return 'uid';
   };
@@ -216,7 +218,7 @@ function ACPUser(props: any) {
             </tr>
           </thead>
           <tbody>
-            {users.map(createUserItem, this)}
+            {users.map(createUserItem)}
           </tbody>
           <tfoot>
             <tr>

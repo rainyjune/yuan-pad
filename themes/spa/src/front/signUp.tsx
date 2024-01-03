@@ -1,4 +1,4 @@
-import React, { ChangeEvent, FormEvent, useContext, useRef, useState } from 'react';
+import { FormEvent, useContext, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';

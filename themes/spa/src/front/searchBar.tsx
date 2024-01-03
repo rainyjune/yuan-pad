@@ -1,4 +1,4 @@
-import React, { FormEvent, useRef } from 'react';
+import { FormEvent, useRef } from 'react';
 
 function SearchBar(props: any) {
   const keywordRef = useRef<HTMLInputElement>(null);

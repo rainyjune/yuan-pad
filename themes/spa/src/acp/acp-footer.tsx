@@ -1,4 +1,3 @@
-import React from 'react';
 
 function ACPFooter(props: any) {
   if (props.user.user_type !== "admin") return null;

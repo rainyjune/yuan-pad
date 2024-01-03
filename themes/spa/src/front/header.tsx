@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 
 import SignIn from './signIn';
 import SignUp from './signUp';

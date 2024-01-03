@@ -1,4 +1,3 @@
-import React from "react";
 
 let ACPOverview = (props: any) => {
   let lang = props.lang,

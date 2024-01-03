@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState, MouseEvent, FormEvent } from 'react';
+import { useContext, useRef, useState, MouseEvent, FormEvent } from 'react';
 import Modal from 'react-modal';
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';

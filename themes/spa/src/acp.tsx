@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createRoot  } from 'react-dom/client';
 
 import ACPLogin from './acp/acp-login';
@@ -9,7 +9,7 @@ import dataProvider from './common/dataProvider';
 import Progress from './common/progress';
 import OfflineWarning from './common/offlineMode';
 import useStateCallback from './common/useStateCallback';
-import { GetUserInfoResponse, PostListResponse, SearchResponse, IConfigParams, ConfigResponse, TranslationResponse, IUser, IComment} from './common/types';
+import { GetUserInfoResponse, ConfigResponse, TranslationResponse, IUser } from './common/types';
 
 function ACPBox() {
   const [loadingModalIsOpen, setLoadingModalIsOpen] = useStateCallback(true);
@@ -24,7 +24,7 @@ function ACPBox() {
   useEffect(() => {
     dataProvider.getAppConfig((res: ConfigResponse) => {
       if (res.statusCode === 200) {
-        let siteConfig = res.response;
+        const siteConfig = res.response;
         dataProvider.getTranslations((res: TranslationResponse) => {
           setTranslations(res.response);
           setAppConfig(siteConfig);
@@ -48,6 +48,7 @@ function ACPBox() {
       });
     });
   };
+  /*
   const loadApplicationTranslation = (successCallback = () => {}) => {
     dataProvider.getTranslations((res: TranslationResponse) => {
       if (res.statusCode === 200) {
@@ -58,6 +59,7 @@ function ACPBox() {
       }
     });
   };
+  */
   const loadApplicationSystemInformation = (successCallback = () => {}) => {
     dataProvider.getSystemInformation((res: ConfigResponse) => {
       if (res.statusCode === 200) {

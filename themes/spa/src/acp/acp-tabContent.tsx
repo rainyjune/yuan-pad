@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import ACPOverview from './acp-overview';
 import ACPConfig from './acp-config';
 import ACPMessages from './acp-messages';
