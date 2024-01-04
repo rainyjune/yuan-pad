@@ -46,8 +46,8 @@ function App() {
   // Get current user identity from server.
   const getUserInfo = () => {
     dataProvider.getUserInfo((res: GetUserInfoResponse) => {
-      setLoadingModalIsOpen(false);
       if (res.statusCode !== 200) {
+        setLoadingModalIsOpen(false);
         return ;
       }
       setCurrentUser1(res.response);
@@ -58,6 +58,7 @@ function App() {
   // Load comments to be displayed on page by page number.
   const loadCommentsFromServer = () => {
     dataProvider.loadCommentsFromServer(currentPage, (res: PostListResponse) => {
+      setLoadingModalIsOpen(false);
       setComments(res.response.comments);
       setcommentsTotalNumber(res.response.total);
       setCommentListType(1);
@@ -77,7 +78,7 @@ function App() {
   useEffect(() => {
     dataProvider.getAppConfig((res: ConfigResponse) => {
       if (res.statusCode === 200) {
-        let siteConfig = res.response;
+        const siteConfig = res.response;
         dataProvider.getTranslations((res: TranslationResponse) => {
           setTranslations(res.response);
           setAppConfig(siteConfig);

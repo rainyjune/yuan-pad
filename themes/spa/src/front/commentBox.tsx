@@ -1,4 +1,4 @@
-import { forwardRef, MouseEvent, useEffect, useRef, useState, useImperativeHandle, useContext, FormEvent, ChangeEvent } from 'react';
+import { forwardRef, MouseEvent, useRef, useState, useImperativeHandle, useContext, FormEvent, ChangeEvent } from 'react';
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';
 import AppConfigContext from '../common/appConfigContext';
@@ -10,7 +10,7 @@ import * as yuanjs from '@rainyjune/yuanjs';
 function Pagination(props: any) {
   const handleClick = (e: MouseEvent) => {
     e.preventDefault();
-    let pageNumber = (e.target as HTMLLinkElement).getAttribute("data-pagenumber");
+    const pageNumber = (e.target as HTMLLinkElement).getAttribute("data-pagenumber");
     if (pageNumber == props.currentPage) {
       return false;
     }
@@ -19,9 +19,9 @@ function Pagination(props: any) {
   return (
     <div className="pagination">
       {(()=> {
-        let items = [];
+        const items = [];
         for (let i = 0; i < props.total; i++) {
-          let className = (props.currentPage === i) ? "pagination-item currentPage" : "pagination-item";
+          const className = (props.currentPage === i) ? "pagination-item currentPage" : "pagination-item";
           items.push(<a
             key={i}
             className={className} 
@@ -72,11 +72,11 @@ function CommentStatistics(props: any) {
 }
 
 function CommentList(props: any) {
-  let searchText = props.searchText,
+  const searchText = props.searchText,
       isSearchResult = props.commentListType === 2;
 
-  let createCommentNodes = function(comment: any) {
-    let text = isSearchResult ? comment.post_content.replace(searchText, "<span class='keyword'>" + searchText + "</span>") : comment.post_content;
+  const createCommentNodes = function(comment: any) {
+    const text = isSearchResult ? comment.post_content.replace(searchText, "<span class='keyword'>" + searchText + "</span>") : comment.post_content;
     return (
       <Comment
         key={comment.id}
@@ -242,7 +242,7 @@ function CommentForm(props: any) {
 }
 
 function CommentBox(props: any) {
-  var propsObj = {
+  const propsObj = {
     commentListType: props.commentListType,
   };
   const lang: any = useContext(LanguageContext);
