@@ -33,7 +33,7 @@ function UserUpdate(props: any) {
   };
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    let uid = idRef.current?.value.trim(),
+    const uid = idRef.current?.value.trim(),
         user = userRef.current?.value.trim(),
         pwd = passRef.current?.value.trim(),
         email = emailRef.current?.value.trim();

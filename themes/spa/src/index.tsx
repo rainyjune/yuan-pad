@@ -90,6 +90,12 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    if (appConfig.board_name) {
+      document.title = appConfig.board_name;
+    }
+  }, [appConfig.board_name]);
+
   // Reload comments from server if the `currentPage` state changed.
   const handlePageChange = (pageNumber: any) => {
     setCurrentPage(parseInt(pageNumber));
