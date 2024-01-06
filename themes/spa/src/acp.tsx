@@ -11,6 +11,10 @@ import OfflineWarning from './common/offlineMode';
 import useStateCallback from './common/useStateCallback';
 import { GetUserInfoResponse, ConfigResponse, TranslationResponse, IUser } from './common/types';
 
+import "bootstrap/dist/css/bootstrap.css";
+import "bootstrap/dist/css/bootstrap-theme.css";
+import './css/acp.css';
+
 function ACPBox() {
   const [loadingModalIsOpen, setLoadingModalIsOpen] = useStateCallback(true);
   const [systemInformation, setSystemInformation] = useStateCallback({});

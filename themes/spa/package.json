@@ -25,7 +25,8 @@
   "homepage": "https://github.com/rainyjune/yuan-pad#readme",
   "devDependencies": {
     "@types/lodash": "^4.14.191",
-    "@types/react": "^18.2.43",
+    "@types/node": "^20.10.6",
+    "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.17",
     "@types/react-modal": "^3.13.1",
     "@typescript-eslint/eslint-plugin": "^6.14.0",
