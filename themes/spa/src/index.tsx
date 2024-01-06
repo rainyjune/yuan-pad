@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { StrictMode, useEffect, useState, useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 
 import "bootstrap/dist/css/bootstrap.css";
@@ -159,5 +159,7 @@ function App() {
 }
 
 createRoot(document.getElementById('content') as Element).render(
-  <App />
+  <StrictMode>
+    <App />
+  </StrictMode>
 );
