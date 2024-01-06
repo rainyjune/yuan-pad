@@ -8,7 +8,7 @@ function AppFooter() {
   const user: any = useContext(UserContext);
   const lang: any = useContext(LanguageContext);
   const ACPMarkup = () => {
-    let ACP = (user && user.user_type === "admin") ? 
+    const ACP = (user && user.user_type === "admin") ?
               "<a href='index.php?action=control_panel'>"+ lang.ACP+"</a>" 
               : '';
     return {

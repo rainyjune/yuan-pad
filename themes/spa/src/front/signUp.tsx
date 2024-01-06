@@ -3,16 +3,7 @@ import Modal from 'react-modal';
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';
 
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
+import ModalStyles from './ModalStyles';
 
 function SignUp(props: any) {
   const userRef = useRef<HTMLInputElement>(null);
@@ -31,7 +22,7 @@ function SignUp(props: any) {
   };
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    let user = userRef.current?.value.trim(),
+    const user = userRef.current?.value.trim(),
         pwd = passRef.current?.value.trim(),
         email = emailRef.current?.value.trim();
     if (!user || !pwd || !email) return;
@@ -50,7 +41,7 @@ function SignUp(props: any) {
   return (
     <div className="signUp">
       <a role="button" className="btn btn-default" href='#' onClick={openModal}>{language.REGISTER}</a>
-      <Modal ariaHideApp={false} isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles}>
+      <Modal ariaHideApp={false} isOpen={modalIsOpen} onRequestClose={closeModal} style={ModalStyles}>
         <p>{errorMsg}</p>
         <button onClick={closeModal}>close</button>
         <form onSubmit={handleSubmit} action="#" method="post">

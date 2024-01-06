@@ -3,16 +3,7 @@ import Modal from 'react-modal';
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';
 
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
+import ModalStyles from './ModalStyles';
 
 function SignIn(props: any) {
   const language: any = useContext(LanguageContext);
@@ -42,7 +33,7 @@ function SignIn(props: any) {
   };
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    let user = userRef.current?.value.trim(),
+    const user = userRef.current?.value.trim(),
         pwd = passRef.current?.value.trim();
     if (!user || !pwd) return;
     handleSignIn({ user, password: pwd});
@@ -51,7 +42,7 @@ function SignIn(props: any) {
   return (
     <div className="signIn">
       <a href='#' onClick={openModal} role="button" className="btn btn-default">{language.LOGIN}</a>
-      <Modal ariaHideApp={false} isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles}>
+      <Modal ariaHideApp={false} isOpen={modalIsOpen} onRequestClose={closeModal} style={ModalStyles}>
         <p>{errorMsg}</p>
         <button onClick={closeModal}>close</button>
         <form onSubmit={handleSubmit} action="#" method="post">

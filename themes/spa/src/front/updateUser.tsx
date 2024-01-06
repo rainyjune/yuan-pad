@@ -4,17 +4,7 @@ import dataProvider from '../common/dataProvider';
 import UserContext from '../common/userContext';
 import LanguageContext from '../common/languageContext';
 
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
-
+import ModalStyles from './ModalStyles';
 function UserUpdate(props: any) {
   const idRef = useRef<HTMLInputElement>(null);
   const userRef = useRef<HTMLInputElement>(null);
@@ -53,7 +43,7 @@ function UserUpdate(props: any) {
   return (
     <div className="updateUser">
       <a role="button" className="btn btn-default" href="#" onClick={openModal}>{language.UPDATE}</a>
-      <Modal ariaHideApp={false} isOpen={modalIsOpen} onRequestClose={closeModal} style={customStyles}>
+      <Modal ariaHideApp={false} isOpen={modalIsOpen} onRequestClose={closeModal} style={ModalStyles}>
         <p>{errorMsg}</p>
         <button onClick={closeModal}>close</button>
         <form onSubmit={handleSubmit} action="#" method="post">
