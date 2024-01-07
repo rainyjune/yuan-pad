@@ -2,17 +2,7 @@ import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import _ from 'lodash';
 import Modal from 'react-modal';
 import dataProvider from '../common/dataProvider';
-
-const customStyles = {
-  content : {
-    top                   : '50%',
-    left                  : '50%',
-    right                 : 'auto',
-    bottom                : 'auto',
-    marginRight           : '-50%',
-    transform             : 'translate(-50%, -50%)'
-  }
-};
+import customStyles from '../common/ModalStyles';
 
 function ReplyModal(props: any) {
   const [state, setState] = useState({
