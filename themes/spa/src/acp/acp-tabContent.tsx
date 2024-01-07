@@ -1,4 +1,3 @@
-import { useRef } from 'react';
 import ACPOverview from './acp-overview';
 import ACPConfig from './acp-config';
 import ACPMessages from './acp-messages';
@@ -6,9 +5,7 @@ import ACPIpConfig from './acp-ipconfig';
 import ACPUsers from './acp-users';
 
 function ACPTabContent(props: any) {
-  const blackListRef: any = useRef(null);
   const handleActiveChange = (newTab: any) => {
-    blackListRef.loadBlackList();
     setTimeout(()=>{
       props.onActiveTabChanged(newTab);
     }, 0);
@@ -37,7 +34,6 @@ function ACPTabContent(props: any) {
         onCommentDeleted={props.onCommentDeleted}
       />
       <ACPIpConfig
-        ref={blackListRef}
         systemInformation={props.systemInformation}
         lang={props.lang}
         activeTab={props.activeTab}

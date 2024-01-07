@@ -23,9 +23,9 @@ function ACPConfig(props: any) {
   });
 
   useEffect(() => {
-    let propAppConfig = props.appConfig;
-    let computedState: any = {};
-    for (let i in propAppConfig) {
+    const propAppConfig = props.appConfig;
+    const computedState: any = {};
+    for (const i in propAppConfig) {
       if (state.hasOwnProperty(i)) {
         computedState[i] = propAppConfig[i] === null ? 0 : propAppConfig[i];
       }
@@ -76,7 +76,7 @@ function ACPConfig(props: any) {
       [target.name]: target.value.trim()
     }));
   };
-  let appConfig = state,
+  const appConfig = state,
       acpData = props.systemInformation,
       lang = props.lang;
 
@@ -115,9 +115,9 @@ function ACPConfig(props: any) {
                 <td>
                   <select name='theme' value={state.theme} onChange={handleInput}>
                     {(()=>{
-                      let themes = acpData.themes, themeOptions = [];
-                      for (let i in themes) {
-                        let theme = themes[i];
+                      const themes = acpData.themes, themeOptions = [];
+                      for (const i in themes) {
+                        const theme = themes[i];
                         themeOptions.push(<option key={theme} value={theme}>{theme}</option>);
                       }
                       return themeOptions;
@@ -130,9 +130,9 @@ function ACPConfig(props: any) {
                 <td>
                   <select name='timezone' value={state.timezone} onChange={handleInput}>
                     {(()=>{
-                      let timeZones = acpData.timezones, timezoneOptions = [];
-                      for (let i in timeZones) {
-                        let timezone = timeZones[i];
+                      const timeZones = acpData.timezones, timezoneOptions = [];
+                      for (const i in timeZones) {
+                        const timezone = timeZones[i];
                         timezoneOptions.push(<option key={i} value={i}>{timezone}</option>);
                       }
                       return timezoneOptions;
@@ -145,9 +145,9 @@ function ACPConfig(props: any) {
                 <td>
                   <select name='lang' value={state.lang} onChange={handleInput}>
                     {(()=>{
-                      let languages = acpData.languages, languageOptions = [];
-                      for (let i in languages) {
-                        let language = languages[i];
+                      const languages = acpData.languages, languageOptions = [];
+                      for (const i in languages) {
+                        const language = languages[i];
                         languageOptions.push(<option key={i} value={language}>{language}</option>);
                       }
                       return languageOptions;
@@ -160,9 +160,9 @@ function ACPConfig(props: any) {
                 <td>
                   <select name='dateformat' value={state.dateformat} onChange={handleInput}>
                     {(()=>{
-                      let dateFormateList = acpData.dateFormates, formatOptions = [];
-                      for (let i in dateFormateList) {
-                        let format = dateFormateList[i];
+                      const dateFormateList = acpData.dateFormates, formatOptions = [];
+                      for (const i in dateFormateList) {
+                        const format = dateFormateList[i];
                         formatOptions.push(<option key={i} value={i}>{format}</option>);
                       }
                       return formatOptions;
@@ -185,7 +185,7 @@ function ACPConfig(props: any) {
                 <td>{lang.ENABLE_CAPTCHA}:</td>
                 <td>
                   {(()=>{
-                    let captchaInputs = [];
+                    const captchaInputs = [];
                     if (acpData.gd_loaded) {
                       captchaInputs.push(<label key="1"><input type="radio" value="1" checked={appConfig.valid_code_open == 1} onChange={toggleCaptcha} />{lang.YES}</label>);
                       captchaInputs.push(<label key="0"><input type="radio" value="0" checked={appConfig.valid_code_open != 1} onChange={toggleCaptcha} />{lang.NO}</label>);
