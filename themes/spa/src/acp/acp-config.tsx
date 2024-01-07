@@ -81,7 +81,7 @@ function ACPConfig(props: any) {
       lang = props.lang;
 
   return (
-    <div className={props.activeTab === "siteset" ? "configContainer selectTag" : "configContainer"}>
+    <div className={props.isActive ? "configContainer selectTag" : "configContainer"}>
       <form onSubmit={handleSubmit} action="index.php?controller=config&amp;action=update" method="post">
         <fieldset>
           <legend>{lang.SYS_CONF}</legend>
@@ -186,12 +186,10 @@ function ACPConfig(props: any) {
                 <td>
                   {(()=>{
                     const captchaInputs = [];
-                    if (acpData.gd_loaded) {
-                      captchaInputs.push(<label key="1"><input type="radio" value="1" checked={appConfig.valid_code_open == 1} onChange={toggleCaptcha} />{lang.YES}</label>);
-                      captchaInputs.push(<label key="0"><input type="radio" value="0" checked={appConfig.valid_code_open != 1} onChange={toggleCaptcha} />{lang.NO}</label>);
-                    } else {
-                      captchaInputs.push(<label key="1"><input type="radio" value="1" onChange={toggleCaptcha} />{lang.YES}</label>);
-                      captchaInputs.push(<label key="0"><input type="radio" value="0" checked={true} onChange={toggleCaptcha} />{lang.NO}{lang.GD_DISABLED_NOTICE}</label>);
+                    captchaInputs.push(<label key="1"><input type="radio" value="1" checked={appConfig.valid_code_open == 1} onChange={toggleCaptcha} />{lang.YES}</label>);
+                    captchaInputs.push(<label key="0"><input type="radio" value="0" checked={appConfig.valid_code_open != 1} onChange={toggleCaptcha} />{lang.NO}</label>);
+                    if (acpData.gd_loaded === false) {
+                      captchaInputs.push(<span>{lang.GD_DISABLED_NOTICE}</span>);
                     }
                     return captchaInputs;
                   })()}

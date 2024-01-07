@@ -1,22 +1,23 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useReducer } from 'react';
+import { messageReducer, dispatchMiddleware } from './messageReducer';
 import dataProvider from '../common/dataProvider';
 import ReplyModal from './acp-replyModal';
 import CommentUpdateModal from './acp-updateCommentModal';
 import Comment from './Comment';
 
+const initialState = {
+  isLoading: false,
+  isError: false,
+  data: []
+};
+
 function ACPMessages(props: any) {
-  const [comments, setComments] = useState([]);
+  const [comments, dispatchBase] = useReducer(messageReducer, initialState);
+  const dispatch = dispatchMiddleware(dispatchBase);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalType, setModalType] = useState(''); // "reply" or "update" 
   const [modalCommentModel, setModalCommentModel] = useState(null);
   const [modalErrorMsg, setModalErrorMsg] = useState('');
-  const addSelectedFlag = (arr: Array<any>) => {
-    if (Array.isArray(arr)) {
-      arr.forEach((currentValue) => {
-        currentValue['checked'] = false;
-      });
-    }
-  };
   const toggle = (itemToToggle: any) => {
     let data = comments.map((currentValue: any) => {
       if (currentValue === itemToToggle) {
@@ -24,7 +25,6 @@ function ACPMessages(props: any) {
       }
       return currentValue;
     });
-    setMixState(data);
   };
   const toggleInputClicked = (e: any) => {
     toggleAll(e.target.checked);
@@ -34,7 +34,6 @@ function ACPMessages(props: any) {
       currentValue['checked'] = checked;
       return currentValue;
     });
-    setMixState(data);
   };
   const getCheckedItems = () => {
     let arr: any = [];
@@ -47,16 +46,8 @@ function ACPMessages(props: any) {
     });
     return arr;
   };
-  /*
-  const getMixinAttr = () => {
-    return 'comments';
-  };
-  */
   const getItemKey = () => {
     return 'id';
-  };
-  const setMixState = (data: any) => {
-    setComments(data);
   };
   const deleteAllComments = (e: any) => {
     e.preventDefault();
@@ -65,7 +56,7 @@ function ACPMessages(props: any) {
     }
     dataProvider.deleteAllComments(res => {
       if (res.statusCode === 200) {
-        setComments([]);
+        dispatch({ type: "LOAD" });
       } else {
         alert('Error');
       }
@@ -81,7 +72,7 @@ function ACPMessages(props: any) {
     }
     dataProvider.deleteAllReplies(res => {
       if (res.statusCode === 200) {
-        loadCommentsFromServer();
+        dispatch({ type: "LOAD" });
       } else {
         alert('ERROR')
       }
@@ -89,7 +80,7 @@ function ACPMessages(props: any) {
   };
   const deleteSelected = (e: any) => {
     e.preventDefault();
-    let checkedItems = getCheckedItems();
+    const checkedItems = getCheckedItems();
     if (checkedItems.length === 0) {
       return false;
     }
@@ -98,7 +89,7 @@ function ACPMessages(props: any) {
     }
     dataProvider.deleteMutiComments(checkedItems, res => {
       if (res.statusCode === 200) {
-        loadCommentsFromServer();
+        dispatch({ type: "LOAD" });
       } else {
         alert('delete error');
       }
@@ -121,47 +112,35 @@ function ACPMessages(props: any) {
   };
   const handleReplyFormSubmitted = () => {
     closeModal();
-    loadCommentsFromServer();
+    dispatch({ type: "LOAD" });
   };
   const handleUpdateComment = (commentTobeUpdated: any) => {
     openModal('update', commentTobeUpdated);
   };
   const handleCommentUpdated = () => {
     closeModal();
-    loadCommentsFromServer();
-  };
-  const loadCommentsFromServer = () => {
-    dataProvider.loadAllCommentsFromServer(res => {
-      if (res.statusCode === 200 || res.statusCode === 404) {
-        let data = res.response.comments;
-        addSelectedFlag(data)
-        //setState({comments: data});
-        setComments(data);
-      } else {
-        // TODO .
-        alert('error');
-      }
-    });
+    dispatch({ type: "LOAD" });
   };
   useEffect(() => {
-    loadCommentsFromServer();
+    dispatch({ type: "LOAD" });
   }, []);
   const handleToggleItem = (item: any) => {
     toggle(item);
   };
-  const handleCommentDeleted = () => {
-    loadCommentsFromServer();
+  const handleCommentDeleted = (commentId, reply) => {
+    dispatch({type: 'DELETE', commentId: commentId, reply: reply});
+    dispatch({type: 'LOAD'});
     props.onCommentDeleted();
   };
   const lang = props.lang;
   
-  let modalProps = {
+  const modalProps = {
     comment: modalCommentModel,
     modalErrorMsg: modalErrorMsg,
     onRequestClose: closeModal
   };
   return (
-    <div className={props.activeTab === "message" ? "message_container selectTag" : "message_container"}>
+    <div className={props.isActive ? "message_container selectTag" : "message_container"}>
       <form onSubmit={deleteSelected} action="#" method="post">
         <table className="table table-striped table-hover">
           <thead>
@@ -173,11 +152,9 @@ function ACPMessages(props: any) {
             </tr>
           </thead>
           <tbody>
-            {(() => {
-              let commentArr: any = [];
-              let createComment = function(comment: any) {
-                commentArr.push(
-                  <Comment
+            {
+              comments.data.map((comment: any) => {
+                return <Comment
                     lang={lang}
                     data={comment}
                     key={comment.id}
@@ -187,11 +164,8 @@ function ACPMessages(props: any) {
                     onUpdateComment={handleUpdateComment}
                     onToggleItem={handleToggleItem}
                   />
-                );
-              };
-              comments && comments.map(createComment);
-              return commentArr;
-            })()}
+              })
+            }
           </tbody>
           <tfoot>
             <tr>

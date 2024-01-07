@@ -17,18 +17,18 @@ function ACPTabContent(props: any) {
       <ACPOverview 
         systemInformation={props.systemInformation}
         lang={props.lang}
-        activeTab={props.activeTab}
+        isActive={props.activeTab === 'overview'}
       />
       <ACPConfig
         systemInformation={props.systemInformation}
         lang={props.lang}
-        activeTab={props.activeTab}
+        isActive={props.activeTab === 'siteset'}
         appConfig={props.appConfig}
         onConfigUpdated={props.onConfigUpdated}
       />
       <ACPMessages 
         lang={props.lang}
-        activeTab={props.activeTab}
+        isActive={props.activeTab === 'message'}
         systemInformation={props.systemInformation}
         onActiveTabChanged={handleActiveChange}
         onCommentDeleted={props.onCommentDeleted}
@@ -36,11 +36,11 @@ function ACPTabContent(props: any) {
       <ACPIpConfig
         systemInformation={props.systemInformation}
         lang={props.lang}
-        activeTab={props.activeTab}
+        isActive={props.activeTab === 'ban_ip'}
       />
       <ACPUsers
         lang={props.lang}
-        activeTab={props.activeTab}
+        isActive={props.activeTab === 'user'}
       />
     </div>
   );

@@ -72,7 +72,7 @@ function ACPIpConfig(props: any) {
   };
   let IPList = IPs;
   let lang = props.lang;
-  let cssClass = props.activeTab === "ban_ip" ? "ip_container selectTag" : "ip_container";
+  let cssClass = props.isActive ? "ip_container selectTag" : "ip_container";
   let createIPItem = function(ip: any) {
     return (
       <IPItem

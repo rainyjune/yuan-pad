@@ -99,7 +99,6 @@ function ACPBox() {
   };
   const updateActiveTab = (newTabName: string) => {
     setActiveTab(newTabName);
-    //this.setState({activeTab: newTabName});
   };
   // Update the `currentUser` state after a user signed in.
   const handleUserSignedIn = (userData: IUser) => {

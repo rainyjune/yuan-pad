@@ -1,5 +1,7 @@
 // @ts-ignore
 import * as yuanjs from '@rainyjune/yuanjs';
+import axios from 'axios';
+import qs from 'qs';
 
 import { AjaxErrCallback, AjaxSuccCallback, SignInData, UpdateCommentObj } from '../common/types';
 
@@ -121,18 +123,14 @@ function loadCommentsFromServer(pageId: number | string, successCallback: AjaxSu
   });
 }
 
-function loadAllCommentsFromServer(successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
-  yuanjs.ajax({
+function loadAllCommentsFromServer() {
+  return axios({
+    method: 'get',
     url: 'index.php',
-    dataType: 'json',
-    method: 'GET',
-    cache: false,
-    data: {controller: 'post', action: 'all'},
-    headers: {
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
-    },
-    success: successCallback,
-    error: errorCallback
+    headers: {'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''},
+    params: {
+      controller: 'post', action: 'all'
+    }
   });
 }
 
@@ -240,17 +238,18 @@ function deleteAllUsers(successCallback?: AjaxSuccCallback, errorCallback?: Ajax
   });
 }
 
-function deleteComment(commentId: number, reply: string, successCallback?: AjaxSuccCallback, errorCallback?: AjaxErrCallback) {
-  yuanjs.ajax({
-    type: "POST",
-    url: 'index.php?controller=post&action=delete',
-    data: {mid: commentId, reply: reply},
-    dataType: "json",
+function deleteComment(commentId: number, reply: string) {
+  return axios({
+    method: 'post',
+    url: 'index.php',
+    data: qs.stringify({mid: commentId, reply: reply}),
     headers: {
+      'content-type': 'application/x-www-form-urlencoded',
       'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
     },
-    success: successCallback,
-    error: errorCallback
+    params: {
+      controller: 'post', action: 'delete'
+    }
   });
 }
 

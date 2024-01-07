@@ -1,9 +1,12 @@
 
-let ACPOverview = (props: any) => {
-  let lang = props.lang,
-      sysInfo = props.systemInformation;
+let ACPOverview = (props: {
+  systemInformation: any,
+  lang: any,
+  isActive: boolean
+}) => {
+  const lang = props.lang, sysInfo = props.systemInformation;
   return (
-    <div className={props.activeTab === "overview" ? "selectTag" : ""}>
+    <div className={props.isActive ? "selectTag" : ""}>
       <h1>{lang.WELCOME_SYS}</h1>
       {lang.THANKS}
       <table className="table">

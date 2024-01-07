@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import dataProvider from '../common/dataProvider';
 import Reply from './Reply';
 
@@ -6,23 +5,20 @@ export default function Comment(props: any) {
   const banIP = (e: any) => {
     //let dom = e.target;
     e.preventDefault();
-    let ip = props.data.ip;
+    const ip = props.data.ip;
     dataProvider.banIP(ip, () => {
       props.onActiveTabChanged('ban_ip');
     });
   };
   const deleteComment = (e: any) => {
     e.preventDefault();
-    let data = props.data;
-    let commentId = data.id;
-    let reply = data.reply ? "1" : "0";
+    const data = props.data;
+    const commentId = data.id;
+    const reply = data.reply ? "1" : "0";
     if (!confirm(props.lang.DEL_COMMENT_CONFIRM)) {
       return false;
     }
-    // TODO
-    dataProvider.deleteComment(commentId, reply, () => {
-      props.onCommentDeleted();
-    });
+    props.onCommentDeleted(commentId, reply);
   };
   const replyComment = (e: any) => {
     e.preventDefault();
@@ -35,8 +31,8 @@ export default function Comment(props: any) {
   const toggleItem = () => {
     props.onToggleItem(props.data);
   };
-  let data = props.data;
-  let lang = props.lang;
+  const data = props.data;
+  const lang = props.lang;
   return (
     <tr className="row">
       <td className="col-xs-1 col-sm-1 col-md-1">
@@ -47,7 +43,7 @@ export default function Comment(props: any) {
         {parseInt(data.uid) ? data.b_username : data.uname}
       </td>
       <td className='col-xs-6 col-sm-6 col-md-6'>
-        {data.post_content}<br />{lang.TIME}：{data.time}
+        {data.post_content}<br />{lang.TIME}: {data.time}
         <Reply lang={lang} data={data} />
       </td>
       <td className="col-xs-2 col-sm-2 col-md-2">

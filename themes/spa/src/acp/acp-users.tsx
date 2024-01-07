@@ -149,8 +149,8 @@ function ACPUser(props: any) {
   const handleToggleItem = (userItem: any) => {
     toggle(userItem);
   };
-  let lang = props.lang;
-  let cssClass = props.activeTab === "user" ? "user_container selectTag" : "user_container";
+  const lang = props.lang;
+  const cssClass = props.isActive ? "user_container selectTag" : "user_container";
   let createUserItem = function(user: any) {
     return (
       <UserItem
