@@ -21,9 +21,9 @@ export default function CommentForm(props: any) {
 
     setValid_code('');
     
-    dataProvider.createPost({ user: author, content: text1, valid_code: valid_code1}, res => {
-        if (res.statusCode !== 200) {
-          alert(res.response);
+    dataProvider.createPost({ user: author, content: text1, valid_code: valid_code1}).then(res => {
+        if (res.data.statusCode !== 200) {
+          alert(res.data.response);
           return;
         }
         captchaRef.current?.refresh();

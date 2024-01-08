@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, MouseEvent } from 'react';
 import _ from 'lodash';
 import dataProvider from '../common/dataProvider';
 
@@ -33,16 +33,16 @@ export default function Reply(props: any) {
     }
   }, [props.data]);
 
-  const deleteReply = (e: any) => {
+  const deleteReply = (e: MouseEvent) => {
     e.preventDefault();
     if (!confirm(props.lang.DEL_REPLY_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteReply(state.id, () => {
+    dataProvider.deleteReply(state.id).then(() => {
       setState(_.extend({}, state, { reply_content: '' }));
     });
   }
-  let lang = props.lang,
+  const lang = props.lang,
       data = state;
   if (!data || !data.reply_content) {
     return null;

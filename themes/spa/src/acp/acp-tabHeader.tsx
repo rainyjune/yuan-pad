@@ -15,11 +15,11 @@ function ACPTabHeader(props: any) {
   };
   const handleSignOut = (e: MouseEvent) => {
     e.preventDefault();
-    dataProvider.signOut(response => {
-      if (response.statusCode === 200) {
+    dataProvider.signOut().then(response => {
+      if (response.status === 200 && response.data.statusCode === 200) {
         props.onUserLogout();
       } else {
-        alert(response.statusText);
+        alert(response.data.statusText);
       }
     });
   }

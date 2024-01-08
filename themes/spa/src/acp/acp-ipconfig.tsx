@@ -41,26 +41,29 @@ function ACPIpConfig(props: any) {
     setIPs(data);
   };
   useEffect(() => {
-    loadBlackList();
-  }, []);
-  const loadBlackList = () => {
-    dataProvider.getIPBlackList(res => {
-      if (res.statusCode === 200) {
-        setIPs(res.response);
-      }
-    });
+    if (props.isActive) {
+      loadBlackList();
+    }
+  }, [props.isActive]);
+  const loadBlackList = async () => {
+    const res = await dataProvider.getIPBlackList();
+    if (res.status === 200 && res.data.statusCode === 200) {
+      setIPs(res.data.response);
+    } else {
+      alert(res.data.statusText);
+    }
   };
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    let checkedItems = getCheckedItems();
+    const checkedItems = getCheckedItems();
     if (checkedItems.length === 0) {
       return false;
     }
     if (!confirm(props.lang.UPDATE_IPLIST_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteMultiIPs(checkedItems, res => {
-      if (res.statusCode === 200) {
+    dataProvider.deleteMultiIPs(checkedItems).then(res => {
+      if (res.data.statusCode === 200) {
         loadBlackList();
       } else {
         alert('delete error');

@@ -25,53 +25,39 @@ function ACPBox() {
    * Load application data after we verified the root user.
    */
   useEffect(() => {
-    dataProvider.getAppConfig((res: ConfigResponse) => {
-      if (res.statusCode === 200) {
-        const siteConfig = res.response;
-        dataProvider.getTranslations((res: TranslationResponse) => {
-          setTranslations(res.response);
+    dataProvider.getAppConfig().then(res => {
+      if (res.status === 200 && res.data.statusCode === 200) {
+        const siteConfig = res.data.response;
+        dataProvider.getTranslations().then(res => {
+          setTranslations(res.data.response);
           setAppConfig(siteConfig);
           getUserInfo();
-        });
+        })
       } else {
-        // TODO Tell the user what's wrong.
-        alert(res.statusText);
+        alert(res.data.statusText);
       }
-    });
+    })
   }, [])
 
-  const loadApplicationConfiguration = (successCallback = () => {}) => {
-    dataProvider.getAppConfigACP((res: ConfigResponse) => {
-      if (res.statusCode !== 200) {
-        return ;
-      }
-      //this.setState({appConfig: }, successCallback);
-      setAppConfig(res.response, () => {
+  const loadApplicationConfiguration = async (successCallback = () => {}) => {
+    const res = await dataProvider.getAppConfigACP();
+    if (res.status === 200 && res.data.statusCode === 200) {
+      setAppConfig(res.data.response, () => {
         successCallback && successCallback();
       });
-    });
+    } else {
+      alert(res.data.statusText);
+    }
   };
-  /*
-  const loadApplicationTranslation = (successCallback = () => {}) => {
-    dataProvider.getTranslations((res: TranslationResponse) => {
-      if (res.statusCode === 200) {
-        //this.setState({translations: res.response}, successCallback);
-        setTranslations(res.response, () => {
-          successCallback && successCallback();
-        })
-      }
-    });
-  };
-  */
-  const loadApplicationSystemInformation = (successCallback = () => {}) => {
-    dataProvider.getSystemInformation((res: ConfigResponse) => {
-      if (res.statusCode === 200) {
-        //this.setState({systemInformation: res.response}, successCallback);
-        setSystemInformation(res.response, () => {
-          successCallback && successCallback();
-        })
-      }
-    });
+  const loadApplicationSystemInformation = async (successCallback = () => {}) => {
+    const res = await dataProvider.getSystemInformation();
+    if (res.status === 200 && res.data.statusCode === 200) {
+      setSystemInformation(res.data.response, () => {
+        successCallback && successCallback();
+      });
+    } else {
+      alert(res.data.statusText);
+    }
   };
   
   /**
@@ -90,12 +76,11 @@ function ACPBox() {
     })
   };
   // Get current user identity from server.
-  const getUserInfo = () => {
-    dataProvider.getUserInfo((res: GetUserInfoResponse) => {
-      setLoadingModalIsOpen(false, () => {
-        handleUserSignedIn(res.response);
-      })
-    });
+  const getUserInfo = async () => {
+    const res = await dataProvider.getUserInfo();
+    setLoadingModalIsOpen(false, () => {
+      handleUserSignedIn(res.data.response);
+    })
   };
   const updateActiveTab = (newTabName: string) => {
     setActiveTab(newTabName);

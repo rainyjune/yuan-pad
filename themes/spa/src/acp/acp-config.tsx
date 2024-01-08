@@ -35,9 +35,9 @@ function ACPConfig(props: any) {
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    dataProvider.updateSiteConfig(state, res => {
+    dataProvider.updateSiteConfig(state).then(res => {
       console.log('ACPConfig state:', state);
-      if (res.statusCode === 200) {
+      if (res.data.statusCode === 200) {
         // TODO show friendly message.
         alert('OK');
         setState(_.extend({}, state, {

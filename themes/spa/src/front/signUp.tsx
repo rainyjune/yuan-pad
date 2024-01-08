@@ -27,13 +27,13 @@ function SignUp(props: any) {
         email = emailRef.current?.value.trim();
     if (!user || !pwd || !email) return;
     
-    dataProvider.signUp({user, pwd, email}, res => {
-      if (res.statusCode !== 200) {
-        setErrorMsg(res.response);
+    dataProvider.signUp({user, pwd, email}).then(res => {
+      if (res.data.statusCode !== 200) {
+        setErrorMsg(res.data.response);
       } else {
         setErrorMsg('');
         setModalIsOpen(false);
-        props.onCurrentUserUpdated(res.response);
+        props.onCurrentUserUpdated(res.data.response);
       }
     });
     return false;

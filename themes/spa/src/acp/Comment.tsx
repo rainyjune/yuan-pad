@@ -2,13 +2,9 @@ import dataProvider from '../common/dataProvider';
 import Reply from './Reply';
 
 export default function Comment(props: any) {
-  const banIP = (e: any) => {
-    //let dom = e.target;
-    e.preventDefault();
-    const ip = props.data.ip;
-    dataProvider.banIP(ip, () => {
-      props.onActiveTabChanged('ban_ip');
-    });
+  const banIP = async (ip: string) => {
+    await dataProvider.banIP(ip);
+    props.onActiveTabChanged('ban_ip');
   };
   const deleteComment = (e: any) => {
     e.preventDefault();
@@ -56,7 +52,10 @@ export default function Comment(props: any) {
         <button className="btn btn-default btn-sm" onClick={updateComment}>
           <span className="glyphicon glyphicon-pencil" aria-hidden="true"></span>
         </button>
-        <button className="btn btn-default btn-sm" onClick={banIP} data-ip={data.ip}>
+        <button className="btn btn-default btn-sm" onClick={(e) => {
+          e.preventDefault();
+          banIP(data.ip)
+        }}>
           <span className="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
         </button>
       </td>

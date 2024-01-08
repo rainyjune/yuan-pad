@@ -25,10 +25,12 @@ function ReplyModal(props: any) {
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!state.pid || !state.content.trim()) return;
-    let action = state.rid ? dataProvider['updateReply'] : dataProvider['createReply'];
-    action(state, (res: any) => {
-      if (res.statusCode === 200) {
+    const action = state.rid ? dataProvider['updateReply'] : dataProvider['createReply'];
+    action(state).then((res: any) => {
+      if (res.status === 200 && res.data.statusCode === 200) {
         props.onReplySubmit();
+      } else {
+        alert(res.data.statusText);
       }
     });
     return false;

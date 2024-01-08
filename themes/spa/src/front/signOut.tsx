@@ -5,7 +5,7 @@ import LanguageContext from '../common/languageContext';
 function LogoutButton(props: any) {
   const handleSignOut = (e: MouseEvent) => {
     e.preventDefault();
-    dataProvider.signOut(() => {
+    dataProvider.signOut().then(() => {
       props.onCurrentUserUpdated({});
     });
   };

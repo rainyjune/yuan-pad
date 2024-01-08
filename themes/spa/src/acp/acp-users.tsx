@@ -59,14 +59,15 @@ function ACPUser(props: any) {
     loadAllUsersFromServer();
   }, []);
 
-  const loadAllUsersFromServer = () => {
-    dataProvider.getAllUsers(res => {
-      if (res.statusCode === 200) {
-        let data = res.response;
+  const loadAllUsersFromServer = async () => {
+    const res = await dataProvider.getAllUsers();
+    if (res.status === 200 && res.data.statusCode === 200) {
+        const data = res.data.response;
         addSelectedFlag(data);
         setUsers(data);
-      }
-    });
+    } else {
+      alert(res.data.statusText);
+    }
   };
   /**
    * Tested 1.
@@ -117,8 +118,8 @@ function ACPUser(props: any) {
     if (!confirm(props.lang.DEL_ALLUSER_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteAllUsers(res => {
-      if (res.statusCode === 200) {
+    dataProvider.deleteAllUsers().then(res => {
+      if (res.data.statusCode === 200) {
         loadAllUsersFromServer();
       }
     });
@@ -135,8 +136,8 @@ function ACPUser(props: any) {
     if (!confirm(props.lang.DEL_SELECTEDUSERS_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteMutiUsers(checkedUids, res => {
-      if (res.statusCode === 200) {
+    dataProvider.deleteMutiUsers(checkedUids).then(res => {
+      if (res.data.statusCode === 200) {
         loadAllUsersFromServer();
       } else {
         alert('delete error');

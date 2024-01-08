@@ -44,42 +44,42 @@ export default function App() {
 
   // Get current user identity from server.
   const getUserInfo = () => {
-    dataProvider.getUserInfo((res: GetUserInfoResponse) => {
-      if (res.statusCode !== 200) {
+    dataProvider.getUserInfo().then((res) => {
+      if (res.data.statusCode !== 200) {
         setLoadingModalIsOpen(false);
         return ;
       }
-      setCurrentUser1(res.response);
+      setCurrentUser1(res.data.response);
       loadCommentsFromServer();
     });
   };
 
   // Load comments to be displayed on page by page number.
   const loadCommentsFromServer = () => {
-    dataProvider.loadCommentsFromServer(currentPage, (res: PostListResponse) => {
+    dataProvider.loadCommentsFromServer(currentPage).then((res) => {
       setLoadingModalIsOpen(false);
-      setComments(res.response.comments);
-      setcommentsTotalNumber(res.response.total);
+      setComments(res.data.response.comments);
+      setcommentsTotalNumber(res.data.response.total);
       setCommentListType(1);
     });
   };
 
   // Get comments from server according to the keyword user has entered.
   const handleSearch = (keyword: string) => {
-    dataProvider.search(keyword, (res: SearchResponse) => {
-      setComments(res.response.comments);
-      setcommentsTotalNumber(res.response.total);
+    dataProvider.search(keyword).then((res) => {
+      setComments(res.data.response.comments);
+      setcommentsTotalNumber(res.data.response.total);
       setCommentListType(2);
     });
   };
 
   // When the component is rendered, load the site configuration from server, and then try to indentify current user.
   useEffect(() => {
-    dataProvider.getAppConfig((res: ConfigResponse) => {
-      if (res.statusCode === 200) {
-        const siteConfig = res.response;
-        dataProvider.getTranslations((res: TranslationResponse) => {
-          setTranslations(res.response);
+    dataProvider.getAppConfig().then((res) => {
+      if (res.data.statusCode === 200) {
+        const siteConfig = res.data.response;
+        dataProvider.getTranslations().then((res) => {
+          setTranslations(res.data.response);
           setAppConfig(siteConfig);
           getUserInfo();
         });

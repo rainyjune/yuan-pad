@@ -19,7 +19,7 @@ function ACPMessages(props: any) {
   const [modalCommentModel, setModalCommentModel] = useState(null);
   const [modalErrorMsg, setModalErrorMsg] = useState('');
   const toggle = (itemToToggle: any) => {
-    let data = comments.map((currentValue: any) => {
+    let data = comments.data.map((currentValue: any) => {
       if (currentValue === itemToToggle) {
         currentValue['checked'] = !currentValue['checked'];
       }
@@ -30,7 +30,7 @@ function ACPMessages(props: any) {
     toggleAll(e.target.checked);
   };
   const toggleAll = (checked: boolean) => {
-    let data = comments.map((currentValue: any) => {
+    let data = comments.data.map((currentValue: any) => {
       currentValue['checked'] = checked;
       return currentValue;
     });
@@ -39,7 +39,7 @@ function ACPMessages(props: any) {
     let arr: any = [];
     let key = getItemKey();
     //let field = getMixinAttr();
-    comments.forEach((currentValue: any) => {
+    comments.data.forEach((currentValue: any) => {
       if (currentValue.checked) {
         arr.push(currentValue[key]);
       }
@@ -54,8 +54,8 @@ function ACPMessages(props: any) {
     if (!confirm(props.lang.DEL_ALL_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteAllComments(res => {
-      if (res.statusCode === 200) {
+    dataProvider.deleteAllComments().then(res => {
+      if (res.data.statusCode === 200) {
         dispatch({ type: "LOAD" });
       } else {
         alert('Error');
@@ -70,8 +70,8 @@ function ACPMessages(props: any) {
     if (!confirm(props.lang.DEL_ALL_REPLY_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteAllReplies(res => {
-      if (res.statusCode === 200) {
+    dataProvider.deleteAllReplies().then(res => {
+      if (res.data.statusCode === 200) {
         dispatch({ type: "LOAD" });
       } else {
         alert('ERROR')
@@ -87,8 +87,8 @@ function ACPMessages(props: any) {
     if (!confirm(props.lang.DEL_SELECTEDCOMMENTS_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteMutiComments(checkedItems, res => {
-      if (res.statusCode === 200) {
+    dataProvider.deleteMutiComments(checkedItems).then(res => {
+      if (res.data.statusCode === 200) {
         dispatch({ type: "LOAD" });
       } else {
         alert('delete error');

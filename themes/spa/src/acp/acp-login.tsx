@@ -10,15 +10,15 @@ function ACPLogin(props: any) {
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(true);
   const handleSignIn = (loginData: any) => {
-    dataProvider.signIn(loginData, res => {
-      if (res.statusCode === 200) {
+    dataProvider.signIn(loginData).then(res => {
+      if (res.data.statusCode === 200) {
         setErrorMsg('');
         setModalIsOpen(false);
-        props.onCurrentUserUpdated(res.response);
-      } else if (res.statusCode === 304) {
+        props.onCurrentUserUpdated(res.data.response);
+      } else if (res.data.statusCode === 304) {
         // The user had signed in before.
       } else {
-        setErrorMsg(res.response)
+        setErrorMsg(res.data.response);
       }
     });
   };

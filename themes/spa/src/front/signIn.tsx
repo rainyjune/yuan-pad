@@ -18,16 +18,16 @@ function SignIn(props: any) {
   };
   const closeModal = () => setModalIsOpen(false);
   const handleSignIn = (loginData: any) => {
-    dataProvider.signIn(loginData, res => {
-      if (res.statusCode === 200) {
+    dataProvider.signIn(loginData).then(res => {
+      if (res.data.statusCode === 200) {
         setErrorMsg('');
         setModalIsOpen(false);
-        props.onCurrentUserUpdated(res.response);
-      } else if (res.statusCode === 304) {
+        props.onCurrentUserUpdated(res.data.response);
+      } else if (res.data.statusCode === 304) {
         // The user had signed in before.
       } else {
         //this.setState({errorMsg: res.response});
-        setErrorMsg(res.response);
+        setErrorMsg(res.data.response);
       }
     });
   };

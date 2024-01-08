@@ -28,14 +28,14 @@ function UserUpdate(props: any) {
         pwd = passRef.current?.value.trim(),
         email = emailRef.current?.value.trim();
     if (!uid || !user || !email) return;
-    dataProvider.updateUser({ uid, user, pwd, email},  res => {
-      if (res.statusCode === 200) {
+    dataProvider.updateUser({ uid, user, pwd, email}).then(res => {
+      if (res.data.statusCode === 200) {
         setErrorMsg('');
         setModalIsOpen(false);
-        props.onCurrentUserUpdated(res.response);
+        props.onCurrentUserUpdated(res.data.response);
       } else {
-        alert(res.response);
-        setErrorMsg(res.response);
+        alert(res.data.response);
+        setErrorMsg(res.data.response);
       }
     });
     return false;

@@ -9,8 +9,8 @@ export default function UserItem(props: any) {
     if (!confirm(props.lang.DEL_SINGLEUSER_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteUser(props.data.uid, res=> {
-      if (res.statusCode === 200) {
+    dataProvider.deleteUser(props.data.uid).then(res=> {
+      if (res.status === 200 && res.data.statusCode === 200) {
         props.onUserDeleted();
       }
     });

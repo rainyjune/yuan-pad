@@ -14,16 +14,17 @@ function UpdateCommentModal(props: any) {
       setUpdate_content(commentData.post_content);
     }
   }, [props.comment]);
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     if (!mid || !update_content.trim()) return;
-    dataProvider.updateComment({mid: parseInt(mid), update_content}, res => {
-      if (res.statusCode === 200) {
+    try {
+      const res = await dataProvider.updateComment({mid: parseInt(mid), update_content});
+      if (res.status === 200 && res.data.statusCode === 200) {
         props.onCommentUpdated();
       }
-    }, function(){
-      debugger;
-    });
+    } catch (e) {
+      alert('Error');
+    }
     return false;
   };
   const changeContent = (e: ChangeEvent<HTMLTextAreaElement>) => {
