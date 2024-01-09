@@ -1,9 +1,10 @@
-import { useEffect, useState, useReducer } from 'react';
+import { useEffect, useState, useReducer, useContext } from 'react';
 import { messageReducer, dispatchMiddleware } from './messageReducer';
 import dataProvider from '../common/dataProvider';
 import ReplyModal from './acp-replyModal';
 import CommentUpdateModal from './acp-updateCommentModal';
 import Comment from './Comment';
+import LanguageContext from '../common/languageContext';
 
 const initialState = {
   isLoading: false,
@@ -12,6 +13,7 @@ const initialState = {
 };
 
 function ACPMessages(props: any) {
+  const lang = useContext(LanguageContext);
   const [comments, dispatchBase] = useReducer(messageReducer, initialState);
   const dispatch = dispatchMiddleware(dispatchBase);
   const [modalIsOpen, setModalIsOpen] = useState(false);
@@ -51,7 +53,7 @@ function ACPMessages(props: any) {
   };
   const deleteAllComments = (e: any) => {
     e.preventDefault();
-    if (!confirm(props.lang.DEL_ALL_CONFIRM)) {
+    if (!confirm(lang.DEL_ALL_CONFIRM)) {
       return false;
     }
     dataProvider.deleteAllComments().then(res => {
@@ -67,7 +69,7 @@ function ACPMessages(props: any) {
    */
   const deleteAllReplies = (e: any) => {
     e.preventDefault();
-    if (!confirm(props.lang.DEL_ALL_REPLY_CONFIRM)) {
+    if (!confirm(lang.DEL_ALL_REPLY_CONFIRM)) {
       return false;
     }
     dataProvider.deleteAllReplies().then(res => {
@@ -84,7 +86,7 @@ function ACPMessages(props: any) {
     if (checkedItems.length === 0) {
       return false;
     }
-    if (!confirm(props.lang.DEL_SELECTEDCOMMENTS_CONFIRM)) {
+    if (!confirm(lang.DEL_SELECTEDCOMMENTS_CONFIRM)) {
       return false;
     }
     dataProvider.deleteMutiComments(checkedItems).then(res => {
@@ -132,7 +134,6 @@ function ACPMessages(props: any) {
     dispatch({type: 'LOAD'});
     props.onCommentDeleted();
   };
-  const lang = props.lang;
   
   const modalProps = {
     comment: modalCommentModel,
@@ -155,7 +156,6 @@ function ACPMessages(props: any) {
             {
               comments.data.map((comment: any) => {
                 return <Comment
-                    lang={lang}
                     data={comment}
                     key={comment.id}
                     onActiveTabChanged={props.onActiveTabChanged}

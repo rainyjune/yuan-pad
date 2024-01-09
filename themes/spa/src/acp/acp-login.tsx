@@ -1,10 +1,12 @@
-import { FormEvent, useRef, useState } from 'react';
+import { FormEvent, useContext, useRef, useState } from 'react';
 import Modal from 'react-modal';
 import dataProvider from '../common/dataProvider';
 
 import customStyles from '../common/ModalStyles';
+import LanguageContext from '../common/languageContext';
 
 function ACPLogin(props: any) {
+  const language = useContext(LanguageContext);
   const userRef = useRef<HTMLInputElement>(null);
   const passRef = useRef<HTMLInputElement>(null);
   const [errorMsg, setErrorMsg] = useState('');
@@ -37,9 +39,7 @@ function ACPLogin(props: any) {
   const dismissAlert = () => {
     setErrorMsg('');
   };
-
-  let language = props.lang;
-  let alertStyle = {
+  const alertStyle = {
     display: errorMsg === "" ? "none" : "block"
   };
   return (

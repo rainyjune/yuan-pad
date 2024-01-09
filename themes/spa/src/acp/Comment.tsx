@@ -1,7 +1,10 @@
+import { useContext } from 'react';
 import dataProvider from '../common/dataProvider';
 import Reply from './Reply';
+import LanguageContext from '../common/languageContext';
 
 export default function Comment(props: any) {
+  const lang = useContext(LanguageContext);
   const banIP = async (ip: string) => {
     await dataProvider.banIP(ip);
     props.onActiveTabChanged('ban_ip');
@@ -28,7 +31,6 @@ export default function Comment(props: any) {
     props.onToggleItem(props.data);
   };
   const data = props.data;
-  const lang = props.lang;
   return (
     <tr className="row">
       <td className="col-xs-1 col-sm-1 col-md-1">
@@ -40,7 +42,7 @@ export default function Comment(props: any) {
       </td>
       <td className='col-xs-6 col-sm-6 col-md-6'>
         {data.post_content}<br />{lang.TIME}: {data.time}
-        <Reply lang={lang} data={data} />
+        <Reply data={data} />
       </td>
       <td className="col-xs-2 col-sm-2 col-md-2">
         <button className="btn btn-danger btn-sm" onClick={deleteComment}>

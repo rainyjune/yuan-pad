@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import dataProvider from '../common/dataProvider';
 import IPItem from './IPItem';
+import LanguageContext from '../common/languageContext';
 
 
 function ACPIpConfig(props: any) {
+  const lang = useContext(LanguageContext);
   const [IPs, setIPs] = useState([]);
   const toggle = (itemToToggle: any) => {
     let data = IPs.map((currentValue: any) => {
@@ -59,7 +61,7 @@ function ACPIpConfig(props: any) {
     if (checkedItems.length === 0) {
       return false;
     }
-    if (!confirm(props.lang.UPDATE_IPLIST_CONFIRM)) {
+    if (!confirm(lang.UPDATE_IPLIST_CONFIRM)) {
       return false;
     }
     dataProvider.deleteMultiIPs(checkedItems).then(res => {
@@ -74,7 +76,6 @@ function ACPIpConfig(props: any) {
     toggle(item);
   };
   let IPList = IPs;
-  let lang = props.lang;
   let cssClass = props.isActive ? "ip_container selectTag" : "ip_container";
   let createIPItem = function(ip: any) {
     return (

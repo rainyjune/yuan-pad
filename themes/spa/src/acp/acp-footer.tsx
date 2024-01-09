@@ -1,6 +1,9 @@
+import { useContext } from "react";
+import UserContext from "../common/userContext";
 
-function ACPFooter(props: any) {
-  if (props.user.user_type !== "admin") return null;
+function ACPFooter() {
+  const user = useContext(UserContext);
+  if (user.user_type !== "admin") return null;
   return (
     <footer>
       <p>

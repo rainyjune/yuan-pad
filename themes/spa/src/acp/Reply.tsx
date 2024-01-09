@@ -1,8 +1,10 @@
-import { useEffect, useState, MouseEvent } from 'react';
+import { useEffect, useState, MouseEvent, useContext } from 'react';
 import _ from 'lodash';
 import dataProvider from '../common/dataProvider';
+import LanguageContext from '../common/languageContext';
 
 export default function Reply(props: any) {
+  const lang = useContext(LanguageContext);
   const [state, setState] = useState({
     b_username: null,
     id: 0,
@@ -35,15 +37,14 @@ export default function Reply(props: any) {
 
   const deleteReply = (e: MouseEvent) => {
     e.preventDefault();
-    if (!confirm(props.lang.DEL_REPLY_CONFIRM)) {
+    if (!confirm(lang.DEL_REPLY_CONFIRM)) {
       return false;
     }
     dataProvider.deleteReply(state.id).then(() => {
       setState(_.extend({}, state, { reply_content: '' }));
     });
   }
-  const lang = props.lang,
-      data = state;
+  const data = state;
   if (!data || !data.reply_content) {
     return null;
   }

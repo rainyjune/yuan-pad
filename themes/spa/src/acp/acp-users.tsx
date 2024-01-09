@@ -1,9 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import UserUpdateModal from './acp-userUpdateModal';
 import dataProvider from '../common/dataProvider';
 import UserItem from './UserItem';
+import LanguageContext from '../common/languageContext';
 
 function ACPUser(props: any) {
+  const lang = useContext(LanguageContext);
   const [users, setUsers] = useState<any>([]);
   const [modalInfo, setModalInfo] = useState({
     updateErrorMsg: '',
@@ -115,7 +117,7 @@ function ACPUser(props: any) {
    */
   const deleteAllUsers = (e: any) => {
     e.preventDefault();
-    if (!confirm(props.lang.DEL_ALLUSER_CONFIRM)) {
+    if (!confirm(lang.DEL_ALLUSER_CONFIRM)) {
       return false;
     }
     dataProvider.deleteAllUsers().then(res => {
@@ -133,7 +135,7 @@ function ACPUser(props: any) {
     if (checkedUids.length === 0) {
       return false;
     }
-    if (!confirm(props.lang.DEL_SELECTEDUSERS_CONFIRM)) {
+    if (!confirm(lang.DEL_SELECTEDUSERS_CONFIRM)) {
       return false;
     }
     dataProvider.deleteMutiUsers(checkedUids).then(res => {
@@ -150,13 +152,11 @@ function ACPUser(props: any) {
   const handleToggleItem = (userItem: any) => {
     toggle(userItem);
   };
-  const lang = props.lang;
   const cssClass = props.isActive ? "user_container selectTag" : "user_container";
   let createUserItem = function(user: any) {
     return (
       <UserItem
         data={user}
-        lang={lang}
         key={user.uid}
         onOpenUserUpdateModal={openUserUpdateModal}
         onUserDeleted={handleUserDeleted}
@@ -194,7 +194,6 @@ function ACPUser(props: any) {
           modalIsOpen={modalInfo.updateModalIsOpen} 
           onRequestClose={closeUpdateModal}
           onUpdateSubmit={handleUpdateSubmit}
-          lang={props.lang} 
         />
       </form>
     </div>

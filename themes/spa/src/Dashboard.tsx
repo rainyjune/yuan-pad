@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import UserContext from './common/userContext';
+import LanguageContext from './common/languageContext';
 
 import ACPLogin from './acp/acp-login';
 import ACPTabHeader from './acp/acp-tabHeader';
@@ -8,7 +10,7 @@ import dataProvider from './common/dataProvider';
 import Progress from './common/progress';
 import OfflineWarning from './common/offlineMode';
 import useStateCallback from './common/useStateCallback';
-import { GetUserInfoResponse, ConfigResponse, TranslationResponse, IUser } from './common/types';
+import { IUser } from './common/types';
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/css/bootstrap-theme.css";
@@ -108,44 +110,39 @@ function ACPBox() {
     {text: translations.ACP_MANAGE_IP,value: "ban_ip"},
     {text: translations.USER_ADMIN,value: "user"}
   ];
-  const propsObj = {
-    user: currentUser,
-    lang: translations
-  };
   return (
-    <div id="acpBox">
-      {
-        (currentUser.user_type === undefined || currentUser.user_type === "guest") ?
-          <ACPLogin
-            {...propsObj}
-            onCurrentUserUpdated={handleUserSignedIn}
-          /> : null
-      }
-      <ACPTabHeader
-        {...propsObj}
-        activeTab={activeTab}
-        tabs={tabs}
-        onTabSelected={updateActiveTab}
-        onUserLogout={handleLogout}
-      />
-      <OfflineWarning
-        appConfig={appConfig}
-        lang={translations}
-      />
-      <ACPTabContent
-        {...propsObj}
-        activeTab={activeTab}
-        systemInformation={systemInformation}
-        appConfig={appConfig}
-        onActiveTabChanged={updateActiveTab}
-        onConfigUpdated={handleConfigUpdate}
-        onCommentDeleted={handleCommentDeleted}
-      />
-      <ACPFooter
-        {...propsObj}
-      />
-      <Progress loadingModalIsOpen={loadingModalIsOpen} />
-    </div>
+    <UserContext.Provider value={currentUser}>
+      <LanguageContext.Provider value={translations}>
+        <div id="acpBox">
+          {
+            (currentUser.user_type === undefined || currentUser.user_type === "guest") ?
+              <ACPLogin
+                onCurrentUserUpdated={handleUserSignedIn}
+              /> : null
+          }
+          <ACPTabHeader
+            activeTab={activeTab}
+            tabs={tabs}
+            onTabSelected={updateActiveTab}
+            onUserLogout={handleLogout}
+          />
+          <OfflineWarning
+            appConfig={appConfig}
+            lang={translations}
+          />
+          <ACPTabContent
+            activeTab={activeTab}
+            systemInformation={systemInformation}
+            appConfig={appConfig}
+            onActiveTabChanged={updateActiveTab}
+            onConfigUpdated={handleConfigUpdate}
+            onCommentDeleted={handleCommentDeleted}
+          />
+          <ACPFooter />
+          <Progress loadingModalIsOpen={loadingModalIsOpen} />
+        </div>
+      </LanguageContext.Provider>
+    </UserContext.Provider>
   );
 }
 

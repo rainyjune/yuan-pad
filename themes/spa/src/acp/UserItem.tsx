@@ -1,12 +1,15 @@
+import { useContext } from 'react';
 import dataProvider from '../common/dataProvider';
+import LanguageContext from '../common/languageContext';
 
 export default function UserItem(props: any) {
+  const lang = useContext(LanguageContext);
   /**
    * Tested 1.
    */
   const deleteUser = (e: any) => {
     e.preventDefault();
-    if (!confirm(props.lang.DEL_SINGLEUSER_CONFIRM)) {
+    if (!confirm(lang.DEL_SINGLEUSER_CONFIRM)) {
       return false;
     }
     dataProvider.deleteUser(props.data.uid).then(res=> {
@@ -29,7 +32,6 @@ export default function UserItem(props: any) {
     props.onToggleItem(props.data);
   };
   let user = props.data;
-  let lang = props.lang;
   return (
     <tr className="row">
       <td className="col-xs-1 col-sm-1 col-md-1"><input type='checkbox' checked={props.data.checked} onChange={toggleItem} /></td>

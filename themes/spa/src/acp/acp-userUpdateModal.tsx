@@ -1,9 +1,11 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
 import Modal from 'react-modal';
 
 import customStyles from '../common/ModalStyles';
+import LanguageContext from '../common/languageContext';
 
 function UserUpdateModal(props: any) {
+  const lang = useContext(LanguageContext);
   const [uid, setUid] = useState('');
   const [user, setUser] = useState('');
   const [pwd, setPwd] = useState('');
@@ -37,7 +39,6 @@ function UserUpdateModal(props: any) {
   const updateEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value)
   };
-  let lang = props.lang;
   return (
     <Modal ariaHideApp={false} isOpen={props.modalIsOpen} onRequestClose={props.onRequestClose} style={customStyles} >
       <div>{props.errorMsg}</div>

@@ -1,7 +1,12 @@
-import { MouseEvent, useState } from 'react';
+import { MouseEvent, useContext, useState } from 'react';
+import UserContext from '../common/userContext';
 import dataProvider from '../common/dataProvider';
+import LanguageContext from '../common/languageContext';
 
 function ACPTabHeader(props: any) {
+  const user = useContext(UserContext);
+  const lang = useContext(LanguageContext);
+  console.log('USER:', user);
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const updateActiveTab = (e: MouseEvent) => {
     e.preventDefault();
@@ -27,7 +32,7 @@ function ACPTabHeader(props: any) {
     setMenuIsOpen(!menuIsOpen)
   };
 
-  if (props.user.user_type !== "admin") return null;
+  if (user.user_type !== "admin") return null;
   let activeTab = props.activeTab;
   let items = props.tabs.map((tab: any) => {
     return (
@@ -47,8 +52,8 @@ function ACPTabHeader(props: any) {
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
             </button>
-            <a className="btn btn-default navbar-btn homeButton" href="index.php">{props.lang.HOME}</a>&nbsp;
-            <a className="btn btn-default navbar-btn signOutButton" href="#" onClick={handleSignOut}>{props.lang.LOGOUT}</a>
+            <a className="btn btn-default navbar-btn homeButton" href="index.php">{lang.HOME}</a>&nbsp;
+            <a className="btn btn-default navbar-btn signOutButton" href="#" onClick={handleSignOut}>{lang.LOGOUT}</a>
           </div>
           {/* Collect the nav links, forms, and other content for toggling */}
           <div className={menuIsOpen ? "navbar-collapse collapse in" : "collapse navbar-collapse"} id="bs-example-navbar-collapse-1">

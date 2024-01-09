@@ -1,8 +1,10 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
 import _ from 'lodash';
 import dataProvider from '../common/dataProvider';
+import LanguageContext from '../common/languageContext';
 
 function ACPConfig(props: any) {
+  const lang = useContext(LanguageContext);
   const [state, setState] = useState({
     board_name: '',
     site_close: 0,
@@ -77,8 +79,7 @@ function ACPConfig(props: any) {
     }));
   };
   const appConfig = state,
-      acpData = props.systemInformation,
-      lang = props.lang;
+      acpData = props.systemInformation;
 
   return (
     <div className={props.isActive ? "configContainer selectTag" : "configContainer"}>
