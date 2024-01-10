@@ -76,7 +76,7 @@ function ACPIpConfig(props: any) {
     toggle(item);
   };
   let IPList = IPs;
-  let cssClass = props.isActive ? "ip_container selectTag" : "ip_container";
+  const cssClass = "ip_container selectTag";
   let createIPItem = function(ip: any) {
     return (
       <IPItem

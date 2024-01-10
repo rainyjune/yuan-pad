@@ -82,7 +82,7 @@ function ACPConfig(props: any) {
       acpData = props.systemInformation;
 
   return (
-    <div className={props.isActive ? "configContainer selectTag" : "configContainer"}>
+    <div className={"configContainer selectTag"}>
       <form onSubmit={handleSubmit} action="index.php?controller=config&amp;action=update" method="post">
         <fieldset>
           <legend>{lang.SYS_CONF}</legend>

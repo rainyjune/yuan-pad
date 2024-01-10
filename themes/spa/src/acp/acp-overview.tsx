@@ -1,13 +1,12 @@
 import { useContext } from "react";
 import LanguageContext from "../common/languageContext";
 
-let ACPOverview = (props: {
-  systemInformation: any,
-  isActive: boolean
+const ACPOverview = (props: {
+  systemInformation: any
 }) => {
   const lang = useContext(LanguageContext), sysInfo = props.systemInformation;
   return (
-    <div className={props.isActive ? "selectTag" : ""}>
+    <div className={"selectTag"}>
       <h1>{lang.WELCOME_SYS}</h1>
       {lang.THANKS}
       <table className="table">

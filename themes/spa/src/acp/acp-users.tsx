@@ -81,8 +81,8 @@ function ACPUser(props: any) {
    * Tested 1.
    */
   const handleUpdateSubmit = (newUserData: any) => {
-    dataProvider.updateUser(newUserData, res => {
-      if (res.statusCode === 200) {
+    dataProvider.updateUser(newUserData).then(res => {
+      if (res.data.statusCode === 200) {
         setModalInfo({
           updateErrorMsg: '',
           updatedModalUserData: null,
@@ -152,7 +152,7 @@ function ACPUser(props: any) {
   const handleToggleItem = (userItem: any) => {
     toggle(userItem);
   };
-  const cssClass = props.isActive ? "user_container selectTag" : "user_container";
+  const cssClass = "user_container selectTag";
   let createUserItem = function(user: any) {
     return (
       <UserItem

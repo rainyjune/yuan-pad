@@ -6,9 +6,16 @@ import ACPMessages from './acp-messages';
 import ACPIpConfig from './acp-ipconfig';
 import ACPUsers from './acp-users';
 
-function ACPTabContent(props: any) {
+function ACPTabContent(props: {
+  onActiveTabChanged: (s: string) => void,
+  systemInformation: object,
+  activeTab: string,
+  appConfig: object,
+  onConfigUpdated: () => void,
+  onCommentDeleted: () => void
+}) {
   const user = useContext(UserContext);
-  const handleActiveChange = (newTab: any) => {
+  const handleActiveChange = (newTab: string) => {
     setTimeout(()=>{
       props.onActiveTabChanged(newTab);
     }, 0);
@@ -17,29 +24,29 @@ function ACPTabContent(props: any) {
 
   return (
     <div className="tagContent">
-      <ACPOverview 
-        systemInformation={props.systemInformation}
-        isActive={props.activeTab === 'overview'}
-      />
-      <ACPConfig
-        systemInformation={props.systemInformation}
-        isActive={props.activeTab === 'siteset'}
-        appConfig={props.appConfig}
-        onConfigUpdated={props.onConfigUpdated}
-      />
-      <ACPMessages 
-        isActive={props.activeTab === 'message'}
-        systemInformation={props.systemInformation}
-        onActiveTabChanged={handleActiveChange}
-        onCommentDeleted={props.onCommentDeleted}
-      />
-      <ACPIpConfig
-        systemInformation={props.systemInformation}
-        isActive={props.activeTab === 'ban_ip'}
-      />
-      <ACPUsers
-        isActive={props.activeTab === 'user'}
-      />
+      { props.activeTab === 'overview' && <ACPOverview systemInformation={props.systemInformation} /> }
+      {
+        props.activeTab === 'siteset' && <ACPConfig
+          systemInformation={props.systemInformation}
+          appConfig={props.appConfig}
+          onConfigUpdated={props.onConfigUpdated}
+        />
+      }
+      {
+        props.activeTab === 'message' && <ACPMessages
+          systemInformation={props.systemInformation}
+          onActiveTabChanged={handleActiveChange}
+          onCommentDeleted={props.onCommentDeleted}
+        />
+      }
+      {
+        props.activeTab === 'ban_ip' && <ACPIpConfig
+          systemInformation={props.systemInformation}
+        />
+      }
+      {
+        props.activeTab === 'user' && <ACPUsers  />
+      }
     </div>
   );
 }

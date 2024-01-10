@@ -141,7 +141,7 @@ function ACPMessages(props: any) {
     onRequestClose: closeModal
   };
   return (
-    <div className={props.isActive ? "message_container selectTag" : "message_container"}>
+    <div className={"message_container selectTag"}>
       <form onSubmit={deleteSelected} action="#" method="post">
         <table className="table table-striped table-hover">
           <thead>
