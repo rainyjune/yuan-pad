@@ -10,7 +10,7 @@ function useStateCallback(initialState: any) {
   }, []); // keep object reference stable, exactly like `useState`
 
   useEffect(() => {
-    // cb.current is `null` on initial render, 
+    // cb.current is `null` on initial render,
     // so we only invoke callback on state *updates*
     if (cbRef.current) {
       cbRef.current(state);

@@ -1,5 +1,5 @@
 #content {
-  border:2px solid #069;
+  border: 2px solid #069;
   margin-left: auto;
   margin-right: auto;
   padding: 5px;
@@ -66,11 +66,11 @@
   h1 {
     text-align: center;
   }
-  
+
   .statistics {
     padding-bottom: 5px;
   }
-  
+
   .commentForm {
     width: 90%;
     margin: 20px auto 10px auto;
@@ -80,12 +80,12 @@
 .searchbar {
   text-align: center;
   margin-top: 15px;
-  
-  input[type=image] {
+
+  input[type="image"] {
     margin-left: 5px;
   }
 }
-  
+
 .commentList {
   span.keyword {
     background-color: yellow;
@@ -107,29 +107,29 @@
     margin-right: 5px;
     text-decoration: none;
   }
-  
+
   .pagination-item.currentPage {
     background-color: red;
   }
 }
 
 .statistics {
-  background: #4A7DAC;
+  background: #4a7dac;
 }
 
 .comment {
-  background: #F3F3F3;
+  background: #f3f3f3;
   border: 1px solid #757575;
   padding: 4px;
   margin-bottom: 5px;
-  
+
   .reply {
     margin-left: 20px;
     padding: 8px 19px;
     margin-top: 10px;
     line-height: 20px;
     border: 1px solid #dedede;
-    
+
     p {
       margin: 0;
     }
@@ -138,13 +138,13 @@
 
 .commentAuthor {
   font-weight: bold;
-  color: #C30;
+  color: #c30;
   font-size: 14px;
   float: left;
 }
 
 .commentDate {
-  color: #C30;
+  color: #c30;
   font-size: 14px;
   float: right;
 }

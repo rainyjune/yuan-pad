@@ -7,46 +7,40 @@ import ACPIpConfig from './acp-ipconfig';
 import ACPUsers from './acp-users';
 
 function ACPTabContent(props: {
-  onActiveTabChanged: (s: string) => void,
-  systemInformation: object,
-  activeTab: string,
-  appConfig: object,
-  onConfigUpdated: () => void,
-  onCommentDeleted: () => void
+  onActiveTabChanged: (s: string) => void;
+  systemInformation: object;
+  activeTab: string;
+  appConfig: object;
+  onConfigUpdated: () => void;
+  onCommentDeleted: () => void;
 }) {
   const user = useContext(UserContext);
   const handleActiveChange = (newTab: string) => {
-    setTimeout(()=>{
+    setTimeout(() => {
       props.onActiveTabChanged(newTab);
     }, 0);
-  }
-  if (user.user_type !== "admin") return null;
+  };
+  if (user.user_type !== 'admin') return null;
 
   return (
     <div className="tagContent">
-      { props.activeTab === 'overview' && <ACPOverview systemInformation={props.systemInformation} /> }
-      {
-        props.activeTab === 'siteset' && <ACPConfig
+      {props.activeTab === 'overview' && <ACPOverview systemInformation={props.systemInformation} />}
+      {props.activeTab === 'siteset' && (
+        <ACPConfig
           systemInformation={props.systemInformation}
           appConfig={props.appConfig}
           onConfigUpdated={props.onConfigUpdated}
         />
-      }
-      {
-        props.activeTab === 'message' && <ACPMessages
+      )}
+      {props.activeTab === 'message' && (
+        <ACPMessages
           systemInformation={props.systemInformation}
           onActiveTabChanged={handleActiveChange}
           onCommentDeleted={props.onCommentDeleted}
         />
-      }
-      {
-        props.activeTab === 'ban_ip' && <ACPIpConfig
-          systemInformation={props.systemInformation}
-        />
-      }
-      {
-        props.activeTab === 'user' && <ACPUsers  />
-      }
+      )}
+      {props.activeTab === 'ban_ip' && <ACPIpConfig systemInformation={props.systemInformation} />}
+      {props.activeTab === 'user' && <ACPUsers />}
     </div>
   );
 }

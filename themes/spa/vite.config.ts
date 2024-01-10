@@ -1,7 +1,6 @@
-import { resolve } from 'path'
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
-
+import { resolve } from "path";
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react-swc";
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,8 +8,8 @@ export default defineConfig({
   build: {
     rollupOptions: {
       input: {
-        front: resolve(__dirname, 'index.html'),
-        acp: resolve(__dirname, 'admin.html'),
+        front: resolve(__dirname, "index.html"),
+        acp: resolve(__dirname, "admin.html"),
       },
     },
   },
@@ -24,4 +23,4 @@ export default defineConfig({
       },
     },
   },
-})
+});

@@ -1,5 +1,11 @@
-import { forwardRef, MouseEvent, useRef, useImperativeHandle, useContext } from 'react';
-import LanguageContext from '../common/languageContext';
+import {
+  forwardRef,
+  MouseEvent,
+  useRef,
+  useImperativeHandle,
+  useContext,
+} from "react";
+import LanguageContext from "../common/languageContext";
 
 const Captcha = forwardRef((props: any, ref) => {
   const lang: any = useContext(LanguageContext);
@@ -10,17 +16,19 @@ const Captcha = forwardRef((props: any, ref) => {
   };
   const refresh = () => {
     const img = picRef.current as HTMLImageElement;
-    const url = img.getAttribute('data-src');
-    img.src = url + '&v=' + Math.random();
+    const url = img.getAttribute("data-src");
+    img.src = url + "&v=" + Math.random();
   };
-  useImperativeHandle(ref, () => ({refresh}), []);
+  useImperativeHandle(ref, () => ({ refresh }), []);
   return (
     <div className="form-group">
-      <label htmlFor="inputCaptcha" className="col-sm-2 col-lg-2 control-label">{lang.CAPTCHA}</label>
+      <label htmlFor="inputCaptcha" className="col-sm-2 col-lg-2 control-label">
+        {lang.CAPTCHA}
+      </label>
       <div className="col-sm-5 col-lg-5">
         <input
           id="inputCaptcha"
-          type="text" 
+          type="text"
           maxLength={10}
           size={20}
           className="form-control"

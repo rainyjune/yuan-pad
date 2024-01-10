@@ -1,10 +1,9 @@
 import { useContext } from "react";
 import LanguageContext from "../common/languageContext";
 
-const ACPOverview = (props: {
-  systemInformation: any
-}) => {
-  const lang = useContext(LanguageContext), sysInfo = props.systemInformation;
+const ACPOverview = (props: { systemInformation: any }) => {
+  const lang = useContext(LanguageContext),
+    sysInfo = props.systemInformation;
   return (
     <div className={"selectTag"}>
       <h1>{lang.WELCOME_SYS}</h1>
@@ -12,31 +11,42 @@ const ACPOverview = (props: {
       <table className="table">
         <tbody>
           <tr>
-            <td colSpan={2}><b>{lang.STATS_INFO}</b></td>
+            <td colSpan={2}>
+              <b>{lang.STATS_INFO}</b>
+            </td>
           </tr>
           <tr>
-            <td>{lang.NUM_POSTS}:</td><td align="right">{sysInfo.commentsTotal}</td>
+            <td>{lang.NUM_POSTS}:</td>
+            <td align="right">{sysInfo.commentsTotal}</td>
           </tr>
           <tr>
-            <td>{lang.NUM_REPLY}:</td><td align="right">{sysInfo.repliesTotal}</td>
+            <td>{lang.NUM_REPLY}:</td>
+            <td align="right">{sysInfo.repliesTotal}</td>
           </tr>
           <tr>
-            <td>{lang.MP_VERSION}:</td><td align="right">{sysInfo.appVersion}</td>
+            <td>{lang.MP_VERSION}:</td>
+            <td align="right">{sysInfo.appVersion}</td>
           </tr>
           <tr>
-            <td colSpan={2}><b>{lang.SYS_INFO}</b></td>
+            <td colSpan={2}>
+              <b>{lang.SYS_INFO}</b>
+            </td>
           </tr>
           <tr>
-            <td>{lang.PHP_VERSION}:</td><td align="right">{sysInfo.phpVersion}</td>
+            <td>{lang.PHP_VERSION}:</td>
+            <td align="right">{sysInfo.phpVersion}</td>
           </tr>
           <tr>
-            <td>{lang.GD_VERSION}: </td><td align="right">{sysInfo.gdVersion}</td>
+            <td>{lang.GD_VERSION}: </td>
+            <td align="right">{sysInfo.gdVersion}</td>
           </tr>
           <tr>
-            <td>Register_Globals:</td><td align="right">{sysInfo.registerGlobals}</td>
+            <td>Register_Globals:</td>
+            <td align="right">{sysInfo.registerGlobals}</td>
           </tr>
           <tr>
-            <td>Magic_Quotes_Gpc:</td><td align="right">{sysInfo.magicQuotesGPC}</td>
+            <td>Magic_Quotes_Gpc:</td>
+            <td align="right">{sysInfo.magicQuotesGPC}</td>
           </tr>
         </tbody>
       </table>

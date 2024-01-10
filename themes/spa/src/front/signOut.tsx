@@ -1,6 +1,6 @@
-import { MouseEvent, useContext } from 'react';
-import dataProvider from '../common/dataProvider';
-import LanguageContext from '../common/languageContext';
+import { MouseEvent, useContext } from "react";
+import dataProvider from "../common/dataProvider";
+import LanguageContext from "../common/languageContext";
 
 function LogoutButton(props: any) {
   const handleSignOut = (e: MouseEvent) => {
@@ -10,7 +10,16 @@ function LogoutButton(props: any) {
     });
   };
   const lang: any = useContext(LanguageContext);
-  return (<a role="button" className="btn btn-default signOutButton" href='#' onClick={handleSignOut}>{lang.LOGOUT}</a>);
+  return (
+    <a
+      role="button"
+      className="btn btn-default signOutButton"
+      href="#"
+      onClick={handleSignOut}
+    >
+      {lang.LOGOUT}
+    </a>
+  );
 }
 
 export default LogoutButton;

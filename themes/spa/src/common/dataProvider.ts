@@ -1,323 +1,346 @@
-import axios from 'axios';
-import qs from 'qs';
+import axios from "axios";
+import qs from "qs";
 
-import { SignInData, UpdateCommentObj } from '../common/types';
+import { SignInData, UpdateCommentObj } from "../common/types";
 
 function banIP(ip: string) {
   return axios({
-    method: 'post',
-    url: 'index.php',
-    data: qs.stringify({ip: ip}),
+    method: "post",
+    url: "index.php",
+    data: qs.stringify({ ip: ip }),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'badip', action: 'create'
-    }
+      controller: "badip",
+      action: "create",
+    },
   });
 }
 
 function deleteMultiIPs(ips: string[]) {
   return axios({
-    method: 'post',
-    url: 'index.php',
-    data: qs.stringify({select_ip: ips}),
+    method: "post",
+    url: "index.php",
+    data: qs.stringify({ select_ip: ips }),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'badip', action: 'update'
-    }
+      controller: "badip",
+      action: "update",
+    },
   });
 }
 
 function signIn(credentials: SignInData) {
   return axios({
-    method: 'post',
-    url: 'index.php',
+    method: "post",
+    url: "index.php",
     data: qs.stringify(credentials),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'user', action: 'login'
-    }
+      controller: "user",
+      action: "login",
+    },
   });
 }
 
 function getUserInfo() {
   return axios({
-    method: 'get',
-    url: 'index.php',
-    headers: {'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''},
+    method: "get",
+    url: "index.php",
+    headers: { RequestVerificationToken: getCookie("CSRF-TOKEN") || "" },
     params: {
-      controller: 'user', action: 'getUserInfo'
-    }
+      controller: "user",
+      action: "getUserInfo",
+    },
   });
 }
 
 function getAppConfig() {
   return axios({
-    method: 'get',
-    url: 'index.php',
-    headers: {'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''},
+    method: "get",
+    url: "index.php",
+    headers: { RequestVerificationToken: getCookie("CSRF-TOKEN") || "" },
     params: {
-      controller: 'config', action: 'show'
-    }
+      controller: "config",
+      action: "show",
+    },
   });
 }
 
 function signOut() {
   return axios({
-    method: 'post',
-    url: 'index.php',
+    method: "post",
+    url: "index.php",
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'user', action: 'logout'
-    }
+      controller: "user",
+      action: "logout",
+    },
   });
 }
 
 function updateUser(userData: object) {
   return axios({
-    method: 'post',
-    url: 'index.php',
+    method: "post",
+    url: "index.php",
     data: qs.stringify(userData),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'user', action: 'update'
-    }
+      controller: "user",
+      action: "update",
+    },
   });
 }
 
 function signUp(userData: object) {
   return axios({
-    method: 'post',
-    url: 'index.php',
+    method: "post",
+    url: "index.php",
     data: qs.stringify(userData),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'user', action: 'create'
-    }
+      controller: "user",
+      action: "create",
+    },
   });
 }
 
 function loadCommentsFromServer(pageId: number | string) {
   return axios({
-    method: 'get',
-    url: 'index.php',
-    headers: {'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''},
+    method: "get",
+    url: "index.php",
+    headers: { RequestVerificationToken: getCookie("CSRF-TOKEN") || "" },
     params: {
-      controller: 'post', action: 'list', page: pageId
-    }
+      controller: "post",
+      action: "list",
+      page: pageId,
+    },
   });
 }
 
 function loadAllCommentsFromServer() {
   return axios({
-    method: 'get',
-    url: 'index.php',
-    headers: {'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''},
+    method: "get",
+    url: "index.php",
+    headers: { RequestVerificationToken: getCookie("CSRF-TOKEN") || "" },
     params: {
-      controller: 'post', action: 'all'
-    }
+      controller: "post",
+      action: "all",
+    },
   });
 }
 
 function search(keyword: string) {
   return axios({
-    method: 'post',
-    url: 'index.php',
-    data: qs.stringify({s:keyword}),
+    method: "post",
+    url: "index.php",
+    data: qs.stringify({ s: keyword }),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'search'
-    }
+      controller: "search",
+    },
   });
 }
 
 function createPost(comment: any) {
   comment.ajax = true;
   return axios({
-    method: 'post',
-    url: 'index.php',
+    method: "post",
+    url: "index.php",
     data: qs.stringify(comment),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'post', action: 'create'
-    }
+      controller: "post",
+      action: "create",
+    },
   });
 }
 
 function getAppConfigACP() {
   return axios({
-    method: 'get',
-    url: 'index.php',
-    headers: {'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''},
+    method: "get",
+    url: "index.php",
+    headers: { RequestVerificationToken: getCookie("CSRF-TOKEN") || "" },
     params: {
-      controller: 'config', action: 'showAll'
-    }
+      controller: "config",
+      action: "showAll",
+    },
   });
 }
 
 function updateSiteConfig(configObj: object) {
   return axios({
-    method: 'post',
-    url: 'index.php',
+    method: "post",
+    url: "index.php",
     data: qs.stringify(configObj),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'config', action: 'update'
-    }
+      controller: "config",
+      action: "update",
+    },
   });
 }
 
 function getAllUsers() {
   return axios({
-    method: 'get',
-    url: 'index.php',
-    headers: {'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''},
+    method: "get",
+    url: "index.php",
+    headers: { RequestVerificationToken: getCookie("CSRF-TOKEN") || "" },
     params: {
-      controller: 'user', action: 'list'
-    }
+      controller: "user",
+      action: "list",
+    },
   });
 }
 
 function deleteAllReplies() {
   return axios({
-    method: 'post',
-    url: 'index.php',
+    method: "post",
+    url: "index.php",
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'reply', action: 'deleteAll'
-    }
+      controller: "reply",
+      action: "deleteAll",
+    },
   });
 }
 
 function deleteAllComments() {
   return axios({
-    method: 'post',
-    url: 'index.php',
+    method: "post",
+    url: "index.php",
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'post', action: 'deleteAll'
-    }
+      controller: "post",
+      action: "deleteAll",
+    },
   });
 }
 
 function deleteAllUsers() {
   return axios({
-    method: 'post',
-    url: 'index.php',
+    method: "post",
+    url: "index.php",
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'user', action: 'deleteAll'
-    }
+      controller: "user",
+      action: "deleteAll",
+    },
   });
 }
 
 function deleteComment(commentId: number, reply: string) {
   return axios({
-    method: 'post',
-    url: 'index.php',
-    data: qs.stringify({mid: commentId, reply: reply}),
+    method: "post",
+    url: "index.php",
+    data: qs.stringify({ mid: commentId, reply: reply }),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'post', action: 'delete'
-    }
+      controller: "post",
+      action: "delete",
+    },
   });
 }
 
 function deleteMutiComments(dataObj: number[]) {
   return axios({
-    method: 'post',
-    url: 'index.php',
-    data: qs.stringify({select_mid: dataObj}),
+    method: "post",
+    url: "index.php",
+    data: qs.stringify({ select_mid: dataObj }),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'post', action: 'delete_multi_messages'
-    }
+      controller: "post",
+      action: "delete_multi_messages",
+    },
   });
 }
 
 function deleteReply(commentId: number) {
   return axios({
-    method: 'post',
-    url: 'index.php',
-    data: qs.stringify({mid: commentId}),
+    method: "post",
+    url: "index.php",
+    data: qs.stringify({ mid: commentId }),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'reply', action: 'delete'
-    }
+      controller: "reply",
+      action: "delete",
+    },
   });
 }
 
 function deleteUser(uid: number) {
   return axios({
-    method: 'post',
-    url: 'index.php',
-    data: qs.stringify({uid: uid}),
+    method: "post",
+    url: "index.php",
+    data: qs.stringify({ uid: uid }),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'user', action: 'delete'
-    }
+      controller: "user",
+      action: "delete",
+    },
   });
 }
 
 function deleteMutiUsers(uids: Array<string | number>) {
   return axios({
-    method: 'post',
-    url: 'index.php',
-    data: qs.stringify({select_uid: uids}),
+    method: "post",
+    url: "index.php",
+    data: qs.stringify({ select_uid: uids }),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'user', action: 'delete_multi'
-    }
+      controller: "user",
+      action: "delete_multi",
+    },
   });
 }
 
@@ -337,85 +360,91 @@ function getCookie(name: string) {
 
 function getTranslations() {
   return axios({
-    method: 'get',
-    url: 'index.php',
-    headers: {'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''},
+    method: "get",
+    url: "index.php",
+    headers: { RequestVerificationToken: getCookie("CSRF-TOKEN") || "" },
     params: {
-      controller: 'config', action: 'getTranslations'
-    }
+      controller: "config",
+      action: "getTranslations",
+    },
   });
 }
 
 function getSystemInformation() {
   return axios({
-    method: 'get',
-    url: 'index.php',
-    headers: {'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''},
+    method: "get",
+    url: "index.php",
+    headers: { RequestVerificationToken: getCookie("CSRF-TOKEN") || "" },
     params: {
-      controller: 'site', action: 'getSystemInformation'
-    }
+      controller: "site",
+      action: "getSystemInformation",
+    },
   });
 }
 
 function createReply(replyData: any) {
   return axios({
-    method: 'post',
-    url: 'index.php',
+    method: "post",
+    url: "index.php",
     data: qs.stringify({
       mid: replyData.pid,
-      content: replyData.content
+      content: replyData.content,
     }),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'reply', action: 'create'
-    }
+      controller: "reply",
+      action: "create",
+    },
   });
 }
 
 function updateReply(replyData: any) {
   return axios({
-    method: 'post',
-    url: 'index.php',
+    method: "post",
+    url: "index.php",
     data: qs.stringify({
       mid: replyData.pid,
-      content: replyData.content
+      content: replyData.content,
     }),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'reply', action: 'update'
-    }
+      controller: "reply",
+      action: "update",
+    },
   });
 }
 
 function updateComment(commentData: UpdateCommentObj) {
   return axios({
-    method: 'post',
-    url: 'index.php',
+    method: "post",
+    url: "index.php",
     data: qs.stringify(commentData),
     headers: {
-      'content-type': 'application/x-www-form-urlencoded',
-      'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''
+      "content-type": "application/x-www-form-urlencoded",
+      RequestVerificationToken: getCookie("CSRF-TOKEN") || "",
     },
     params: {
-      controller: 'post', action: 'update'
-    }
+      controller: "post",
+      action: "update",
+    },
   });
 }
 
 function getIPBlackList() {
   return axios({
-    method: 'get',
-    url: 'index.php',
-    headers: {'RequestVerificationToken': getCookie('CSRF-TOKEN') || ''},
+    method: "get",
+    url: "index.php",
+    headers: { RequestVerificationToken: getCookie("CSRF-TOKEN") || "" },
     params: {
-      controller: 'badip', action: 'list'
-    }
+      controller: "badip",
+      action: "list",
+    },
   });
 }
 
@@ -432,7 +461,7 @@ export default {
   deleteUser,
   deleteMutiUsers,
   deleteMultiIPs,
-  getIPBlackList, 
+  getIPBlackList,
   getAppConfig,
   getAppConfigACP,
   getAllUsers,
@@ -448,5 +477,5 @@ export default {
   loadCommentsFromServer,
   getUserInfo,
   search,
-  updateSiteConfig
+  updateSiteConfig,
 };

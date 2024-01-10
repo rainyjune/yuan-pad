@@ -1,7 +1,7 @@
-import { useEffect, useState, MouseEvent, useContext } from 'react';
-import _ from 'lodash';
-import dataProvider from '../common/dataProvider';
-import LanguageContext from '../common/languageContext';
+import { useEffect, useState, MouseEvent, useContext } from "react";
+import _ from "lodash";
+import dataProvider from "../common/dataProvider";
+import LanguageContext from "../common/languageContext";
 
 export default function Reply(props: any) {
   const lang = useContext(LanguageContext);
@@ -15,7 +15,7 @@ export default function Reply(props: any) {
     time: "",
     uid: null,
     uname: "",
-    user: ""
+    user: "",
   });
   useEffect(() => {
     let data = props.data;
@@ -30,7 +30,7 @@ export default function Reply(props: any) {
         time: data.time,
         uid: data.uid,
         uname: data.uname,
-        user: data.user
+        user: data.user,
       });
     }
   }, [props.data]);
@@ -41,17 +41,26 @@ export default function Reply(props: any) {
       return false;
     }
     dataProvider.deleteReply(state.id).then(() => {
-      setState(_.extend({}, state, { reply_content: '' }));
+      setState(_.extend({}, state, { reply_content: "" }));
     });
-  }
+  };
   const data = state;
   if (!data || !data.reply_content) {
     return null;
   }
   return (
     <div>
-      {lang.YOU_REPLIED && lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content)}
-      <span>&nbsp;<a onClick={deleteReply} href="#">{lang.DELETE_THIS_REPLY}</a></span>
+      {lang.YOU_REPLIED &&
+        lang.YOU_REPLIED.replace("{reply_time}", data.reply_time).replace(
+          "{reply_content}",
+          data.reply_content,
+        )}
+      <span>
+        &nbsp;
+        <a onClick={deleteReply} href="#">
+          {lang.DELETE_THIS_REPLY}
+        </a>
+      </span>
     </div>
   );
 }

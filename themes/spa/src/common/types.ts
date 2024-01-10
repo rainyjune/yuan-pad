@@ -6,16 +6,16 @@ export interface GetUserInfoResponse {
     user_type: string;
     username: string;
     email: string;
-  }
+  };
 }
 
 export interface PostListResponse {
   statusCode: number;
   statusText: string;
   response: {
-    total: number,
-    comments: Array<IComment>
-  }
+    total: number;
+    comments: Array<IComment>;
+  };
 }
 
 export interface SearchResponse {
@@ -24,7 +24,7 @@ export interface SearchResponse {
   response: {
     comments: Array<IComment>;
     total: number;
-  }
+  };
 }
 
 export interface IConfigParams {

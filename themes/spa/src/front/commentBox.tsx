@@ -1,10 +1,10 @@
-import { useContext } from 'react';
-import LanguageContext from '../common/languageContext';
-import AppConfigContext from '../common/appConfigContext';
+import { useContext } from "react";
+import LanguageContext from "../common/languageContext";
+import AppConfigContext from "../common/appConfigContext";
 
-import CommentForm from './CommentForm';
-import CommentList from './CommentList';
-import CommentStatistics from './CommentStatistics';
+import CommentForm from "./CommentForm";
+import CommentList from "./CommentList";
+import CommentStatistics from "./CommentStatistics";
 
 function CommentBox(props: any) {
   const propsObj = {
@@ -24,17 +24,23 @@ function CommentBox(props: any) {
         {...propsObj}
         onCloseSearch={props.onCloseSearch}
         onPageChanged={props.onPageChanged}
-        total={props.commentsTotalNumber} 
-        currentPage = {props.currentPage}
-        pagenum={appConfig.page_on ? Math.ceil(props.commentsTotalNumber/appConfig.num_perpage) : 1} />
-      {
-        props.commentListType !== 1 ? '' :
+        total={props.commentsTotalNumber}
+        currentPage={props.currentPage}
+        pagenum={
+          appConfig.page_on
+            ? Math.ceil(props.commentsTotalNumber / appConfig.num_perpage)
+            : 1
+        }
+      />
+      {props.commentListType !== 1 ? (
+        ""
+      ) : (
         <CommentForm
           {...propsObj}
           user={props.user}
           onCommentCreated={props.onCommentCreated}
         />
-      }
+      )}
     </div>
   );
 }

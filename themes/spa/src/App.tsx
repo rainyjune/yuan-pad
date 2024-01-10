@@ -1,45 +1,60 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef } from "react";
 
 import "bootstrap/dist/css/bootstrap.css";
 import "bootstrap/dist/css/bootstrap-theme.css";
-import './css/style.css';
+import "./css/style.css";
 
-import SearchBar from './front/searchBar';
-import CommentBox from './front/commentBox';
-import Header from './front/header';
-import Footer from './front/footer';
-import dataProvider from './common/dataProvider';
-import Progress from './common/progress';
-import OfflineWarning from './common/offlineMode';
-import AppConfigContext from './common/appConfigContext';
-import UserContext from './common/userContext';
-import LanguageContext from './common/languageContext';
-import { GetUserInfoResponse, PostListResponse, SearchResponse, IConfigParams, ConfigResponse, TranslationResponse, IUser, IComment} from './common/types';
+import SearchBar from "./front/searchBar";
+import CommentBox from "./front/commentBox";
+import Header from "./front/header";
+import Footer from "./front/footer";
+import dataProvider from "./common/dataProvider";
+import Progress from "./common/progress";
+import OfflineWarning from "./common/offlineMode";
+import AppConfigContext from "./common/appConfigContext";
+import UserContext from "./common/userContext";
+import LanguageContext from "./common/languageContext";
+import {
+  GetUserInfoResponse,
+  PostListResponse,
+  SearchResponse,
+  IConfigParams,
+  ConfigResponse,
+  TranslationResponse,
+  IUser,
+  IComment,
+} from "./common/types";
 
 export default function App() {
   const didMount = useRef(false);
   const [loadingModalIsOpen, setLoadingModalIsOpen] = useState(true);
   const [appConfig, setAppConfig] = useState<IConfigParams>({
-    board_name: '',
-    site_close: '0',
-    close_reason: '',
-    admin_email: '',
-    copyright_info: '',
-    valid_code_open: '0',
-    page_on: '0',
+    board_name: "",
+    site_close: "0",
+    close_reason: "",
+    admin_email: "",
+    copyright_info: "",
+    valid_code_open: "0",
+    page_on: "0",
     num_perpage: 0,
-    theme: '',
-    admin: '',
-    lang: '',
-    timezone: '0',
+    theme: "",
+    admin: "",
+    lang: "",
+    timezone: "0",
     filter_type: 1,
-    allowed_tags: ''});
+    allowed_tags: "",
+  });
   const [comments, setComments] = useState<Array<IComment>>([]);
   const [commentsTotalNumber, setcommentsTotalNumber] = useState(0); // The total number of all comments or filtered comments.
   const [commentListType, setCommentListType] = useState(1); // 1: Default list. 2: Search Result list
   const [currentPage, setCurrentPage] = useState(0);
-  const [currentUser, setCurrentUser1] = useState<IUser>({uid: -1, user_type: 'guest', username: '', email: ''});
-  const [searchText, setSearchText] = useState(''); // The search keyword
+  const [currentUser, setCurrentUser1] = useState<IUser>({
+    uid: -1,
+    user_type: "guest",
+    username: "",
+    email: "",
+  });
+  const [searchText, setSearchText] = useState(""); // The search keyword
   const [translations, setTranslations] = useState({});
 
   // Get current user identity from server.
@@ -47,7 +62,7 @@ export default function App() {
     dataProvider.getUserInfo().then((res) => {
       if (res.data.statusCode !== 200) {
         setLoadingModalIsOpen(false);
-        return ;
+        return;
       }
       setCurrentUser1(res.data.response);
       loadCommentsFromServer();
@@ -102,7 +117,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (!didMount.current ) {
+    if (!didMount.current) {
       didMount.current = true;
       return;
     }
@@ -117,7 +132,7 @@ export default function App() {
   const setCurrentUser = (userData: IUser) => {
     setCurrentUser1(userData);
   };
-  
+
   if (currentUser.user_type !== "admin" && appConfig.site_close == 1) {
     return <div>{appConfig.close_reason}</div>;
   }
@@ -126,25 +141,20 @@ export default function App() {
       <UserContext.Provider value={currentUser}>
         <LanguageContext.Provider value={translations}>
           <div id="appbox">
-            <Header
-              onCurrentUserUpdated={setCurrentUser}
-            />
-            <OfflineWarning 
-              appConfig={appConfig}
-              lang={translations}
-            />
+            <Header onCurrentUserUpdated={setCurrentUser} />
+            <OfflineWarning appConfig={appConfig} lang={translations} />
             <CommentBox
               onCommentCreated={loadCommentsFromServer}
               onCloseSearch={loadCommentsFromServer}
               onPageChanged={handlePageChange}
-              currentPage = {currentPage}
-              commentListType={commentListType} 
-              comments={comments} 
+              currentPage={currentPage}
+              commentListType={commentListType}
+              comments={comments}
               commentsTotalNumber={commentsTotalNumber}
               searchText={searchText}
             />
-            <SearchBar 
-              onSubmit={handleSearch} 
+            <SearchBar
+              onSubmit={handleSearch}
               onUserInput={handleKeywordInput}
               searchText={searchText}
             />

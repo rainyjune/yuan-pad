@@ -71,7 +71,7 @@
   text-align: center;
   margin-top: 15px;
 }
-.searchbar input[type=image] {
+.searchbar input[type="image"] {
   margin-left: 5px;
 }
 
@@ -98,11 +98,11 @@
 }
 
 .statistics {
-  background: #4A7DAC;
+  background: #4a7dac;
 }
 
 .comment {
-  background: #F3F3F3;
+  background: #f3f3f3;
   border: 1px solid #757575;
   padding: 4px;
   margin-bottom: 5px;
@@ -120,13 +120,13 @@
 
 .commentAuthor {
   font-weight: bold;
-  color: #C30;
+  color: #c30;
   font-size: 14px;
   float: left;
 }
 
 .commentDate {
-  color: #C30;
+  color: #c30;
   font-size: 14px;
   float: right;
 }

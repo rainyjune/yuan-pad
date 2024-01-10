@@ -1,11 +1,11 @@
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useRef } from "react";
 
 function SearchBar(props: any) {
   const keywordRef = useRef<HTMLInputElement>(null);
   const handleSearch = (e: FormEvent) => {
     e.preventDefault();
     let keyword = keywordRef.current?.value.trim();
-    if (!keyword) return ;
+    if (!keyword) return;
     props.onSubmit(keyword);
     return false;
   };
@@ -16,20 +16,30 @@ function SearchBar(props: any) {
     <div className="searchbar">
       <form onSubmit={handleSearch} className="form-inline">
         <div className="form-group">
-          <label className="sr-only" htmlFor="inputSearch">Search</label>
+          <label className="sr-only" htmlFor="inputSearch">
+            Search
+          </label>
           <input
             id="inputSearch"
-            type="text" 
+            type="text"
             size={10}
-            placeholder="Search" 
-            ref={keywordRef} 
+            placeholder="Search"
+            ref={keywordRef}
             value={props.searchText}
             onChange={handleChange}
-            className="form-control" 
+            className="form-control"
           />
         </div>
-        <button type="button" className="btn btn-default btn-sm" aria-label="Submit" onClick={handleSearch}>
-          <span className="glyphicon glyphicon-search" aria-hidden="true"></span>
+        <button
+          type="button"
+          className="btn btn-default btn-sm"
+          aria-label="Submit"
+          onClick={handleSearch}
+        >
+          <span
+            className="glyphicon glyphicon-search"
+            aria-hidden="true"
+          ></span>
         </button>
       </form>
     </div>

@@ -1,9 +1,9 @@
 body {
-  background-color: #CCCCCC;
+  background-color: #cccccc;
 }
 
 h1 {
-  color: #CCCC99;
+  color: #cccc99;
   text-align: center;
 }
 
@@ -108,7 +108,8 @@ footer {
   text-align: center;
 }
 
-.homeButton, .signOutButton {
+.homeButton,
+.signOutButton {
   margin-top: 8px;
 }
 
