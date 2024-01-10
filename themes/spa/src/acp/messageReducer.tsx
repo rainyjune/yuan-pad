@@ -4,18 +4,42 @@ export function messageReducer(state, action) {
   console.log(action.type);
 
   switch (action.type) {
-    case "LOAD_SUCCESS":
+    case 'LOAD_SUCCESS':
       return {
         ...state,
         isLoading: false,
         isError: false,
-        data: action.data
+        data: action.data,
       };
-    case "LOAD_ERROR":
+    case 'LOAD_ERROR':
       return {
         ...state,
         isLoading: false,
-        isError: true
+        isError: true,
+      };
+    case 'TOGGLE':
+      return {
+        ...state,
+        data: state.data.map((item) => {
+          if (item.id === action.id) {
+            return {
+              ...item,
+              checked: !item.checked,
+            };
+          } else {
+            return item;
+          }
+        }),
+      };
+    case 'TOGGLEALL':
+      return {
+        ...state,
+        data: state.data.map((item) => {
+          return {
+            ...item,
+            checked: action.checked,
+          };
+        }),
       };
     default:
       return state;
@@ -23,23 +47,28 @@ export function messageReducer(state, action) {
 }
 
 export function dispatchMiddleware(dispatch) {
-  return async action => {
+  return async (action) => {
     switch (action.type) {
-      case "LOAD":
+      case 'LOAD':
         try {
           const res = await dataProvider.loadAllCommentsFromServer();
           if (res.status === 200) {
             dispatch({
               type: 'LOAD_SUCCESS',
-              data: res.data.response.comments
+              data: res.data.response.comments.map((comment) => {
+                return {
+                  ...comment,
+                  checked: false,
+                };
+              }),
             });
           }
-        } catch(e) {
-          dispatch({ type: "LOAD_ERROR" });
+        } catch (e) {
+          dispatch({ type: 'LOAD_ERROR' });
         }
         break;
       case 'DELETE':
-        console.log("DELETE");
+        console.log('DELETE');
         try {
           const res = await dataProvider.deleteComment(action.commentId, action.reply);
           if (res.status === 200) {
@@ -47,8 +76,8 @@ export function dispatchMiddleware(dispatch) {
               type: 'LOAD',
             });
           }
-        } catch(e) {
-          dispatch({ type: "LOAD_ERROR" });
+        } catch (e) {
+          dispatch({ type: 'LOAD_ERROR' });
         }
         break;
       default:

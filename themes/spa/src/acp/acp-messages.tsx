@@ -9,38 +9,30 @@ import LanguageContext from '../common/languageContext';
 const initialState = {
   isLoading: false,
   isError: false,
-  data: []
+  data: [],
 };
 
-function ACPMessages(props: any) {
+function ACPMessages(props: {
+  systemInformation: object;
+  onActiveTabChanged: (s: string) => void;
+  onCommentDeleted: () => void;
+}) {
   const lang = useContext(LanguageContext);
   const [comments, dispatchBase] = useReducer(messageReducer, initialState);
   const dispatch = dispatchMiddleware(dispatchBase);
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalType, setModalType] = useState(''); // "reply" or "update" 
+  const [modalType, setModalType] = useState(''); // "reply" or "update"
   const [modalCommentModel, setModalCommentModel] = useState(null);
   const [modalErrorMsg, setModalErrorMsg] = useState('');
-  const toggle = (itemToToggle: any) => {
-    let data = comments.data.map((currentValue: any) => {
-      if (currentValue === itemToToggle) {
-        currentValue['checked'] = !currentValue['checked'];
-      }
-      return currentValue;
-    });
-  };
-  const toggleInputClicked = (e: any) => {
-    toggleAll(e.target.checked);
-  };
-  const toggleAll = (checked: boolean) => {
-    let data = comments.data.map((currentValue: any) => {
-      currentValue['checked'] = checked;
-      return currentValue;
+  const toggleInputClicked = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({
+      type: 'TOGGLEALL',
+      checked: e.target.checked,
     });
   };
   const getCheckedItems = () => {
-    let arr: any = [];
-    let key = getItemKey();
-    //let field = getMixinAttr();
+    const arr: number[] = [];
+    const key = 'id';
     comments.data.forEach((currentValue: any) => {
       if (currentValue.checked) {
         arr.push(currentValue[key]);
@@ -48,17 +40,14 @@ function ACPMessages(props: any) {
     });
     return arr;
   };
-  const getItemKey = () => {
-    return 'id';
-  };
   const deleteAllComments = (e: any) => {
     e.preventDefault();
     if (!confirm(lang.DEL_ALL_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteAllComments().then(res => {
+    dataProvider.deleteAllComments().then((res) => {
       if (res.data.statusCode === 200) {
-        dispatch({ type: "LOAD" });
+        dispatch({ type: 'LOAD' });
       } else {
         alert('Error');
       }
@@ -72,11 +61,11 @@ function ACPMessages(props: any) {
     if (!confirm(lang.DEL_ALL_REPLY_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteAllReplies().then(res => {
+    dataProvider.deleteAllReplies().then((res) => {
       if (res.data.statusCode === 200) {
-        dispatch({ type: "LOAD" });
+        dispatch({ type: 'LOAD' });
       } else {
-        alert('ERROR')
+        alert('ERROR');
       }
     });
   };
@@ -89,9 +78,9 @@ function ACPMessages(props: any) {
     if (!confirm(lang.DEL_SELECTEDCOMMENTS_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteMutiComments(checkedItems).then(res => {
+    dataProvider.deleteMutiComments(checkedItems).then((res) => {
       if (res.data.statusCode === 200) {
-        dispatch({ type: "LOAD" });
+        dispatch({ type: 'LOAD' });
       } else {
         alert('delete error');
       }
@@ -104,7 +93,7 @@ function ACPMessages(props: any) {
     setModalIsOpen(false);
     setModalType('');
     setModalCommentModel(null);
-    setModalErrorMsg('')
+    setModalErrorMsg('');
   };
   const openModal = (type = 'reply', commentData: any) => {
     setModalIsOpen(true);
@@ -114,63 +103,68 @@ function ACPMessages(props: any) {
   };
   const handleReplyFormSubmitted = () => {
     closeModal();
-    dispatch({ type: "LOAD" });
+    dispatch({ type: 'LOAD' });
   };
   const handleUpdateComment = (commentTobeUpdated: any) => {
     openModal('update', commentTobeUpdated);
   };
   const handleCommentUpdated = () => {
     closeModal();
-    dispatch({ type: "LOAD" });
+    dispatch({ type: 'LOAD' });
   };
   useEffect(() => {
-    dispatch({ type: "LOAD" });
+    dispatch({ type: 'LOAD' });
   }, []);
-  const handleToggleItem = (item: any) => {
-    toggle(item);
+  const handleToggleItem = (id: number) => {
+    dispatch({
+      type: 'TOGGLE',
+      id: id,
+    });
   };
   const handleCommentDeleted = (commentId, reply) => {
-    dispatch({type: 'DELETE', commentId: commentId, reply: reply});
-    dispatch({type: 'LOAD'});
+    dispatch({ type: 'DELETE', commentId: commentId, reply: reply });
+    dispatch({ type: 'LOAD' });
     props.onCommentDeleted();
   };
-  
+
   const modalProps = {
     comment: modalCommentModel,
     modalErrorMsg: modalErrorMsg,
-    onRequestClose: closeModal
+    onRequestClose: closeModal,
   };
   return (
-    <div className={"message_container selectTag"}>
+    <div className={'message_container selectTag'}>
       <form onSubmit={deleteSelected} action="#" method="post">
         <table className="table table-striped table-hover">
           <thead>
             <tr className="header row">
-              <th className="col-xs-1 col-sm-1 col-md-1"><input type="checkbox" onClick={toggleInputClicked} /></th>
+              <th className="col-xs-1 col-sm-1 col-md-1">
+                <input type="checkbox" onChange={toggleInputClicked} />
+              </th>
               <th className="col-xs-3 col-sm-3 col-md-3">{lang.NICKNAME}</th>
               <th className="col-xs-6 col-sm-6 col-md-6">{lang.MESSAGE}</th>
               <th className="col-xs-2 col-sm-2 col-md-2">{lang.OPERATION}</th>
             </tr>
           </thead>
           <tbody>
-            {
-              comments.data.map((comment: any) => {
-                return <Comment
-                    data={comment}
-                    key={comment.id}
-                    onActiveTabChanged={props.onActiveTabChanged}
-                    onReplyComment={handleReplyComment}
-                    onCommentDeleted={handleCommentDeleted}
-                    onUpdateComment={handleUpdateComment}
-                    onToggleItem={handleToggleItem}
-                  />
-              })
-            }
+            {comments.data.map((comment: any) => {
+              return (
+                <Comment
+                  data={comment}
+                  key={comment.id}
+                  onActiveTabChanged={props.onActiveTabChanged}
+                  onReplyComment={handleReplyComment}
+                  onCommentDeleted={handleCommentDeleted}
+                  onUpdateComment={handleUpdateComment}
+                  onToggleItem={handleToggleItem}
+                />
+              );
+            })}
           </tbody>
           <tfoot>
             <tr>
               <td colSpan={4}>
-                <input type='submit' value={lang.DELETE_CHECKED} />
+                <input type="submit" value={lang.DELETE_CHECKED} />
                 <button onClick={deleteAllComments}>{lang.DELETE_ALL}</button>
                 <button onClick={deleteAllReplies}>{lang.DELETE_ALL_REPLY}</button>
               </td>
@@ -180,12 +174,12 @@ function ACPMessages(props: any) {
       </form>
       <ReplyModal
         {...modalProps}
-        modalIsOpen = {modalIsOpen && modalType === "reply"}
+        modalIsOpen={modalIsOpen && modalType === 'reply'}
         onReplySubmit={handleReplyFormSubmitted}
       />
       <CommentUpdateModal
         {...modalProps}
-        modalIsOpen = {modalIsOpen && modalType === "update"}
+        modalIsOpen={modalIsOpen && modalType === 'update'}
         onCommentUpdated={handleCommentUpdated}
       />
     </div>

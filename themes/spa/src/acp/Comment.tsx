@@ -3,7 +3,15 @@ import dataProvider from '../common/dataProvider';
 import Reply from './Reply';
 import LanguageContext from '../common/languageContext';
 
-export default function Comment(props: any) {
+export default function Comment(props: {
+  data: object;
+  onActiveTabChanged: (s: string) => void;
+  onReplyComment: (data: any) => void;
+  onCommentDeleted: (id: any, reply: any) => void;
+  onUpdateComment: (data: any) => void;
+  onToggleItem: (id: number) => void;
+}) {
+  const data = props.data;
   const lang = useContext(LanguageContext);
   const banIP = async (ip: string) => {
     await dataProvider.banIP(ip);
@@ -11,37 +19,36 @@ export default function Comment(props: any) {
   };
   const deleteComment = (e: any) => {
     e.preventDefault();
-    const data = props.data;
     const commentId = data.id;
-    const reply = data.reply ? "1" : "0";
-    if (!confirm(props.lang.DEL_COMMENT_CONFIRM)) {
+    const reply = data.reply ? '1' : '0';
+    if (!confirm(lang.DEL_COMMENT_CONFIRM)) {
       return false;
     }
     props.onCommentDeleted(commentId, reply);
   };
   const replyComment = (e: any) => {
     e.preventDefault();
-    props.onReplyComment(props.data);
+    props.onReplyComment(data);
   };
   const updateComment = (e: any) => {
     e.preventDefault();
-    props.onUpdateComment(props.data);
+    props.onUpdateComment(data);
   };
   const toggleItem = () => {
-    props.onToggleItem(props.data);
+    props.onToggleItem(data.id);
   };
-  const data = props.data;
+
   return (
     <tr className="row">
       <td className="col-xs-1 col-sm-1 col-md-1">
-        <input type='checkbox' checked={props.data.checked} onChange={toggleItem} />
-        <input type='hidden' name={props.data.id} value={data.reply ? 1 : 0} />
+        <input type="checkbox" checked={data.checked} onChange={toggleItem} />
+        <input type="hidden" name={data.id} value={data.reply ? 1 : 0} />
       </td>
-      <td className="col-xs-3 col-sm-3 col-md-3">
-        {parseInt(data.uid) ? data.b_username : data.uname}
-      </td>
-      <td className='col-xs-6 col-sm-6 col-md-6'>
-        {data.post_content}<br />{lang.TIME}: {data.time}
+      <td className="col-xs-3 col-sm-3 col-md-3">{parseInt(data.uid) ? data.b_username : data.uname}</td>
+      <td className="col-xs-6 col-sm-6 col-md-6">
+        {data.post_content}
+        <br />
+        {lang.TIME}: {data.time}
         <Reply data={data} />
       </td>
       <td className="col-xs-2 col-sm-2 col-md-2">
@@ -54,10 +61,13 @@ export default function Comment(props: any) {
         <button className="btn btn-default btn-sm" onClick={updateComment}>
           <span className="glyphicon glyphicon-pencil" aria-hidden="true"></span>
         </button>
-        <button className="btn btn-default btn-sm" onClick={(e) => {
-          e.preventDefault();
-          banIP(data.ip)
-        }}>
+        <button
+          className="btn btn-default btn-sm"
+          onClick={(e) => {
+            e.preventDefault();
+            banIP(data.ip);
+          }}
+        >
           <span className="glyphicon glyphicon-ban-circle" aria-hidden="true"></span>
         </button>
       </td>
