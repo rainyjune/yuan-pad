@@ -1,6 +1,6 @@
-import { useContext } from "react";
-import dataProvider from "../common/dataProvider";
-import LanguageContext from "../common/languageContext";
+import { useContext } from 'react';
+import dataProvider from '../common/dataProvider';
+import LanguageContext from '../common/languageContext';
 
 export default function UserItem(props: any) {
   const lang = useContext(LanguageContext);
@@ -29,17 +29,13 @@ export default function UserItem(props: any) {
    * Tested 1.
    */
   const toggleItem = () => {
-    props.onToggleItem(props.data);
+    props.onToggleItem(props.data.uid);
   };
-  let user = props.data;
+  const user = props.data;
   return (
     <tr className="row">
       <td className="col-xs-1 col-sm-1 col-md-1">
-        <input
-          type="checkbox"
-          checked={props.data.checked}
-          onChange={toggleItem}
-        />
+        <input type="checkbox" checked={user.checked} onChange={toggleItem} />
       </td>
       <td className="col-xs-3 col-sm-3 col-md-3">{user.username}</td>
       <td className="col-xs-6 col-sm-6 col-md-6">{user.email}</td>

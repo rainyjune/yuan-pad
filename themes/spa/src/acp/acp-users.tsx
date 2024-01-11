@@ -1,75 +1,49 @@
-import { useContext, useEffect, useState } from "react";
-import UserUpdateModal from "./acp-userUpdateModal";
-import dataProvider from "../common/dataProvider";
-import UserItem from "./UserItem";
-import LanguageContext from "../common/languageContext";
+import { useContext, useEffect, useState, useReducer } from 'react';
+import UserUpdateModal from './acp-userUpdateModal';
+import UserItem from './UserItem';
+import LanguageContext from '../common/languageContext';
+import { usersReducer, dispatchMiddleware } from './usersReducer';
 
 function ACPUser(props: any) {
   const lang = useContext(LanguageContext);
-  const [users, setUsers] = useState<any>([]);
+  const [users, dispatchBase] = useReducer(usersReducer, []);
+  const dispatch = dispatchMiddleware(dispatchBase);
   const [modalInfo, setModalInfo] = useState({
-    updateErrorMsg: "",
+    updateErrorMsg: '',
     updateModalIsOpen: false,
     updatedModalUserData: null,
   });
-  const addSelectedFlag = (arr: Array<any>) => {
-    if (Array.isArray(arr)) {
-      arr.forEach((currentValue) => {
-        currentValue["checked"] = false;
-      });
-    }
-  };
-  const toggle = (itemToToggle: any) => {
-    let data: Array<any> = users.map((currentValue: any) => {
-      if (currentValue === itemToToggle) {
-        currentValue["checked"] = !currentValue["checked"];
-      }
-      return currentValue;
+  const toggle = (uid: number) => {
+    dispatch({
+      type: 'toggle',
+      uid,
     });
-    setUsers(data);
   };
-  const toggleInputClicked = (e: any) => {
+  const toggleInputClicked = (e: React.ChangeEvent<HTMLInputElement>) => {
     toggleAll(e.target.checked);
   };
   const toggleAll = (checked: boolean) => {
-    let data = users.map((currentValue: any) => {
-      currentValue["checked"] = checked;
-      return currentValue;
+    dispatch({
+      type: 'toggleAll',
+      checked,
     });
-    setUsers(data);
   };
   const getCheckedItems = () => {
-    let arr: any = [];
-    let key = getItemKey();
+    const arr: number[] = [];
     users.forEach((currentValue: any) => {
       if (currentValue.checked) {
-        arr.push(currentValue[key]);
+        arr.push(currentValue.uid);
       }
     });
     return arr;
   };
-  /*
-  const getMixinAttr = () => {
-    return 'users';
-  };
-  */
-  const getItemKey = () => {
-    return "uid";
-  };
 
   useEffect(() => {
-    loadAllUsersFromServer();
+    dispatch({ type: 'loadAll' });
   }, []);
 
   const loadAllUsersFromServer = async () => {
-    const res = await dataProvider.getAllUsers();
-    if (res.status === 200 && res.data.statusCode === 200) {
-      const data = res.data.response;
-      addSelectedFlag(data);
-      setUsers(data);
-    } else {
-      alert(res.data.statusText);
-    }
+    dispatch({ type: 'loadAll' });
   };
   /**
    * Tested 1.
@@ -81,23 +55,23 @@ function ACPUser(props: any) {
    * Tested 1.
    */
   const handleUpdateSubmit = (newUserData: any) => {
-    dataProvider.updateUser(newUserData).then((res) => {
-      if (res.data.statusCode === 200) {
-        setModalInfo({
-          updateErrorMsg: "",
-          updatedModalUserData: null,
-          updateModalIsOpen: false,
-        });
-        loadAllUsersFromServer();
-      }
+    dispatch({
+      type: 'update',
+      data: newUserData,
     });
+    setModalInfo({
+      updateErrorMsg: '',
+      updatedModalUserData: null,
+      updateModalIsOpen: false,
+    });
+    dispatch({ type: 'loadAll' });
   };
   /**
    * Tested 1.
    */
   const closeUpdateModal = () => {
     setModalInfo({
-      updateErrorMsg: "",
+      updateErrorMsg: '',
       updatedModalUserData: null,
       updateModalIsOpen: false,
     });
@@ -107,7 +81,7 @@ function ACPUser(props: any) {
    */
   const openUserUpdateModal = (userData: any) => {
     setModalInfo({
-      updateErrorMsg: "",
+      updateErrorMsg: '',
       updatedModalUserData: userData,
       updateModalIsOpen: true,
     });
@@ -120,10 +94,11 @@ function ACPUser(props: any) {
     if (!confirm(lang.DEL_ALLUSER_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteAllUsers().then((res) => {
-      if (res.data.statusCode === 200) {
-        loadAllUsersFromServer();
-      }
+    dispatch({
+      type: 'deleteAll',
+    });
+    dispatch({
+      type: 'loadAll',
     });
   };
   /**
@@ -131,28 +106,28 @@ function ACPUser(props: any) {
    */
   const handleDeleteMulti = (e: any) => {
     e.preventDefault();
-    let checkedUids = getCheckedItems();
+    const checkedUids = getCheckedItems();
     if (checkedUids.length === 0) {
       return false;
     }
     if (!confirm(lang.DEL_SELECTEDUSERS_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteMutiUsers(checkedUids).then((res) => {
-      if (res.data.statusCode === 200) {
-        loadAllUsersFromServer();
-      } else {
-        alert("delete error");
-      }
+    dispatch({
+      type: 'deleteMulti',
+      data: checkedUids,
+    });
+    dispatch({
+      type: 'loadAll',
     });
   };
   /**
    * Tested 1
    */
-  const handleToggleItem = (userItem: any) => {
-    toggle(userItem);
+  const handleToggleItem = (uid: number) => {
+    toggle(uid);
   };
-  const cssClass = "user_container selectTag";
+  const cssClass = 'user_container selectTag';
   let createUserItem = function (user: any) {
     return (
       <UserItem
@@ -164,6 +139,7 @@ function ACPUser(props: any) {
       />
     );
   };
+  console.log('USERS:', users);
   return (
     <div className={cssClass}>
       <form onSubmit={handleDeleteMulti} action="#" method="post">
@@ -171,7 +147,7 @@ function ACPUser(props: any) {
           <thead>
             <tr className="header row">
               <th className="col-xs-1 col-sm-1 col-md-1">
-                <input type="checkbox" onClick={toggleInputClicked} />
+                <input type="checkbox" onChange={toggleInputClicked} />
               </th>
               <th className="col-xs-3 col-sm-3 col-md-3">{lang.NICKNAME}</th>
               <th className="col-xs-6 col-sm-6 col-md-6">{lang.EMAIL}</th>
