@@ -1,8 +1,10 @@
-import { useContext } from 'react';
-import dataProvider from '../common/dataProvider';
+import { useContext, useReducer } from 'react';
 import LanguageContext from '../common/languageContext';
+import { usersReducer, dispatchMiddleware } from './usersReducer';
 
 export default function UserItem(props: any) {
+  const [, dispatchBase] = useReducer(usersReducer, []);
+  const dispatch = dispatchMiddleware(dispatchBase);
   const lang = useContext(LanguageContext);
   /**
    * Tested 1.
@@ -12,11 +14,11 @@ export default function UserItem(props: any) {
     if (!confirm(lang.DEL_SINGLEUSER_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteUser(props.data.uid).then((res) => {
-      if (res.status === 200 && res.data.statusCode === 200) {
-        props.onUserDeleted();
-      }
+    dispatch({
+      type: 'delete',
+      uid: props.data.uid,
     });
+    props.onUserDeleted();
   };
   /**
    * Tested 1.

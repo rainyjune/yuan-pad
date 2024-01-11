@@ -80,6 +80,36 @@ export function dispatchMiddleware(dispatch) {
           dispatch({ type: 'LOAD_ERROR' });
         }
         break;
+      case 'DELETEMULTI':
+        try {
+          const res = await dataProvider.deleteMutiComments(action.data);
+          if (res.status === 200) {
+            //
+          }
+        } catch (e) {
+          //dispatch({ type: 'LOAD_ERROR' });
+        }
+        break;
+      case 'DELETEALL':
+        try {
+          const res = await dataProvider.deleteAllComments();
+          if (res.status === 200) {
+            //
+          }
+        } catch (e) {
+          //dispatch({ type: 'LOAD_ERROR' });
+        }
+        break;
+      case 'DELETEALLREPLIES':
+        try {
+          const res = await dataProvider.deleteAllReplies();
+          if (res.status === 200) {
+            //
+          }
+        } catch (e) {
+          //dispatch({ type: 'LOAD_ERROR' });
+        }
+        break;
       default:
         return dispatch(action);
     }

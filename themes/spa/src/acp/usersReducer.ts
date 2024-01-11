@@ -72,6 +72,16 @@ export function dispatchMiddleware(dispatch) {
           debugger;
         }
         break;
+      case 'delete':
+        try {
+          const res = await dataProvider.deleteUser(action.uid);
+          if (res.data.statusCode === 200) {
+            //
+          }
+        } catch(e) {
+          debugger;
+        }
+        break;
       case 'deleteAll':
         try {
           const res = await dataProvider.deleteAllUsers();

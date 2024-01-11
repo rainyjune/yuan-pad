@@ -1,6 +1,5 @@
-import { useEffect, useState, useReducer, useContext } from 'react';
+import { useEffect, useState, useReducer, useContext, MouseEvent } from 'react';
 import { messageReducer, dispatchMiddleware } from './messageReducer';
-import dataProvider from '../common/dataProvider';
 import ReplyModal from './acp-replyModal';
 import CommentUpdateModal from './acp-updateCommentModal';
 import Comment from './Comment';
@@ -40,34 +39,28 @@ function ACPMessages(props: {
     });
     return arr;
   };
-  const deleteAllComments = (e: any) => {
+  const deleteAllComments = (e: MouseEvent) => {
     e.preventDefault();
     if (!confirm(lang.DEL_ALL_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteAllComments().then((res) => {
-      if (res.data.statusCode === 200) {
-        dispatch({ type: 'LOAD' });
-      } else {
-        alert('Error');
-      }
+    dispatch({
+      type: 'DELETEALL',
     });
+    dispatch({ type: 'LOAD' });
   };
   /**
    * Tested 1
    */
-  const deleteAllReplies = (e: any) => {
+  const deleteAllReplies = (e: MouseEvent) => {
     e.preventDefault();
     if (!confirm(lang.DEL_ALL_REPLY_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteAllReplies().then((res) => {
-      if (res.data.statusCode === 200) {
-        dispatch({ type: 'LOAD' });
-      } else {
-        alert('ERROR');
-      }
+    dispatch({
+      type: 'DELETEALLREPLIES',
     });
+    dispatch({ type: 'LOAD' });
   };
   const deleteSelected = (e: any) => {
     e.preventDefault();
@@ -78,13 +71,11 @@ function ACPMessages(props: {
     if (!confirm(lang.DEL_SELECTEDCOMMENTS_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteMutiComments(checkedItems).then((res) => {
-      if (res.data.statusCode === 200) {
-        dispatch({ type: 'LOAD' });
-      } else {
-        alert('delete error');
-      }
+    dispatch({
+      type: 'DELETEMULTI',
+      data: checkedItems,
     });
+    dispatch({ type: 'LOAD' });
   };
   const handleReplyComment = (commentTobeReplied: any) => {
     openModal('reply', commentTobeReplied);
