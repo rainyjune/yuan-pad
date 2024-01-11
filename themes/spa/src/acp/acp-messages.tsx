@@ -23,11 +23,15 @@ function ACPMessages(props: {
   const [modalType, setModalType] = useState(''); // "reply" or "update"
   const [modalCommentModel, setModalCommentModel] = useState(null);
   const [modalErrorMsg, setModalErrorMsg] = useState('');
-  const toggleInputClicked = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({
-      type: 'TOGGLEALL',
-      checked: e.target.checked,
-    });
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const handleToggleAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Create a copy (to avoid mutation).
+    let nextIds = new Set();
+    if (e.target.checked) {
+      nextIds = new Set(comments.data.map((comment) => comment.id));
+      setSelectedIds(nextIds);
+    }
+    setSelectedIds(nextIds);
   };
   const getCheckedItems = () => {
     const arr: number[] = [];
@@ -62,9 +66,9 @@ function ACPMessages(props: {
     });
     dispatch({ type: 'LOAD' });
   };
-  const deleteSelected = (e: any) => {
+  const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const checkedItems = getCheckedItems();
+    const checkedItems = Array.from(selectedIds);
     if (checkedItems.length === 0) {
       return false;
     }
@@ -106,11 +110,15 @@ function ACPMessages(props: {
   useEffect(() => {
     dispatch({ type: 'LOAD' });
   }, []);
-  const handleToggleItem = (id: number) => {
-    dispatch({
-      type: 'TOGGLE',
-      id: id,
-    });
+  const handleToggleItem = (toggledId: number) => {
+    // Create a copy (to avoid mutation).
+    const nextIds = new Set(selectedIds);
+    if (nextIds.has(toggledId)) {
+      nextIds.delete(toggledId);
+    } else {
+      nextIds.add(toggledId);
+    }
+    setSelectedIds(nextIds);
   };
   const handleCommentDeleted = (commentId, reply) => {
     dispatch({ type: 'DELETE', commentId: commentId, reply: reply });
@@ -125,12 +133,12 @@ function ACPMessages(props: {
   };
   return (
     <div className={'message_container selectTag'}>
-      <form onSubmit={deleteSelected} action="#" method="post">
+      <form onSubmit={handleFormSubmit} action="#" method="post">
         <table className="table table-striped table-hover">
           <thead>
             <tr className="header row">
               <th className="col-xs-1 col-sm-1 col-md-1">
-                <input type="checkbox" onChange={toggleInputClicked} />
+                <input type="checkbox" onChange={handleToggleAll} />
               </th>
               <th className="col-xs-3 col-sm-3 col-md-3">{lang.NICKNAME}</th>
               <th className="col-xs-6 col-sm-6 col-md-6">{lang.MESSAGE}</th>
@@ -148,6 +156,7 @@ function ACPMessages(props: {
                   onCommentDeleted={handleCommentDeleted}
                   onUpdateComment={handleUpdateComment}
                   onToggleItem={handleToggleItem}
+                  isSelected={selectedIds.has(comment.id)}
                 />
               );
             })}

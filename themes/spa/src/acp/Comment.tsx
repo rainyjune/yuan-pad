@@ -10,6 +10,7 @@ export default function Comment(props: {
   onCommentDeleted: (id: any, reply: any) => void;
   onUpdateComment: (data: any) => void;
   onToggleItem: (id: number) => void;
+  isSelected: boolean;
 }) {
   const data = props.data;
   const lang = useContext(LanguageContext);
@@ -41,7 +42,7 @@ export default function Comment(props: {
   return (
     <tr className="row">
       <td className="col-xs-1 col-sm-1 col-md-1">
-        <input type="checkbox" checked={data.checked} onChange={toggleItem} />
+        <input type="checkbox" checked={props.isSelected} onChange={toggleItem} />
         <input type="hidden" name={data.id} value={data.reply ? 1 : 0} />
       </td>
       <td className="col-xs-3 col-sm-3 col-md-3">{parseInt(data.uid) ? data.b_username : data.uname}</td>

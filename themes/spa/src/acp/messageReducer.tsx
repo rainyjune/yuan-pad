@@ -17,30 +17,6 @@ export function messageReducer(state, action) {
         isLoading: false,
         isError: true,
       };
-    case 'TOGGLE':
-      return {
-        ...state,
-        data: state.data.map((item) => {
-          if (item.id === action.id) {
-            return {
-              ...item,
-              checked: !item.checked,
-            };
-          } else {
-            return item;
-          }
-        }),
-      };
-    case 'TOGGLEALL':
-      return {
-        ...state,
-        data: state.data.map((item) => {
-          return {
-            ...item,
-            checked: action.checked,
-          };
-        }),
-      };
     default:
       return state;
   }
@@ -55,12 +31,7 @@ export function dispatchMiddleware(dispatch) {
           if (res.status === 200) {
             dispatch({
               type: 'LOAD_SUCCESS',
-              data: res.data.response.comments.map((comment) => {
-                return {
-                  ...comment,
-                  checked: false,
-                };
-              }),
+              data: res.data.response.comments,
             });
           }
         } catch (e) {
