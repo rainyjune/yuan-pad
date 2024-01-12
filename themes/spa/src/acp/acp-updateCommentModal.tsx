@@ -1,12 +1,12 @@
-import { ChangeEvent, FormEvent, useEffect, useState } from "react";
-import Modal from "react-modal";
-import dataProvider from "../common/dataProvider";
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
+import Modal from 'react-modal';
+import dataProvider from '../common/dataProvider';
 
-import customStyles from "../common/ModalStyles";
+import customStyles from '../common/ModalStyles';
 
 function UpdateCommentModal(props: any) {
-  const [mid, setMid] = useState("");
-  const [update_content, setUpdate_content] = useState("");
+  const [mid, setMid] = useState('');
+  const [update_content, setUpdate_content] = useState('');
   useEffect(() => {
     let commentData = props.comment;
     if (commentData) {
@@ -14,7 +14,7 @@ function UpdateCommentModal(props: any) {
       setUpdate_content(commentData.post_content);
     }
   }, [props.comment]);
-  const handleSubmit = async (e: FormEvent) => {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!mid || !update_content.trim()) return;
     try {
@@ -26,20 +26,15 @@ function UpdateCommentModal(props: any) {
         props.onCommentUpdated();
       }
     } catch (e) {
-      alert("Error");
+      alert('Error');
     }
     return false;
-  };
-  const changeContent = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  }
+  function changeContent(e: ChangeEvent<HTMLTextAreaElement>) {
     setUpdate_content(e.target.value);
-  };
+  }
   return (
-    <Modal
-      ariaHideApp={false}
-      isOpen={props.modalIsOpen}
-      onRequestClose={props.onRequestClose}
-      style={customStyles}
-    >
+    <Modal ariaHideApp={false} isOpen={props.modalIsOpen} onRequestClose={props.onRequestClose} style={customStyles}>
       <div>{props.modalErrorMsg}</div>
       <form onSubmit={handleSubmit} action="#" method="post">
         <textarea value={update_content} onChange={changeContent}></textarea>

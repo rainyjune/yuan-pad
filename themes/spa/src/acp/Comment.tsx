@@ -15,11 +15,11 @@ export default function Comment(props: {
 }) {
   const data = props.data;
   const lang = useContext(LanguageContext);
-  const banIP = async (ip: string) => {
+  async function banIP(ip: string) {
     await dataProvider.banIP(ip);
     props.onActiveTabChanged('ban_ip');
-  };
-  const deleteComment = (e: any) => {
+  }
+  function deleteComment(e: any) {
     e.preventDefault();
     const commentId = data.id;
     const reply = data.reply ? '1' : '0';
@@ -27,18 +27,18 @@ export default function Comment(props: {
       return false;
     }
     props.onCommentDeleted(commentId, reply);
-  };
-  const replyComment = (e: any) => {
+  }
+  function replyComment(e: any) {
     e.preventDefault();
     props.onReplyComment(data);
-  };
-  const updateComment = (e: any) => {
+  }
+  function updateComment(e: any) {
     e.preventDefault();
     props.onUpdateComment(data);
-  };
-  const toggleItem = () => {
+  }
+  function toggleItem() {
     props.onToggleItem(data.id);
-  };
+  }
 
   return (
     <tr className="row">

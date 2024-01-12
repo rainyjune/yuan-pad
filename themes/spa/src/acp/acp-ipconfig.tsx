@@ -1,31 +1,31 @@
-import { useContext, useEffect, useState } from "react";
-import dataProvider from "../common/dataProvider";
-import IPItem from "./IPItem";
-import LanguageContext from "../common/languageContext";
+import { useContext, useEffect, useState } from 'react';
+import dataProvider from '../common/dataProvider';
+import IPItem from './IPItem';
+import LanguageContext from '../common/languageContext';
 
 function ACPIpConfig(props: any) {
   const lang = useContext(LanguageContext);
   const [IPs, setIPs] = useState([]);
-  const toggle = (itemToToggle: any) => {
+  function toggle(itemToToggle: any) {
     let data = IPs.map((currentValue: any) => {
       if (currentValue === itemToToggle) {
-        currentValue["checked"] = !currentValue["checked"];
+        currentValue['checked'] = !currentValue['checked'];
       }
       return currentValue;
     });
     setMixState(data);
-  };
-  const toggleInputClicked = (e: any) => {
+  }
+  function toggleInputClicked(e: any) {
     toggleAll(e.target.checked);
-  };
-  const toggleAll = (checked: boolean) => {
+  }
+  function toggleAll(checked: boolean) {
     let data = IPs.map((currentValue: any) => {
-      currentValue["checked"] = checked;
+      currentValue['checked'] = checked;
       return currentValue;
     });
     setMixState(data);
-  };
-  const getCheckedItems = () => {
+  }
+  function getCheckedItems() {
     let arr: Array<any> = [];
     let key = getItemKey();
     IPs.forEach((currentValue: any) => {
@@ -34,27 +34,27 @@ function ACPIpConfig(props: any) {
       }
     });
     return arr;
-  };
-  const getItemKey = () => {
-    return "ip";
-  };
-  const setMixState = (data: any) => {
+  }
+  function getItemKey() {
+    return 'ip';
+  }
+  function setMixState(data: any) {
     setIPs(data);
-  };
+  }
   useEffect(() => {
     if (props.isActive) {
       loadBlackList();
     }
   }, [props.isActive]);
-  const loadBlackList = async () => {
+  async function loadBlackList() {
     const res = await dataProvider.getIPBlackList();
     if (res.status === 200 && res.data.statusCode === 200) {
       setIPs(res.data.response);
     } else {
       alert(res.data.statusText);
     }
-  };
-  const handleSubmit = (e: any) => {
+  }
+  function handleSubmit(e: any) {
     e.preventDefault();
     const checkedItems = getCheckedItems();
     if (checkedItems.length === 0) {
@@ -67,18 +67,18 @@ function ACPIpConfig(props: any) {
       if (res.data.statusCode === 200) {
         loadBlackList();
       } else {
-        alert("delete error");
+        alert('delete error');
       }
     });
-  };
-  const handleToggleItem = (item: any) => {
+  }
+  function handleToggleItem(item: any) {
     toggle(item);
-  };
-  let IPList = IPs;
-  const cssClass = "ip_container selectTag";
-  let createIPItem = function (ip: any) {
+  }
+  const IPList = IPs;
+  const cssClass = 'ip_container selectTag';
+  function createIPItem(ip: any) {
     return <IPItem data={ip} key={ip.ip} onItemToggled={handleToggleItem} />;
-  };
+  }
   return (
     <div className={cssClass}>
       <form onSubmit={handleSubmit} action="#" method="post">

@@ -1,24 +1,18 @@
-import {
-  forwardRef,
-  MouseEvent,
-  useRef,
-  useImperativeHandle,
-  useContext,
-} from "react";
-import LanguageContext from "../common/languageContext";
+import { forwardRef, MouseEvent, useRef, useImperativeHandle, useContext } from 'react';
+import LanguageContext from '../common/languageContext';
 
 const Captcha = forwardRef((props: any, ref) => {
   const lang: any = useContext(LanguageContext);
   const picRef = useRef<HTMLImageElement>(null);
-  const refreshCaptch = (e: MouseEvent) => {
+  function refreshCaptch(e: MouseEvent) {
     e.preventDefault();
     refresh();
-  };
-  const refresh = () => {
+  }
+  function refresh() {
     const img = picRef.current as HTMLImageElement;
-    const url = img.getAttribute("data-src");
-    img.src = url + "&v=" + Math.random();
-  };
+    const url = img.getAttribute('data-src');
+    img.src = url + '&v=' + Math.random();
+  }
   useImperativeHandle(ref, () => ({ refresh }), []);
   return (
     <div className="form-group">

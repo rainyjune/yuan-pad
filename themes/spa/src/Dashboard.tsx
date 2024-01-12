@@ -59,7 +59,7 @@ function ACPBox() {
     });
   }, []);
 
-  const loadApplicationConfiguration = async (successCallback = () => {}) => {
+  async function loadApplicationConfiguration(successCallback = () => {}) {
     const res = await dataProvider.getAppConfigACP();
     if (res.status === 200 && res.data.statusCode === 200) {
       setAppConfig(res.data.response);
@@ -67,8 +67,8 @@ function ACPBox() {
     } else {
       alert(res.data.statusText);
     }
-  };
-  const loadApplicationSystemInformation = async (successCallback = () => {}) => {
+  }
+  async function loadApplicationSystemInformation(successCallback = () => {}) {
     const res = await dataProvider.getSystemInformation();
     if (res.status === 200 && res.data.statusCode === 200) {
       setSystemInformation(res.data.response, () => {
@@ -77,34 +77,31 @@ function ACPBox() {
     } else {
       alert(res.data.statusText);
     }
-  };
+  }
 
-  /**
-   * Tested 1.
-   */
   // Reload site configuration after being updated by admin user.
-  const handleConfigUpdate = () => {
+  function handleConfigUpdate() {
     loadApplicationConfiguration();
-  };
+  }
   // Update the `currentUser` state to default value.
-  const handleLogout = () => {
+  function handleLogout() {
     // Navigates to the index.php page after signed out.
     setCurrentUser({});
     setAppConfig(initialAppConfig);
     window.location.href = 'index.php';
-  };
+  }
   // Get current user identity from server.
-  const getUserInfo = async () => {
+  async function getUserInfo() {
     const res = await dataProvider.getUserInfo();
     setLoadingModalIsOpen(false, () => {
       handleUserSignedIn(res.data.response);
     });
-  };
-  const updateActiveTab = (newTabName: string) => {
+  }
+  function updateActiveTab(newTabName: string) {
     setActiveTab(newTabName);
-  };
+  }
   // Update the `currentUser` state after a user signed in.
-  const handleUserSignedIn = (userData: IUser) => {
+  function handleUserSignedIn(userData: IUser) {
     if (userData.user_type === 'admin') {
       setCurrentUser(userData, () => {
         loadApplicationConfiguration(loadApplicationSystemInformation);
@@ -115,10 +112,10 @@ function ACPBox() {
       //this.setState({currentUser: userData});
       setCurrentUser(userData);
     }
-  };
-  const handleCommentDeleted = () => {
+  }
+  function handleCommentDeleted() {
     loadApplicationSystemInformation();
-  };
+  }
   const tabs = [
     { text: translations.ACP_OVERVIEW, value: 'overview' },
     { text: translations.ACP_CONFSET, value: 'siteset' },

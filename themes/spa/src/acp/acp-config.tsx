@@ -8,7 +8,7 @@ function ACPConfig(props: any) {
   const lang = useContext(LanguageContext);
   const [state, setState] = useState(appConfig);
 
-  const handleSubmit = (e: FormEvent) => {
+  function handleSubmit(e: FormEvent) {
     e.preventDefault();
     dataProvider.updateSiteConfig(state).then((res) => {
       console.log('ACPConfig state:', state);
@@ -25,38 +25,38 @@ function ACPConfig(props: any) {
         alert('failed');
       }
     });
-  };
-  const toggleSiteClose = (e: ChangeEvent) => {
+  }
+  function toggleSiteClose(e: ChangeEvent) {
     setState({
       ...state,
       site_close: Number((e.target as HTMLInputElement).value),
     });
-  };
-  const toggleCaptcha = (e: ChangeEvent) => {
+  }
+  function toggleCaptcha(e: ChangeEvent) {
     setState({
       ...state,
       valid_code_open: Number((e.target as HTMLInputElement).value),
     });
-  };
-  const togglePagination = (e: ChangeEvent) => {
+  }
+  function togglePagination(e: ChangeEvent) {
     setState({
       ...state,
       page_on: Number((e.target as HTMLInputElement).value),
     });
-  };
-  const toggleFilterType = (e: ChangeEvent) => {
+  }
+  function toggleFilterType(e: ChangeEvent) {
     setState({
       ...state,
       filter_type: Number((e.target as HTMLInputElement).value),
     });
-  };
-  const handleInput = (e: ChangeEvent) => {
+  }
+  function handleInput(e: ChangeEvent) {
     const target = e.target as HTMLInputElement | HTMLTextAreaElement;
     setState({
       ...state,
       [target.name]: target.value.trim(),
     });
-  };
+  }
   const acpData = props.systemInformation;
   return (
     <div className={'configContainer selectTag'}>

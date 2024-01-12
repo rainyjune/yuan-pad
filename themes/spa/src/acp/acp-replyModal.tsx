@@ -22,7 +22,7 @@ function ReplyModal(props: any) {
     }
   }, [props.comment]);
 
-  const handleSubmit = (e: FormEvent) => {
+  function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!state.pid || !state.content.trim()) return;
     const action = state.rid ? dataProvider['updateReply'] : dataProvider['createReply'];
@@ -34,11 +34,10 @@ function ReplyModal(props: any) {
       }
     });
     return false;
-  };
-  const changeContent = (e: ChangeEvent<HTMLTextAreaElement>) => {
+  }
+  function changeContent(e: ChangeEvent<HTMLTextAreaElement>) {
     setState({ ...state, content: e.target.value });
-  };
-  console.log('replymodal:', state.content);
+  }
   return (
     <Modal
       ariaHideApp={false}

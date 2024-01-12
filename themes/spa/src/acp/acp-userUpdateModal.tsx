@@ -19,7 +19,7 @@ function UserUpdateModal(props: any) {
       setEmail(userData.email);
     }
   }, [props.userData]);
-  const handleSubmit = (e: FormEvent) => {
+  function handleSubmit(e: FormEvent) {
     e.preventDefault();
     let user1 = user.trim(),
       pwd1 = pwd.trim(),
@@ -32,13 +32,13 @@ function UserUpdateModal(props: any) {
       email: email1,
     });
     return false;
-  };
-  const updatePassword = (e: ChangeEvent<HTMLInputElement>) => {
+  }
+  function updatePassword(e: ChangeEvent<HTMLInputElement>) {
     setPwd(e.target.value);
-  };
-  const updateEmail = (e: ChangeEvent<HTMLInputElement>) => {
+  }
+  function updateEmail(e: ChangeEvent<HTMLInputElement>) {
     setEmail(e.target.value);
-  };
+  }
   return (
     <Modal ariaHideApp={false} isOpen={props.modalIsOpen} onRequestClose={props.onRequestClose} style={customStyles}>
       <div>{props.errorMsg}</div>

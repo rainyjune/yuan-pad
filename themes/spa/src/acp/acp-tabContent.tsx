@@ -14,11 +14,11 @@ function ACPTabContent(props: {
   onCommentDeleted: () => void;
 }) {
   const user = useContext(UserContext);
-  const handleActiveChange = (newTab: string) => {
+  function handleActiveChange(newTab: string) {
     setTimeout(() => {
       props.onActiveTabChanged(newTab);
     }, 0);
-  };
+  }
   if (user.user_type !== 'admin') return null;
 
   return (

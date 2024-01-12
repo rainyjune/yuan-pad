@@ -13,22 +13,22 @@ function ACPUser(props: any) {
     updateModalIsOpen: false,
     updatedModalUserData: null,
   });
-  const toggle = (uid: number) => {
+  function toggle(uid: number) {
     dispatch({
       type: 'toggle',
       uid,
     });
-  };
-  const toggleInputClicked = (e: React.ChangeEvent<HTMLInputElement>) => {
+  }
+  function toggleInputClicked(e: React.ChangeEvent<HTMLInputElement>) {
     toggleAll(e.target.checked);
-  };
-  const toggleAll = (checked: boolean) => {
+  }
+  function toggleAll(checked: boolean) {
     dispatch({
       type: 'toggleAll',
       checked,
     });
-  };
-  const getCheckedItems = () => {
+  }
+  function getCheckedItems() {
     const arr: number[] = [];
     users.forEach((currentValue: any) => {
       if (currentValue.checked) {
@@ -36,25 +36,19 @@ function ACPUser(props: any) {
       }
     });
     return arr;
-  };
+  }
 
   useEffect(() => {
     dispatch({ type: 'loadAll' });
   }, []);
 
-  const loadAllUsersFromServer = async () => {
+  async function loadAllUsersFromServer() {
     dispatch({ type: 'loadAll' });
-  };
-  /**
-   * Tested 1.
-   */
-  const handleUserDeleted = () => {
+  }
+  function handleUserDeleted() {
     loadAllUsersFromServer();
-  };
-  /**
-   * Tested 1.
-   */
-  const handleUpdateSubmit = (newUserData: any) => {
+  }
+  function handleUpdateSubmit(newUserData: any) {
     dispatch({
       type: 'update',
       data: newUserData,
@@ -65,31 +59,25 @@ function ACPUser(props: any) {
       updateModalIsOpen: false,
     });
     dispatch({ type: 'loadAll' });
-  };
-  /**
-   * Tested 1.
-   */
-  const closeUpdateModal = () => {
+  }
+  function closeUpdateModal() {
     setModalInfo({
       updateErrorMsg: '',
       updatedModalUserData: null,
       updateModalIsOpen: false,
     });
-  };
-  /**
-   * Tested 1.
-   */
-  const openUserUpdateModal = (userData: any) => {
+  }
+  function openUserUpdateModal(userData: any) {
     setModalInfo({
       updateErrorMsg: '',
       updatedModalUserData: userData,
       updateModalIsOpen: true,
     });
-  };
+  }
   /**
    * Tested 1.
    */
-  const deleteAllUsers = (e: any) => {
+  function deleteAllUsers(e: any) {
     e.preventDefault();
     if (!confirm(lang.DEL_ALLUSER_CONFIRM)) {
       return false;
@@ -100,11 +88,8 @@ function ACPUser(props: any) {
     dispatch({
       type: 'loadAll',
     });
-  };
-  /**
-   * Tested 1.
-   */
-  const handleDeleteMulti = (e: any) => {
+  }
+  function handleDeleteMulti(e: any) {
     e.preventDefault();
     const checkedUids = getCheckedItems();
     if (checkedUids.length === 0) {
@@ -120,15 +105,12 @@ function ACPUser(props: any) {
     dispatch({
       type: 'loadAll',
     });
-  };
-  /**
-   * Tested 1
-   */
-  const handleToggleItem = (uid: number) => {
+  }
+  function handleToggleItem(uid: number) {
     toggle(uid);
-  };
+  }
   const cssClass = 'user_container selectTag';
-  let createUserItem = function (user: any) {
+  function createUserItem(user: any) {
     return (
       <UserItem
         data={user}
@@ -138,8 +120,7 @@ function ACPUser(props: any) {
         onToggleItem={handleToggleItem}
       />
     );
-  };
-  console.log('USERS:', users);
+  }
   return (
     <div className={cssClass}>
       <form onSubmit={handleDeleteMulti} action="#" method="post">

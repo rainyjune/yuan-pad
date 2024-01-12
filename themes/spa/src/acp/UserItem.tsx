@@ -6,10 +6,7 @@ export default function UserItem(props: any) {
   const [, dispatchBase] = useReducer(usersReducer, []);
   const dispatch = dispatchMiddleware(dispatchBase);
   const lang = useContext(LanguageContext);
-  /**
-   * Tested 1.
-   */
-  const deleteUser = (e: any) => {
+  function deleteUser(e: any) {
     e.preventDefault();
     if (!confirm(lang.DEL_SINGLEUSER_CONFIRM)) {
       return false;
@@ -19,20 +16,14 @@ export default function UserItem(props: any) {
       uid: props.data.uid,
     });
     props.onUserDeleted();
-  };
-  /**
-   * Tested 1.
-   */
-  const updateUser = (e: any) => {
+  }
+  function updateUser(e: any) {
     e.preventDefault();
     props.onOpenUserUpdateModal(props.data);
-  };
-  /**
-   * Tested 1.
-   */
-  const toggleItem = () => {
+  }
+  function toggleItem() {
     props.onToggleItem(props.data.uid);
-  };
+  }
   const user = props.data;
   return (
     <tr className="row">

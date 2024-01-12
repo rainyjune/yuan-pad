@@ -34,7 +34,7 @@ export default function Reply(props: any) {
     }
   }, [props.data]);
 
-  const deleteReply = (e: MouseEvent) => {
+  function deleteReply(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_REPLY_CONFIRM)) {
       return false;
@@ -43,7 +43,7 @@ export default function Reply(props: any) {
       setState({ ...state, reply_content: '' });
       props.onDelete();
     });
-  };
+  }
   const data = state;
   if (!data || !data.reply_content) {
     return null;

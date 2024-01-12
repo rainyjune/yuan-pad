@@ -11,13 +11,6 @@ const initialState = {
   data: [],
 };
 
-const initialReplyData = {
-  rid: '',
-  pid: '',
-  content: '',
-  r_time: '',
-};
-
 function ACPMessages(props: {
   systemInformation: object;
   onActiveTabChanged: (s: string) => void;
@@ -31,7 +24,7 @@ function ACPMessages(props: {
   const [activeCommentId, setActiveCommentId] = useState(null);
   const [modalErrorMsg, setModalErrorMsg] = useState('');
   const [selectedIds, setSelectedIds] = useState(new Set());
-  const handleToggleAll = (e: React.ChangeEvent<HTMLInputElement>) => {
+  function handleToggleAll(e: React.ChangeEvent<HTMLInputElement>) {
     // Create a copy (to avoid mutation).
     let nextIds = new Set();
     if (e.target.checked) {
@@ -39,8 +32,8 @@ function ACPMessages(props: {
       setSelectedIds(nextIds);
     }
     setSelectedIds(nextIds);
-  };
-  const deleteAllComments = (e: MouseEvent) => {
+  }
+  function deleteAllComments(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_ALL_CONFIRM)) {
       return false;
@@ -49,11 +42,11 @@ function ACPMessages(props: {
       type: 'DELETEALL',
     });
     dispatch({ type: 'LOAD' });
-  };
+  }
   /**
    * Tested 1
    */
-  const deleteAllReplies = (e: MouseEvent) => {
+  function deleteAllReplies(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_ALL_REPLY_CONFIRM)) {
       return false;
@@ -62,8 +55,8 @@ function ACPMessages(props: {
       type: 'DELETEALLREPLIES',
     });
     dispatch({ type: 'LOAD' });
-  };
-  const handleFormSubmit = (e: React.FormEvent) => {
+  }
+  function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
     const checkedItems = Array.from(selectedIds);
     if (checkedItems.length === 0) {
@@ -77,37 +70,37 @@ function ACPMessages(props: {
       data: checkedItems,
     });
     dispatch({ type: 'LOAD' });
-  };
-  const handleReplyComment = (commentTobeReplied: any) => {
+  }
+  function handleReplyComment(commentTobeReplied: any) {
     openModal('reply', commentTobeReplied);
-  };
-  const closeModal = () => {
+  }
+  function closeModal() {
     setModalIsOpen(false);
     setModalType('');
     setActiveCommentId(null);
     setModalErrorMsg('');
-  };
-  const openModal = (type = 'reply', commentData: any) => {
+  }
+  function openModal(type = 'reply', commentData: any) {
     setModalIsOpen(true);
     setModalType(type);
     setActiveCommentId(commentData.id);
     setModalErrorMsg('');
-  };
-  const handleReplyFormSubmitted = () => {
+  }
+  function handleReplyFormSubmitted() {
     closeModal();
     dispatch({ type: 'LOAD' });
-  };
-  const handleUpdateComment = (commentTobeUpdated: any) => {
+  }
+  function handleUpdateComment(commentTobeUpdated: any) {
     openModal('update', commentTobeUpdated);
-  };
-  const handleCommentUpdated = () => {
+  }
+  function handleCommentUpdated() {
     closeModal();
     dispatch({ type: 'LOAD' });
-  };
+  }
   useEffect(() => {
     dispatch({ type: 'LOAD' });
   }, []);
-  const handleToggleItem = (toggledId: number) => {
+  function handleToggleItem(toggledId: number) {
     // Create a copy (to avoid mutation).
     const nextIds = new Set(selectedIds);
     if (nextIds.has(toggledId)) {
@@ -116,19 +109,17 @@ function ACPMessages(props: {
       nextIds.add(toggledId);
     }
     setSelectedIds(nextIds);
-  };
-  const handleCommentDeleted = (commentId, reply) => {
+  }
+  function handleCommentDeleted(commentId, reply) {
     dispatch({ type: 'DELETE', commentId: commentId, reply: reply });
     dispatch({ type: 'LOAD' });
     props.onCommentDeleted();
-  };
-  console.log('comments：', comments);
+  }
   const modalProps = {
     comment: comments.data.find((comment) => comment.id === activeCommentId),
     modalErrorMsg: modalErrorMsg,
     onRequestClose: closeModal,
   };
-  console.log('modalProps:', modalProps);
   return (
     <div className={'message_container selectTag'}>
       <form onSubmit={handleFormSubmit} action="#" method="post">
