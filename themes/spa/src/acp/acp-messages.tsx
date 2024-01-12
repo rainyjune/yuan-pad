@@ -169,12 +169,13 @@ function ACPMessages(props: {
         </table>
       </form>
       <ReplyModal
-        key={activeCommentId}
+        key={`reply-${activeCommentId}`}
         {...modalProps}
         modalIsOpen={modalState.isOpen && modalState.type === 'reply'}
         onReplySubmit={handleReplyFormSubmitted}
       />
       <CommentUpdateModal
+        key={`update-${activeCommentId}`}
         {...modalProps}
         modalIsOpen={modalState.isOpen && modalState.type === 'update'}
         onCommentUpdated={handleCommentUpdated}

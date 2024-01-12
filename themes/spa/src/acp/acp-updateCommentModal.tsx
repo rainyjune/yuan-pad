@@ -5,22 +5,14 @@ import dataProvider from '../common/dataProvider';
 import customStyles from '../common/ModalStyles';
 
 function UpdateCommentModal(props: any) {
-  const [mid, setMid] = useState('');
-  const [update_content, setUpdate_content] = useState('');
-  useEffect(() => {
-    let commentData = props.comment;
-    if (commentData) {
-      setMid(commentData.id);
-      setUpdate_content(commentData.post_content);
-    }
-  }, [props.comment]);
+  const [content, setContent] = useState(props.comment?.post_content ?? '');
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!mid || !update_content.trim()) return;
+    if (!content.trim()) return;
     try {
       const res = await dataProvider.updateComment({
-        mid: parseInt(mid),
-        update_content,
+        mid: parseInt(props.comment.id),
+        update_content: content,
       });
       if (res.status === 200 && res.data.statusCode === 200) {
         props.onCommentUpdated();
@@ -30,14 +22,14 @@ function UpdateCommentModal(props: any) {
     }
     return false;
   }
-  function changeContent(e: ChangeEvent<HTMLTextAreaElement>) {
-    setUpdate_content(e.target.value);
-  }
   return (
     <Modal ariaHideApp={false} isOpen={props.modalIsOpen} onRequestClose={props.onRequestClose} style={customStyles}>
       <div>{props.error}</div>
       <form onSubmit={handleSubmit} action="#" method="post">
-        <textarea value={update_content} onChange={changeContent}></textarea>
+        <textarea
+          value={content}
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
+        ></textarea>
         <input type="submit" />
       </form>
     </Modal>
