@@ -10,6 +10,7 @@ export default function Comment(props: {
   onCommentDeleted: (id: any, reply: any) => void;
   onUpdateComment: (data: any) => void;
   onToggleItem: (id: number) => void;
+  onReplyDelete: () => void;
   isSelected: boolean;
 }) {
   const data = props.data;
@@ -50,7 +51,7 @@ export default function Comment(props: {
         {data.post_content}
         <br />
         {lang.TIME}: {data.time}
-        <Reply data={data} />
+        <Reply data={data} onDelete={props.onReplyDelete} />
       </td>
       <td className="col-xs-2 col-sm-2 col-md-2">
         <button className="btn btn-danger btn-sm" onClick={deleteComment}>

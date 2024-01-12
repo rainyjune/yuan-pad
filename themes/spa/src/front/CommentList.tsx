@@ -1,4 +1,4 @@
-import Comment from "./Comment";
+import Comment from './Comment';
 
 export default function CommentList(props: any) {
   const searchText = props.searchText,
@@ -6,10 +6,7 @@ export default function CommentList(props: any) {
 
   const createCommentNodes = function (comment: any) {
     const text = isSearchResult
-      ? comment.post_content.replace(
-          searchText,
-          "<span class='keyword'>" + searchText + "</span>",
-        )
+      ? comment.post_content.replace(searchText, "<span class='keyword'>" + searchText + '</span>')
       : comment.post_content;
     return (
       <Comment key={comment.id} data={comment}>
@@ -17,7 +14,5 @@ export default function CommentList(props: any) {
       </Comment>
     );
   };
-  return (
-    <div className="commentList">{props.data.map(createCommentNodes)}</div>
-  );
+  return <div className="commentList">{(props.data || []).map(createCommentNodes)}</div>;
 }

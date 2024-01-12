@@ -11,6 +11,13 @@ const initialState = {
   data: [],
 };
 
+const initialReplyData = {
+  rid: '',
+  pid: '',
+  content: '',
+  r_time: '',
+};
+
 function ACPMessages(props: {
   systemInformation: object;
   onActiveTabChanged: (s: string) => void;
@@ -21,7 +28,7 @@ function ACPMessages(props: {
   const dispatch = dispatchMiddleware(dispatchBase);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [modalType, setModalType] = useState(''); // "reply" or "update"
-  const [modalCommentModel, setModalCommentModel] = useState(null);
+  const [activeCommentId, setActiveCommentId] = useState(null);
   const [modalErrorMsg, setModalErrorMsg] = useState('');
   const [selectedIds, setSelectedIds] = useState(new Set());
   const handleToggleAll = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,16 +39,6 @@ function ACPMessages(props: {
       setSelectedIds(nextIds);
     }
     setSelectedIds(nextIds);
-  };
-  const getCheckedItems = () => {
-    const arr: number[] = [];
-    const key = 'id';
-    comments.data.forEach((currentValue: any) => {
-      if (currentValue.checked) {
-        arr.push(currentValue[key]);
-      }
-    });
-    return arr;
   };
   const deleteAllComments = (e: MouseEvent) => {
     e.preventDefault();
@@ -87,13 +84,13 @@ function ACPMessages(props: {
   const closeModal = () => {
     setModalIsOpen(false);
     setModalType('');
-    setModalCommentModel(null);
+    setActiveCommentId(null);
     setModalErrorMsg('');
   };
   const openModal = (type = 'reply', commentData: any) => {
     setModalIsOpen(true);
     setModalType(type);
-    setModalCommentModel(commentData);
+    setActiveCommentId(commentData.id);
     setModalErrorMsg('');
   };
   const handleReplyFormSubmitted = () => {
@@ -125,12 +122,13 @@ function ACPMessages(props: {
     dispatch({ type: 'LOAD' });
     props.onCommentDeleted();
   };
-
+  console.log('comments：', comments);
   const modalProps = {
-    comment: modalCommentModel,
+    comment: comments.data.find((comment) => comment.id === activeCommentId),
     modalErrorMsg: modalErrorMsg,
     onRequestClose: closeModal,
   };
+  console.log('modalProps:', modalProps);
   return (
     <div className={'message_container selectTag'}>
       <form onSubmit={handleFormSubmit} action="#" method="post">
@@ -157,6 +155,7 @@ function ACPMessages(props: {
                   onUpdateComment={handleUpdateComment}
                   onToggleItem={handleToggleItem}
                   isSelected={selectedIds.has(comment.id)}
+                  onReplyDelete={() => dispatch({ type: 'LOAD' })}
                 />
               );
             })}

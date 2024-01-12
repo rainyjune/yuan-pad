@@ -10,7 +10,6 @@ function ACPTabContent(props: {
   onActiveTabChanged: (s: string) => void;
   systemInformation: object;
   activeTab: string;
-  appConfig: object;
   onConfigUpdated: () => void;
   onCommentDeleted: () => void;
 }) {
@@ -26,11 +25,7 @@ function ACPTabContent(props: {
     <div className="tagContent">
       {props.activeTab === 'overview' && <ACPOverview systemInformation={props.systemInformation} />}
       {props.activeTab === 'siteset' && (
-        <ACPConfig
-          systemInformation={props.systemInformation}
-          appConfig={props.appConfig}
-          onConfigUpdated={props.onConfigUpdated}
-        />
+        <ACPConfig systemInformation={props.systemInformation} onConfigUpdated={props.onConfigUpdated} />
       )}
       {props.activeTab === 'message' && (
         <ACPMessages
