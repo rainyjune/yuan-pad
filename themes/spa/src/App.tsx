@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
@@ -14,16 +14,7 @@ import OfflineWarning from './common/offlineMode';
 import AppConfigContext from './common/appConfigContext';
 import UserContext from './common/userContext';
 import LanguageContext from './common/languageContext';
-import {
-  GetUserInfoResponse,
-  PostListResponse,
-  SearchResponse,
-  IConfigParams,
-  ConfigResponse,
-  TranslationResponse,
-  IUser,
-  IComment,
-} from './common/types';
+import { IConfigParams, IUser } from './common/types';
 
 export default function App() {
   const didMount = useRef(false);
@@ -44,10 +35,12 @@ export default function App() {
     filter_type: 1,
     allowed_tags: '',
   });
-  const [comments, setComments] = useState<Array<IComment>>([]);
-  const [commentsTotalNumber, setcommentsTotalNumber] = useState(0); // The total number of all comments or filtered comments.
-  const [commentListType, setCommentListType] = useState(1); // 1: Default list. 2: Search Result list
-  const [currentPage, setCurrentPage] = useState(0);
+  const [comments, setComments] = useState({
+    data: [], // Comments
+    total: 0, // The total number of all comments or filtered comments.
+    listType: 1, // 1: Default list. 2: Search Result list
+    currentPage: 0,
+  });
   const [currentUser, setCurrentUser1] = useState<IUser>({
     uid: -1,
     user_type: 'guest',
@@ -70,21 +63,34 @@ export default function App() {
   }
 
   // Load comments to be displayed on page by page number.
-  function loadCommentsFromServer() {
-    dataProvider.loadCommentsFromServer(currentPage).then((res) => {
-      setLoadingModalIsOpen(false);
-      setComments(res.data.response.comments);
-      setcommentsTotalNumber(res.data.response.total);
-      setCommentListType(1);
-    });
-  }
+  const loadCommentsFromServer = useCallback(
+    function () {
+      dataProvider.loadCommentsFromServer(comments.currentPage).then((res) => {
+        setLoadingModalIsOpen(false);
+        setComments({
+          //...comments,
+          data: res.data.response.comments,
+          total: res.data.response.total,
+          listType: 1,
+          currentPage: comments.currentPage,
+        });
+      });
+    },
+    [comments.currentPage],
+  );
 
   // Get comments from server according to the keyword user has entered.
-  function handleSearch(keyword: string) {
+  function handleSearch(e: React.FormEvent) {
+    e.preventDefault();
+    const keyword: string = searchText;
     dataProvider.search(keyword).then((res) => {
-      setComments(res.data.response.comments);
-      setcommentsTotalNumber(res.data.response.total);
-      setCommentListType(2);
+      setComments({
+        ...comments,
+        data: res.data.response.comments,
+        total: res.data.response.total,
+        listType: 2,
+        currentPage: 0,
+      });
     });
   }
 
@@ -111,21 +117,17 @@ export default function App() {
     }
   }, [appConfig.board_name]);
 
-  // Reload comments from server if the `currentPage` state changed.
-  function handlePageChange(pageNumber: any) {
-    setCurrentPage(parseInt(pageNumber));
-  }
-
   useEffect(() => {
     if (!didMount.current) {
       didMount.current = true;
       return;
     }
     loadCommentsFromServer();
-  }, [currentPage]);
+  }, [comments.currentPage, loadCommentsFromServer]);
 
   // Update the `searchText` state.
-  function handleKeywordInput(searchText: string) {
+  function handleKeywordInput(e: React.ChangeEvent<HTMLInputElement>) {
+    const searchText = e.target.value;
     setSearchText(searchText);
   }
 
@@ -142,15 +144,20 @@ export default function App() {
         <LanguageContext.Provider value={translations}>
           <div id="appbox">
             <Header onCurrentUserUpdated={setCurrentUser} />
-            <OfflineWarning appConfig={appConfig} lang={translations} />
+            <OfflineWarning />
             <CommentBox
               onCommentCreated={loadCommentsFromServer}
               onCloseSearch={loadCommentsFromServer}
-              onPageChanged={handlePageChange}
-              currentPage={currentPage}
-              commentListType={commentListType}
-              comments={comments}
-              commentsTotalNumber={commentsTotalNumber}
+              onPageChanged={(pageNumber: string) =>
+                setComments({
+                  ...comments,
+                  currentPage: parseInt(pageNumber),
+                })
+              }
+              currentPage={comments.currentPage}
+              commentListType={comments.listType}
+              comments={comments.data}
+              commentsTotalNumber={comments.total}
               searchText={searchText}
             />
             <SearchBar onSubmit={handleSearch} onUserInput={handleKeywordInput} searchText={searchText} />
