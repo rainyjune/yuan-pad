@@ -52,7 +52,7 @@ function ReplyModal(props: any) {
       }}
       style={customStyles}
     >
-      <div>{props.modalErrorMsg}</div>
+      <div>{props.error}</div>
       <form onSubmit={handleSubmit} action="#" method="post">
         <textarea value={state.content} onChange={changeContent}></textarea>
         <input type="submit" />

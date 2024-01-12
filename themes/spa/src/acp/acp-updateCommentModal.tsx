@@ -35,7 +35,7 @@ function UpdateCommentModal(props: any) {
   }
   return (
     <Modal ariaHideApp={false} isOpen={props.modalIsOpen} onRequestClose={props.onRequestClose} style={customStyles}>
-      <div>{props.modalErrorMsg}</div>
+      <div>{props.error}</div>
       <form onSubmit={handleSubmit} action="#" method="post">
         <textarea value={update_content} onChange={changeContent}></textarea>
         <input type="submit" />

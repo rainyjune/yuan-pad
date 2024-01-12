@@ -19,10 +19,12 @@ function ACPMessages(props: {
   const lang = useContext(LanguageContext);
   const [comments, dispatchBase] = useReducer(messageReducer, initialState);
   const dispatch = dispatchMiddleware(dispatchBase);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [modalType, setModalType] = useState(''); // "reply" or "update"
+  const [modalState, setModalState] = useState({
+    isOpen: false,
+    type: '', // "reply" or "update"
+    error: null,
+  });
   const [activeCommentId, setActiveCommentId] = useState(null);
-  const [modalErrorMsg, setModalErrorMsg] = useState('');
   const [selectedIds, setSelectedIds] = useState(new Set());
   function handleToggleAll(e: React.ChangeEvent<HTMLInputElement>) {
     // Create a copy (to avoid mutation).
@@ -75,16 +77,20 @@ function ACPMessages(props: {
     openModal('reply', commentTobeReplied);
   }
   function closeModal() {
-    setModalIsOpen(false);
-    setModalType('');
+    setModalState({
+      isOpen: false,
+      type: '',
+      error: null,
+    });
     setActiveCommentId(null);
-    setModalErrorMsg('');
   }
   function openModal(type = 'reply', commentData: any) {
-    setModalIsOpen(true);
-    setModalType(type);
+    setModalState({
+      isOpen: true,
+      type: type,
+      error: null,
+    });
     setActiveCommentId(commentData.id);
-    setModalErrorMsg('');
   }
   function handleReplyFormSubmitted() {
     closeModal();
@@ -117,7 +123,7 @@ function ACPMessages(props: {
   }
   const modalProps = {
     comment: comments.data.find((comment) => comment.id === activeCommentId),
-    modalErrorMsg: modalErrorMsg,
+    modalErrorMsg: modalState.error,
     onRequestClose: closeModal,
   };
   return (
@@ -164,12 +170,12 @@ function ACPMessages(props: {
       </form>
       <ReplyModal
         {...modalProps}
-        modalIsOpen={modalIsOpen && modalType === 'reply'}
+        modalIsOpen={modalState.isOpen && modalState.type === 'reply'}
         onReplySubmit={handleReplyFormSubmitted}
       />
       <CommentUpdateModal
         {...modalProps}
-        modalIsOpen={modalIsOpen && modalType === 'update'}
+        modalIsOpen={modalState.isOpen && modalState.type === 'update'}
         onCommentUpdated={handleCommentUpdated}
       />
     </div>
