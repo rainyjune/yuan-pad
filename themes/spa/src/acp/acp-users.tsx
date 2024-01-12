@@ -11,7 +11,7 @@ function ACPUser(props: any) {
   const [modalInfo, setModalInfo] = useState({
     updateErrorMsg: '',
     updateModalIsOpen: false,
-    updatedModalUserData: null,
+    updatedModalUserId: null,
   });
   function toggle(uid: number) {
     dispatch({
@@ -55,7 +55,7 @@ function ACPUser(props: any) {
     });
     setModalInfo({
       updateErrorMsg: '',
-      updatedModalUserData: null,
+      updatedModalUserId: null,
       updateModalIsOpen: false,
     });
     dispatch({ type: 'loadAll' });
@@ -63,14 +63,14 @@ function ACPUser(props: any) {
   function closeUpdateModal() {
     setModalInfo({
       updateErrorMsg: '',
-      updatedModalUserData: null,
+      updatedModalUserId: null,
       updateModalIsOpen: false,
     });
   }
-  function openUserUpdateModal(userData: any) {
+  function openUserUpdateModal(userId: any) {
     setModalInfo({
       updateErrorMsg: '',
-      updatedModalUserData: userData,
+      updatedModalUserId: userId,
       updateModalIsOpen: true,
     });
   }
@@ -121,6 +121,7 @@ function ACPUser(props: any) {
       />
     );
   }
+  const updatedModalUserData = users.find((user) => user.uid === modalInfo.updatedModalUserId);
   return (
     <div className={cssClass}>
       <form onSubmit={handleDeleteMulti} action="#" method="post">
@@ -146,7 +147,8 @@ function ACPUser(props: any) {
           </tfoot>
         </table>
         <UserUpdateModal
-          userData={modalInfo.updatedModalUserData}
+          key={`update-${modalInfo.updatedModalUserId}`}
+          userData={updatedModalUserData}
           errorMsg={modalInfo.updateErrorMsg}
           modalIsOpen={modalInfo.updateModalIsOpen}
           onRequestClose={closeUpdateModal}

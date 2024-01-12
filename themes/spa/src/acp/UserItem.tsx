@@ -24,7 +24,7 @@ export default function UserItem(props: {
   }
   function updateUser(e: MouseEvent) {
     e.preventDefault();
-    props.onOpenUserUpdateModal(props.data);
+    props.onOpenUserUpdateModal(props.data.uid);
   }
   function toggleItem() {
     props.onToggleItem(props.data.uid);

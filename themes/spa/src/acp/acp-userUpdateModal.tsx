@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useContext, useState } from 'react';
 import Modal from 'react-modal';
 
 import customStyles from '../common/ModalStyles';
@@ -6,38 +6,20 @@ import LanguageContext from '../common/languageContext';
 
 function UserUpdateModal(props: any) {
   const lang = useContext(LanguageContext);
-  const [uid, setUid] = useState('');
-  const [user, setUser] = useState('');
   const [pwd, setPwd] = useState('');
-  const [email, setEmail] = useState('');
-  console.log('userdata:', props.userData);
-  useEffect(() => {
-    if (props.userData) {
-      let userData = props.userData;
-      setUid(userData.uid);
-      setUser(userData.username);
-      setEmail(userData.email);
-    }
-  }, [props.userData]);
+  const [email, setEmail] = useState(props.userData?.email ?? '');
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    let user1 = user.trim(),
-      pwd1 = pwd.trim(),
+    const pwd1 = pwd.trim(),
       email1 = email.trim();
-    if (!user1 || !email1) return;
+    if (!email1) return;
     props.onUpdateSubmit({
-      uid,
-      user: user1,
+      uid: props.userData.uid,
+      user: props.userData.username,
       pwd: pwd1,
       email: email1,
     });
     return false;
-  }
-  function updatePassword(e: ChangeEvent<HTMLInputElement>) {
-    setPwd(e.target.value);
-  }
-  function updateEmail(e: ChangeEvent<HTMLInputElement>) {
-    setEmail(e.target.value);
   }
   return (
     <Modal ariaHideApp={false} isOpen={props.modalIsOpen} onRequestClose={props.onRequestClose} style={customStyles}>
@@ -47,19 +29,31 @@ function UserUpdateModal(props: any) {
           <dl>
             <dt>{lang.USERNAME}</dt>
             <dd>
-              <input type="text" readOnly={true} value={user} name="user" size={20} />
+              <input type="text" readOnly={true} value={props.userData?.username ?? ''} name="user" size={20} />
             </dd>
           </dl>
           <dl>
             <dt>{lang.PASSWORD}</dt>
             <dd>
-              <input type="password" value={pwd} onChange={updatePassword} name="pwd" size={20} />
+              <input
+                type="password"
+                value={pwd}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setPwd(e.target.value)}
+                name="pwd"
+                size={20}
+              />
             </dd>
           </dl>
           <dl>
             <dt>{lang.EMAIL}</dt>
             <dd>
-              <input type="text" value={email} onChange={updateEmail} name="email" size={20} />
+              <input
+                type="text"
+                value={email}
+                onChange={(e: ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                name="email"
+                size={20}
+              />
             </dd>
           </dl>
         </div>
