@@ -1,50 +1,19 @@
-import { useEffect, useState, MouseEvent, useContext } from 'react';
+import { MouseEvent, useContext } from 'react';
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';
 
-export default function Reply(props: any) {
+export default function Reply({ data, onDelete }: { data: any; onDelete: () => void }) {
   const lang = useContext(LanguageContext);
-  const [state, setState] = useState({
-    b_username: null,
-    id: 0,
-    ip: '::1',
-    post_content: '',
-    reply_content: '',
-    reply_time: '',
-    time: '',
-    uid: null,
-    uname: '',
-    user: '',
-  });
-  useEffect(() => {
-    let data = props.data;
-    if (data) {
-      setState({
-        b_username: data.b_username,
-        id: data.id,
-        ip: data.ip,
-        post_content: data.post_content,
-        reply_content: data.reply_content,
-        reply_time: data.reply_time,
-        time: data.time,
-        uid: data.uid,
-        uname: data.uname,
-        user: data.user,
-      });
-    }
-  }, [props.data]);
 
   function deleteReply(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_REPLY_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteReply(state.id).then(() => {
-      setState({ ...state, reply_content: '' });
-      props.onDelete();
+    dataProvider.deleteReply(data.id).then(() => {
+      onDelete();
     });
   }
-  const data = state;
   if (!data || !data.reply_content) {
     return null;
   }
