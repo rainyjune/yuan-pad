@@ -4,29 +4,18 @@ import dataProvider from '../common/dataProvider';
 import customStyles from '../common/ModalStyles';
 
 function ReplyModal(props: any) {
-  const [state, setState] = useState({
-    rid: '',
-    pid: '',
-    content: '',
-    r_time: '',
-  });
-  useEffect(() => {
-    const commentData = props.comment;
-    if (commentData) {
-      setState({
-        ...state,
-        rid: commentData.reply_id,
-        pid: commentData.id,
-        content: commentData.reply_content,
-      });
-    }
-  }, [props.comment]);
+  const [content, setContent] = useState(props.comment?.reply_content ?? '');
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    if (!state.pid || !state.content.trim()) return;
-    const action = state.rid ? dataProvider['updateReply'] : dataProvider['createReply'];
-    action(state).then((res: any) => {
+    if (!content.trim()) return;
+    const action = props.comment?.reply_id ? dataProvider['updateReply'] : dataProvider['createReply'];
+    action({
+      rid: props.comment.reply_id,
+      pid: props.comment.id,
+      content: content.trim(),
+      r_time: '',
+    }).then((res: any) => {
       if (res.status === 200 && res.data.statusCode === 200) {
         props.onReplySubmit();
       } else {
@@ -35,26 +24,21 @@ function ReplyModal(props: any) {
     });
     return false;
   }
-  function changeContent(e: ChangeEvent<HTMLTextAreaElement>) {
-    setState({ ...state, content: e.target.value });
-  }
   return (
     <Modal
       ariaHideApp={false}
       isOpen={props.modalIsOpen}
       onRequestClose={() => {
-        setState({
-          ...state,
-          content: '',
-        });
-        debugger;
         props.onRequestClose();
       }}
       style={customStyles}
     >
       <div>{props.error}</div>
       <form onSubmit={handleSubmit} action="#" method="post">
-        <textarea value={state.content} onChange={changeContent}></textarea>
+        <textarea
+          value={content}
+          onChange={(e: ChangeEvent<HTMLTextAreaElement>) => setContent(e.target.value)}
+        ></textarea>
         <input type="submit" />
       </form>
     </Modal>
