@@ -5,10 +5,11 @@ import ACPConfig from './acp-config';
 import ACPMessages from './acp-messages';
 import ACPIpConfig from './acp-ipconfig';
 import ACPUsers from './acp-users';
+import type { ISystemInfo } from '../common/types';
 
 function ACPTabContent(props: {
   onActiveTabChanged: (s: string) => void;
-  systemInformation: object;
+  systemInformation: ISystemInfo;
   activeTab: string;
   onConfigUpdated: () => void;
   onCommentDeleted: () => void;
@@ -34,7 +35,7 @@ function ACPTabContent(props: {
           onCommentDeleted={props.onCommentDeleted}
         />
       )}
-      {props.activeTab === 'ban_ip' && <ACPIpConfig systemInformation={props.systemInformation} />}
+      {props.activeTab === 'ban_ip' && <ACPIpConfig />}
       {props.activeTab === 'user' && <ACPUsers />}
     </div>
   );

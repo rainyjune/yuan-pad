@@ -12,43 +12,25 @@ import dataProvider from './common/dataProvider';
 import Progress from './common/progress';
 import OfflineWarning from './common/offlineMode';
 import AppConfigContext from './common/appConfigContext';
-import UserContext from './common/userContext';
+import UserContext, { initialState as userInitalState } from './common/userContext';
 import LanguageContext from './common/languageContext';
+import { initialState as languageInitalState } from './common/languageContext';
 import { IConfigParams, IUser } from './common/types';
+import { initialState as appConfigInitalState } from './common/appConfigContext';
 
 export default function App() {
   const didMount = useRef(false);
   const [loadingModalIsOpen, setLoadingModalIsOpen] = useState(true);
-  const [appConfig, setAppConfig] = useState<IConfigParams>({
-    board_name: '',
-    site_close: '0',
-    close_reason: '',
-    admin_email: '',
-    copyright_info: '',
-    valid_code_open: '0',
-    page_on: '0',
-    num_perpage: 0,
-    theme: '',
-    admin: '',
-    lang: '',
-    timezone: '0',
-    filter_type: 1,
-    allowed_tags: '',
-  });
+  const [appConfig, setAppConfig] = useState<IConfigParams>(appConfigInitalState);
   const [comments, setComments] = useState({
     data: [], // Comments
     total: 0, // The total number of all comments or filtered comments.
     listType: 1, // 1: Default list. 2: Search Result list
     currentPage: 0,
   });
-  const [currentUser, setCurrentUser1] = useState<IUser>({
-    uid: -1,
-    user_type: 'guest',
-    username: '',
-    email: '',
-  });
+  const [currentUser, setCurrentUser1] = useState<IUser>(userInitalState);
   const [searchText, setSearchText] = useState(''); // The search keyword
-  const [translations, setTranslations] = useState({});
+  const [translations, setTranslations] = useState(languageInitalState);
 
   // Get current user identity from server.
   function getUserInfo() {

@@ -2,12 +2,13 @@ import { useContext } from 'react';
 import dataProvider from '../common/dataProvider';
 import Reply from './Reply';
 import LanguageContext from '../common/languageContext';
+import type { IComment } from '../common/types';
 
 export default function Comment(props: {
-  data: object;
+  data: IComment;
   onActiveTabChanged: (s: string) => void;
   onReplyComment: (data: any) => void;
-  onCommentDeleted: (id: any, reply: any) => void;
+  onCommentDeleted: (id: any) => void;
   onUpdateComment: (data: any) => void;
   onToggleItem: (id: number) => void;
   onReplyDelete: () => void;
@@ -22,11 +23,10 @@ export default function Comment(props: {
   function deleteComment(e: any) {
     e.preventDefault();
     const commentId = data.id;
-    const reply = data.reply ? '1' : '0';
     if (!confirm(lang.DEL_COMMENT_CONFIRM)) {
       return false;
     }
-    props.onCommentDeleted(commentId, reply);
+    props.onCommentDeleted(commentId);
   }
   function replyComment(e: any) {
     e.preventDefault();
@@ -44,7 +44,6 @@ export default function Comment(props: {
     <tr className="row">
       <td className="col-xs-1 col-sm-1 col-md-1">
         <input type="checkbox" checked={props.isSelected} onChange={toggleItem} />
-        <input type="hidden" name={data.id} value={data.reply ? 1 : 0} />
       </td>
       <td className="col-xs-3 col-sm-3 col-md-3">{parseInt(data.uid) ? data.b_username : data.uname}</td>
       <td className="col-xs-6 col-sm-6 col-md-6">

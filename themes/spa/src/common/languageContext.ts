@@ -1,7 +1,9 @@
 import React from "react";
 import type { ITranslationData } from "./types";
 
-const initialState: ITranslationData = {
+export const initialState: ITranslationData = {
+  OFFLINE_WARNING: "",
+  DATE_FORMAT: "",
   DEL_SINGLEUSER_CONFIRM: "",
   "DEL_REPLY_CONFIRM": "",
   "DEL_COMMENT_CONFIRM": "",

@@ -26,6 +26,7 @@
   "homepage": "https://github.com/rainyjune/yuan-pad#readme",
   "devDependencies": {
     "@types/node": "^20.10.6",
+    "@types/qs": "^6.9.11",
     "@types/react": "^18.2.47",
     "@types/react-dom": "^18.2.17",
     "@types/react-modal": "^3.13.1",

@@ -264,11 +264,11 @@ function deleteAllUsers() {
   });
 }
 
-function deleteComment(commentId: number, reply: string) {
+function deleteComment(commentId: number) {
   return axios({
     method: "post",
     url: "index.php",
-    data: qs.stringify({ mid: commentId, reply: reply }),
+    data: qs.stringify({ mid: commentId }),
     headers: {
       "content-type": "application/x-www-form-urlencoded",
       RequestVerificationToken: getCookie("CSRF-TOKEN") || "",

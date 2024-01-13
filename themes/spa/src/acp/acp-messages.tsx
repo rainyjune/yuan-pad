@@ -1,15 +1,10 @@
 import { useEffect, useState, useReducer, useContext, MouseEvent } from 'react';
-import { messageReducer, dispatchMiddleware } from './messageReducer';
+import { initialState as messageInitalState, messageReducer, dispatchMiddleware } from './messageReducer';
 import ReplyModal from './acp-replyModal';
 import CommentUpdateModal from './acp-updateCommentModal';
 import Comment from './Comment';
 import LanguageContext from '../common/languageContext';
-
-const initialState = {
-  isLoading: false,
-  isError: false,
-  data: [],
-};
+import { IComment } from '../common/types';
 
 function ACPMessages(props: {
   systemInformation: object;
@@ -17,7 +12,7 @@ function ACPMessages(props: {
   onCommentDeleted: () => void;
 }) {
   const lang = useContext(LanguageContext);
-  const [comments, dispatchBase] = useReducer(messageReducer, initialState);
+  const [comments, dispatchBase] = useReducer(messageReducer, messageInitalState);
   const dispatch = dispatchMiddleware(dispatchBase);
   const [modalState, setModalState] = useState({
     isOpen: false,
@@ -30,7 +25,7 @@ function ACPMessages(props: {
     // Create a copy (to avoid mutation).
     let nextIds = new Set();
     if (e.target.checked) {
-      nextIds = new Set(comments.data.map((comment) => comment.id));
+      nextIds = new Set(comments.data.map((comment: IComment) => comment.id));
       setSelectedIds(nextIds);
     }
     setSelectedIds(nextIds);
@@ -116,13 +111,13 @@ function ACPMessages(props: {
     }
     setSelectedIds(nextIds);
   }
-  function handleCommentDeleted(commentId, reply) {
-    dispatch({ type: 'DELETE', commentId: commentId, reply: reply });
+  function handleCommentDeleted(commentId: number) {
+    dispatch({ type: 'DELETE', commentId: commentId });
     dispatch({ type: 'LOAD' });
     props.onCommentDeleted();
   }
   const modalProps = {
-    comment: comments.data.find((comment) => comment.id === activeCommentId),
+    comment: comments.data.find((comment: IComment) => comment.id === activeCommentId),
     modalErrorMsg: modalState.error,
     onRequestClose: closeModal,
   };

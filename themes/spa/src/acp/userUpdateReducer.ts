@@ -1,10 +1,12 @@
-export const userUpdateInitialState = {
+import type { IUserUpdateReducerAction, IUserModalState } from '../common/types';
+
+export const userUpdateInitialState: IUserModalState = {
   updateErrorMsg: '',
   updateModalIsOpen: false,
   updatedModalUserId: null,
 };
 
-export function userUpdateReducer(state, action) {
+export function userUpdateReducer(state: IUserModalState, action: IUserUpdateReducerAction) {
   switch(action.type) {
     case 'saved': {
       return {
@@ -23,12 +25,12 @@ export function userUpdateReducer(state, action) {
     case 'selected': {
       return {
           updateErrorMsg: '',
-          updatedModalUserId: action.id,
+          updatedModalUserId: action.id ?? null,
           updateModalIsOpen: true,
       }
     }
     default: {
-      throw Error('Unknown action: ' + action.type);
+      return state;
     }
   }
 }

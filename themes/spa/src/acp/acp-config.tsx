@@ -1,10 +1,10 @@
-import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
+import { ChangeEvent, FormEvent, useContext, useState } from 'react';
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';
 import AppConfigContext from '../common/appConfigContext';
-import type { ITranslationData } from '../common/types';
+import type { ITranslationData, ISystemInfo } from '../common/types';
 
-function ACPConfig(props: any) {
+function ACPConfig(props: { systemInformation: ISystemInfo; onConfigUpdated: () => void }) {
   const appConfig = useContext(AppConfigContext);
   const lang: ITranslationData = useContext(LanguageContext);
   const [state, setState] = useState(appConfig);
@@ -75,9 +75,9 @@ function ACPConfig(props: any) {
               <tr>
                 <td>{lang.CLOSE_BOARD}:</td>
                 <td>
-                  <input type="radio" value="1" checked={state.site_close == 1} onChange={toggleSiteClose} />
+                  <input type="radio" value="1" checked={state.site_close === 1} onChange={toggleSiteClose} />
                   {lang.YES}
-                  <input type="radio" value="0" checked={state.site_close != 1} onChange={toggleSiteClose} />
+                  <input type="radio" value="0" checked={state.site_close !== 1} onChange={toggleSiteClose} />
                   {lang.NO}
                 </td>
               </tr>
@@ -118,8 +118,9 @@ function ACPConfig(props: any) {
                     {(() => {
                       const themes = acpData.themes,
                         themeOptions = [];
-                      for (const i in themes) {
-                        const theme = themes[i];
+                      const entries = Object.entries(themes);
+                      for (const [, v] of entries) {
+                        const theme = v;
                         themeOptions.push(
                           <option key={theme} value={theme}>
                             {theme}
@@ -138,14 +139,17 @@ function ACPConfig(props: any) {
                     {(() => {
                       const timeZones = acpData.timezones,
                         timezoneOptions = [];
-                      for (const i in timeZones) {
-                        const timezone = timeZones[i];
+                      const entries = Object.entries(timeZones);
+                      for (const [key, value] of Object.entries(entries)) {
+                        console.log(`${key}: ${value}`);
+                        const timezone = value;
                         timezoneOptions.push(
-                          <option key={i} value={i}>
+                          <option key={key} value={key}>
                             {timezone}
                           </option>,
                         );
                       }
+
                       return timezoneOptions;
                     })()}
                   </select>
@@ -158,10 +162,11 @@ function ACPConfig(props: any) {
                     {(() => {
                       const languages = acpData.languages,
                         languageOptions = [];
-                      for (const i in languages) {
-                        const language = languages[i];
+                      const entries = Object.entries(languages);
+                      for (const [k, v] of entries) {
+                        const language = v;
                         languageOptions.push(
-                          <option key={i} value={language}>
+                          <option key={k} value={language}>
                             {language}
                           </option>,
                         );
@@ -178,10 +183,11 @@ function ACPConfig(props: any) {
                     {(() => {
                       const dateFormateList = acpData.dateFormates,
                         formatOptions = [];
-                      for (const i in dateFormateList) {
-                        const format = dateFormateList[i];
+                      const entries = Object.entries(dateFormateList);
+                      for (const [k, v] of entries) {
+                        const format = v;
                         formatOptions.push(
-                          <option key={i} value={i}>
+                          <option key={k} value={k}>
                             {format}
                           </option>,
                         );
@@ -217,13 +223,13 @@ function ACPConfig(props: any) {
                     const captchaInputs = [];
                     captchaInputs.push(
                       <label key="1">
-                        <input type="radio" value="1" checked={state.valid_code_open == 1} onChange={toggleCaptcha} />
+                        <input type="radio" value="1" checked={state.valid_code_open === 1} onChange={toggleCaptcha} />
                         {lang.YES}
                       </label>,
                     );
                     captchaInputs.push(
                       <label key="0">
-                        <input type="radio" value="0" checked={state.valid_code_open != 1} onChange={toggleCaptcha} />
+                        <input type="radio" value="0" checked={state.valid_code_open !== 1} onChange={toggleCaptcha} />
                         {lang.NO}
                       </label>,
                     );
@@ -258,11 +264,11 @@ function ACPConfig(props: any) {
                 <td>{lang.FILTER_HTML_TAGS}:</td>
                 <td>
                   <label>
-                    <input type="radio" value="1" checked={state.filter_type == 1} onChange={toggleFilterType} />
+                    <input type="radio" value="1" checked={state.filter_type === 1} onChange={toggleFilterType} />
                     {lang.STRIP_DISALLOWED_TAGS}
                   </label>
                   <label>
-                    <input type="radio" value="2" checked={state.filter_type == 2} onChange={toggleFilterType} />
+                    <input type="radio" value="2" checked={state.filter_type === 2} onChange={toggleFilterType} />
                     {lang.ESCAPE_ALL_TAGS}
                   </label>
                 </td>

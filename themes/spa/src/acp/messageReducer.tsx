@@ -1,6 +1,13 @@
 import dataProvider from '../common/dataProvider';
+import type { IMessageState, IMessageReducerAction } from '../common/types';
 
-export function messageReducer(state, action) {
+export const initialState = {
+  isLoading: false,
+  isError: false,
+  data: [],
+};
+
+export function messageReducer(state: IMessageState, action: IMessageReducerAction) {
   console.log(action.type);
 
   switch (action.type) {
@@ -22,8 +29,8 @@ export function messageReducer(state, action) {
   }
 }
 
-export function dispatchMiddleware(dispatch) {
-  return async (action) => {
+export function dispatchMiddleware(dispatch: (obj: IMessageReducerAction) => void) {
+  return async (action: IMessageReducerAction) => {
     switch (action.type) {
       case 'LOAD':
         try {
@@ -41,7 +48,7 @@ export function dispatchMiddleware(dispatch) {
       case 'DELETE':
         console.log('DELETE');
         try {
-          const res = await dataProvider.deleteComment(action.commentId, action.reply);
+          const res = await dataProvider.deleteComment(action.commentId ?? 0);
           if (res.status === 200) {
             dispatch({
               type: 'LOAD',

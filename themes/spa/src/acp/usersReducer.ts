@@ -1,16 +1,17 @@
 import dataProvider from '../common/dataProvider';
+import type { IUser, IUserReducerAction } from '../common/types';
 
-export function usersReducer(users, action) {
+export function usersReducer(users: Array<IUser>, action: IUserReducerAction) {
   switch(action.type) {
     case 'loaded':
       return action.data;
     default:
-      throw Error('Unknown action: ' + action.type);
+      return users;
   }
 }
 
-export function dispatchMiddleware(dispatch) {
-  return async (action) => {
+export function dispatchMiddleware(dispatch: (obj: IUserReducerAction) => void) {
+  return async (action: IUserReducerAction) => {
     switch(action.type) {
       case 'loadAll':
         try {
@@ -39,11 +40,7 @@ export function dispatchMiddleware(dispatch) {
         try {
           const res = await dataProvider.updateUser(action.data);
           if (res.data.statusCode === 200) {
-            /*
-            dispatch({
-              type: 'loadAll'
-            })
-            */
+            //
           }
         } catch(e) {
           debugger;
@@ -51,7 +48,7 @@ export function dispatchMiddleware(dispatch) {
         break;
       case 'delete':
         try {
-          const res = await dataProvider.deleteUser(action.uid);
+          const res = await dataProvider.deleteUser(action.uid ?? 0);
           if (res.data.statusCode === 200) {
             //
           }
@@ -74,11 +71,7 @@ export function dispatchMiddleware(dispatch) {
           const res = await dataProvider.deleteMutiUsers(action.data);
           debugger;
           if (res.data.statusCode === 200) {
-            /*
-            dispatch({
-              type: 'loadAll'
-            })
-            */
+            //
           } else {
             alert('delete error');
           }

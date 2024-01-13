@@ -2,15 +2,15 @@ import { useContext, useEffect, useState, ChangeEvent } from 'react';
 import dataProvider from '../common/dataProvider';
 import IPItem from './IPItem';
 import LanguageContext from '../common/languageContext';
-import type { ITranslationData } from '../common/types';
+import type { ITranslationData, IBannedIPItem } from '../common/types';
 
-function ACPIpConfig(props: { systemInformation: object }) {
+function ACPIpConfig() {
   const lang: ITranslationData = useContext(LanguageContext);
-  const [IPs, setIPs] = useState([]);
-  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [IPs, setIPs] = useState<Array<IBannedIPItem>>([]);
+  const [selectedIds, setSelectedIds] = useState(new Set<string>());
 
   function toggleInputClicked(e: ChangeEvent<HTMLInputElement>) {
-    let nextIds = new Set();
+    let nextIds = new Set<string>();
     if (e.target.checked) {
       nextIds = new Set(IPs.map((item) => item.ip));
     }

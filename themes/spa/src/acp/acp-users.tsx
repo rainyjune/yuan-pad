@@ -4,8 +4,9 @@ import UserItem from './UserItem';
 import LanguageContext from '../common/languageContext';
 import { usersReducer, dispatchMiddleware } from './usersReducer';
 import { userUpdateInitialState, userUpdateReducer } from './userUpdateReducer';
+import type { IUser } from '../common/types';
 
-function ACPUser(props: any) {
+function ACPUser() {
   const lang = useContext(LanguageContext);
   const [users, dispatchBase] = useReducer(usersReducer, []);
   const dispatch = dispatchMiddleware(dispatchBase);
@@ -15,7 +16,7 @@ function ACPUser(props: any) {
   function toggleInputClicked(e: React.ChangeEvent<HTMLInputElement>) {
     let nextIds = new Set();
     if (e.target.checked) {
-      nextIds = new Set(users.map((item) => item.uid));
+      nextIds = new Set(users.map((item: IUser) => item.uid));
     }
     setSelectedIds(nextIds);
   }
@@ -80,7 +81,7 @@ function ACPUser(props: any) {
     setSelectedIds(nextIds);
   }
   const cssClass = 'user_container selectTag';
-  const updatedModalUserData = users.find((user) => user.uid === modalInfo.updatedModalUserId);
+  const updatedModalUserData = users.find((user: IUser) => user.uid === modalInfo.updatedModalUserId);
   return (
     <div className={cssClass}>
       <form onSubmit={handleDeleteMulti} action="#" method="post">

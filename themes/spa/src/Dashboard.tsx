@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import UserContext from './common/userContext';
 import LanguageContext from './common/languageContext';
-import AppConfigContext from './common/appConfigContext';
+import AppConfigContext, { initialState as appConfigInitalState } from './common/appConfigContext';
 
 import ACPLogin from './acp/acp-login';
 import ACPTabHeader from './acp/acp-tabHeader';
@@ -17,28 +17,11 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
 import './css/acp.css';
 
-const initialAppConfig = {
-  board_name: '',
-  site_close: '0',
-  close_reason: '',
-  admin_email: '',
-  copyright_info: '',
-  valid_code_open: '0',
-  page_on: '0',
-  num_perpage: 0,
-  theme: '',
-  admin: '',
-  lang: '',
-  timezone: '0',
-  filter_type: 1,
-  allowed_tags: '',
-};
-
 function ACPBox() {
   const [loadingModalIsOpen, setLoadingModalIsOpen] = useStateCallback(true);
   const [systemInformation, setSystemInformation] = useStateCallback({});
   const [activeTab, setActiveTab] = useState('overview');
-  const [appConfig, setAppConfig] = useState<IConfigParams>(initialAppConfig);
+  const [appConfig, setAppConfig] = useState<IConfigParams>(appConfigInitalState);
   const [currentUser, setCurrentUser] = useStateCallback({});
   const [translations, setTranslations] = useStateCallback({});
   /**
@@ -87,7 +70,7 @@ function ACPBox() {
   function handleLogout() {
     // Navigates to the index.php page after signed out.
     setCurrentUser({});
-    setAppConfig(initialAppConfig);
+    setAppConfig(appConfigInitalState);
     window.location.href = 'index.php';
   }
   // Get current user identity from server.

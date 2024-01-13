@@ -42,6 +42,9 @@ export interface IConfigParams {
   timezone: string;
   filter_type: number;
   allowed_tags: string;
+  password?: string;
+  dateformat: string;
+  filter_words: string;
 }
 
 export interface ConfigResponse {
@@ -51,6 +54,8 @@ export interface ConfigResponse {
 }
 
 export interface ITranslationData {
+  OFFLINE_WARNING: string;
+  DATE_FORMAT: string;
   DEL_SINGLEUSER_CONFIRM: string;
   DEL_REPLY_CONFIRM: string;
   DEL_COMMENT_CONFIRM: string;
@@ -269,3 +274,54 @@ export interface UserUpdateData {
 
 export type AjaxSuccCallback = (res: any) => void;
 export type AjaxErrCallback = (e: any) => void;
+
+export interface ISystemInfo {
+  commentsTotal: number;
+  repliesTotal: number;
+  appVersion: string;
+  phpVersion: string;
+  gd_loaded: boolean;
+  gdVersion: string;
+  registerGlobals: string;
+  magicQuotesGPC: string;
+  zipSupport: string;
+  themes: object;
+  timezones: object;
+  languages: object;
+  dateFormates: object;
+}
+
+export interface IReducerAction {
+  type: string;
+}
+
+export interface IUserUpdateReducerAction extends IReducerAction {
+  id?: number;
+}
+
+export interface IUserReducerAction extends IReducerAction {
+  data?: any;
+  uid?: number;
+}
+
+export interface IMessageReducerAction extends IReducerAction {
+  data?: any;
+  commentId?: number;
+  reply?: string;
+}
+
+export interface IMessageState {
+  isLoading: boolean;
+  isError: boolean;
+  data: Array<any>
+}
+
+export interface IUserModalState {
+  updateErrorMsg: string;
+  updateModalIsOpen: boolean;
+  updatedModalUserId: null | number;
+}
+
+export interface IBannedIPItem {
+  ip: string;
+}
