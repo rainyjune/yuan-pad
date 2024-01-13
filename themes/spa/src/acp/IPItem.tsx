@@ -1,11 +1,8 @@
 export default function IPItem(props: any) {
-  function toggleItem() {
-    props.onItemToggled(props.data);
-  }
   return (
     <tr className="admin_message">
       <td>
-        <input type="checkbox" onChange={toggleItem} checked={props.data.checked} />
+        <input type="checkbox" onChange={() => props.onItemToggled(props.data.ip)} checked={props.isSelected} />
       </td>
       <td>{props.data.ip}</td>
     </tr>

@@ -1,51 +1,23 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useState, ChangeEvent } from 'react';
 import dataProvider from '../common/dataProvider';
 import IPItem from './IPItem';
 import LanguageContext from '../common/languageContext';
 
-function ACPIpConfig(props: any) {
+function ACPIpConfig(props: { systemInformation: object }) {
   const lang = useContext(LanguageContext);
   const [IPs, setIPs] = useState([]);
-  function toggle(itemToToggle: any) {
-    let data = IPs.map((currentValue: any) => {
-      if (currentValue === itemToToggle) {
-        currentValue['checked'] = !currentValue['checked'];
-      }
-      return currentValue;
-    });
-    setMixState(data);
-  }
-  function toggleInputClicked(e: any) {
-    toggleAll(e.target.checked);
-  }
-  function toggleAll(checked: boolean) {
-    let data = IPs.map((currentValue: any) => {
-      currentValue['checked'] = checked;
-      return currentValue;
-    });
-    setMixState(data);
-  }
-  function getCheckedItems() {
-    let arr: Array<any> = [];
-    let key = getItemKey();
-    IPs.forEach((currentValue: any) => {
-      if (currentValue.checked) {
-        arr.push(currentValue[key]);
-      }
-    });
-    return arr;
-  }
-  function getItemKey() {
-    return 'ip';
-  }
-  function setMixState(data: any) {
-    setIPs(data);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+
+  function toggleInputClicked(e: ChangeEvent<HTMLInputElement>) {
+    let nextIds = new Set();
+    if (e.target.checked) {
+      nextIds = new Set(IPs.map((item) => item.ip));
+    }
+    setSelectedIds(nextIds);
   }
   useEffect(() => {
-    if (props.isActive) {
-      loadBlackList();
-    }
-  }, [props.isActive]);
+    loadBlackList();
+  }, []);
   async function loadBlackList() {
     const res = await dataProvider.getIPBlackList();
     if (res.status === 200 && res.data.statusCode === 200) {
@@ -56,7 +28,7 @@ function ACPIpConfig(props: any) {
   }
   function handleSubmit(e: any) {
     e.preventDefault();
-    const checkedItems = getCheckedItems();
+    const checkedItems = Array.from(selectedIds);
     if (checkedItems.length === 0) {
       return false;
     }
@@ -71,28 +43,32 @@ function ACPIpConfig(props: any) {
       }
     });
   }
-  function handleToggleItem(item: any) {
-    toggle(item);
-  }
-  const IPList = IPs;
-  const cssClass = 'ip_container selectTag';
-  function createIPItem(ip: any) {
-    return <IPItem data={ip} key={ip.ip} onItemToggled={handleToggleItem} />;
+  function handleToggleItem(toggledId: string) {
+    // Create a copy (to avoid mutation).
+    const nextIds = new Set(selectedIds);
+    if (nextIds.has(toggledId)) {
+      nextIds.delete(toggledId);
+    } else {
+      nextIds.add(toggledId);
+    }
+    setSelectedIds(nextIds);
   }
   return (
-    <div className={cssClass}>
+    <div className="ip_container selectTag">
       <form onSubmit={handleSubmit} action="#" method="post">
         <table className="table table-striped table-hover">
           <thead>
             <tr className="header">
               <th>
-                <input type="checkbox" onClick={toggleInputClicked} />
+                <input type="checkbox" onChange={toggleInputClicked} />
               </th>
               <th>{lang.BAD_IP}</th>
             </tr>
           </thead>
           <tbody>
-            {IPList && IPList.map(createIPItem)}
+            {IPs.map((ip: any) => (
+              <IPItem isSelected={selectedIds.has(ip.ip)} data={ip} key={ip.ip} onItemToggled={handleToggleItem} />
+            ))}
             <tr>
               <td colSpan={2} align="left">
                 <input type="submit" value={lang.DELETE_CHECKED} />
