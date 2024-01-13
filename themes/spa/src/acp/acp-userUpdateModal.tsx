@@ -10,13 +10,12 @@ function UserUpdateModal(props: any) {
   const [email, setEmail] = useState(props.userData?.email ?? '');
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const pwd1 = pwd.trim(),
-      email1 = email.trim();
+    const email1 = email.trim();
     if (!email1) return;
     props.onUpdateSubmit({
       uid: props.userData.uid,
       user: props.userData.username,
-      pwd: pwd1,
+      pwd: pwd.trim(),
       email: email1,
     });
     return false;

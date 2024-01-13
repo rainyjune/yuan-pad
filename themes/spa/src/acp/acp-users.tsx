@@ -3,39 +3,21 @@ import UserUpdateModal from './acp-userUpdateModal';
 import UserItem from './UserItem';
 import LanguageContext from '../common/languageContext';
 import { usersReducer, dispatchMiddleware } from './usersReducer';
+import { userUpdateInitialState, userUpdateReducer } from './userUpdateReducer';
 
 function ACPUser(props: any) {
   const lang = useContext(LanguageContext);
   const [users, dispatchBase] = useReducer(usersReducer, []);
   const dispatch = dispatchMiddleware(dispatchBase);
-  const [modalInfo, setModalInfo] = useState({
-    updateErrorMsg: '',
-    updateModalIsOpen: false,
-    updatedModalUserId: null,
-  });
-  function toggle(uid: number) {
-    dispatch({
-      type: 'toggle',
-      uid,
-    });
-  }
+  const [modalInfo, setModalInfo] = useReducer(userUpdateReducer, userUpdateInitialState);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+
   function toggleInputClicked(e: React.ChangeEvent<HTMLInputElement>) {
-    toggleAll(e.target.checked);
-  }
-  function toggleAll(checked: boolean) {
-    dispatch({
-      type: 'toggleAll',
-      checked,
-    });
-  }
-  function getCheckedItems() {
-    const arr: number[] = [];
-    users.forEach((currentValue: any) => {
-      if (currentValue.checked) {
-        arr.push(currentValue.uid);
-      }
-    });
-    return arr;
+    let nextIds = new Set();
+    if (e.target.checked) {
+      nextIds = new Set(users.map((item) => item.uid));
+    }
+    setSelectedIds(nextIds);
   }
 
   useEffect(() => {
@@ -54,29 +36,10 @@ function ACPUser(props: any) {
       data: newUserData,
     });
     setModalInfo({
-      updateErrorMsg: '',
-      updatedModalUserId: null,
-      updateModalIsOpen: false,
+      type: 'saved',
     });
     dispatch({ type: 'loadAll' });
   }
-  function closeUpdateModal() {
-    setModalInfo({
-      updateErrorMsg: '',
-      updatedModalUserId: null,
-      updateModalIsOpen: false,
-    });
-  }
-  function openUserUpdateModal(userId: any) {
-    setModalInfo({
-      updateErrorMsg: '',
-      updatedModalUserId: userId,
-      updateModalIsOpen: true,
-    });
-  }
-  /**
-   * Tested 1.
-   */
   function deleteAllUsers(e: any) {
     e.preventDefault();
     if (!confirm(lang.DEL_ALLUSER_CONFIRM)) {
@@ -91,7 +54,7 @@ function ACPUser(props: any) {
   }
   function handleDeleteMulti(e: any) {
     e.preventDefault();
-    const checkedUids = getCheckedItems();
+    const checkedUids = Array.from(selectedIds);
     if (checkedUids.length === 0) {
       return false;
     }
@@ -106,21 +69,17 @@ function ACPUser(props: any) {
       type: 'loadAll',
     });
   }
-  function handleToggleItem(uid: number) {
-    toggle(uid);
+  function handleToggleItem(toggledId: number) {
+    // Create a copy (to avoid mutation).
+    const nextIds = new Set(selectedIds);
+    if (nextIds.has(toggledId)) {
+      nextIds.delete(toggledId);
+    } else {
+      nextIds.add(toggledId);
+    }
+    setSelectedIds(nextIds);
   }
   const cssClass = 'user_container selectTag';
-  function createUserItem(user: any) {
-    return (
-      <UserItem
-        data={user}
-        key={user.uid}
-        onOpenUserUpdateModal={openUserUpdateModal}
-        onUserDeleted={handleUserDeleted}
-        onToggleItem={handleToggleItem}
-      />
-    );
-  }
   const updatedModalUserData = users.find((user) => user.uid === modalInfo.updatedModalUserId);
   return (
     <div className={cssClass}>
@@ -136,7 +95,23 @@ function ACPUser(props: any) {
               <th className="col-xs-2 col-sm-2 col-md-2">{lang.OPERATION}</th>
             </tr>
           </thead>
-          <tbody>{users.map(createUserItem)}</tbody>
+          <tbody>
+            {users.map((user: any) => (
+              <UserItem
+                isSelected={selectedIds.has(user.uid)}
+                data={user}
+                key={user.uid}
+                onOpenUserUpdateModal={(userId: any) => {
+                  setModalInfo({
+                    type: 'selected',
+                    id: userId,
+                  });
+                }}
+                onUserDeleted={handleUserDeleted}
+                onToggleItem={handleToggleItem}
+              />
+            ))}
+          </tbody>
           <tfoot>
             <tr>
               <td colSpan={4}>
@@ -151,7 +126,11 @@ function ACPUser(props: any) {
           userData={updatedModalUserData}
           errorMsg={modalInfo.updateErrorMsg}
           modalIsOpen={modalInfo.updateModalIsOpen}
-          onRequestClose={closeUpdateModal}
+          onRequestClose={() =>
+            setModalInfo({
+              type: 'cancelled',
+            })
+          }
           onUpdateSubmit={handleUpdateSubmit}
         />
       </form>

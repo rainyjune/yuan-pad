@@ -3,6 +3,7 @@ import LanguageContext from '../common/languageContext';
 import { usersReducer, dispatchMiddleware } from './usersReducer';
 
 export default function UserItem(props: {
+  isSelected: boolean;
   data: any;
   onUserDeleted: () => void;
   onOpenUserUpdateModal: (data: any) => void;
@@ -26,14 +27,11 @@ export default function UserItem(props: {
     e.preventDefault();
     props.onOpenUserUpdateModal(props.data.uid);
   }
-  function toggleItem() {
-    props.onToggleItem(props.data.uid);
-  }
   const user = props.data;
   return (
     <tr className="row">
       <td className="col-xs-1 col-sm-1 col-md-1">
-        <input type="checkbox" checked={user.checked} onChange={toggleItem} />
+        <input type="checkbox" checked={props.isSelected} onChange={() => props.onToggleItem(props.data.uid)} />
       </td>
       <td className="col-xs-3 col-sm-3 col-md-3">{user.username}</td>
       <td className="col-xs-6 col-sm-6 col-md-6">{user.email}</td>

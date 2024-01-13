@@ -4,24 +4,6 @@ export function usersReducer(users, action) {
   switch(action.type) {
     case 'loaded':
       return action.data;
-    case 'toggle':
-      return users.map(user => {
-        if (user.uid === action.uid) {
-          return {
-            ...user,
-            checked: !user.checked
-          };
-        } else {
-          return user;
-        }
-      });
-    case 'toggleAll':
-      return users.map(user => {
-        return {
-          ...user,
-          checked: action.checked
-        };
-      })
     default:
       throw Error('Unknown action: ' + action.type);
   }
@@ -38,12 +20,7 @@ export function dispatchMiddleware(dispatch) {
             dispatch(
               {
                 type: 'loaded',
-                data: data.map(item=> {
-                  return {
-                    ...item,
-                    checked: false
-                  }
-                })
+                data
               }
             );
             //addSelectedFlag(data);
