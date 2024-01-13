@@ -2,9 +2,10 @@ import { useContext, useEffect, useState, ChangeEvent } from 'react';
 import dataProvider from '../common/dataProvider';
 import IPItem from './IPItem';
 import LanguageContext from '../common/languageContext';
+import type { ITranslationData } from '../common/types';
 
 function ACPIpConfig(props: { systemInformation: object }) {
-  const lang = useContext(LanguageContext);
+  const lang: ITranslationData = useContext(LanguageContext);
   const [IPs, setIPs] = useState([]);
   const [selectedIds, setSelectedIds] = useState(new Set());
 

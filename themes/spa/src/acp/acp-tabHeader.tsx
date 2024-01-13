@@ -9,8 +9,8 @@ function ACPTabHeader(props: any) {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   function updateActiveTab(e: MouseEvent) {
     e.preventDefault();
-    let tabLink = e.target as HTMLAnchorElement;
-    let newTabName = tabLink.getAttribute('data-tabname');
+    const tabLink = e.target as HTMLAnchorElement;
+    const newTabName = tabLink.getAttribute('data-tabname');
     if (newTabName === props.activeTab) {
       return false;
     }
@@ -32,8 +32,8 @@ function ACPTabHeader(props: any) {
   }
 
   if (user.user_type !== 'admin') return null;
-  let activeTab = props.activeTab;
-  let items = props.tabs.map((tab: any) => {
+  const activeTab = props.activeTab;
+  const items = props.tabs.map((tab: any) => {
     return (
       <li key={tab.value} role="presentation" className={tab.value === activeTab ? 'active' : ''}>
         <a href="#" data-tabname={tab.value} onClick={updateActiveTab}>

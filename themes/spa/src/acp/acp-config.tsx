@@ -2,10 +2,11 @@ import { ChangeEvent, FormEvent, useContext, useEffect, useState } from 'react';
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';
 import AppConfigContext from '../common/appConfigContext';
+import type { ITranslationData } from '../common/types';
 
 function ACPConfig(props: any) {
   const appConfig = useContext(AppConfigContext);
-  const lang = useContext(LanguageContext);
+  const lang: ITranslationData = useContext(LanguageContext);
   const [state, setState] = useState(appConfig);
 
   function handleSubmit(e: FormEvent) {
