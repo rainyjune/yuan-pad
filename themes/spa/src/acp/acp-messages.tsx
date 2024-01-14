@@ -1,10 +1,12 @@
-import { useEffect, useState, useReducer, useContext, MouseEvent } from 'react';
-import { initialState as messageInitalState, messageReducer, dispatchMiddleware } from './messageReducer';
+import { useEffect, useState, useContext, MouseEvent, useCallback } from 'react';
+import { initialState as messageInitalState, messageReducer } from './messageReducer';
 import ReplyModal from './acp-replyModal';
 import CommentUpdateModal from './acp-updateCommentModal';
 import Comment from './Comment';
 import LanguageContext from '../common/languageContext';
 import { IComment } from '../common/types';
+import useThunkReducer from '../common/useThunkReducer';
+import dataProvider from '../common/dataProvider';
 
 function ACPMessages(props: {
   systemInformation: object;
@@ -12,64 +14,75 @@ function ACPMessages(props: {
   onCommentDeleted: () => void;
 }) {
   const lang = useContext(LanguageContext);
-  const [comments, dispatchBase] = useReducer(messageReducer, messageInitalState);
-  const dispatch = dispatchMiddleware(dispatchBase);
+  const [comments, dispatch] = useThunkReducer(messageReducer, messageInitalState);
   const [modalState, setModalState] = useState({
     isOpen: false,
     type: '', // "reply" or "update"
     error: null,
   });
-  const [activeCommentId, setActiveCommentId] = useState(null);
-  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [activeCommentId, setActiveCommentId] = useState<null | number>(null);
+  const [selectedIds, setSelectedIds] = useState(new Set<number>());
   function handleToggleAll(e: React.ChangeEvent<HTMLInputElement>) {
     // Create a copy (to avoid mutation).
-    let nextIds = new Set();
+    let nextIds = new Set<number>();
     if (e.target.checked) {
       nextIds = new Set(comments.data.map((comment: IComment) => comment.id));
       setSelectedIds(nextIds);
     }
     setSelectedIds(nextIds);
   }
-  function deleteAllComments(e: MouseEvent) {
+  async function deleteAllComments(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_ALL_CONFIRM)) {
       return false;
     }
-    dispatch({
-      type: 'DELETEALL',
-    });
-    dispatch({ type: 'LOAD' });
+    try {
+      const res = await dataProvider.deleteAllComments();
+      console.log('res:', res);
+      if (res.data.statusCode === 200) {
+        loadMessages();
+      } else {
+        throw Error(res.data);
+      }
+    } catch (e) {
+      alert('删除失败');
+    }
   }
-  /**
-   * Tested 1
-   */
-  function deleteAllReplies(e: MouseEvent) {
+  async function deleteAllReplies(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_ALL_REPLY_CONFIRM)) {
       return false;
     }
-    dispatch({
-      type: 'DELETEALLREPLIES',
-    });
-    dispatch({ type: 'LOAD' });
+    try {
+      const res = await dataProvider.deleteAllReplies();
+      if (res.data.statusCode === 200) {
+        loadMessages();
+      } else {
+        throw Error(res.data);
+      }
+    } catch (e) {
+      alert('删除回复失败');
+    }
   }
-  function handleFormSubmit(e: React.FormEvent) {
+  async function handleFormSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const checkedItems = Array.from(selectedIds);
+    const checkedItems: number[] = Array.from(selectedIds);
     if (checkedItems.length === 0) {
       return false;
     }
     if (!confirm(lang.DEL_SELECTEDCOMMENTS_CONFIRM)) {
       return false;
     }
-    dispatch({
-      type: 'DELETEMULTI',
-      data: checkedItems,
-    });
-    dispatch({ type: 'LOAD' });
-  }
-  function handleReplyComment(commentTobeReplied: any) {
-    openModal('reply', commentTobeReplied);
+    try {
+      const res = await dataProvider.deleteMutiComments(checkedItems);
+      if (res.data.statusCode === 200) {
+        loadMessages();
+      } else {
+        throw Error(res.data);
+      }
+    } catch (e) {
+      alert('删除失败');
+    }
   }
   function closeModal() {
     setModalState({
@@ -79,28 +92,33 @@ function ACPMessages(props: {
     });
     setActiveCommentId(null);
   }
-  function openModal(type = 'reply', commentData: any) {
+  function openModal(type = 'reply', commentId: number) {
     setModalState({
       isOpen: true,
       type: type,
       error: null,
     });
-    setActiveCommentId(commentData.id);
+    setActiveCommentId(commentId);
   }
-  function handleReplyFormSubmitted() {
-    closeModal();
-    dispatch({ type: 'LOAD' });
-  }
-  function handleUpdateComment(commentTobeUpdated: any) {
-    openModal('update', commentTobeUpdated);
-  }
-  function handleCommentUpdated() {
-    closeModal();
-    dispatch({ type: 'LOAD' });
-  }
+  const loadMessages = useCallback(
+    async function () {
+      try {
+        const res = await dataProvider.loadAllCommentsFromServer();
+        if (res.data.statusCode === 200) {
+          dispatch({
+            type: 'LOAD_SUCCESS',
+            data: res.data.response.comments,
+          });
+        }
+      } catch (e) {
+        dispatch({ type: 'LOAD_ERROR' });
+      }
+    },
+    [dispatch],
+  );
   useEffect(() => {
-    dispatch({ type: 'LOAD' });
-  }, []);
+    loadMessages();
+  }, [loadMessages]);
   function handleToggleItem(toggledId: number) {
     // Create a copy (to avoid mutation).
     const nextIds = new Set(selectedIds);
@@ -111,10 +129,18 @@ function ACPMessages(props: {
     }
     setSelectedIds(nextIds);
   }
-  function handleCommentDeleted(commentId: number) {
-    dispatch({ type: 'DELETE', commentId: commentId });
-    dispatch({ type: 'LOAD' });
-    props.onCommentDeleted();
+  async function handleCommentDeleted(commentId: number) {
+    try {
+      const res = await dataProvider.deleteComment(commentId);
+      if (res.data.statusCode === 200) {
+        loadMessages();
+        props.onCommentDeleted();
+      } else {
+        throw Error(res.data);
+      }
+    } catch (e) {
+      alert('删除留言失败');
+    }
   }
   const modalProps = {
     comment: comments.data.find((comment: IComment) => comment.id === activeCommentId),
@@ -142,12 +168,14 @@ function ACPMessages(props: {
                   data={comment}
                   key={comment.id}
                   onActiveTabChanged={props.onActiveTabChanged}
-                  onReplyComment={handleReplyComment}
+                  onReplyComment={(id: number) => {
+                    openModal('reply', id);
+                  }}
                   onCommentDeleted={handleCommentDeleted}
-                  onUpdateComment={handleUpdateComment}
+                  onUpdateComment={(id: number) => openModal('update', id)}
                   onToggleItem={handleToggleItem}
                   isSelected={selectedIds.has(comment.id)}
-                  onReplyDelete={() => dispatch({ type: 'LOAD' })}
+                  onReplyDelete={loadMessages}
                 />
               );
             })}
@@ -167,13 +195,19 @@ function ACPMessages(props: {
         key={`reply-${activeCommentId}`}
         {...modalProps}
         modalIsOpen={modalState.isOpen && modalState.type === 'reply'}
-        onReplySubmit={handleReplyFormSubmitted}
+        onReplySubmit={() => {
+          closeModal();
+          loadMessages();
+        }}
       />
       <CommentUpdateModal
         key={`update-${activeCommentId}`}
         {...modalProps}
         modalIsOpen={modalState.isOpen && modalState.type === 'update'}
-        onCommentUpdated={handleCommentUpdated}
+        onCommentUpdated={() => {
+          closeModal();
+          loadMessages();
+        }}
       />
     </div>
   );

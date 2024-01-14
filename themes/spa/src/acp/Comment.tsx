@@ -7,7 +7,7 @@ import type { IComment } from '../common/types';
 export default function Comment(props: {
   data: IComment;
   onActiveTabChanged: (s: string) => void;
-  onReplyComment: (data: any) => void;
+  onReplyComment: (data: number) => void;
   onCommentDeleted: (id: any) => void;
   onUpdateComment: (data: any) => void;
   onToggleItem: (id: number) => void;
@@ -30,11 +30,11 @@ export default function Comment(props: {
   }
   function replyComment(e: any) {
     e.preventDefault();
-    props.onReplyComment(data);
+    props.onReplyComment(data.id);
   }
   function updateComment(e: any) {
     e.preventDefault();
-    props.onUpdateComment(data);
+    props.onUpdateComment(data.id);
   }
   function toggleItem() {
     props.onToggleItem(data.id);

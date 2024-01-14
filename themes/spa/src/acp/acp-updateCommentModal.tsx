@@ -16,6 +16,8 @@ function UpdateCommentModal(props: any) {
       });
       if (res.status === 200 && res.data.statusCode === 200) {
         props.onCommentUpdated();
+      } else {
+        throw Error(res.data);
       }
     } catch (e) {
       alert('Error');
