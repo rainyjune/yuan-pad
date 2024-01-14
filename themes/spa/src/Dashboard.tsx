@@ -12,6 +12,7 @@ import Progress from './common/progress';
 import OfflineWarning from './common/offlineMode';
 import useStateCallback from './common/useStateCallback';
 import { IConfigParams, IUser } from './common/types';
+import SystemInfoProvider from './common/SystemInfoProvider';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
@@ -19,7 +20,6 @@ import './css/acp.css';
 
 function ACPBox() {
   const [loadingModalIsOpen, setLoadingModalIsOpen] = useStateCallback(true);
-  const [systemInformation, setSystemInformation] = useStateCallback({});
   const [activeTab, setActiveTab] = useState('overview');
   const [appConfig, setAppConfig] = useState<IConfigParams>(appConfigInitalState);
   const [currentUser, setCurrentUser] = useStateCallback({});
@@ -51,16 +51,6 @@ function ACPBox() {
       alert(res.data.statusText);
     }
   }
-  async function loadApplicationSystemInformation(successCallback = () => {}) {
-    const res = await dataProvider.getSystemInformation();
-    if (res.status === 200 && res.data.statusCode === 200) {
-      setSystemInformation(res.data.response, () => {
-        successCallback && successCallback();
-      });
-    } else {
-      alert(res.data.statusText);
-    }
-  }
 
   // Reload site configuration after being updated by admin user.
   function handleConfigUpdate() {
@@ -87,17 +77,13 @@ function ACPBox() {
   function handleUserSignedIn(userData: IUser) {
     if (userData.user_type === 'admin') {
       setCurrentUser(userData, () => {
-        loadApplicationConfiguration(loadApplicationSystemInformation);
+        loadApplicationConfiguration();
       });
     } else if (userData.user_type === 'regular') {
       window.location.href = 'index.php';
     } else {
-      //this.setState({currentUser: userData});
       setCurrentUser(userData);
     }
-  }
-  function handleCommentDeleted() {
-    loadApplicationSystemInformation();
   }
   const tabs = [
     { text: translations.ACP_OVERVIEW, value: 'overview' },
@@ -107,33 +93,33 @@ function ACPBox() {
     { text: translations.USER_ADMIN, value: 'user' },
   ];
   return (
-    <AppConfigContext.Provider value={appConfig}>
-      <UserContext.Provider value={currentUser}>
-        <LanguageContext.Provider value={translations}>
-          <div id="acpBox">
-            {currentUser.user_type === undefined || currentUser.user_type === 'guest' ? (
-              <ACPLogin onCurrentUserUpdated={handleUserSignedIn} />
-            ) : null}
-            <ACPTabHeader
-              activeTab={activeTab}
-              tabs={tabs}
-              onTabSelected={updateActiveTab}
-              onUserLogout={handleLogout}
-            />
-            <OfflineWarning />
-            <ACPTabContent
-              activeTab={activeTab}
-              systemInformation={systemInformation}
-              onActiveTabChanged={updateActiveTab}
-              onConfigUpdated={handleConfigUpdate}
-              onCommentDeleted={handleCommentDeleted}
-            />
-            <ACPFooter />
-            <Progress loadingModalIsOpen={loadingModalIsOpen} />
-          </div>
-        </LanguageContext.Provider>
-      </UserContext.Provider>
-    </AppConfigContext.Provider>
+    <SystemInfoProvider>
+      <AppConfigContext.Provider value={appConfig}>
+        <UserContext.Provider value={currentUser}>
+          <LanguageContext.Provider value={translations}>
+            <div id="acpBox">
+              {currentUser.user_type === undefined || currentUser.user_type === 'guest' ? (
+                <ACPLogin onCurrentUserUpdated={handleUserSignedIn} />
+              ) : null}
+              <ACPTabHeader
+                activeTab={activeTab}
+                tabs={tabs}
+                onTabSelected={updateActiveTab}
+                onUserLogout={handleLogout}
+              />
+              <OfflineWarning />
+              <ACPTabContent
+                activeTab={activeTab}
+                onActiveTabChanged={updateActiveTab}
+                onConfigUpdated={handleConfigUpdate}
+              />
+              <ACPFooter />
+              <Progress loadingModalIsOpen={loadingModalIsOpen} />
+            </div>
+          </LanguageContext.Provider>
+        </UserContext.Provider>
+      </AppConfigContext.Provider>
+    </SystemInfoProvider>
   );
 }
 

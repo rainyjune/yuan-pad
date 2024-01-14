@@ -7,12 +7,10 @@ import LanguageContext from '../common/languageContext';
 import { IComment } from '../common/types';
 import useThunkReducer from '../common/useThunkReducer';
 import dataProvider from '../common/dataProvider';
+import { useSystemInfoDispatch } from '../common/SystemInfoContext';
 
-function ACPMessages(props: {
-  systemInformation: object;
-  onActiveTabChanged: (s: string) => void;
-  onCommentDeleted: () => void;
-}) {
+function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
+  const systemInfoDispatch = useSystemInfoDispatch();
   const lang = useContext(LanguageContext);
   const [comments, dispatch] = useThunkReducer(messageReducer, messageInitalState);
   const [modalState, setModalState] = useState({
@@ -41,6 +39,9 @@ function ACPMessages(props: {
       console.log('res:', res);
       if (res.data.statusCode === 200) {
         loadMessages();
+        systemInfoDispatch({
+          type: 'loaded',
+        });
       } else {
         throw Error(res.data);
       }
@@ -57,6 +58,9 @@ function ACPMessages(props: {
       const res = await dataProvider.deleteAllReplies();
       if (res.data.statusCode === 200) {
         loadMessages();
+        systemInfoDispatch({
+          type: 'loaded',
+        });
       } else {
         throw Error(res.data);
       }
@@ -77,6 +81,9 @@ function ACPMessages(props: {
       const res = await dataProvider.deleteMutiComments(checkedItems);
       if (res.data.statusCode === 200) {
         loadMessages();
+        systemInfoDispatch({
+          type: 'loaded',
+        });
       } else {
         throw Error(res.data);
       }
@@ -104,12 +111,10 @@ function ACPMessages(props: {
     async function () {
       try {
         const res = await dataProvider.loadAllCommentsFromServer();
-        if (res.data.statusCode === 200) {
-          dispatch({
-            type: 'LOAD_SUCCESS',
-            data: res.data.response.comments,
-          });
-        }
+        dispatch({
+          type: 'LOAD_SUCCESS',
+          data: res.data.response.comments,
+        });
       } catch (e) {
         dispatch({ type: 'LOAD_ERROR' });
       }
@@ -134,7 +139,9 @@ function ACPMessages(props: {
       const res = await dataProvider.deleteComment(commentId);
       if (res.data.statusCode === 200) {
         loadMessages();
-        props.onCommentDeleted();
+        systemInfoDispatch({
+          type: 'loaded',
+        });
       } else {
         throw Error(res.data);
       }
@@ -175,7 +182,12 @@ function ACPMessages(props: {
                   onUpdateComment={(id: number) => openModal('update', id)}
                   onToggleItem={handleToggleItem}
                   isSelected={selectedIds.has(comment.id)}
-                  onReplyDelete={loadMessages}
+                  onReplyDelete={() => {
+                    loadMessages();
+                    systemInfoDispatch({
+                      type: 'loaded',
+                    });
+                  }}
                 />
               );
             })}
@@ -198,6 +210,9 @@ function ACPMessages(props: {
         onReplySubmit={() => {
           closeModal();
           loadMessages();
+          systemInfoDispatch({
+            type: 'loaded',
+          });
         }}
       />
       <CommentUpdateModal
@@ -207,6 +222,9 @@ function ACPMessages(props: {
         onCommentUpdated={() => {
           closeModal();
           loadMessages();
+          systemInfoDispatch({
+            type: 'loaded',
+          });
         }}
       />
     </div>

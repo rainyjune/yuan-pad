@@ -1,11 +1,12 @@
-import { useContext } from "react";
-import LanguageContext from "../common/languageContext";
+import { useContext } from 'react';
+import LanguageContext from '../common/languageContext';
+import { useSystemInfo } from '../common/SystemInfoContext';
 
-const ACPOverview = (props: { systemInformation: any }) => {
+const ACPOverview = () => {
   const lang = useContext(LanguageContext),
-    sysInfo = props.systemInformation;
+    sysInfo = useSystemInfo();
   return (
-    <div className={"selectTag"}>
+    <div className={'selectTag'}>
       <h1>{lang.WELCOME_SYS}</h1>
       {lang.THANKS}
       <table className="table">

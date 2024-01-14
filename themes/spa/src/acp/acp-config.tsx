@@ -2,9 +2,10 @@ import { ChangeEvent, FormEvent, useContext, useState } from 'react';
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';
 import AppConfigContext from '../common/appConfigContext';
+import { useSystemInfo } from '../common/SystemInfoContext';
 import type { ITranslationData, ISystemInfo } from '../common/types';
 
-function ACPConfig(props: { systemInformation: ISystemInfo; onConfigUpdated: () => void }) {
+function ACPConfig(props: { onConfigUpdated: () => void }) {
   const appConfig = useContext(AppConfigContext);
   const lang: ITranslationData = useContext(LanguageContext);
   const [state, setState] = useState(appConfig);
@@ -58,7 +59,7 @@ function ACPConfig(props: { systemInformation: ISystemInfo; onConfigUpdated: () 
       [target.name]: target.value.trim(),
     });
   }
-  const acpData = props.systemInformation;
+  const acpData = useSystemInfo();
   return (
     <div className={'configContainer selectTag'}>
       <form onSubmit={handleSubmit} action="index.php?controller=config&amp;action=update" method="post">
