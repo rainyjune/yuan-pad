@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useRef, useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import Modal from 'react-modal';
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';
@@ -6,9 +6,9 @@ import LanguageContext from '../common/languageContext';
 import ModalStyles from './ModalStyles';
 
 function SignUp(props: any) {
-  const userRef = useRef<HTMLInputElement>(null);
-  const passRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const language: any = useContext(LanguageContext);
@@ -22,9 +22,8 @@ function SignUp(props: any) {
   }
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const user = userRef.current?.value.trim(),
-      pwd = passRef.current?.value.trim(),
-      email = emailRef.current?.value.trim();
+    const user = username,
+      pwd = password;
     if (!user || !pwd || !email) return;
 
     dataProvider.signUp({ user, pwd, email }).then((res) => {
@@ -51,15 +50,36 @@ function SignUp(props: any) {
             <legend>{language.REGISTER}</legend>
             <div className="form-group">
               <label htmlFor="inputUser">{language.USERNAME}</label>
-              <input type="text" ref={userRef} className="form-control" id="inputUser" placeholder="Username" />
+              <input
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                className="form-control"
+                id="inputUser"
+                placeholder="Username"
+              />
             </div>
             <div className="form-group">
               <label htmlFor="inputPassword">{language.PASSWORD}</label>
-              <input type="password" ref={passRef} className="form-control" id="inputPassword" placeholder="Password" />
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="form-control"
+                id="inputPassword"
+                placeholder="Password"
+              />
             </div>
             <div className="form-group">
               <label htmlFor="inputEmail">{language.EMAIL}</label>
-              <input type="email" ref={emailRef} className="form-control" id="inputEmail" placeholder="" />
+              <input
+                type="email"
+                onChange={(e) => setEmail(e.target.value)}
+                value={email}
+                className="form-control"
+                id="inputEmail"
+                placeholder=""
+              />
             </div>
             <button type="submit" className="btn btn-default">
               {language.REGISTER}

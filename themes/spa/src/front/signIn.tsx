@@ -1,4 +1,4 @@
-import { useContext, useRef, useState, MouseEvent, FormEvent } from 'react';
+import { useContext, useState, MouseEvent, FormEvent } from 'react';
 import Modal from 'react-modal';
 import dataProvider from '../common/dataProvider';
 import LanguageContext from '../common/languageContext';
@@ -6,9 +6,9 @@ import LanguageContext from '../common/languageContext';
 import ModalStyles from './ModalStyles';
 
 function SignIn(props: any) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const language: any = useContext(LanguageContext);
-  const userRef = useRef<HTMLInputElement>(null);
-  const passRef = useRef<HTMLInputElement>(null);
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   function openModal(e: MouseEvent) {
@@ -33,8 +33,8 @@ function SignIn(props: any) {
   }
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const user = userRef.current?.value.trim(),
-      pwd = passRef.current?.value.trim();
+    const user = username,
+      pwd = password;
     if (!user || !pwd) return;
     handleSignIn({ user, password: pwd });
     return false;
@@ -50,11 +50,25 @@ function SignIn(props: any) {
         <form onSubmit={handleSubmit} action="#" method="post">
           <div className="form-group">
             <label htmlFor="inputUsername">{language.USERNAME}</label>
-            <input ref={userRef} type="text" className="form-control" id="inputUsername" placeholder="" />
+            <input
+              onChange={(e) => setUsername(e.target.value)}
+              value={username}
+              type="text"
+              className="form-control"
+              id="inputUsername"
+              placeholder=""
+            />
           </div>
           <div className="form-group">
             <label htmlFor="inputPassword">{language.ADMIN_PWD}</label>
-            <input ref={passRef} type="password" className="form-control" id="inputPassword" placeholder="" />
+            <input
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              type="password"
+              className="form-control"
+              id="inputPassword"
+              placeholder=""
+            />
           </div>
           <button type="submit" className="btn btn-default">
             {language.SUBMIT}

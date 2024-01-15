@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useRef, useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import Modal from 'react-modal';
 import dataProvider from '../common/dataProvider';
 
@@ -7,8 +7,8 @@ import LanguageContext from '../common/languageContext';
 
 function ACPLogin(props: any) {
   const language = useContext(LanguageContext);
-  const userRef = useRef<HTMLInputElement>(null);
-  const passRef = useRef<HTMLInputElement>(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(true);
   function handleSignIn(loginData: any) {
@@ -26,9 +26,8 @@ function ACPLogin(props: any) {
   }
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    // TODO
-    let user = userRef.current?.value.trim(),
-      pwd = passRef.current?.value.trim();
+    const user = username,
+      pwd = password;
     if (!user || !pwd) return;
     handleSignIn({ user, password: pwd });
     return false;
@@ -54,11 +53,25 @@ function ACPLogin(props: any) {
         <form onSubmit={handleSubmit} action="#" method="post">
           <div className="form-group">
             <label htmlFor="inputUsername">{language.USERNAME}</label>
-            <input id="inputUsername" type="text" ref={userRef} className="form-control" placeholder="admin" />
+            <input
+              id="inputUsername"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="form-control"
+              placeholder="admin"
+            />
           </div>
           <div className="form-group">
             <label htmlFor="inputPassword">{language.ADMIN_PWD}</label>
-            <input id="inputPassword" type="password" ref={passRef} className="form-control" placeholder="Password" />
+            <input
+              id="inputPassword"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="form-control"
+              placeholder="Password"
+            />
           </div>
           <button type="submit" className="btn btn-default">
             {language.SUBMIT}

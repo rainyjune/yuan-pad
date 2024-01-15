@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, useCallback } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/css/bootstrap-theme.css';
@@ -19,7 +19,6 @@ import { IConfigParams, IUser } from './common/types';
 import { initialState as appConfigInitalState } from './common/appConfigContext';
 
 export default function App() {
-  const didMount = useRef(false);
   const [loadingModalIsOpen, setLoadingModalIsOpen] = useState(true);
   const [appConfig, setAppConfig] = useState<IConfigParams>(appConfigInitalState);
   const [comments, setComments] = useState({
@@ -100,10 +99,6 @@ export default function App() {
   }, [appConfig.board_name]);
 
   useEffect(() => {
-    if (!didMount.current) {
-      didMount.current = true;
-      return;
-    }
     loadCommentsFromServer();
   }, [comments.currentPage, loadCommentsFromServer]);
 

@@ -1,4 +1,4 @@
-import { FormEvent, useContext, useRef, useState } from 'react';
+import { FormEvent, useContext, useState } from 'react';
 import Modal from 'react-modal';
 import dataProvider from '../common/dataProvider';
 import UserContext from '../common/userContext';
@@ -6,14 +6,12 @@ import LanguageContext from '../common/languageContext';
 
 import ModalStyles from './ModalStyles';
 function UserUpdate(props: any) {
-  const idRef = useRef<HTMLInputElement>(null);
-  const userRef = useRef<HTMLInputElement>(null);
-  const passRef = useRef<HTMLInputElement>(null);
-  const emailRef = useRef<HTMLInputElement>(null);
+  const user: any = useContext(UserContext);
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(user.email ?? '');
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const language: any = useContext(LanguageContext);
-  const user: any = useContext(UserContext);
   function openModal(e: any) {
     e.preventDefault();
     setModalIsOpen(true);
@@ -23,12 +21,8 @@ function UserUpdate(props: any) {
   }
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const uid = idRef.current?.value.trim(),
-      user = userRef.current?.value.trim(),
-      pwd = passRef.current?.value.trim(),
-      email = emailRef.current?.value.trim();
-    if (!uid || !user || !email) return;
-    dataProvider.updateUser({ uid, user, pwd, email }).then((res) => {
+    if (!email) return;
+    dataProvider.updateUser({ uid: user.uid, user: user.username, pwd: password, email }).then((res) => {
       if (res.data.statusCode === 200) {
         setErrorMsg('');
         setModalIsOpen(false);
@@ -49,31 +43,29 @@ function UserUpdate(props: any) {
         <p>{errorMsg}</p>
         <button onClick={closeModal}>close</button>
         <form onSubmit={handleSubmit} action="#" method="post">
-          <input type="hidden" ref={idRef} value={user.uid} />
           <div className="form-group">
             <label htmlFor="inputUser">{language.USERNAME}</label>
-            <input
-              type="text"
-              ref={userRef}
-              readOnly={true}
-              defaultValue={user.username}
-              className="form-control"
-              id="inputUser"
-            />
+            <input type="text" readOnly={true} defaultValue={user.username} className="form-control" id="inputUser" />
           </div>
           <div className="form-group">
             <label htmlFor="inputPassword">{language.PASSWORD}</label>
             <input
               type="password"
-              defaultValue={user.password}
-              ref={passRef}
+              value={password}
               className="form-control"
               id="inputPassword"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div className="form-group">
             <label htmlFor="inputEmail">{language.EMAIL}</label>
-            <input type="email" defaultValue={user.email} ref={emailRef} className="form-control" id="inputEmail" />
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="form-control"
+              id="inputEmail"
+            />
           </div>
           <button type="submit" className="btn btn-default">
             {language.UPDATE}
