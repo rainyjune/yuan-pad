@@ -25,13 +25,6 @@ export default function CommentStatistics(props: any) {
   }
   return (
     <div className="statistics">
-      {props.commentListType === 2 ? (
-        <a href="#" onClick={props.onCloseSearch}>
-          Close
-        </a>
-      ) : (
-        ''
-      )}
       <p dangerouslySetInnerHTML={rawMarkup()} />
       {!parseInt(appConfig.page_on) || props.commentListType !== 1 ? (
         ''

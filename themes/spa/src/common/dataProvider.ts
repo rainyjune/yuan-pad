@@ -3,6 +3,15 @@ import qs from "qs";
 
 import { SignInData, UpdateCommentObj } from "../common/types";
 
+export function fetchByFunctionName(args) {
+  if (typeof args === 'string') {
+    return fetchFunctions[args]().then(res => res.data.response);
+  } else if (Array.isArray(args)) {
+    const [functionName, ...functionArgs] = args;
+    return fetchFunctions[functionName].apply(null, functionArgs).then(res => res.data.response);
+  }
+}
+
 function banIP(ip: string) {
   return axios({
     method: "post",
@@ -448,7 +457,7 @@ function getIPBlackList() {
   });
 }
 
-export default {
+const fetchFunctions = {
   banIP,
   createPost,
   createReply,
@@ -479,3 +488,5 @@ export default {
   search,
   updateSiteConfig,
 };
+
+export default fetchFunctions;

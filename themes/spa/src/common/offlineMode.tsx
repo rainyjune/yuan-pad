@@ -8,7 +8,7 @@ function Offline() {
     <p
       className="bg-warning"
       style={{
-        display: appConfig.site_close == 1 ? 'block' : 'none',
+        display: appConfig?.site_close == 1 ? 'block' : 'none',
       }}
     >
       {lang.OFFLINE_WARNING}

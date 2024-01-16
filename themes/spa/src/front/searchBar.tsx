@@ -1,11 +1,14 @@
-function SearchBar(props: {
-  onSubmit: (s: React.FormEvent) => void;
-  onUserInput: (s: React.ChangeEvent<HTMLInputElement>) => void;
-  searchText: string;
-}) {
+import { useState, FormEvent } from 'react';
+
+function SearchBar({ onSubmit }: { onSubmit: (s: string) => void }) {
+  const [searchText, setSearchText] = useState(''); // The search keyword
+  const handleSubmit = (e: FormEvent) => {
+    e.preventDefault();
+    onSubmit(searchText);
+  };
   return (
     <div className="searchbar">
-      <form onSubmit={props.onSubmit} className="form-inline">
+      <form onSubmit={handleSubmit} className="form-inline">
         <div className="form-group">
           <label className="sr-only" htmlFor="inputSearch">
             Search
@@ -15,12 +18,14 @@ function SearchBar(props: {
             type="text"
             size={10}
             placeholder="Search"
-            value={props.searchText}
-            onChange={props.onUserInput}
+            value={searchText}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              setSearchText(e.target.value);
+            }}
             className="form-control"
           />
         </div>
-        <button type="button" className="btn btn-default btn-sm" aria-label="Submit" onClick={props.onSubmit}>
+        <button type="button" className="btn btn-default btn-sm" aria-label="Submit" onClick={handleSubmit}>
           <span className="glyphicon glyphicon-search" aria-hidden="true"></span>
         </button>
       </form>
