@@ -13,7 +13,6 @@ function ACPConfig(props: { onConfigUpdated: () => void }) {
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     dataProvider.updateSiteConfig(state).then((res) => {
-      console.log('ACPConfig state:', state);
       if (res.data.statusCode === 200) {
         // TODO show friendly message.
         alert('OK');
@@ -142,7 +141,6 @@ function ACPConfig(props: { onConfigUpdated: () => void }) {
                         timezoneOptions = [];
                       const entries = Object.entries(timeZones);
                       for (const [key, value] of Object.entries(entries)) {
-                        console.log(`${key}: ${value}`);
                         const timezone = value;
                         timezoneOptions.push(
                           <option key={key} value={key}>
@@ -290,7 +288,13 @@ function ACPConfig(props: { onConfigUpdated: () => void }) {
               <tr>
                 <td>{lang.CHANGE_PWD}:</td>
                 <td>
-                  <input type="password" name="password" value={state.password} onChange={handleInput} />
+                  <input
+                    type="password"
+                    name="password"
+                    value={state.password}
+                    onChange={handleInput}
+                    autoComplete="new-password"
+                  />
                   &nbsp;{lang.PWD_TIP}
                 </td>
               </tr>

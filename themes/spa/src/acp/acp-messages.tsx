@@ -36,7 +36,6 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
     }
     try {
       const res = await dataProvider.deleteAllComments();
-      console.log('res:', res);
       if (res.data.statusCode === 200) {
         loadMessages();
         systemInfoDispatch({

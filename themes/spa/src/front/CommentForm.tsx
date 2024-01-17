@@ -1,42 +1,37 @@
 import { useRef, useState, FormEvent, ChangeEvent } from 'react';
-import dataProvider from '../common/dataProvider';
 import Captcha from './Captcha';
+import { mutate } from 'swr';
 
-import { useAppConfig, useUser, useTranslation } from '../common/dataHooks';
+import { useAppConfig, useUser, useTranslation, useAddComment } from '../common/dataHooks';
 
 export default function CommentForm(props: any) {
+  const { trigger: addComment } = useAddComment();
   const { data: lang } = useTranslation();
   const { data: appConfig } = useAppConfig();
   const { user: user } = useUser();
   const captchaRef = useRef<any>(null);
   const [text, setText] = useState('');
   const [valid_code, setValid_code] = useState('');
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    const author = user?.username?.trim() || 'anonymous',
+    const author = user.username || 'anonymous',
       text1 = text.trim(),
       valid_code1 = valid_code.trim();
     if (!author || !text1) return;
 
     setValid_code('');
 
-    dataProvider.createPost({ user: author, content: text1, valid_code: valid_code1 }).then((res) => {
-      if (res.data.statusCode !== 200) {
-        alert(res.data.response);
-        return;
-      }
+    try {
+      const res = await addComment({ user: author, content: text1, valid_code: valid_code1 });
       captchaRef.current?.refresh();
-      // Clear the text in the textarea.
       setText('');
+      //mutate('loadCommentsFromServer');
       props.onCommentCreated();
-    });
+    } catch (e) {
+      // error handling
+      alert(e);
+    }
     return false;
-  }
-  function handleTextChange(e: ChangeEvent<HTMLTextAreaElement>) {
-    setText(e.target.value);
-  }
-  function handleCaptchaChange(e: any) {
-    setValid_code(e.target.value);
   }
   return (
     <form onSubmit={handleSubmit} className="commentForm form-horizontal">
@@ -55,13 +50,21 @@ export default function CommentForm(props: any) {
             id="inputContent"
             className="form-control"
             rows={3}
-            onChange={handleTextChange}
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+              setText(e.target.value);
+            }}
             value={text}
           ></textarea>
         </div>
       </div>
-      {appConfig.valid_code_open == 0 && (
-        <Captcha ref={captchaRef} valid_code={valid_code} onCaptchaChange={handleCaptchaChange} />
+      {Number(appConfig.valid_code_open) === 1 && (
+        <Captcha
+          ref={captchaRef}
+          valid_code={valid_code}
+          onCaptchaChange={(str: string) => {
+            setValid_code(str);
+          }}
+        />
       )}
       <div className="form-group">
         <div className="col-sm-offset-2 col-sm-10 col-lg-offset-2 col-lg-10">

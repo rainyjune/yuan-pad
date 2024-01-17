@@ -53,6 +53,7 @@ function UserUpdate(props: any) {
               value={password}
               className="form-control"
               id="inputPassword"
+              autoComplete="new-password"
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>

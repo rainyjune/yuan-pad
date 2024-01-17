@@ -14,7 +14,6 @@ function LogoutButton() {
     mutate(
       'getUserInfo',
       (user) => {
-        console.log('return user:', user);
         // Hardcode userInitalState here, because this API indicates the user is still logged in
         // Even though the logout API has been called.
         // Might be a serser side bug
@@ -25,7 +24,6 @@ function LogoutButton() {
         revalidate: false,
       },
     );
-    console.log('third:', document.cookie);
   }
   return (
     <a role="button" className="btn btn-default signOutButton" onClick={handleSignOut}>

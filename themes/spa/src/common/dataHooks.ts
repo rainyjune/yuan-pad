@@ -40,8 +40,16 @@ async function sendRequest(url, { arg }) {
   });
 }
 
+export function useAddComment() {
+  return useSWRMutation('createPost', sendRequest /* options */);
+}
+
 export function useSignIn() {
   return useSWRMutation('signIn', sendRequest /* options */);
+}
+
+export function useSignUp() {
+  return useSWRMutation('signUp', sendRequest /* options */);
 }
 
 export function useUpdateUser() {

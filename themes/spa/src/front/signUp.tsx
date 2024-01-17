@@ -1,41 +1,39 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, MouseEvent } from 'react';
 import Modal from 'react-modal';
-import dataProvider from '../common/dataProvider';
-import { useTranslation } from '../common/dataHooks';
+import { mutate } from 'swr';
+import { useTranslation, useSignUp } from '../common/dataHooks';
 
 import ModalStyles from './ModalStyles';
 
-function SignUp(props: any) {
+function SignUp() {
+  const { trigger: signUp } = useSignUp();
   const { data: language } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const user = username,
       pwd = password;
     if (!user || !pwd || !email) return;
 
-    dataProvider.signUp({ user, pwd, email }).then((res) => {
-      if (res.data.statusCode !== 200) {
-        setErrorMsg(res.data.response);
-      } else {
-        setErrorMsg('');
-        setModalIsOpen(false);
-        props.onCurrentUserUpdated(res.data.response);
-      }
-    });
-    return false;
+    try {
+      await signUp({ user, pwd, email });
+      setErrorMsg('');
+      setModalIsOpen(false);
+      mutate('getUserInfo');
+    } catch (e) {
+      setErrorMsg(e);
+    }
   }
   return (
     <div className="signUp">
       <a
         role="button"
         className="btn btn-default"
-        href="#"
-        onClick={(e: any) => {
+        onClick={(e: MouseEvent<HTMLAnchorElement>) => {
           e.preventDefault();
           setModalIsOpen(true);
         }}
@@ -45,14 +43,13 @@ function SignUp(props: any) {
       <Modal
         ariaHideApp={false}
         isOpen={modalIsOpen}
-        onRequestClose={(e: any) => {
-          e.preventDefault();
+        onRequestClose={() => {
           setModalIsOpen(false);
         }}
         style={ModalStyles}
       >
         <p>{errorMsg}</p>
-        <form onSubmit={handleSubmit} action="#" method="post">
+        <form onSubmit={handleSubmit} action="#" method="post" autoComplete="off">
           <fieldset>
             <legend>{language.REGISTER}</legend>
             <div className="form-group">
@@ -85,7 +82,7 @@ function SignUp(props: any) {
                 value={email}
                 className="form-control"
                 id="inputEmail"
-                placeholder=""
+                autoComplete="off"
               />
             </div>
             <button type="submit" className="btn btn-default">

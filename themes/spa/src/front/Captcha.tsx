@@ -21,13 +21,14 @@ const Captcha = forwardRef((props: any, ref) => {
       </label>
       <div className="col-sm-5 col-lg-5">
         <input
+          required
           id="inputCaptcha"
           type="text"
           maxLength={10}
           size={20}
           className="form-control"
           value={props.valid_code}
-          onChange={props.onCaptchaChange}
+          onChange={(e) => props.onCaptchaChange(e.target.value)}
         />
         <img
           className="captchaImg"

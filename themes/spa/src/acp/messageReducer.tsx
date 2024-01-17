@@ -7,8 +7,6 @@ export const initialState = {
 };
 
 export function messageReducer(state: IMessageState, action: IMessageReducerAction) {
-  console.log(action.type);
-
   switch (action.type) {
     case 'LOAD_SUCCESS':
       return {

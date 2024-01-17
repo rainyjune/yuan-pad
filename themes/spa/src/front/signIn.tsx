@@ -5,8 +5,8 @@ import { mutate } from 'swr';
 import ModalStyles from './ModalStyles';
 import { useTranslation, useSignIn } from '../common/dataHooks';
 
-function SignIn(props: any) {
-  const { trigger: triggerSignIn, data, error, reset, isMutating } = useSignIn();
+function SignIn() {
+  const { trigger: triggerSignIn } = useSignIn();
   const { data: language } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -21,7 +21,7 @@ function SignIn(props: any) {
     e.preventDefault();
     if (!username || !password) return;
     try {
-      const result = await triggerSignIn({ user: username, password: password });
+      await triggerSignIn({ user: username, password: password });
       setErrorMsg('');
       setModalIsOpen(false);
       mutate('getUserInfo');
@@ -38,7 +38,7 @@ function SignIn(props: any) {
       </a>
       <Modal ariaHideApp={false} isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} style={ModalStyles}>
         <p>{errorMsg}</p>
-        <form onSubmit={handleSubmit} action="#" method="post">
+        <form onSubmit={handleSubmit} action="#" method="post" autoComplete="off">
           <div className="form-group">
             <label htmlFor="inputUsername">{language.USERNAME}</label>
             <input
