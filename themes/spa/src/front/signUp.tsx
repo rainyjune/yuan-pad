@@ -1,25 +1,17 @@
-import { FormEvent, useContext, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import Modal from 'react-modal';
 import dataProvider from '../common/dataProvider';
-import LanguageContext from '../common/languageContext';
+import { useTranslation } from '../common/dataHooks';
 
 import ModalStyles from './ModalStyles';
 
 function SignUp(props: any) {
+  const { data: language } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const language: any = useContext(LanguageContext);
-  function openModal(e: any) {
-    e.preventDefault();
-    setModalIsOpen(true);
-  }
-  function closeModal(e: any) {
-    e.preventDefault();
-    setModalIsOpen(false);
-  }
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const user = username,
@@ -39,12 +31,27 @@ function SignUp(props: any) {
   }
   return (
     <div className="signUp">
-      <a role="button" className="btn btn-default" href="#" onClick={openModal}>
+      <a
+        role="button"
+        className="btn btn-default"
+        href="#"
+        onClick={(e: any) => {
+          e.preventDefault();
+          setModalIsOpen(true);
+        }}
+      >
         {language.REGISTER}
       </a>
-      <Modal ariaHideApp={false} isOpen={modalIsOpen} onRequestClose={closeModal} style={ModalStyles}>
+      <Modal
+        ariaHideApp={false}
+        isOpen={modalIsOpen}
+        onRequestClose={(e: any) => {
+          e.preventDefault();
+          setModalIsOpen(false);
+        }}
+        style={ModalStyles}
+      >
         <p>{errorMsg}</p>
-        <button onClick={closeModal}>close</button>
         <form onSubmit={handleSubmit} action="#" method="post">
           <fieldset>
             <legend>{language.REGISTER}</legend>

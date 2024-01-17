@@ -1,8 +1,8 @@
-import { forwardRef, MouseEvent, useRef, useImperativeHandle, useContext } from 'react';
-import LanguageContext from '../common/languageContext';
+import { forwardRef, MouseEvent, useRef, useImperativeHandle } from 'react';
+import { useTranslation } from '../common/dataHooks';
 
 const Captcha = forwardRef((props: any, ref) => {
-  const lang: any = useContext(LanguageContext);
+  const { data: lang } = useTranslation();
   const picRef = useRef<HTMLImageElement>(null);
   function refreshCaptch(e: MouseEvent) {
     e.preventDefault();

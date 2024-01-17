@@ -1,12 +1,10 @@
-import { useContext } from 'react';
-import LanguageContext from '../common/languageContext';
-import AppConfigContext from '../common/appConfigContext';
+import { useAppConfig, useTranslation } from '../common/dataHooks';
 // @ts-expect-error This library does not provide .d.ts file
 import * as yuanjs from '@rainyjune/yuanjs';
 
 export default function Reply(props: any) {
-  const lang: any = useContext(LanguageContext);
-  const appConfig: any = useContext(AppConfigContext);
+  const { data: lang } = useTranslation();
+  const { data: appConfig } = useAppConfig();
   function rawMarkup() {
     const mapObj = {
       '{admin_name}': appConfig.admin,

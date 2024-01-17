@@ -1,17 +1,16 @@
-import { useRef, useState, useContext, FormEvent, ChangeEvent } from 'react';
-import LanguageContext from '../common/languageContext';
-import AppConfigContext from '../common/appConfigContext';
-import userContext from '../common/userContext';
+import { useRef, useState, FormEvent, ChangeEvent } from 'react';
 import dataProvider from '../common/dataProvider';
 import Captcha from './Captcha';
 
+import { useAppConfig, useUser, useTranslation } from '../common/dataHooks';
+
 export default function CommentForm(props: any) {
-  const user = useContext(userContext);
+  const { data: lang } = useTranslation();
+  const { data: appConfig } = useAppConfig();
+  const { user: user } = useUser();
   const captchaRef = useRef<any>(null);
   const [text, setText] = useState('');
   const [valid_code, setValid_code] = useState('');
-  const lang: any = useContext(LanguageContext);
-  const appConfig: any = useContext(AppConfigContext);
   function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const author = user?.username?.trim() || 'anonymous',
@@ -61,9 +60,9 @@ export default function CommentForm(props: any) {
           ></textarea>
         </div>
       </div>
-      {appConfig.valid_code_open == 1 ? (
+      {appConfig.valid_code_open == 0 && (
         <Captcha ref={captchaRef} valid_code={valid_code} onCaptchaChange={handleCaptchaChange} />
-      ) : null}
+      )}
       <div className="form-group">
         <div className="col-sm-offset-2 col-sm-10 col-lg-offset-2 col-lg-10">
           <button className="btn btn-default" type="submit">

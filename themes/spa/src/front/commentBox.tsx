@@ -1,17 +1,12 @@
-import { useContext } from 'react';
-import LanguageContext from '../common/languageContext';
-import AppConfigContext from '../common/appConfigContext';
-
 import CommentForm from './CommentForm';
 import CommentList from './CommentList';
 import CommentStatistics from './CommentStatistics';
+import { useAppConfig, useTranslation } from '../common/dataHooks';
 
 function CommentBox(props: any) {
-  const propsObj = {
-    commentListType: props.commentListType,
-  };
-  const lang: any = useContext(LanguageContext);
-  const appConfig: any = useContext(AppConfigContext);
+  const { currentPage, commentListType, comments, commentsTotalNumber } = props.commentsData;
+  const { data: lang } = useTranslation();
+  const { data: appConfig } = useAppConfig();
   return (
     <div className="commentBox">
       <h1>{lang.WELCOME_POST}</h1>
@@ -20,19 +15,19 @@ function CommentBox(props: any) {
           Search {props.searchText} :<button onClick={props.onCloseSearch}>Close</button>
         </p>
       )}
-      <CommentList {...propsObj} data={props.comments} searchText={props.searchText} />
+      <CommentList commentListType={commentListType} data={comments} searchText={props.searchText} />
       <CommentStatistics
-        {...propsObj}
+        commentListType={commentListType}
         onCloseSearch={props.onCloseSearch}
         onPageChanged={props.onPageChanged}
-        total={props.commentsTotalNumber}
-        currentPage={props.currentPage}
-        pagenum={appConfig?.page_on ? Math.ceil(props.commentsTotalNumber / appConfig.num_perpage) : 1}
+        total={commentsTotalNumber}
+        currentPage={currentPage}
+        pagenum={appConfig?.page_on ? Math.ceil(commentsTotalNumber / appConfig.num_perpage) : 1}
       />
-      {props.commentListType !== 1 ? (
+      {commentListType !== 1 ? (
         ''
       ) : (
-        <CommentForm {...propsObj} user={props.user} onCommentCreated={props.onCommentCreated} />
+        <CommentForm commentListType={commentListType} user={props.user} onCommentCreated={props.onCommentCreated} />
       )}
     </div>
   );

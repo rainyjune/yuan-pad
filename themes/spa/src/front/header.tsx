@@ -1,34 +1,29 @@
-import { useContext } from "react";
-
-import SignIn from "./signIn";
-import SignUp from "./signUp";
-import UpdateUser from "./updateUser";
-import SignOutButton from "./signOut";
-import UserContext from "../common/userContext";
+import SignIn from './signIn';
+import SignUp from './signUp';
+import UpdateUser from './updateUser';
+import SignOutButton from './signOut';
+import { useUser } from '../common/dataHooks';
 
 function Header(props: any) {
-  let propsObj = {
-    onCurrentUserUpdated: props.onCurrentUserUpdated,
-  };
-  const user: any = useContext(UserContext);
+  const { user: user } = useUser();
   return (
     <div className="header">
       {(() => {
         switch (user.user_type) {
-          case "regular":
+          case 'regular':
             return (
               <div>
-                <UpdateUser {...propsObj} />
-                <SignOutButton {...propsObj} />
+                <UpdateUser {...props} />
+                <SignOutButton {...props} />
               </div>
             );
-          case "admin":
-            return <SignOutButton {...propsObj} />;
-          case "guest":
+          case 'admin':
+            return <SignOutButton />;
+          case 'guest':
           default:
             return (
               <div>
-                <SignIn {...propsObj} /> <SignUp {...propsObj} />
+                <SignIn {...props} /> <SignUp {...props} />
               </div>
             );
         }

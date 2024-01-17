@@ -24,7 +24,7 @@ export function dispatchMiddleware(dispatch) {
             data: res.data.response,
           });
         } else {
-          alert(res.data.statusText);
+          //alert(res.data.statusText);
         }
         break;
       }

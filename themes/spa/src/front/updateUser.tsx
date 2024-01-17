@@ -1,47 +1,46 @@
-import { FormEvent, useContext, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import Modal from 'react-modal';
-import dataProvider from '../common/dataProvider';
-import UserContext from '../common/userContext';
-import LanguageContext from '../common/languageContext';
+import { mutate } from 'swr';
+import { useUser, useTranslation, useUpdateUser } from '../common/dataHooks';
 
 import ModalStyles from './ModalStyles';
 function UserUpdate(props: any) {
-  const user: any = useContext(UserContext);
+  const { trigger: triggerUpdate, data, error, reset, isMutating } = useUpdateUser();
+  const { data: language } = useTranslation();
+  const { user: user } = useUser();
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState(user.email ?? '');
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(false);
-  const language: any = useContext(LanguageContext);
-  function openModal(e: any) {
-    e.preventDefault();
-    setModalIsOpen(true);
-  }
-  function closeModal() {
-    setModalIsOpen(false);
-  }
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!email) return;
-    dataProvider.updateUser({ uid: user.uid, user: user.username, pwd: password, email }).then((res) => {
-      if (res.data.statusCode === 200) {
-        setErrorMsg('');
-        setModalIsOpen(false);
-        props.onCurrentUserUpdated(res.data.response);
-      } else {
-        alert(res.data.response);
-        setErrorMsg(res.data.response);
-      }
-    });
+    try {
+      const result = await triggerUpdate({ uid: user.uid, user: user.username, pwd: password, email });
+      setPassword('');
+      setErrorMsg('');
+      setModalIsOpen(false);
+      mutate('getUserInfo', { ...result }, { revalidate: false });
+    } catch (e) {
+      setErrorMsg(e);
+    }
     return false;
   }
   return (
     <div className="updateUser">
-      <a role="button" className="btn btn-default" href="#" onClick={openModal}>
+      <a
+        role="button"
+        className="btn btn-default"
+        href="#"
+        onClick={(e: any) => {
+          e.preventDefault();
+          setModalIsOpen(true);
+        }}
+      >
         {language.UPDATE}
       </a>
-      <Modal ariaHideApp={false} isOpen={modalIsOpen} onRequestClose={closeModal} style={ModalStyles}>
+      <Modal ariaHideApp={false} isOpen={modalIsOpen} onRequestClose={() => setModalIsOpen(false)} style={ModalStyles}>
         <p>{errorMsg}</p>
-        <button onClick={closeModal}>close</button>
         <form onSubmit={handleSubmit} action="#" method="post">
           <div className="form-group">
             <label htmlFor="inputUser">{language.USERNAME}</label>

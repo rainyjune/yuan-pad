@@ -1,11 +1,9 @@
-import { useContext } from 'react';
-import LanguageContext from '../common/languageContext';
-import AppConfigContext from '../common/appConfigContext';
 import Pagination from './Pagination';
+import { useAppConfig, useTranslation } from '../common/dataHooks';
 
 export default function CommentStatistics(props: any) {
-  const appConfig: any = useContext(AppConfigContext);
-  const lang: any = useContext(LanguageContext);
+  const { data: lang } = useTranslation();
+  const { data: appConfig } = useAppConfig();
   function rawMarkup() {
     let pagenavText, text;
     if (props.commentListType === 1) {
@@ -26,9 +24,7 @@ export default function CommentStatistics(props: any) {
   return (
     <div className="statistics">
       <p dangerouslySetInnerHTML={rawMarkup()} />
-      {!parseInt(appConfig.page_on) || props.commentListType !== 1 ? (
-        ''
-      ) : (
+      {parseInt(appConfig?.page_on) === 1 && props.commentListType === 1 && (
         <Pagination
           onPageChanged={props.onPageChanged}
           currentPage={props.currentPage}
