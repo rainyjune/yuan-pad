@@ -1,5 +1,7 @@
-import Pagination from './Pagination';
+import Pagination from 'rc-pagination';
 import { useAppConfig, useTranslation } from '../common/dataHooks';
+
+import '../css/index.less';
 
 export default function CommentStatistics(props: any) {
   const { data: lang } = useTranslation();
@@ -21,15 +23,16 @@ export default function CommentStatistics(props: any) {
     }
     return { __html: text };
   }
+  console.log('total:', Math.ceil(props.total / appConfig.num_perpage));
   return (
     <div className="statistics">
       <p dangerouslySetInnerHTML={rawMarkup()} />
       {parseInt(appConfig?.page_on) === 1 && props.commentListType === 1 && (
         <Pagination
-          onPageChanged={props.onPageChanged}
-          currentPage={props.currentPage}
-          commentListType={props.commentListType}
           total={Math.ceil(props.total / appConfig.num_perpage)}
+          current={props.currentPage + 1}
+          pageSize={Number(appConfig.num_perpage)}
+          onChange={(current) => props.onPageChanged(current - 1)}
         />
       )}
     </div>
