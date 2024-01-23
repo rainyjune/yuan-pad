@@ -13,7 +13,7 @@ function LogoutButton() {
     document.cookie = 'CSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
     mutate(
       'getUserInfo',
-      (user) => {
+      () => {
         // Hardcode userInitalState here, because this API indicates the user is still logged in
         // Even though the logout API has been called.
         // Might be a serser side bug

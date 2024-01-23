@@ -3,11 +3,13 @@ import qs from "qs";
 
 import { SignInData, UpdateCommentObj } from "../common/types";
 
-export function fetchByFunctionName(args) {
+export function fetchByFunctionName(args: string | Array<any>) {
   if (typeof args === 'string') {
+    // @ts-expect-error Expected
     return fetchFunctions[args]().then(res => res.data.response);
   } else if (Array.isArray(args)) {
     const [functionName, ...functionArgs] = args;
+    // @ts-expect-error Expected
     return fetchFunctions[functionName].apply(null, functionArgs).then(res => res.data.response);
   }
 }

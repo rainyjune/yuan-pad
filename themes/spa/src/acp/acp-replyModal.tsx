@@ -1,28 +1,33 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import Modal from 'react-modal';
-import dataProvider from '../common/dataProvider';
 import customStyles from '../common/ModalStyles';
 
+import { useCreateReply, useUpdateReply } from '../common/dataHooks';
+import { mutate } from 'swr';
+
 function ReplyModal(props: any) {
+  const { trigger: createReply } = useCreateReply();
+  const { trigger: updateReply } = useUpdateReply();
   const [content, setContent] = useState(props.comment?.reply_content ?? '');
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!content.trim()) return;
-    const action = props.comment?.reply_id ? dataProvider['updateReply'] : dataProvider['createReply'];
-    action({
+    const action = props.comment?.reply_id ? updateReply : createReply;
+    const data = {
       rid: props.comment.reply_id,
       pid: props.comment.id,
       content: content.trim(),
       r_time: '',
-    }).then((res: any) => {
-      if (res.status === 200 && res.data.statusCode === 200) {
-        props.onReplySubmit();
-      } else {
-        alert(res.data.statusText);
-      }
-    });
-    return false;
+    };
+    try {
+      // @ts-expect-error Expected
+      await action(data);
+      props.onRequestClose();
+      mutate('loadAllCommentsFromServer');
+    } catch (e) {
+      alert(e);
+    }
   }
   return (
     <Modal

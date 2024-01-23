@@ -1,6 +1,5 @@
 import { useRef, useState, FormEvent, ChangeEvent } from 'react';
 import Captcha from './Captcha';
-import { mutate } from 'swr';
 
 import { useAppConfig, useUser, useTranslation, useAddComment } from '../common/dataHooks';
 
@@ -22,10 +21,9 @@ export default function CommentForm(props: any) {
     setValid_code('');
 
     try {
-      const res = await addComment({ user: author, content: text1, valid_code: valid_code1 });
+      await addComment({ user: author, content: text1, valid_code: valid_code1 });
       captchaRef.current?.refresh();
       setText('');
-      //mutate('loadCommentsFromServer');
       props.onCommentCreated();
     } catch (e) {
       // error handling

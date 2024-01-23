@@ -1,27 +1,22 @@
-import { useContext, useReducer, MouseEvent } from 'react';
-import LanguageContext from '../common/languageContext';
-import { usersReducer, dispatchMiddleware } from './usersReducer';
+import { MouseEvent } from 'react';
+import { useTranslation, useDeleteUser } from '../common/dataHooks';
+import { mutate } from 'swr';
 
 export default function UserItem(props: {
   isSelected: boolean;
   data: any;
-  onUserDeleted: () => void;
   onOpenUserUpdateModal: (data: any) => void;
   onToggleItem: (id: number) => void;
 }) {
-  const [, dispatchBase] = useReducer(usersReducer, []);
-  const dispatch = dispatchMiddleware(dispatchBase);
-  const lang = useContext(LanguageContext);
-  function deleteUser(e: MouseEvent) {
+  const { trigger } = useDeleteUser();
+  const { data: lang } = useTranslation();
+  async function deleteUser(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_SINGLEUSER_CONFIRM)) {
       return false;
     }
-    dispatch({
-      type: 'delete',
-      uid: props.data.uid,
-    });
-    props.onUserDeleted();
+    await trigger(props.data.uid);
+    mutate('getAllUsers');
   }
   function updateUser(e: MouseEvent) {
     e.preventDefault();

@@ -1,11 +1,11 @@
-import { ChangeEvent, FormEvent, useContext, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 import Modal from 'react-modal';
 
 import customStyles from '../common/ModalStyles';
-import LanguageContext from '../common/languageContext';
+import { useTranslation } from '../common/dataHooks';
 
 function UserUpdateModal(props: any) {
-  const lang = useContext(LanguageContext);
+  const { data: lang } = useTranslation();
   const [pwd, setPwd] = useState('');
   const [email, setEmail] = useState(props.userData?.email ?? '');
   function handleSubmit(e: FormEvent) {

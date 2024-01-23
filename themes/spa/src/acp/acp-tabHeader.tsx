@@ -1,11 +1,12 @@
-import { MouseEvent, useContext, useState } from 'react';
-import UserContext from '../common/userContext';
-import dataProvider from '../common/dataProvider';
-import LanguageContext from '../common/languageContext';
+import { MouseEvent, useState } from 'react';
+import { initialState as userInitalState } from '../common/userContext';
+import { mutate } from 'swr';
+import { useUser, useTranslation, useLogoutUser } from '../common/dataHooks';
 
 function ACPTabHeader(props: any) {
-  const user = useContext(UserContext);
-  const lang = useContext(LanguageContext);
+  const { trigger } = useLogoutUser();
+  const { data: lang } = useTranslation();
+  const { user } = useUser();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   function updateActiveTab(e: MouseEvent) {
     e.preventDefault();
@@ -19,13 +20,21 @@ function ACPTabHeader(props: any) {
   }
   function handleSignOut(e: MouseEvent) {
     e.preventDefault();
-    dataProvider.signOut().then((response) => {
-      if (response.status === 200 && response.data.statusCode === 200) {
-        props.onUserLogout();
-      } else {
-        alert(response.data.statusText);
-      }
-    });
+    trigger();
+    document.cookie = 'CSRF-TOKEN=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+    mutate(
+      'getUserInfo',
+      () => {
+        // Hardcode userInitalState here, because this API indicates the user is still logged in
+        // Even though the logout API has been called.
+        // Might be a serser side bug
+        return Promise.resolve(userInitalState);
+      },
+      {
+        optimisticData: userInitalState,
+        revalidate: false,
+      },
+    );
   }
   function toggleMenu() {
     setMenuIsOpen(!menuIsOpen);

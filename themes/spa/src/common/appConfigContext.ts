@@ -1,4 +1,3 @@
-import React from "react";
 import type { IConfigParams } from '../common/types';
 
 export const initialState: IConfigParams = {
@@ -19,6 +18,3 @@ export const initialState: IConfigParams = {
   dateformat: "",
   filter_words: "",
 }
-const AppConfigContext = React.createContext(initialState);
-
-export default AppConfigContext;

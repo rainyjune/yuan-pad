@@ -27,7 +27,7 @@ function SignIn() {
       mutate('getUserInfo');
     } catch (e) {
       // error handling
-      setErrorMsg(e);
+      setErrorMsg(e as string);
     }
     return false;
   }

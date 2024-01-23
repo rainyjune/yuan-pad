@@ -297,6 +297,7 @@ export interface IReducerAction {
 
 export interface IUserUpdateReducerAction extends IReducerAction {
   id?: number;
+  error?: string;
 }
 
 export interface IUserReducerAction extends IReducerAction {

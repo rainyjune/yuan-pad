@@ -1,31 +1,32 @@
-import { ChangeEvent, FormEvent, useContext, useState } from 'react';
-import dataProvider from '../common/dataProvider';
-import LanguageContext from '../common/languageContext';
-import AppConfigContext from '../common/appConfigContext';
-import { useSystemInfo } from '../common/SystemInfoContext';
-import type { ITranslationData, ISystemInfo } from '../common/types';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { useAppConfigACP, useTranslation, useSystemInformation, useUpdateConfig } from '../common/dataHooks';
+import { mutate } from 'swr';
 
-function ACPConfig(props: { onConfigUpdated: () => void }) {
-  const appConfig = useContext(AppConfigContext);
-  const lang: ITranslationData = useContext(LanguageContext);
-  const [state, setState] = useState(appConfig);
+function ACPConfig() {
+  const { trigger: updateConfig } = useUpdateConfig();
+  const { data: acpData } = useSystemInformation();
+  const { data: appConfig } = useAppConfigACP();
+  const { data: lang } = useTranslation();
+  const [state, setState] = useState({ ...appConfig, password: '' });
 
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
-    dataProvider.updateSiteConfig(state).then((res) => {
-      if (res.data.statusCode === 200) {
-        // TODO show friendly message.
-        alert('OK');
-        setState({
-          ...state,
-          password: '',
-        }); // Empty the password input value.
-        props.onConfigUpdated();
-      } else {
-        // TODO User friendly message.
-        alert('failed');
-      }
-    });
+    try {
+      await updateConfig(state);
+      setState({
+        ...state,
+        password: '',
+      });
+      mutate(
+        'getAppConfigACP',
+        { ...state },
+        {
+          revalidate: false,
+        },
+      );
+    } catch (e) {
+      alert(e);
+    }
   }
   function toggleSiteClose(e: ChangeEvent) {
     setState({
@@ -58,7 +59,7 @@ function ACPConfig(props: { onConfigUpdated: () => void }) {
       [target.name]: target.value.trim(),
     });
   }
-  const acpData = useSystemInfo();
+
   return (
     <div className={'configContainer selectTag'}>
       <form onSubmit={handleSubmit} action="index.php?controller=config&amp;action=update" method="post">
@@ -75,9 +76,9 @@ function ACPConfig(props: { onConfigUpdated: () => void }) {
               <tr>
                 <td>{lang.CLOSE_BOARD}:</td>
                 <td>
-                  <input type="radio" value="1" checked={state.site_close === 1} onChange={toggleSiteClose} />
+                  <input type="radio" value="1" checked={Number(state.site_close) === 1} onChange={toggleSiteClose} />
                   {lang.YES}
-                  <input type="radio" value="0" checked={state.site_close !== 1} onChange={toggleSiteClose} />
+                  <input type="radio" value="0" checked={Number(state.site_close) !== 1} onChange={toggleSiteClose} />
                   {lang.NO}
                 </td>
               </tr>
@@ -120,7 +121,7 @@ function ACPConfig(props: { onConfigUpdated: () => void }) {
                         themeOptions = [];
                       const entries = Object.entries(themes);
                       for (const [, v] of entries) {
-                        const theme = v;
+                        const theme = v as string;
                         themeOptions.push(
                           <option key={theme} value={theme}>
                             {theme}
@@ -141,10 +142,9 @@ function ACPConfig(props: { onConfigUpdated: () => void }) {
                         timezoneOptions = [];
                       const entries = Object.entries(timeZones);
                       for (const [key, value] of Object.entries(entries)) {
-                        const timezone = value;
                         timezoneOptions.push(
                           <option key={key} value={key}>
-                            {timezone}
+                            {value as unknown as string}
                           </option>,
                         );
                       }
@@ -165,8 +165,8 @@ function ACPConfig(props: { onConfigUpdated: () => void }) {
                       for (const [k, v] of entries) {
                         const language = v;
                         languageOptions.push(
-                          <option key={k} value={language}>
-                            {language}
+                          <option key={k} value={language as unknown as string}>
+                            {language as unknown as string}
                           </option>,
                         );
                       }
@@ -187,7 +187,7 @@ function ACPConfig(props: { onConfigUpdated: () => void }) {
                         const format = v;
                         formatOptions.push(
                           <option key={k} value={k}>
-                            {format}
+                            {format as unknown as string}
                           </option>,
                         );
                       }

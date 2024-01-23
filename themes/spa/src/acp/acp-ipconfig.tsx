@@ -1,33 +1,22 @@
-import { useContext, useEffect, useState, ChangeEvent } from 'react';
-import dataProvider from '../common/dataProvider';
+import { useState, ChangeEvent } from 'react';
 import IPItem from './IPItem';
-import LanguageContext from '../common/languageContext';
-import type { ITranslationData, IBannedIPItem } from '../common/types';
+import { useTranslation, useIPBlackList, useDeleteMultiIPs } from '../common/dataHooks';
 
 function ACPIpConfig() {
-  const lang: ITranslationData = useContext(LanguageContext);
-  const [IPs, setIPs] = useState<Array<IBannedIPItem>>([]);
+  const { trigger } = useDeleteMultiIPs();
+  const { data: lang } = useTranslation();
+  const { data: IPs, mutate } = useIPBlackList();
   const [selectedIds, setSelectedIds] = useState(new Set<string>());
 
   function toggleInputClicked(e: ChangeEvent<HTMLInputElement>) {
     let nextIds = new Set<string>();
     if (e.target.checked) {
-      nextIds = new Set(IPs.map((item) => item.ip));
+      nextIds = new Set(IPs.map((item: any) => item.ip));
     }
     setSelectedIds(nextIds);
   }
-  useEffect(() => {
-    loadBlackList();
-  }, []);
-  async function loadBlackList() {
-    const res = await dataProvider.getIPBlackList();
-    if (res.status === 200 && res.data.statusCode === 200) {
-      setIPs(res.data.response);
-    } else {
-      alert(res.data.statusText);
-    }
-  }
-  function handleSubmit(e: any) {
+
+  async function handleSubmit(e: any) {
     e.preventDefault();
     const checkedItems = Array.from(selectedIds);
     if (checkedItems.length === 0) {
@@ -36,13 +25,12 @@ function ACPIpConfig() {
     if (!confirm(lang.UPDATE_IPLIST_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteMultiIPs(checkedItems).then((res) => {
-      if (res.data.statusCode === 200) {
-        loadBlackList();
-      } else {
-        alert('delete error');
-      }
-    });
+    try {
+      await trigger(checkedItems);
+      mutate();
+    } catch (e) {
+      alert(e);
+    }
   }
   function handleToggleItem(toggledId: string) {
     // Create a copy (to avoid mutation).

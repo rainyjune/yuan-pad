@@ -1,16 +1,18 @@
-import { useContext, useEffect, useState, useReducer } from 'react';
+import { useState, useReducer, MouseEvent } from 'react';
 import UserUpdateModal from './acp-userUpdateModal';
 import UserItem from './UserItem';
-import LanguageContext from '../common/languageContext';
-import { usersReducer, dispatchMiddleware } from './usersReducer';
-import { userUpdateInitialState, userUpdateReducer } from './userUpdateReducer';
+import { userUpdateInitialState, reducer } from './userUpdateReducer';
 import type { IUser } from '../common/types';
+import { useTranslation, useAllUsers, useUpdateUser, useDeleteMutiUsers, useDeleteAllUsers } from '../common/dataHooks';
+import { mutate } from 'swr';
 
 function ACPUser() {
-  const lang = useContext(LanguageContext);
-  const [users, dispatchBase] = useReducer(usersReducer, []);
-  const dispatch = dispatchMiddleware(dispatchBase);
-  const [modalInfo, setModalInfo] = useReducer(userUpdateReducer, userUpdateInitialState);
+  const { trigger: triggerUpdate } = useUpdateUser();
+  const { trigger: triggerDeleteMulti } = useDeleteMutiUsers();
+  const { trigger: triggerDeleteAll } = useDeleteAllUsers();
+  const { data: lang } = useTranslation();
+  const { data: users } = useAllUsers();
+  const [modalInfo, dispatch] = useReducer(reducer, userUpdateInitialState);
   const [selectedIds, setSelectedIds] = useState(new Set());
 
   function toggleInputClicked(e: React.ChangeEvent<HTMLInputElement>) {
@@ -20,40 +22,34 @@ function ACPUser() {
     }
     setSelectedIds(nextIds);
   }
-
-  useEffect(() => {
-    dispatch({ type: 'loadAll' });
-  }, []);
-
-  async function loadAllUsersFromServer() {
-    dispatch({ type: 'loadAll' });
+  async function handleUpdateSubmit(newUserData: any) {
+    try {
+      await triggerUpdate(newUserData);
+      dispatch({
+        type: 'saved',
+      });
+      mutate('getAllUsers');
+    } catch (e) {
+      dispatch({
+        type: 'error',
+        id: newUserData.uid,
+        error: e as string,
+      });
+    }
   }
-  function handleUserDeleted() {
-    loadAllUsersFromServer();
-  }
-  function handleUpdateSubmit(newUserData: any) {
-    dispatch({
-      type: 'update',
-      data: newUserData,
-    });
-    setModalInfo({
-      type: 'saved',
-    });
-    dispatch({ type: 'loadAll' });
-  }
-  function deleteAllUsers(e: any) {
+  async function deleteAllUsers(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_ALLUSER_CONFIRM)) {
       return false;
     }
-    dispatch({
-      type: 'deleteAll',
-    });
-    dispatch({
-      type: 'loadAll',
-    });
+    try {
+      await triggerDeleteAll();
+      mutate('getAllUsers');
+    } catch (e) {
+      alert(e);
+    }
   }
-  function handleDeleteMulti(e: any) {
+  async function handleDeleteMulti(e: any) {
     e.preventDefault();
     const checkedUids = Array.from(selectedIds);
     if (checkedUids.length === 0) {
@@ -62,13 +58,12 @@ function ACPUser() {
     if (!confirm(lang.DEL_SELECTEDUSERS_CONFIRM)) {
       return false;
     }
-    dispatch({
-      type: 'deleteMulti',
-      data: checkedUids,
-    });
-    dispatch({
-      type: 'loadAll',
-    });
+    try {
+      await triggerDeleteMulti(checkedUids);
+      mutate('getAllUsers');
+    } catch (e) {
+      alert(e);
+    }
   }
   function handleToggleItem(toggledId: number) {
     // Create a copy (to avoid mutation).
@@ -103,12 +98,11 @@ function ACPUser() {
                 data={user}
                 key={user.uid}
                 onOpenUserUpdateModal={(userId: any) => {
-                  setModalInfo({
+                  dispatch({
                     type: 'selected',
                     id: userId,
                   });
                 }}
-                onUserDeleted={handleUserDeleted}
                 onToggleItem={handleToggleItem}
               />
             ))}
@@ -128,7 +122,7 @@ function ACPUser() {
           errorMsg={modalInfo.updateErrorMsg}
           modalIsOpen={modalInfo.updateModalIsOpen}
           onRequestClose={() =>
-            setModalInfo({
+            dispatch({
               type: 'cancelled',
             })
           }

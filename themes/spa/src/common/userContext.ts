@@ -1,4 +1,3 @@
-import { createContext } from "react";
 import type { IUser } from '../common/types';
 
 export const initialState: IUser = {
@@ -7,4 +6,3 @@ export const initialState: IUser = {
   username: '',
   email: '',
 };
-export default createContext(initialState);

@@ -1,18 +1,24 @@
-import { useEffect, useState, useContext, MouseEvent, useCallback } from 'react';
-import { initialState as messageInitalState, messageReducer } from './messageReducer';
+import { useState, MouseEvent } from 'react';
 import ReplyModal from './acp-replyModal';
 import CommentUpdateModal from './acp-updateCommentModal';
 import Comment from './Comment';
-import LanguageContext from '../common/languageContext';
+import {
+  useTranslation,
+  useAllComments,
+  useDeleteMutiComments,
+  useDeleteAllReplies,
+  useDeleteAllComments,
+} from '../common/dataHooks';
 import { IComment } from '../common/types';
-import useThunkReducer from '../common/useThunkReducer';
-import dataProvider from '../common/dataProvider';
-import { useSystemInfoDispatch } from '../common/SystemInfoContext';
+import { mutate } from 'swr';
 
 function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
-  const systemInfoDispatch = useSystemInfoDispatch();
-  const lang = useContext(LanguageContext);
-  const [comments, dispatch] = useThunkReducer(messageReducer, messageInitalState);
+  const { trigger: triggerDeleteAllComments } = useDeleteAllComments();
+  const { trigger: triggerDeleteAllReplies } = useDeleteAllReplies();
+  const { trigger: trigerDeleteMulti } = useDeleteMutiComments();
+  const { data: lang } = useTranslation();
+  const { data: commentsData } = useAllComments();
+  const comments = commentsData.comments ?? [];
   const [modalState, setModalState] = useState({
     isOpen: false,
     type: '', // "reply" or "update"
@@ -24,7 +30,7 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
     // Create a copy (to avoid mutation).
     let nextIds = new Set<number>();
     if (e.target.checked) {
-      nextIds = new Set(comments.data.map((comment: IComment) => comment.id));
+      nextIds = new Set(comments.map((comment: IComment) => comment.id));
       setSelectedIds(nextIds);
     }
     setSelectedIds(nextIds);
@@ -35,17 +41,10 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
       return false;
     }
     try {
-      const res = await dataProvider.deleteAllComments();
-      if (res.data.statusCode === 200) {
-        loadMessages();
-        systemInfoDispatch({
-          type: 'loaded',
-        });
-      } else {
-        throw Error(res.data);
-      }
+      await triggerDeleteAllComments();
+      mutate('loadAllCommentsFromServer');
     } catch (e) {
-      alert('删除失败');
+      alert(e);
     }
   }
   async function deleteAllReplies(e: MouseEvent) {
@@ -54,17 +53,10 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
       return false;
     }
     try {
-      const res = await dataProvider.deleteAllReplies();
-      if (res.data.statusCode === 200) {
-        loadMessages();
-        systemInfoDispatch({
-          type: 'loaded',
-        });
-      } else {
-        throw Error(res.data);
-      }
+      await triggerDeleteAllReplies();
+      mutate('loadAllCommentsFromServer');
     } catch (e) {
-      alert('删除回复失败');
+      alert(e);
     }
   }
   async function handleFormSubmit(e: React.FormEvent) {
@@ -77,17 +69,10 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
       return false;
     }
     try {
-      const res = await dataProvider.deleteMutiComments(checkedItems);
-      if (res.data.statusCode === 200) {
-        loadMessages();
-        systemInfoDispatch({
-          type: 'loaded',
-        });
-      } else {
-        throw Error(res.data);
-      }
+      trigerDeleteMulti(checkedItems);
+      mutate('loadAllCommentsFromServer');
     } catch (e) {
-      alert('删除失败');
+      alert(e);
     }
   }
   function closeModal() {
@@ -106,23 +91,6 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
     });
     setActiveCommentId(commentId);
   }
-  const loadMessages = useCallback(
-    async function () {
-      try {
-        const res = await dataProvider.loadAllCommentsFromServer();
-        dispatch({
-          type: 'LOAD_SUCCESS',
-          data: res.data.response.comments,
-        });
-      } catch (e) {
-        dispatch({ type: 'LOAD_ERROR' });
-      }
-    },
-    [dispatch],
-  );
-  useEffect(() => {
-    loadMessages();
-  }, [loadMessages]);
   function handleToggleItem(toggledId: number) {
     // Create a copy (to avoid mutation).
     const nextIds = new Set(selectedIds);
@@ -133,23 +101,9 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
     }
     setSelectedIds(nextIds);
   }
-  async function handleCommentDeleted(commentId: number) {
-    try {
-      const res = await dataProvider.deleteComment(commentId);
-      if (res.data.statusCode === 200) {
-        loadMessages();
-        systemInfoDispatch({
-          type: 'loaded',
-        });
-      } else {
-        throw Error(res.data);
-      }
-    } catch (e) {
-      alert('删除留言失败');
-    }
-  }
+  console.log('comments:', comments);
   const modalProps = {
-    comment: comments.data.find((comment: IComment) => comment.id === activeCommentId),
+    comment: comments.find((comment: IComment) => comment.id === activeCommentId),
     modalErrorMsg: modalState.error,
     onRequestClose: closeModal,
   };
@@ -168,7 +122,7 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
             </tr>
           </thead>
           <tbody>
-            {comments.data.map((comment: any) => {
+            {comments.map((comment: any) => {
               return (
                 <Comment
                   data={comment}
@@ -177,16 +131,10 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
                   onReplyComment={(id: number) => {
                     openModal('reply', id);
                   }}
-                  onCommentDeleted={handleCommentDeleted}
                   onUpdateComment={(id: number) => openModal('update', id)}
                   onToggleItem={handleToggleItem}
                   isSelected={selectedIds.has(comment.id)}
-                  onReplyDelete={() => {
-                    loadMessages();
-                    systemInfoDispatch({
-                      type: 'loaded',
-                    });
-                  }}
+                  onReplyDelete={() => {}}
                 />
               );
             })}
@@ -208,10 +156,6 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
         modalIsOpen={modalState.isOpen && modalState.type === 'reply'}
         onReplySubmit={() => {
           closeModal();
-          loadMessages();
-          systemInfoDispatch({
-            type: 'loaded',
-          });
         }}
       />
       <CommentUpdateModal
@@ -220,10 +164,6 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
         modalIsOpen={modalState.isOpen && modalState.type === 'update'}
         onCommentUpdated={() => {
           closeModal();
-          loadMessages();
-          systemInfoDispatch({
-            type: 'loaded',
-          });
         }}
       />
     </div>

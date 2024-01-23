@@ -1,26 +1,25 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import Modal from 'react-modal';
-import dataProvider from '../common/dataProvider';
+import { useUpdateComment } from '../common/dataHooks';
 
 import customStyles from '../common/ModalStyles';
+import { mutate } from 'swr';
 
 function UpdateCommentModal(props: any) {
+  const { trigger } = useUpdateComment();
   const [content, setContent] = useState(props.comment?.post_content ?? '');
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!content.trim()) return;
     try {
-      const res = await dataProvider.updateComment({
+      trigger({
         mid: parseInt(props.comment.id),
         update_content: content,
       });
-      if (res.status === 200 && res.data.statusCode === 200) {
-        props.onCommentUpdated();
-      } else {
-        throw Error(res.data);
-      }
+      props.onRequestClose();
+      mutate('loadAllCommentsFromServer');
     } catch (e) {
-      alert('Error');
+      alert(e);
     }
     return false;
   }

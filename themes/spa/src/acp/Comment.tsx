@@ -1,38 +1,40 @@
-import { useContext } from 'react';
-import dataProvider from '../common/dataProvider';
+import { MouseEvent } from 'react';
 import Reply from './Reply';
-import LanguageContext from '../common/languageContext';
 import type { IComment } from '../common/types';
+import { useTranslation, useBanIP, useDeleteComment } from '../common/dataHooks';
+import { mutate } from 'swr';
 
 export default function Comment(props: {
   data: IComment;
   onActiveTabChanged: (s: string) => void;
   onReplyComment: (data: number) => void;
-  onCommentDeleted: (id: any) => void;
   onUpdateComment: (data: any) => void;
   onToggleItem: (id: number) => void;
   onReplyDelete: () => void;
   isSelected: boolean;
 }) {
+  const { trigger: triggerDelete } = useDeleteComment();
+  const { trigger: triggerBanIP } = useBanIP();
+  const { data: lang } = useTranslation();
   const data = props.data;
-  const lang = useContext(LanguageContext);
   async function banIP(ip: string) {
-    await dataProvider.banIP(ip);
+    await triggerBanIP(ip);
     props.onActiveTabChanged('ban_ip');
   }
-  function deleteComment(e: any) {
+  function deleteComment(e: MouseEvent) {
     e.preventDefault();
     const commentId = data.id;
     if (!confirm(lang.DEL_COMMENT_CONFIRM)) {
       return false;
     }
-    props.onCommentDeleted(commentId);
+    triggerDelete(commentId);
+    mutate('loadAllCommentsFromServer');
   }
-  function replyComment(e: any) {
+  function replyComment(e: MouseEvent) {
     e.preventDefault();
     props.onReplyComment(data.id);
   }
-  function updateComment(e: any) {
+  function updateComment(e: MouseEvent) {
     e.preventDefault();
     props.onUpdateComment(data.id);
   }
@@ -50,7 +52,7 @@ export default function Comment(props: {
         {data.post_content}
         <br />
         {lang.TIME}: {data.time}
-        <Reply data={data} onDelete={props.onReplyDelete} />
+        <Reply data={data} />
       </td>
       <td className="col-xs-2 col-sm-2 col-md-2">
         <button className="btn btn-danger btn-sm" onClick={deleteComment}>

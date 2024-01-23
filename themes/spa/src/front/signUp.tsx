@@ -25,7 +25,7 @@ function SignUp() {
       setModalIsOpen(false);
       mutate('getUserInfo');
     } catch (e) {
-      setErrorMsg(e);
+      setErrorMsg(e as string);
     }
   }
   return (

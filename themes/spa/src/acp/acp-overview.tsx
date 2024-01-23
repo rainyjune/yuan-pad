@@ -1,10 +1,9 @@
-import { useContext } from 'react';
-import LanguageContext from '../common/languageContext';
-import { useSystemInfo } from '../common/SystemInfoContext';
+import { useTranslation, useSystemInformation } from '../common/dataHooks';
 
 const ACPOverview = () => {
-  const lang = useContext(LanguageContext),
-    sysInfo = useSystemInfo();
+  const { data: lang } = useTranslation();
+  const { data: sysInfo } = useSystemInformation();
+
   return (
     <div className={'selectTag'}>
       <h1>{lang.WELCOME_SYS}</h1>

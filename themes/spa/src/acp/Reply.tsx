@@ -1,26 +1,32 @@
-import { MouseEvent, useContext } from 'react';
-import dataProvider from '../common/dataProvider';
-import LanguageContext from '../common/languageContext';
+import { MouseEvent } from 'react';
+import { useTranslation, useDeleteReply } from '../common/dataHooks';
+import { mutate } from 'swr';
 
-export default function Reply({ data, onDelete }: { data: any; onDelete: () => void }) {
-  const lang = useContext(LanguageContext);
+export default function Reply({ data }: { data: any }) {
+  const { data: lang } = useTranslation();
+  const { trigger } = useDeleteReply();
 
   function deleteReply(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_REPLY_CONFIRM)) {
       return false;
     }
-    dataProvider.deleteReply(data.id).then(() => {
-      onDelete();
-    });
+    trigger(data.id);
+    mutate('loadAllCommentsFromServer');
   }
-  if (!data || !data.reply_content) {
+  if (!data.reply_content) {
     return null;
   }
   return (
     <div>
-      {lang.YOU_REPLIED &&
-        lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace('{reply_content}', data.reply_content)}
+      <div
+        dangerouslySetInnerHTML={{
+          __html: lang.YOU_REPLIED.replace('{reply_time}', data.reply_time).replace(
+            '{reply_content}',
+            data.reply_content,
+          ),
+        }}
+      ></div>
       <span>
         &nbsp;
         <a onClick={deleteReply} href="#">

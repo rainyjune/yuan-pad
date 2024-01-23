@@ -1,4 +1,5 @@
 import { useAppConfig, useUser, useTranslation } from '../common/dataHooks';
+// @ts-expect-error Image
 import rssURL from '../images/rss-icon.png';
 
 function AppFooter() {

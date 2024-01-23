@@ -1,11 +1,11 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, MouseEvent } from 'react';
 import Modal from 'react-modal';
 import { mutate } from 'swr';
 import { useUser, useTranslation, useUpdateUser } from '../common/dataHooks';
 
 import ModalStyles from './ModalStyles';
-function UserUpdate(props: any) {
-  const { trigger: triggerUpdate, data, error, reset, isMutating } = useUpdateUser();
+function UserUpdate() {
+  const { trigger: triggerUpdate } = useUpdateUser();
   const { data: language } = useTranslation();
   const { user: user } = useUser();
   const [password, setPassword] = useState('');
@@ -22,7 +22,7 @@ function UserUpdate(props: any) {
       setModalIsOpen(false);
       mutate('getUserInfo', { ...result }, { revalidate: false });
     } catch (e) {
-      setErrorMsg(e);
+      setErrorMsg(e as string);
     }
     return false;
   }
@@ -32,7 +32,7 @@ function UserUpdate(props: any) {
         role="button"
         className="btn btn-default"
         href="#"
-        onClick={(e: any) => {
+        onClick={(e: MouseEvent) => {
           e.preventDefault();
           setModalIsOpen(true);
         }}

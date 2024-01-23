@@ -1,35 +1,30 @@
-import { FormEvent, useContext, useState } from 'react';
+import { FormEvent, useState } from 'react';
 import Modal from 'react-modal';
-import dataProvider from '../common/dataProvider';
 
 import customStyles from '../common/ModalStyles';
-import LanguageContext from '../common/languageContext';
+import { useTranslation, useSignIn } from '../common/dataHooks';
+import { mutate } from 'swr';
 
-function ACPLogin(props: any) {
-  const language = useContext(LanguageContext);
+function ACPLogin() {
+  const { trigger } = useSignIn();
+  const { data: language } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [modalIsOpen, setModalIsOpen] = useState(true);
-  function handleSignIn(loginData: any) {
-    dataProvider.signIn(loginData).then((res) => {
-      if (res.data.statusCode === 200) {
-        setErrorMsg('');
-        setModalIsOpen(false);
-        props.onCurrentUserUpdated(res.data.response);
-      } else if (res.data.statusCode === 304) {
-        // The user had signed in before.
-      } else {
-        setErrorMsg(res.data.response);
-      }
-    });
-  }
-  function handleSubmit(e: FormEvent) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const user = username,
       pwd = password;
     if (!user || !pwd) return;
-    handleSignIn({ user, password: pwd });
+    try {
+      await trigger({ user, password: pwd });
+      setErrorMsg('');
+      setModalIsOpen(false);
+      mutate('getUserInfo');
+    } catch (e) {
+      setErrorMsg(e as string);
+    }
     return false;
   }
   function goToHome() {

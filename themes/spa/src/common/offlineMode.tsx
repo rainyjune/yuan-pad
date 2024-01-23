@@ -1,9 +1,8 @@
-import { useContext } from 'react';
-import LanguageContext from '../common/languageContext';
-import AppConfigContext from './appConfigContext';
+import { useAppConfig, useTranslation } from './dataHooks';
+
 function Offline() {
-  const appConfig = useContext(AppConfigContext);
-  const lang = useContext(LanguageContext);
+  const { data: appConfig } = useAppConfig();
+  const { data: lang } = useTranslation();
   return (
     <p
       className="bg-warning"
