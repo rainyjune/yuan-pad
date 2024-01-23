@@ -5,13 +5,3 @@ sites/default/config.php
 *.map
 .sass-cache/
 *.komodoproject
-*.html
-*.js
-*.css
-*.eot
-*.ttf
-*.woff
-*.woff2
-*.svg
-*.gif
-*.jpg
