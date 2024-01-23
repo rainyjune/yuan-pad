@@ -47,6 +47,7 @@ export default function CommentForm(props: any) {
         </label>
         <div className="col-sm-10 col-lg-10">
           <textarea
+            required
             id="inputContent"
             className="form-control"
             rows={3}
