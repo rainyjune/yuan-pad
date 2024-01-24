@@ -1,7 +1,6 @@
 import { MouseEvent, useState } from 'react';
-import { initialState as userInitalState } from '../common/userContext';
 import { mutate } from 'swr';
-import { useUser, useTranslation, useLogoutUser } from '../common/dataHooks';
+import { useUser, useTranslation, useLogoutUser, userInitalState } from '../common/dataHooks';
 
 function ACPTabHeader(props: any) {
   const { trigger } = useLogoutUser();

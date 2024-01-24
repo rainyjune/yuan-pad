@@ -1,7 +1,6 @@
 import { MouseEvent } from 'react';
 import { useSWRConfig } from 'swr';
-import { initialState as userInitalState } from '../common/userContext';
-import { useTranslation, useLogoutUser } from '../common/dataHooks';
+import { useTranslation, useLogoutUser, userInitalState } from '../common/dataHooks';
 
 function LogoutButton() {
   const { mutate } = useSWRConfig();
