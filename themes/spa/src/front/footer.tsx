@@ -1,6 +1,4 @@
 import { useAppConfig, useUser, useTranslation } from '../common/dataHooks';
-// @ts-expect-error Image
-import rssURL from '../images/rss-icon.png';
 
 function AppFooter() {
   const { data: appConfig } = useAppConfig();
@@ -23,10 +21,17 @@ function AppFooter() {
         Powered by{' '}
         <a href="https://github.com/rainyjune/yuan-pad" target="_blank" title="Find More">
           YuanPad
-        </a>
-        &nbsp;
+        </a>{' '}
         <a href="index.php?action=rss">
-          <img src={rssURL} alt="rss" />
+          <img
+            title="RSS"
+            src={'./themes/spa/templates/images/rss-icon.png'} // For production
+            alt="RSS"
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null; // prevents looping
+              currentTarget.src = './images/rss-icon.png'; // For development
+            }}
+          />
         </a>
       </p>
     </footer>
