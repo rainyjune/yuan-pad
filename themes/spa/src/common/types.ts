@@ -1,3 +1,7 @@
+export interface ObjectLiteral {
+  [key: string]: string;
+}
+
 export interface GetUserInfoResponse {
   statusCode: number;
   statusText: string;
