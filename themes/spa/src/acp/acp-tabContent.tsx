@@ -3,16 +3,13 @@ import ACPConfig from './acp-config';
 import ACPMessages from './acp-messages';
 import ACPIpConfig from './acp-ipconfig';
 import ACPUsers from './acp-users';
-import { useUser } from '../common/dataHooks';
 
 function ACPTabContent(props: { onActiveTabChanged: (s: string) => void; activeTab: string }) {
-  const { user } = useUser();
   function handleActiveChange(newTab: string) {
     setTimeout(() => {
       props.onActiveTabChanged(newTab);
     }, 0);
   }
-  if (user.user_type !== 'admin') return null;
 
   return (
     <div className="tagContent">

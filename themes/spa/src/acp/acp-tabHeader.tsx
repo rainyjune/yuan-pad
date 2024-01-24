@@ -1,16 +1,22 @@
 import { MouseEvent, useState } from 'react';
 import { mutate } from 'swr';
-import { useUser, useTranslation, useLogoutUser, userInitalState } from '../common/dataHooks';
+import { useTranslation, useLogoutUser, userInitalState } from '../common/dataHooks';
 
-function ACPTabHeader(props: any) {
+function ACPTabHeader(props: { activeTab: string; onTabSelected: (newTab: string) => void }) {
   const { trigger } = useLogoutUser();
   const { data: lang } = useTranslation();
-  const { user } = useUser();
   const [menuIsOpen, setMenuIsOpen] = useState(false);
+  const tabs = [
+    { text: lang.ACP_OVERVIEW, value: 'overview' },
+    { text: lang.ACP_CONFSET, value: 'siteset' },
+    { text: lang.ACP_MANAGE_POST, value: 'message' },
+    { text: lang.ACP_MANAGE_IP, value: 'ban_ip' },
+    { text: lang.USER_ADMIN, value: 'user' },
+  ];
   function updateActiveTab(e: MouseEvent) {
     e.preventDefault();
     const tabLink = e.target as HTMLAnchorElement;
-    const newTabName = tabLink.getAttribute('data-tabname');
+    const newTabName = tabLink.getAttribute('data-tabname') ?? '';
     if (newTabName === props.activeTab) {
       return false;
     }
@@ -39,9 +45,8 @@ function ACPTabHeader(props: any) {
     setMenuIsOpen(!menuIsOpen);
   }
 
-  if (user.user_type !== 'admin') return null;
   const activeTab = props.activeTab;
-  const items = props.tabs.map((tab: any) => {
+  const items = tabs.map((tab: { text: string; value: string }) => {
     return (
       <li key={tab.value} role="presentation" className={tab.value === activeTab ? 'active' : ''}>
         <a href="#" data-tabname={tab.value} onClick={updateActiveTab}>
