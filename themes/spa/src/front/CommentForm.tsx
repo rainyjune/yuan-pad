@@ -1,6 +1,6 @@
 import { useRef, useState, FormEvent, ChangeEvent } from 'react';
-import Captcha, { CaptchaCom } from './Captcha';
-
+import Captcha from './Captcha';
+import type { CaptchaCom } from '../common/types';
 import { useAppConfig, useUser, useTranslation, useAddComment } from '../common/dataHooks';
 
 export default function CommentForm(props: { onCommentCreated: () => void }) {

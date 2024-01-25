@@ -321,3 +321,6 @@ export interface IUserModalState {
 export interface IBannedIPItem {
   ip: string;
 }
+export type CaptchaCom = {
+  refresh: () => void;
+};

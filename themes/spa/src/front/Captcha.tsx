@@ -51,8 +51,5 @@ const Captcha = forwardRef(
     );
   },
 );
-export type CaptchaCom = {
-  refresh: () => void;
-};
 
 export default Captcha;

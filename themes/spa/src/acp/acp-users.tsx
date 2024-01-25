@@ -1,9 +1,16 @@
 import { useState, MouseEvent, FormEvent } from 'react';
 import UserUpdateModal from './acp-userUpdateModal';
 import UserItem from './UserItem';
-import { userUpdateInitialState, getState } from './userUpdateReducer';
 import type { IUser, IUserUpdate, IUserUpdateReducerAction } from '../common/types';
-import { useTranslation, useAllUsers, useUpdateUser, useDeleteMutiUsers, useDeleteAllUsers } from '../common/dataHooks';
+import {
+  useTranslation,
+  useAllUsers,
+  useUpdateUser,
+  useDeleteMutiUsers,
+  useDeleteAllUsers,
+  getState,
+  userUpdateInitialState,
+} from '../common/dataHooks';
 import { mutate } from 'swr';
 
 function ACPUser() {
