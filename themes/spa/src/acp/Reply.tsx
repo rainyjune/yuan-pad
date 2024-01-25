@@ -1,8 +1,9 @@
 import { MouseEvent } from 'react';
 import { useTranslation, useDeleteReply } from '../common/dataHooks';
+import type { IComment } from '../common/types';
 import { mutate } from 'swr';
 
-export default function Reply({ data }: { data: any }) {
+export default function Reply({ data }: { data: IComment }) {
   const { data: lang } = useTranslation();
   const { trigger } = useDeleteReply();
 

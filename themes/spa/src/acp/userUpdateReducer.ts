@@ -6,7 +6,7 @@ export const userUpdateInitialState: IUserModalState = {
   updatedModalUserId: null,
 };
 
-export function reducer(state: any, action: IUserUpdateReducerAction) {
+export function getState(action: IUserUpdateReducerAction): IUserModalState {
   switch(action.type) {
     case 'saved': {
       return {
@@ -31,13 +31,13 @@ export function reducer(state: any, action: IUserUpdateReducerAction) {
     }
     case 'error': {
       return {
-        updateErrorMsg: action.error,
+        updateErrorMsg: action.error ?? '',
         updatedModalUserId: action.id ?? null,
         updateModalIsOpen: true,
       }
     }
     default: {
-      return state;
+      throw Error('Unknown action: ' + action.type);
     }
   }
 }

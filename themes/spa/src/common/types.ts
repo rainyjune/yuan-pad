@@ -2,6 +2,10 @@ export interface ObjectLiteral {
   [key: string]: string;
 }
 
+export interface AjaxObject {
+  ajax: boolean;
+}
+
 export interface GetUserInfoResponse {
   statusCode: number;
   statusText: string;
@@ -240,17 +244,24 @@ export interface IUser {
   email: string;
 }
 
+export interface IUserUpdate {
+  uid: number | string;
+  user: string;
+  pwd?: string;
+  email: string;
+}
+
 export interface IComment {
   id: number;
   ip: string;
-  uid: any;
+  uid: string | number;
   uname: string;
   post_content: string;
   time: string;
-  reply_id: any;
+  reply_id: string | number;
   reply_content: string;
   reply_time: string;
-  b_username: any;
+  b_username: string | null;
 }
 
 export interface UpdateCommentObj {
@@ -276,9 +287,6 @@ export interface UserUpdateData {
   email: string;
 }
 
-export type AjaxSuccCallback = (res: any) => void;
-export type AjaxErrCallback = (e: any) => void;
-
 export interface ISystemInfo {
   commentsTotal: number;
   repliesTotal: number;
@@ -302,23 +310,6 @@ export interface IReducerAction {
 export interface IUserUpdateReducerAction extends IReducerAction {
   id?: number;
   error?: string;
-}
-
-export interface IUserReducerAction extends IReducerAction {
-  data?: any;
-  uid?: number;
-}
-
-export interface IMessageReducerAction extends IReducerAction {
-  data?: any;
-  commentId?: number;
-  reply?: string;
-}
-
-export interface IMessageState {
-  isLoading: boolean;
-  isError: boolean;
-  data: Array<any>
 }
 
 export interface IUserModalState {

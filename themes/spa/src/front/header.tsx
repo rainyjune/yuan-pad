@@ -4,7 +4,7 @@ import UpdateUser from './updateUser';
 import SignOutButton from './signOut';
 import { useUser } from '../common/dataHooks';
 
-function Header(props: any) {
+function Header() {
   const { user: user } = useUser();
   return (
     <div className="header">
@@ -13,8 +13,8 @@ function Header(props: any) {
           case 'regular':
             return (
               <div>
-                <UpdateUser {...props} />
-                <SignOutButton {...props} />
+                <UpdateUser />
+                <SignOutButton />
               </div>
             );
           case 'admin':
@@ -23,7 +23,7 @@ function Header(props: any) {
           default:
             return (
               <div>
-                <SignIn {...props} /> <SignUp {...props} />
+                <SignIn /> <SignUp />
               </div>
             );
         }

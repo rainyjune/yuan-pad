@@ -8,7 +8,7 @@ export default function Comment(props: {
   data: IComment;
   onActiveTabChanged: (s: string) => void;
   onReplyComment: (data: number) => void;
-  onUpdateComment: (data: any) => void;
+  onUpdateComment: (data: number) => void;
   onToggleItem: (id: number) => void;
   onReplyDelete: () => void;
   isSelected: boolean;
@@ -47,7 +47,7 @@ export default function Comment(props: {
       <td className="col-xs-1 col-sm-1 col-md-1">
         <input type="checkbox" checked={props.isSelected} onChange={toggleItem} />
       </td>
-      <td className="col-xs-3 col-sm-3 col-md-3">{parseInt(data.uid) ? data.b_username : data.uname}</td>
+      <td className="col-xs-3 col-sm-3 col-md-3">{Number(data.uid) ? data.b_username : data.uname}</td>
       <td className="col-xs-6 col-sm-6 col-md-6">
         {data.post_content}
         <br />
@@ -59,7 +59,15 @@ export default function Comment(props: {
           <span className="glyphicon glyphicon-remove-circle" aria-hidden="true"></span>
         </button>
         <button className="btn btn-default btn-sm" onClick={replyComment}>
-          <img src="./themes/spa/images/reply.png" width="12" height="12" />
+          <img
+            src="./themes/spa/templates/images/reply.png" // For production
+            width="12"
+            height="12"
+            onError={({ currentTarget }) => {
+              currentTarget.onerror = null; // prevents looping
+              currentTarget.src = './images/reply.png'; // For development
+            }}
+          />
         </button>
         <button className="btn btn-default btn-sm" onClick={updateComment}>
           <span className="glyphicon glyphicon-pencil" aria-hidden="true"></span>

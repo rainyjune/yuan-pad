@@ -1,6 +1,7 @@
-import { useState, ChangeEvent } from 'react';
+import { useState, ChangeEvent, FormEvent } from 'react';
 import IPItem from './IPItem';
 import { useTranslation, useIPBlackList, useDeleteMultiIPs } from '../common/dataHooks';
+import { IBannedIPItem } from '../common/types';
 
 function ACPIpConfig() {
   const { trigger } = useDeleteMultiIPs();
@@ -11,12 +12,12 @@ function ACPIpConfig() {
   function toggleInputClicked(e: ChangeEvent<HTMLInputElement>) {
     let nextIds = new Set<string>();
     if (e.target.checked) {
-      nextIds = new Set(IPs.map((item: any) => item.ip));
+      nextIds = new Set(IPs.map((item: IBannedIPItem) => item.ip));
     }
     setSelectedIds(nextIds);
   }
 
-  async function handleSubmit(e: any) {
+  async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     const checkedItems = Array.from(selectedIds);
     if (checkedItems.length === 0) {
@@ -55,7 +56,7 @@ function ACPIpConfig() {
             </tr>
           </thead>
           <tbody>
-            {IPs.map((ip: any) => (
+            {IPs.map((ip: IBannedIPItem) => (
               <IPItem isSelected={selectedIds.has(ip.ip)} data={ip} key={ip.ip} onItemToggled={handleToggleItem} />
             ))}
             <tr>

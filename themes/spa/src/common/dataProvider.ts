@@ -1,9 +1,9 @@
 import axios from "axios";
 import qs from "qs";
 
-import { SignInData, UpdateCommentObj } from "../common/types";
+import { SignInData, UpdateCommentObj, AjaxObject, ReplyObj } from "../common/types";
 
-export function fetchByFunctionName(args: string | Array<any>) {
+export function fetchByFunctionName(args: string | number | Array<string | number | object>) {
   if (typeof args === 'string') {
     // @ts-expect-error Expected
     return fetchFunctions[args]().then(res => res.data.response);
@@ -173,7 +173,7 @@ function search(keyword: string) {
   });
 }
 
-function createPost(comment: any) {
+function createPost(comment: AjaxObject) {
   comment.ajax = true;
   return axios({
     method: "post",
@@ -393,7 +393,7 @@ function getSystemInformation() {
   });
 }
 
-function createReply(replyData: any) {
+function createReply(replyData: ReplyObj) {
   return axios({
     method: "post",
     url: "index.php",
@@ -412,7 +412,7 @@ function createReply(replyData: any) {
   });
 }
 
-function updateReply(replyData: any) {
+function updateReply(replyData: ReplyObj) {
   return axios({
     method: "post",
     url: "index.php",

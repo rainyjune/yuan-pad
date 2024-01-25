@@ -1,14 +1,14 @@
 import { useRef, useState, FormEvent, ChangeEvent } from 'react';
-import Captcha from './Captcha';
+import Captcha, { CaptchaCom } from './Captcha';
 
 import { useAppConfig, useUser, useTranslation, useAddComment } from '../common/dataHooks';
 
-export default function CommentForm(props: any) {
+export default function CommentForm(props: { onCommentCreated: () => void }) {
   const { trigger: addComment } = useAddComment();
   const { data: lang } = useTranslation();
   const { data: appConfig } = useAppConfig();
   const { user: user } = useUser();
-  const captchaRef = useRef<any>(null);
+  const captchaRef = useRef<CaptchaCom>(null);
   const [text, setText] = useState('');
   const [valid_code, setValid_code] = useState('');
   async function handleSubmit(e: FormEvent) {

@@ -101,7 +101,6 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
     }
     setSelectedIds(nextIds);
   }
-  console.log('comments:', comments);
   const modalProps = {
     comment: comments.find((comment: IComment) => comment.id === activeCommentId),
     modalErrorMsg: modalState.error,
@@ -122,7 +121,7 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
             </tr>
           </thead>
           <tbody>
-            {comments.map((comment: any) => {
+            {comments.map((comment: IComment) => {
               return (
                 <Comment
                   data={comment}
@@ -131,7 +130,7 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
                   onReplyComment={(id: number) => {
                     openModal('reply', id);
                   }}
-                  onUpdateComment={(id: number) => openModal('update', id)}
+                  onUpdateComment={(id: number) => openModal('update', Number(id))}
                   onToggleItem={handleToggleItem}
                   isSelected={selectedIds.has(comment.id)}
                   onReplyDelete={() => {}}
@@ -154,17 +153,11 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
         key={`reply-${activeCommentId}`}
         {...modalProps}
         modalIsOpen={modalState.isOpen && modalState.type === 'reply'}
-        onReplySubmit={() => {
-          closeModal();
-        }}
       />
       <CommentUpdateModal
         key={`update-${activeCommentId}`}
         {...modalProps}
         modalIsOpen={modalState.isOpen && modalState.type === 'update'}
-        onCommentUpdated={() => {
-          closeModal();
-        }}
       />
     </div>
   );

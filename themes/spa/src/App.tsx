@@ -51,7 +51,7 @@ export default function App() {
             keyword: '',
           });
         }}
-        onPageChanged={(pageNumber: string) => {
+        onPageChanged={(pageNumber) => {
           setCurrentPage(Number(pageNumber));
         }}
         commentsData={{

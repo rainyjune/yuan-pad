@@ -254,14 +254,14 @@ export function useAllComments() {
   return useWrappedSWR('loadAllCommentsFromServer', { fallbackData: {}});
 }
 
-function useWrappedSWR(key: any, swrExtraOptions = {}) {
+function useWrappedSWR(key: string | Array<string | number>, swrExtraOptions = {}) {
   return useSWR(key, fetchByFunctionName, {
     ...swrOptions,
     ...swrExtraOptions,
   });
 }
 
-async function sendRequest(url: any, { arg } : { arg: any}) {
+async function sendRequest(url: string, { arg } : { arg?: number | string | object | Array<string | number | object>} ) {
   // @ts-expect-error Expected
   return dataProvider[url](arg).then((res) => {
     if (res.data.statusCode !== 200) {

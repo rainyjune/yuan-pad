@@ -1,29 +1,38 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import Modal from 'react-modal';
 import customStyles from '../common/ModalStyles';
-
+import type { IComment } from '../common/types';
 import { useCreateReply, useUpdateReply } from '../common/dataHooks';
 import { mutate } from 'swr';
 
-function ReplyModal(props: any) {
+function ReplyModal({
+  comment: { id: pid, reply_id, reply_content },
+  onRequestClose,
+  modalIsOpen,
+  modalErrorMsg,
+}: {
+  comment: IComment;
+  onRequestClose: () => void;
+  modalIsOpen: boolean;
+  modalErrorMsg: string | null;
+}) {
   const { trigger: createReply } = useCreateReply();
   const { trigger: updateReply } = useUpdateReply();
-  const [content, setContent] = useState(props.comment?.reply_content ?? '');
+  const [content, setContent] = useState(reply_content ?? '');
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!content.trim()) return;
-    const action = props.comment?.reply_id ? updateReply : createReply;
-    const data = {
-      rid: props.comment.reply_id,
-      pid: props.comment.id,
-      content: content.trim(),
-      r_time: '',
-    };
+    const action = reply_id ? updateReply : createReply;
     try {
       // @ts-expect-error Expected
-      await action(data);
-      props.onRequestClose();
+      await action({
+        rid: reply_id,
+        pid: pid,
+        content: content.trim(),
+        r_time: '',
+      });
+      onRequestClose();
       mutate('loadAllCommentsFromServer');
     } catch (e) {
       alert(e);
@@ -32,13 +41,13 @@ function ReplyModal(props: any) {
   return (
     <Modal
       ariaHideApp={false}
-      isOpen={props.modalIsOpen}
+      isOpen={modalIsOpen}
       onRequestClose={() => {
-        props.onRequestClose();
+        onRequestClose();
       }}
       style={customStyles}
     >
-      <div>{props.error}</div>
+      <div>{modalErrorMsg}</div>
       <form onSubmit={handleSubmit} action="#" method="post">
         <textarea
           value={content}

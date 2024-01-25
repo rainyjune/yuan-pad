@@ -9,14 +9,14 @@ function replaceAll(str: string, mapObj: ObjectLiteral) {
   });
 }
 
-export default function Reply(props: any) {
+export default function Reply({ date, content }: { date: string; content: string }) {
   const { data: lang } = useTranslation();
   const { data: appConfig } = useAppConfig();
   function rawMarkup() {
     const mapObj = {
       '{admin_name}': appConfig.admin,
-      '{reply_time}': props.date,
-      '{reply_content}': props.content,
+      '{reply_time}': date,
+      '{reply_content}': content,
     };
     return { __html: replaceAll(lang.ADMIN_REPLIED ?? '', mapObj) };
   }

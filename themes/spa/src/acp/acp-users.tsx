@@ -1,8 +1,8 @@
-import { useState, useReducer, MouseEvent } from 'react';
+import { useState, MouseEvent, FormEvent } from 'react';
 import UserUpdateModal from './acp-userUpdateModal';
 import UserItem from './UserItem';
-import { userUpdateInitialState, reducer } from './userUpdateReducer';
-import type { IUser } from '../common/types';
+import { userUpdateInitialState, getState } from './userUpdateReducer';
+import type { IUser, IUserUpdate, IUserUpdateReducerAction } from '../common/types';
 import { useTranslation, useAllUsers, useUpdateUser, useDeleteMutiUsers, useDeleteAllUsers } from '../common/dataHooks';
 import { mutate } from 'swr';
 
@@ -12,7 +12,10 @@ function ACPUser() {
   const { trigger: triggerDeleteAll } = useDeleteAllUsers();
   const { data: lang } = useTranslation();
   const { data: users } = useAllUsers();
-  const [modalInfo, dispatch] = useReducer(reducer, userUpdateInitialState);
+  const [modalInfo, setModalInfo] = useState(userUpdateInitialState);
+  function dispatch(action: IUserUpdateReducerAction) {
+    setModalInfo(getState(action));
+  }
   const [selectedIds, setSelectedIds] = useState(new Set());
 
   function toggleInputClicked(e: React.ChangeEvent<HTMLInputElement>) {
@@ -22,7 +25,7 @@ function ACPUser() {
     }
     setSelectedIds(nextIds);
   }
-  async function handleUpdateSubmit(newUserData: any) {
+  async function handleUpdateSubmit(newUserData: IUserUpdate) {
     try {
       await triggerUpdate(newUserData);
       dispatch({
@@ -32,7 +35,7 @@ function ACPUser() {
     } catch (e) {
       dispatch({
         type: 'error',
-        id: newUserData.uid,
+        id: Number(newUserData.uid),
         error: e as string,
       });
     }
@@ -49,7 +52,7 @@ function ACPUser() {
       alert(e);
     }
   }
-  async function handleDeleteMulti(e: any) {
+  async function handleDeleteMulti(e: FormEvent) {
     e.preventDefault();
     const checkedUids = Array.from(selectedIds);
     if (checkedUids.length === 0) {
@@ -92,15 +95,15 @@ function ACPUser() {
             </tr>
           </thead>
           <tbody>
-            {users.map((user: any) => (
+            {users.map((user: IUser) => (
               <UserItem
                 isSelected={selectedIds.has(user.uid)}
                 data={user}
                 key={user.uid}
-                onOpenUserUpdateModal={(userId: any) => {
+                onOpenUserUpdateModal={(userId: number | string) => {
                   dispatch({
                     type: 'selected',
-                    id: userId,
+                    id: Number(userId),
                   });
                 }}
                 onToggleItem={handleToggleItem}
@@ -121,11 +124,11 @@ function ACPUser() {
           userData={updatedModalUserData}
           errorMsg={modalInfo.updateErrorMsg}
           modalIsOpen={modalInfo.updateModalIsOpen}
-          onRequestClose={() =>
+          onRequestClose={() => {
             dispatch({
               type: 'cancelled',
-            })
-          }
+            });
+          }}
           onUpdateSubmit={handleUpdateSubmit}
         />
       </form>

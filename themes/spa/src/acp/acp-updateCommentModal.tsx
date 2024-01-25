@@ -1,22 +1,32 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import Modal from 'react-modal';
 import { useUpdateComment } from '../common/dataHooks';
-
+import type { IComment } from '../common/types';
 import customStyles from '../common/ModalStyles';
 import { mutate } from 'swr';
 
-function UpdateCommentModal(props: any) {
+function UpdateCommentModal({
+  comment: { post_content, id: pid },
+  onRequestClose,
+  modalErrorMsg,
+  modalIsOpen,
+}: {
+  comment: IComment;
+  onRequestClose: () => void;
+  modalIsOpen: boolean;
+  modalErrorMsg: string | null;
+}) {
   const { trigger } = useUpdateComment();
-  const [content, setContent] = useState(props.comment?.post_content ?? '');
+  const [content, setContent] = useState(post_content ?? '');
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     if (!content.trim()) return;
     try {
       trigger({
-        mid: parseInt(props.comment.id),
+        mid: Number(pid),
         update_content: content,
       });
-      props.onRequestClose();
+      onRequestClose();
       mutate('loadAllCommentsFromServer');
     } catch (e) {
       alert(e);
@@ -24,8 +34,8 @@ function UpdateCommentModal(props: any) {
     return false;
   }
   return (
-    <Modal ariaHideApp={false} isOpen={props.modalIsOpen} onRequestClose={props.onRequestClose} style={customStyles}>
-      <div>{props.error}</div>
+    <Modal ariaHideApp={false} isOpen={modalIsOpen} onRequestClose={onRequestClose} style={customStyles}>
+      <div>{modalErrorMsg}</div>
       <form onSubmit={handleSubmit} action="#" method="post">
         <textarea
           value={content}

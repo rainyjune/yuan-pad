@@ -1,12 +1,13 @@
 import Reply from './Reply';
+import type { IComment } from '../common/types';
 
-export default function Comment(props: any) {
+export default function Comment(props: { data: IComment; children: string }) {
   function rawMarkup() {
     return { __html: props.children.toString() };
   }
   function rawAuthorMarkup() {
     return {
-      __html: parseInt(props.data.uid) ? props.data.b_username : props.data.uname,
+      __html: (Number(props.data.uid) ? props.data.b_username : props.data.uname) ?? '',
     };
   }
   return (

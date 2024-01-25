@@ -3,7 +3,13 @@ import { useAppConfig, useTranslation } from '../common/dataHooks';
 
 import '../css/index.less';
 
-export default function CommentStatistics(props: any) {
+export default function CommentStatistics(props: {
+  commentListType: number;
+  total: number;
+  pagenum: number;
+  currentPage: number;
+  onPageChanged: (n: number) => void;
+}) {
   const { data: lang } = useTranslation();
   const { data: appConfig } = useAppConfig();
   function rawMarkup() {
@@ -23,7 +29,6 @@ export default function CommentStatistics(props: any) {
     }
     return { __html: text };
   }
-  console.log('total:', Math.ceil(props.total / appConfig.num_perpage));
   return (
     <div className="statistics">
       <p dangerouslySetInnerHTML={rawMarkup()} />

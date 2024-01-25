@@ -2,8 +2,21 @@ import CommentForm from './CommentForm';
 import CommentList from './CommentList';
 import CommentStatistics from './CommentStatistics';
 import { useAppConfig, useTranslation } from '../common/dataHooks';
+import type { IComment } from '../common/types';
 
-function CommentBox(props: any) {
+function CommentBox(props: {
+  onCommentCreated: () => void;
+  onPageChanged: (n: number) => void;
+  onCloseSearch: () => void;
+  searchText: string;
+  isSearch: boolean;
+  commentsData: {
+    currentPage: number;
+    commentListType: number;
+    comments: Array<IComment>;
+    commentsTotalNumber: number;
+  };
+}) {
   const { currentPage, commentListType, comments, commentsTotalNumber } = props.commentsData;
   const { data: lang } = useTranslation();
   const { data: appConfig } = useAppConfig();
@@ -18,17 +31,12 @@ function CommentBox(props: any) {
       <CommentList commentListType={commentListType} data={comments} searchText={props.searchText} />
       <CommentStatistics
         commentListType={commentListType}
-        onCloseSearch={props.onCloseSearch}
         onPageChanged={props.onPageChanged}
         total={commentsTotalNumber}
         currentPage={currentPage}
         pagenum={appConfig?.page_on ? Math.ceil(commentsTotalNumber / appConfig.num_perpage) : 1}
       />
-      {commentListType !== 1 ? (
-        ''
-      ) : (
-        <CommentForm commentListType={commentListType} user={props.user} onCommentCreated={props.onCommentCreated} />
-      )}
+      {commentListType !== 1 ? '' : <CommentForm onCommentCreated={props.onCommentCreated} />}
     </div>
   );
 }
