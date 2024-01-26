@@ -50,7 +50,7 @@ function ACPUser() {
   async function deleteAllUsers(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_ALLUSER_CONFIRM)) {
-      return false;
+      return;
     }
     try {
       await triggerDeleteAll();
@@ -63,10 +63,10 @@ function ACPUser() {
     e.preventDefault();
     const checkedUids = Array.from(selectedIds);
     if (checkedUids.length === 0) {
-      return false;
+      return;
     }
     if (!confirm(lang.DEL_SELECTEDUSERS_CONFIRM)) {
-      return false;
+      return;
     }
     try {
       await triggerDeleteMulti(checkedUids);

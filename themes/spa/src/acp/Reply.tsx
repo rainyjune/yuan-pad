@@ -10,7 +10,7 @@ export default function Reply({ data }: { data: IComment }) {
   function deleteReply(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_REPLY_CONFIRM)) {
-      return false;
+      return;
     }
     trigger(data.id);
     mutate('loadAllCommentsFromServer');

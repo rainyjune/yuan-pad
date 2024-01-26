@@ -6,6 +6,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "strictNullChecks": true,
+    "noImplicitReturns": true,
 
     /* Bundler mode */
     "moduleResolution": "bundler",

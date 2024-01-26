@@ -36,7 +36,7 @@ function CommentBox(props: {
         currentPage={currentPage}
         pagenum={appConfig?.page_on ? Math.ceil(commentsTotalNumber / appConfig.num_perpage) : 1}
       />
-      {commentListType !== 1 ? '' : <CommentForm onCommentCreated={props.onCommentCreated} />}
+      {commentListType === 1 && <CommentForm onCommentCreated={props.onCommentCreated} />}
     </div>
   );
 }

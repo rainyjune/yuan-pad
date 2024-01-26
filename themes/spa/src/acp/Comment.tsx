@@ -25,7 +25,7 @@ export default function Comment(props: {
     e.preventDefault();
     const commentId = data.id;
     if (!confirm(lang.DEL_COMMENT_CONFIRM)) {
-      return false;
+      return;
     }
     triggerDelete(commentId);
     mutate('loadAllCommentsFromServer');

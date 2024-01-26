@@ -19,7 +19,7 @@ export default function UserItem({
   async function deleteUser(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_SINGLEUSER_CONFIRM)) {
-      return false;
+      return;
     }
     await trigger(uid);
     mutate('getAllUsers');

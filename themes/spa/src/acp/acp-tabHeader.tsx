@@ -18,7 +18,7 @@ function ACPTabHeader(props: { activeTab: string; onTabSelected: (newTab: string
     const tabLink = e.target as HTMLAnchorElement;
     const newTabName = tabLink.getAttribute('data-tabname') ?? '';
     if (newTabName === props.activeTab) {
-      return false;
+      return;
     }
     props.onTabSelected(newTabName);
     setMenuIsOpen(false);

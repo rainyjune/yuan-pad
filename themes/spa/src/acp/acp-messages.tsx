@@ -38,7 +38,7 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
   async function deleteAllComments(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_ALL_CONFIRM)) {
-      return false;
+      return;
     }
     try {
       await triggerDeleteAllComments();
@@ -50,7 +50,7 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
   async function deleteAllReplies(e: MouseEvent) {
     e.preventDefault();
     if (!confirm(lang.DEL_ALL_REPLY_CONFIRM)) {
-      return false;
+      return;
     }
     try {
       await triggerDeleteAllReplies();
@@ -63,10 +63,10 @@ function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
     e.preventDefault();
     const checkedItems: number[] = Array.from(selectedIds);
     if (checkedItems.length === 0) {
-      return false;
+      return;
     }
     if (!confirm(lang.DEL_SELECTEDCOMMENTS_CONFIRM)) {
-      return false;
+      return;
     }
     try {
       trigerDeleteMulti(checkedItems);

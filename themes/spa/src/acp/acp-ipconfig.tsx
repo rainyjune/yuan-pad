@@ -21,10 +21,10 @@ function ACPIpConfig() {
     e.preventDefault();
     const checkedItems = Array.from(selectedIds);
     if (checkedItems.length === 0) {
-      return false;
+      return;
     }
     if (!confirm(lang.UPDATE_IPLIST_CONFIRM)) {
-      return false;
+      return;
     }
     try {
       await trigger(checkedItems);

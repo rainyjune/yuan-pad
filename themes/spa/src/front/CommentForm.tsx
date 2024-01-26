@@ -3,7 +3,7 @@ import Captcha from './Captcha';
 import type { CaptchaCom } from '../common/types';
 import { useAppConfig, useUser, useTranslation, useAddComment } from '../common/dataHooks';
 
-export default function CommentForm(props: { onCommentCreated: () => void }) {
+export default function CommentForm({ onCommentCreated }: { onCommentCreated: () => void }) {
   const { trigger: addComment } = useAddComment();
   const { data: lang } = useTranslation();
   const { data: appConfig } = useAppConfig();
@@ -24,7 +24,7 @@ export default function CommentForm(props: { onCommentCreated: () => void }) {
       await addComment({ user: author, content: text1, valid_code: valid_code1 });
       captchaRef.current?.refresh();
       setText('');
-      props.onCommentCreated();
+      onCommentCreated();
     } catch (e) {
       // error handling
       alert(e);
