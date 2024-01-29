@@ -280,6 +280,12 @@ export interface SignInData {
   password: string;
 }
 
+export interface IUserSignUp {
+  user: string;
+  pwd: string;
+  email: string;
+}
+
 export interface UserUpdateData {
   uid: number | string;
   user: string;

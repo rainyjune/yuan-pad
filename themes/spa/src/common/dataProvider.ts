@@ -1,7 +1,7 @@
 import axios from "axios";
 import qs from "qs";
 
-import { SignInData, UpdateCommentObj, AjaxObject, ReplyObj } from "../common/types";
+import { SignInData, UpdateCommentObj, AjaxObject, ReplyObj, IConfigParams, IUserUpdate, IUserSignUp } from "../common/types";
 
 export function fetchByFunctionName(args: string | number | Array<string | number | object>) {
   if (typeof args === 'string') {
@@ -101,7 +101,7 @@ function signOut() {
   });
 }
 
-function updateUser(userData: object) {
+function updateUser(userData: IUserUpdate) {
   return axios({
     method: "post",
     url: "index.php",
@@ -117,7 +117,7 @@ function updateUser(userData: object) {
   });
 }
 
-function signUp(userData: object) {
+function signUp(userData: IUserSignUp) {
   return axios({
     method: "post",
     url: "index.php",
@@ -202,7 +202,7 @@ function getAppConfigACP() {
   });
 }
 
-function updateSiteConfig(configObj: object) {
+function updateSiteConfig(configObj: IConfigParams) {
   return axios({
     method: "post",
     url: "index.php",
