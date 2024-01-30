@@ -74,7 +74,14 @@ function ACPTabHeader(props: ACPTabHeaderProps) {
               <span className="icon-bar"></span>
               <span className="icon-bar"></span>
             </button>
-            <a className="btn btn-default navbar-btn homeButton" href="index.php">
+            <a
+              className="btn btn-default navbar-btn homeButton"
+              href="#"
+              onClick={(e: MouseEvent) => {
+                const href = window.location.port === '8000' ? '/' : 'index.php';
+                (e.target as HTMLAnchorElement).href = href;
+              }}
+            >
               {lang.HOME}
             </a>
             &nbsp;

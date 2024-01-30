@@ -1,21 +1,29 @@
+import { MouseEvent } from 'react';
 import { useAppConfig, useUser, useTranslation } from '../common/dataHooks';
 
 function AppFooter() {
   const { data: appConfig } = useAppConfig();
   const { user: user } = useUser();
   const { data: lang } = useTranslation();
-  function ACPMarkup() {
-    const ACP = user?.user_type === 'admin' ? "<a href='index.php?action=control_panel'>" + lang.ACP + '</a>' : '';
-    return {
-      __html: ACP,
-    };
-  }
+
   return (
     <footer>
       <p>
         {appConfig.copyright_info}&nbsp;
         <a href={'mailto:' + appConfig.admin_email}>{lang.ADMIN_EMAIL}</a>&nbsp;
-        <span dangerouslySetInnerHTML={ACPMarkup()}></span>
+        {user.user_type === 'admin' && (
+          <span>
+            <a
+              href="#"
+              onClick={(e: MouseEvent) => {
+                const href = window.location.port === '8000' ? '/admin' : './index.php?action=control_panel';
+                (e.target as HTMLAnchorElement).href = href;
+              }}
+            >
+              {lang.ACP}
+            </a>
+          </span>
+        )}
       </p>
       <p>
         Powered by{' '}
