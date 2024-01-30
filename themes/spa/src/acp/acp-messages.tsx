@@ -149,16 +149,20 @@ function ACPMessages(props: ACPMessagesProps) {
           </tfoot>
         </table>
       </form>
-      <ReplyModal
-        key={`reply-${activeCommentId}`}
-        {...modalProps}
-        modalIsOpen={modalState.isOpen && modalState.type === 'reply'}
-      />
-      <CommentUpdateModal
-        key={`update-${activeCommentId}`}
-        {...modalProps}
-        modalIsOpen={modalState.isOpen && modalState.type === 'update'}
-      />
+      {modalProps.comment && (
+        <>
+          <ReplyModal
+            key={`reply-${activeCommentId}`}
+            {...modalProps}
+            modalIsOpen={modalState.isOpen && modalState.type === 'reply'}
+          />
+          <CommentUpdateModal
+            key={`update-${activeCommentId}`}
+            {...modalProps}
+            modalIsOpen={modalState.isOpen && modalState.type === 'update'}
+          />
+        </>
+      )}
     </div>
   );
 }

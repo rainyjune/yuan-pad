@@ -1,13 +1,22 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useEffect, useState } from 'react';
 import { useAppConfigACP, useTranslation, useSystemInformation, useUpdateConfig } from '../common/dataHooks';
 import { mutate } from 'swr';
+import { IConfigParams } from '../common/types';
 
 function ACPConfig() {
   const { trigger: updateConfig } = useUpdateConfig();
   const { data: acpData } = useSystemInformation();
   const { data: appConfig } = useAppConfigACP();
   const { data: lang } = useTranslation();
-  const [state, setState] = useState({ ...appConfig, password: '' });
+  const [state, setState] = useState<IConfigParams>({ ...appConfig, password: '' });
+
+  useEffect(() => {
+    if (!appConfig) return;
+    setState((prev) => ({
+      ...prev,
+      ...appConfig,
+    }));
+  }, [appConfig]);
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
