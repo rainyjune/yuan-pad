@@ -272,11 +272,21 @@ function ACPConfig() {
                 <td>{lang.FILTER_HTML_TAGS}:</td>
                 <td>
                   <label>
-                    <input type="radio" value="1" checked={state.filter_type === 1} onChange={toggleFilterType} />
+                    <input
+                      type="radio"
+                      value="1"
+                      checked={Number(state.filter_type) === 1}
+                      onChange={toggleFilterType}
+                    />
                     {lang.STRIP_DISALLOWED_TAGS}
                   </label>
                   <label>
-                    <input type="radio" value="2" checked={state.filter_type === 2} onChange={toggleFilterType} />
+                    <input
+                      type="radio"
+                      value="2"
+                      checked={Number(state.filter_type) === 2}
+                      onChange={toggleFilterType}
+                    />
                     {lang.ESCAPE_ALL_TAGS}
                   </label>
                 </td>
