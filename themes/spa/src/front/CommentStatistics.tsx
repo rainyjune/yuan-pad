@@ -1,15 +1,9 @@
 import Pagination from 'rc-pagination';
 import { useAppConfig, useTranslation } from '../common/dataHooks';
-
+import { CommentStatisticsProps } from '../common/types';
 import '../css/index.less';
 
-export default function CommentStatistics(props: {
-  commentListType: number;
-  total: number;
-  pagenum: number;
-  currentPage: number;
-  onPageChanged: (n: number) => void;
-}) {
+export default function CommentStatistics(props: CommentStatisticsProps) {
   const { data: lang } = useTranslation();
   const { data: appConfig } = useAppConfig();
   function rawMarkup() {

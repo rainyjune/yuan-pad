@@ -1,8 +1,9 @@
 import { MouseEvent, useState } from 'react';
 import { mutate } from 'swr';
 import { useTranslation, useLogoutUser, userInitalState } from '../common/dataHooks';
+import { ACPTabHeaderProps } from '../common/types';
 
-function ACPTabHeader(props: { activeTab: string; onTabSelected: (newTab: string) => void }) {
+function ACPTabHeader(props: ACPTabHeaderProps) {
   const { trigger } = useLogoutUser();
   const { data: lang } = useTranslation();
   const [menuIsOpen, setMenuIsOpen] = useState(false);

@@ -330,3 +330,120 @@ export interface IBannedIPItem {
 export type CaptchaCom = {
   refresh: () => void;
 };
+
+export interface CaptchaProps {
+  valid_code: string;
+  onCaptchaChange: (str: string) => void;
+}
+
+export interface CommentProps {
+  data: IComment;
+  children: string;
+}
+
+export interface CommentBoxProps {
+  onCommentCreated: () => void;
+  onPageChanged: (n: number) => void;
+  onCloseSearch: () => void;
+  searchText: string;
+  isSearch: boolean;
+  commentsData: {
+    currentPage: number;
+    commentListType: number;
+    comments: Array<IComment>;
+    commentsTotalNumber: number;
+  };
+}
+
+export interface CommentFormProps {
+  onCommentCreated: () => void;
+}
+
+export interface CommentListProps {
+  searchText: string;
+  commentListType: number;
+  data: Array<IComment>;
+}
+
+export interface CommentStatisticsProps {
+  commentListType: number;
+  total: number;
+  pagenum: number;
+  currentPage: number;
+  onPageChanged: (n: number) => void;
+}
+
+export interface ReplyProps {
+  date: string;
+  content: string;
+}
+
+export interface SearchBarProps {
+  onSubmit: (s: string) => void;
+}
+
+export interface ACPMessagesProps {
+  onActiveTabChanged: (s: string) => void;
+}
+
+export interface ReplyModalProps {
+  comment: IComment;
+  onRequestClose: () => void;
+  modalIsOpen: boolean;
+  modalErrorMsg: string | null;
+}
+export interface ACPTabContentProps {
+  onActiveTabChanged: (s: string) => void;
+  activeTab: string;
+}
+
+export interface ACPTabHeaderProps {
+  activeTab: string;
+  onTabSelected: (newTab: string) => void;
+}
+
+export interface UpdateCommentModalProps {
+  comment: IComment;
+  onRequestClose: () => void;
+  modalIsOpen: boolean;
+  modalErrorMsg: string | null;
+}
+
+export interface UserUpdateModalProps {
+  userData: IUser;
+  modalIsOpen: boolean;
+  onRequestClose: () => void;
+  errorMsg: string;
+  onUpdateSubmit: (user: IUserUpdate) => void;
+}
+
+export interface ACPCommentProps {
+  data: IComment;
+  onActiveTabChanged: (s: string) => void;
+  onReplyComment: (data: number) => void;
+  onUpdateComment: (data: number) => void;
+  onToggleItem: (id: number) => void;
+  onReplyDelete: () => void;
+  isSelected: boolean;
+}
+
+export interface IPItemProps {
+  onItemToggled: (ip: string) => void;
+  isSelected: boolean;
+  data: IBannedIPItem;
+}
+
+export interface ACPReplyProps {
+  data: IComment;
+}
+
+export interface UserItemProps {
+  isSelected: boolean;
+  data: IUser;
+  onOpenUserUpdateModal: (data: string | number) => void;
+  onToggleItem: (id: number) => void;
+}
+
+export interface ProgressProps {
+  loadingModalIsOpen: boolean;
+}

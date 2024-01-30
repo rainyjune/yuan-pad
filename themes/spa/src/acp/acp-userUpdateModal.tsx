@@ -1,16 +1,10 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import Modal from 'react-modal';
-import type { IUser, IUserUpdate } from '../common/types';
+import type { UserUpdateModalProps } from '../common/types';
 import customStyles from '../common/ModalStyles';
 import { useTranslation } from '../common/dataHooks';
 
-function UserUpdateModal(props: {
-  userData: IUser;
-  modalIsOpen: boolean;
-  onRequestClose: () => void;
-  errorMsg: string;
-  onUpdateSubmit: (user: IUserUpdate) => void;
-}) {
+function UserUpdateModal(props: UserUpdateModalProps) {
   const { data: lang } = useTranslation();
   const [pwd, setPwd] = useState('');
   const [email, setEmail] = useState(props.userData?.email ?? '');

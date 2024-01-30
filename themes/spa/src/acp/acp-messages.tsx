@@ -9,10 +9,10 @@ import {
   useDeleteAllReplies,
   useDeleteAllComments,
 } from '../common/dataHooks';
-import { IComment } from '../common/types';
+import { ACPMessagesProps, IComment } from '../common/types';
 import { mutate } from 'swr';
 
-function ACPMessages(props: { onActiveTabChanged: (s: string) => void }) {
+function ACPMessages(props: ACPMessagesProps) {
   const { trigger: triggerDeleteAllComments } = useDeleteAllComments();
   const { trigger: triggerDeleteAllReplies } = useDeleteAllReplies();
   const { trigger: trigerDeleteMulti } = useDeleteMutiComments();

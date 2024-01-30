@@ -3,8 +3,9 @@ import ACPConfig from './acp-config';
 import ACPMessages from './acp-messages';
 import ACPIpConfig from './acp-ipconfig';
 import ACPUsers from './acp-users';
+import { ACPTabContentProps } from '../common/types';
 
-function ACPTabContent(props: { onActiveTabChanged: (s: string) => void; activeTab: string }) {
+function ACPTabContent(props: ACPTabContentProps) {
   function handleActiveChange(newTab: string) {
     setTimeout(() => {
       props.onActiveTabChanged(newTab);

@@ -1,5 +1,5 @@
 import { useAppConfig, useTranslation } from '../common/dataHooks';
-import type { ObjectLiteral } from '../common/types';
+import type { ObjectLiteral, ReplyProps } from '../common/types';
 
 function replaceAll(str: string, mapObj: ObjectLiteral) {
   const re = new RegExp(Object.keys(mapObj).join('|'), 'gi');
@@ -9,7 +9,7 @@ function replaceAll(str: string, mapObj: ObjectLiteral) {
   });
 }
 
-export default function Reply({ date, content }: { date: string; content: string }) {
+export default function Reply({ date, content }: ReplyProps) {
   const { data: lang } = useTranslation();
   const { data: appConfig } = useAppConfig();
   function rawMarkup() {

@@ -1,18 +1,10 @@
 import { MouseEvent } from 'react';
 import Reply from './Reply';
-import type { IComment } from '../common/types';
+import type { ACPCommentProps } from '../common/types';
 import { useTranslation, useBanIP, useDeleteComment } from '../common/dataHooks';
 import { mutate } from 'swr';
 
-export default function Comment(props: {
-  data: IComment;
-  onActiveTabChanged: (s: string) => void;
-  onReplyComment: (data: number) => void;
-  onUpdateComment: (data: number) => void;
-  onToggleItem: (id: number) => void;
-  onReplyDelete: () => void;
-  isSelected: boolean;
-}) {
+export default function Comment(props: ACPCommentProps) {
   const { trigger: triggerDelete } = useDeleteComment();
   const { trigger: triggerBanIP } = useBanIP();
   const { data: lang } = useTranslation();

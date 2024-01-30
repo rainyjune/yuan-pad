@@ -1,6 +1,7 @@
 import { useState, FormEvent } from 'react';
+import { SearchBarProps } from '../common/types';
 
-function SearchBar({ onSubmit }: { onSubmit: (s: string) => void }) {
+function SearchBar({ onSubmit }: SearchBarProps) {
   const [searchText, setSearchText] = useState(''); // The search keyword
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();

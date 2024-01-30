@@ -1,14 +1,6 @@
-import type { IBannedIPItem } from '../common/types';
+import type { IPItemProps } from '../common/types';
 
-export default function IPItem({
-  onItemToggled,
-  data,
-  isSelected,
-}: {
-  onItemToggled: (ip: string) => void;
-  isSelected: boolean;
-  data: IBannedIPItem;
-}) {
+export default function IPItem({ onItemToggled, data, isSelected }: IPItemProps) {
   return (
     <tr className="admin_message">
       <td>

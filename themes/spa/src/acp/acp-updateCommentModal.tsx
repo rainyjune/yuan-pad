@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import Modal from 'react-modal';
 import { useUpdateComment } from '../common/dataHooks';
-import type { IComment } from '../common/types';
+import type { UpdateCommentModalProps } from '../common/types';
 import customStyles from '../common/ModalStyles';
 import { mutate } from 'swr';
 
@@ -10,12 +10,7 @@ function UpdateCommentModal({
   onRequestClose,
   modalErrorMsg,
   modalIsOpen,
-}: {
-  comment: IComment;
-  onRequestClose: () => void;
-  modalIsOpen: boolean;
-  modalErrorMsg: string | null;
-}) {
+}: UpdateCommentModalProps) {
   const { trigger } = useUpdateComment();
   const [content, setContent] = useState(post_content ?? '');
   async function handleSubmit(e: FormEvent) {

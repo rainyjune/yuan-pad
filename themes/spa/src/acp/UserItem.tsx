@@ -1,6 +1,6 @@
 import { MouseEvent } from 'react';
 import { useTranslation, useDeleteUser } from '../common/dataHooks';
-import type { IUser } from '../common/types';
+import type { UserItemProps } from '../common/types';
 import { mutate } from 'swr';
 
 export default function UserItem({
@@ -8,12 +8,7 @@ export default function UserItem({
   isSelected,
   onOpenUserUpdateModal,
   onToggleItem,
-}: {
-  isSelected: boolean;
-  data: IUser;
-  onOpenUserUpdateModal: (data: string | number) => void;
-  onToggleItem: (id: number) => void;
-}) {
+}: UserItemProps) {
   const { trigger } = useDeleteUser();
   const { data: lang } = useTranslation();
   async function deleteUser(e: MouseEvent) {

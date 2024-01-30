@@ -2,21 +2,9 @@ import CommentForm from './CommentForm';
 import CommentList from './CommentList';
 import CommentStatistics from './CommentStatistics';
 import { useAppConfig, useTranslation } from '../common/dataHooks';
-import type { IComment } from '../common/types';
+import type { CommentBoxProps } from '../common/types';
 
-function CommentBox(props: {
-  onCommentCreated: () => void;
-  onPageChanged: (n: number) => void;
-  onCloseSearch: () => void;
-  searchText: string;
-  isSearch: boolean;
-  commentsData: {
-    currentPage: number;
-    commentListType: number;
-    comments: Array<IComment>;
-    commentsTotalNumber: number;
-  };
-}) {
+function CommentBox(props: CommentBoxProps) {
   const { currentPage, commentListType, comments, commentsTotalNumber } = props.commentsData;
   const { data: lang } = useTranslation();
   const { data: appConfig } = useAppConfig();

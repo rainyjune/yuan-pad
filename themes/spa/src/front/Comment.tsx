@@ -1,7 +1,7 @@
 import Reply from './Reply';
-import type { IComment } from '../common/types';
+import type { CommentProps } from '../common/types';
 
-export default function Comment(props: { data: IComment; children: string }) {
+export default function Comment(props: CommentProps) {
   function rawMarkup() {
     return { __html: props.children.toString() };
   }

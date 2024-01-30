@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState } from 'react';
 import Modal from 'react-modal';
 import customStyles from '../common/ModalStyles';
-import type { IComment } from '../common/types';
+import type { ReplyModalProps } from '../common/types';
 import { useCreateReply, useUpdateReply } from '../common/dataHooks';
 import { mutate } from 'swr';
 
@@ -10,12 +10,7 @@ function ReplyModal({
   onRequestClose,
   modalIsOpen,
   modalErrorMsg,
-}: {
-  comment: IComment;
-  onRequestClose: () => void;
-  modalIsOpen: boolean;
-  modalErrorMsg: string | null;
-}) {
+}: ReplyModalProps) {
   const { trigger: createReply } = useCreateReply();
   const { trigger: updateReply } = useUpdateReply();
   const [content, setContent] = useState(reply_content ?? '');

@@ -1,7 +1,7 @@
 import Comment from './Comment';
-import type { IComment } from '../common/types';
+import type { CommentListProps, IComment } from '../common/types';
 
-export default function CommentList(props: { searchText: string; commentListType: number; data: Array<IComment> }) {
+export default function CommentList(props: CommentListProps) {
   const searchText = props.searchText,
     isSearchResult = props.commentListType === 2;
 
