@@ -1,9 +1,13 @@
-import { StrictMode } from "react";
-import { createRoot } from "react-dom/client";
-import ACPBox from "./Dashboard";
+import { StrictMode } from 'react';
+import { createRoot } from 'react-dom/client';
+import { ErrorBoundary } from 'react-error-boundary';
+import Fallback from './common/Fallback';
+import ACPBox from './Dashboard';
 
-createRoot(document.getElementById("content") as Element).render(
+createRoot(document.getElementById('content') as Element).render(
   <StrictMode>
-    <ACPBox />
+    <ErrorBoundary FallbackComponent={Fallback}>
+      <ACPBox />
+    </ErrorBoundary>
   </StrictMode>,
 );
