@@ -11,16 +11,10 @@ exports[`Footer renders correctly 1`] = `
       Email
     </a>
      
-    <span
-      dangerouslySetInnerHTML={
-        {
-          "__html": "",
-        }
-      }
-    />
   </p>
   <p>
-    Powered by 
+    Powered by
+     
     <a
       href="https://github.com/rainyjune/yuan-pad"
       target="_blank"
@@ -28,13 +22,15 @@ exports[`Footer renders correctly 1`] = `
     >
       YuanPad
     </a>
-     
+     
     <a
       href="index.php?action=rss"
     >
       <img
-        alt="rss"
-        src="misc/images/rss-icon.png"
+        alt="RSS"
+        onError={[Function]}
+        src="./themes/spa/templates/images/rss-icon.png"
+        title="RSS"
       />
     </a>
   </p>
@@ -52,16 +48,10 @@ exports[`Footer renders correctly 2`] = `
       Email
     </a>
      
-    <span
-      dangerouslySetInnerHTML={
-        {
-          "__html": "",
-        }
-      }
-    />
   </p>
   <p>
-    Powered by 
+    Powered by
+     
     <a
       href="https://github.com/rainyjune/yuan-pad"
       target="_blank"
@@ -69,13 +59,15 @@ exports[`Footer renders correctly 2`] = `
     >
       YuanPad
     </a>
-     
+     
     <a
       href="index.php?action=rss"
     >
       <img
-        alt="rss"
-        src="misc/images/rss-icon.png"
+        alt="RSS"
+        onError={[Function]}
+        src="./themes/spa/templates/images/rss-icon.png"
+        title="RSS"
       />
     </a>
   </p>
@@ -93,16 +85,18 @@ exports[`Footer renders correctly 3`] = `
       Email
     </a>
      
-    <span
-      dangerouslySetInnerHTML={
-        {
-          "__html": "<a href='index.php?action=control_panel'>Admin</a>",
-        }
-      }
-    />
+    <span>
+      <a
+        href="#"
+        onClick={[Function]}
+      >
+        Admin
+      </a>
+    </span>
   </p>
   <p>
-    Powered by 
+    Powered by
+     
     <a
       href="https://github.com/rainyjune/yuan-pad"
       target="_blank"
@@ -110,13 +104,15 @@ exports[`Footer renders correctly 3`] = `
     >
       YuanPad
     </a>
-     
+     
     <a
       href="index.php?action=rss"
     >
       <img
-        alt="rss"
-        src="misc/images/rss-icon.png"
+        alt="RSS"
+        onError={[Function]}
+        src="./themes/spa/templates/images/rss-icon.png"
+        title="RSS"
       />
     </a>
   </p>

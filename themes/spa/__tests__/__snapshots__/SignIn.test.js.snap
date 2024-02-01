@@ -6,7 +6,6 @@ exports[`SignIn renders correctly 1`] = `
 >
   <a
     className="btn btn-default"
-    href="#"
     onClick={[Function]}
     role="button"
   >

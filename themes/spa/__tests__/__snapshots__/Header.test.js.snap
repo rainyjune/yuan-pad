@@ -10,7 +10,6 @@ exports[`Render Header correctly 1`] = `
     >
       <a
         className="btn btn-default"
-        href="#"
         onClick={[Function]}
         role="button"
       >
@@ -23,7 +22,6 @@ exports[`Render Header correctly 1`] = `
     >
       <a
         className="btn btn-default"
-        href="#"
         onClick={[Function]}
         role="button"
       >
@@ -40,7 +38,6 @@ exports[`Render Header correctly 2`] = `
 >
   <a
     className="btn btn-default signOutButton"
-    href="#"
     onClick={[Function]}
     role="button"
   >
@@ -68,7 +65,6 @@ exports[`Render Header correctly 3`] = `
     </div>
     <a
       className="btn btn-default signOutButton"
-      href="#"
       onClick={[Function]}
       role="button"
     >

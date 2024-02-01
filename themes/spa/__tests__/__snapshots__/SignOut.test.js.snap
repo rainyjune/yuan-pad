@@ -3,7 +3,6 @@
 exports[`SignOut renders correctly 1`] = `
 <a
   className="btn btn-default signOutButton"
-  href="#"
   onClick={[Function]}
   role="button"
 >
@@ -14,7 +13,6 @@ exports[`SignOut renders correctly 1`] = `
 exports[`SignOut renders correctly 2`] = `
 <a
   className="btn btn-default signOutButton"
-  href="#"
   onClick={[Function]}
   role="button"
 >

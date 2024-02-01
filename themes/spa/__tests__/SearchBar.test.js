@@ -1,16 +1,15 @@
 import renderer from 'react-test-renderer';
-import SearchBar from '../src/searchBar';
+import SearchBar from '../src/front/searchBar';
 
 it('SearchBar renders correctly', () => {
-  const component = renderer.create(<SearchBar 
-    searchText="Keyword"
-  />);
+  const props = {
+    onSubmit: (s) => {},
+  };
+  const component = renderer.create(<SearchBar {...props} />);
   let tree = component.toJSON();
   expect(tree).toMatchSnapshot();
 
-  const component2 = renderer.create(<SearchBar 
-    searchText="Keyword 2"
-  />);
-  let tree2 = component2.toJSON();
-  expect(tree2).toMatchSnapshot();
+  // const component2 = renderer.create(<SearchBar {...props} />);
+  // let tree2 = component2.toJSON();
+  // expect(tree2).toMatchSnapshot();
 });

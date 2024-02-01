@@ -69,7 +69,7 @@ exports[`CommentBox renders correctly 1`] = `
         className="reply"
         dangerouslySetInnerHTML={
           {
-            "__html": "<font color="red"> undefined replied at 12-05 16:22 :</font> k reply",
+            "__html": "<font color="red"> admin replied at 12-05 16:22 :</font> k reply",
           }
         }
       />
@@ -121,26 +121,19 @@ exports[`CommentBox renders correctly 1`] = `
     <div
       className="form-group"
     >
-      <label
+      <span
         className="col-sm-2 col-lg-2 control-label"
-        htmlFor="inputUser"
       >
         NickName
-      </label>
+      </span>
       <div
         className="col-sm-5 col-lg-5"
       >
-        <input
-          className="form-control"
-          id="inputUser"
-          maxLength="10"
-          onChange={[Function]}
-          type="text"
-          value="anonymous"
-        />
-        <label
+        <span
           className="control-label"
-        />
+        >
+          anonymous
+        </span>
       </div>
     </div>
     <div
@@ -159,7 +152,8 @@ exports[`CommentBox renders correctly 1`] = `
           className="form-control"
           id="inputContent"
           onChange={[Function]}
-          rows="3"
+          required={true}
+          rows={3}
           value=""
         />
       </div>
