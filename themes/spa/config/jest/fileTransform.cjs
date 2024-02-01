@@ -1,8 +1,8 @@
 // config/jest/fileTransform.js
-"use strict";
+'use strict';
 
-const path = require("path");
-const camelcase = require("camelcase");
+const path = require('path');
+const camelcase = require('camelcase');
 
 // This is a custom Jest transformer turning file imports into filenames.
 // http://facebook.github.io/jest/docs/en/webpack.html
@@ -36,6 +36,10 @@ module.exports = {
       };`;
     }
 
-    return `module.exports = ${assetFilename};`;
+    //return `module.exports = ${assetFilename};`; // Syntax before jest 28
+    return {
+      // process() and processAsync() methods of a custom transformer module cannot return a string anymore. They must always return an object:
+      code: `module.exports = ${assetFilename};`, // See https://jest-archive-august-2023.netlify.app/docs/28.x/upgrading-to-jest28/#transformer
+    };
   },
 };
