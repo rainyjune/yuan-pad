@@ -1,0 +1,15 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SignIn renders correctly 1`] = `
+<div
+  className="signIn"
+>
+  <a
+    className="btn btn-default"
+    onClick={[Function]}
+    role="button"
+  >
+    Login
+  </a>
+</div>
+`;

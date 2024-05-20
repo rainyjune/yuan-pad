@@ -1,0 +1,176 @@
+body {
+  background-color: #cccccc;
+}
+
+h1 {
+  color: #cccc99;
+  text-align: center;
+}
+
+a:link {
+  text-decoration: none;
+}
+
+a:hover {
+  color: gray;
+}
+
+#content {
+  display: block;
+  margin: 0 auto;
+  /* Show all tags*/
+}
+#content header {
+  text-align: right;
+  padding-top: 1em;
+}
+#content .tabs {
+  padding: 0em;
+  margin: 0em 0em 0em 3em;
+  width: 100%;
+  height: 1.77em;
+  *height: 1.73em;
+}
+#content .tabs li {
+  background: url(../images/tagleft.gif) no-repeat left bottom;
+  list-style-type: none;
+  float: left;
+}
+#content .tabs li a {
+  padding: 0em 1em 0em 1em;
+  color: #999999;
+  background: url(../images/tagright.gif) no-repeat right bottom;
+  float: left;
+  height: 1.7em;
+  text-decoration: none;
+}
+#content .tabs li.selectTag {
+  background-position: left top;
+  margin-bottom: -2px;
+  position: relative;
+}
+#content .tabs li.selectTag a {
+  background-position: right top;
+  color: #000000;
+}
+#content .tagContent {
+  background: url(../images/bg.gif) repeat-x;
+  border: #aecbd4 1px solid;
+  padding: 0em 0em;
+  background-color: #fff;
+  min-height: 650px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 1em 1em;
+  color: #474747;
+  /* DIV seleted was displayed */
+  /* Message Management DIV */
+  /* IP Management DIV */
+}
+#content .tagContent > div {
+  display: none;
+}
+#content .tagContent div.selectTag {
+  display: block;
+}
+#content .tagContent .message_container {
+  padding-top: 1em;
+  height: 100%;
+  overflow: auto;
+  width: 100%;
+}
+#content .tagContent .configContainer {
+  height: 100%;
+  overflow: auto;
+}
+#content .tagContent .ip_container {
+  margin-top: 15px;
+  padding-top: 10px;
+  margin-bottom: 20px;
+  height: 400px;
+  overflow: auto;
+  margin: 0 auto;
+}
+
+.hidden {
+  display: none;
+}
+
+textarea.span-9 {
+  height: 40px;
+}
+
+.check_span {
+  display: none;
+}
+
+footer {
+  text-align: center;
+}
+
+.homeButton,
+.signOutButton {
+  margin-top: 8px;
+}
+
+.homeButton {
+  margin-left: 15px;
+}
+
+@media (max-width: 767px) {
+  /*
+  body {
+    background-color: red;
+  }
+  */
+  #content .tagContent {
+    padding: 0;
+  }
+
+  .container-fluid {
+    padding-left: 5px;
+    padding-right: 5px;
+  }
+
+  textarea,
+  select {
+    max-width: 200px;
+  }
+}
+/*
+@media (min-width: 768px) {
+  body {
+    background-color: green;
+  }
+}
+
+@media (min-width: 992px) {
+  body {
+    background-color: blue;
+  }
+}
+
+@media (min-width: 1200px) {
+  body {
+    background-color: purple;
+  }
+}
+*/
+tfoot input,
+tfoot button {
+  margin-right: 15px;
+}
+
+.btn-danger {
+  margin-right: 5px;
+}
+
+/* React Modal */
+.ReactModal__Overlay > div {
+  -webkit-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+}
+
+.message_container .btn {
+  margin-right: 5px;
+}

@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Offline Warning renders correctly 1`] = `
+<p
+  className="bg-warning"
+  style={
+    {
+      "display": "none",
+    }
+  }
+>
+  This site is in offline mode
+</p>
+`;
+
+exports[`Offline Warning renders correctly 2`] = `
+<p
+  className="bg-warning"
+  style={
+    {
+      "display": "block",
+    }
+  }
+>
+  This site is in offline mode
+</p>
+`;

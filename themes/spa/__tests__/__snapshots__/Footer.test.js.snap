@@ -1,0 +1,120 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Footer renders correctly 1`] = `
+<footer>
+  <p>
+    Copyright © MySite
+     
+    <a
+      href="mailto:rainyjune@live.cn"
+    >
+      Email
+    </a>
+     
+  </p>
+  <p>
+    Powered by
+     
+    <a
+      href="https://github.com/rainyjune/yuan-pad"
+      target="_blank"
+      title="Find More"
+    >
+      YuanPad
+    </a>
+     
+    <a
+      href="index.php?action=rss"
+    >
+      <img
+        alt="RSS"
+        onError={[Function]}
+        src="./themes/spa/templates/images/rss-icon.png"
+        title="RSS"
+      />
+    </a>
+  </p>
+</footer>
+`;
+
+exports[`Footer renders correctly 2`] = `
+<footer>
+  <p>
+    Copyright © MySite
+     
+    <a
+      href="mailto:rainyjune@live.cn"
+    >
+      Email
+    </a>
+     
+  </p>
+  <p>
+    Powered by
+     
+    <a
+      href="https://github.com/rainyjune/yuan-pad"
+      target="_blank"
+      title="Find More"
+    >
+      YuanPad
+    </a>
+     
+    <a
+      href="index.php?action=rss"
+    >
+      <img
+        alt="RSS"
+        onError={[Function]}
+        src="./themes/spa/templates/images/rss-icon.png"
+        title="RSS"
+      />
+    </a>
+  </p>
+</footer>
+`;
+
+exports[`Footer renders correctly 3`] = `
+<footer>
+  <p>
+    Copyright © MySite
+     
+    <a
+      href="mailto:rainyjune@live.cn"
+    >
+      Email
+    </a>
+     
+    <span>
+      <a
+        href="#"
+        onClick={[Function]}
+      >
+        Admin
+      </a>
+    </span>
+  </p>
+  <p>
+    Powered by
+     
+    <a
+      href="https://github.com/rainyjune/yuan-pad"
+      target="_blank"
+      title="Find More"
+    >
+      YuanPad
+    </a>
+     
+    <a
+      href="index.php?action=rss"
+    >
+      <img
+        alt="RSS"
+        onError={[Function]}
+        src="./themes/spa/templates/images/rss-icon.png"
+        title="RSS"
+      />
+    </a>
+  </p>
+</footer>
+`;

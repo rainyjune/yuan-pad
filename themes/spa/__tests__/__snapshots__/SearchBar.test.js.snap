@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SearchBar renders correctly 1`] = `
+<div
+  className="searchbar"
+>
+  <form
+    className="form-inline"
+    onSubmit={[Function]}
+  >
+    <div
+      className="form-group"
+    >
+      <label
+        className="sr-only"
+        htmlFor="inputSearch"
+      >
+        Search
+      </label>
+      <input
+        className="form-control"
+        id="inputSearch"
+        onChange={[Function]}
+        placeholder="Search"
+        size={10}
+        type="text"
+        value=""
+      />
+    </div>
+    <button
+      aria-label="Submit"
+      className="btn btn-default btn-sm"
+      onClick={[Function]}
+      type="button"
+    >
+      <span
+        aria-hidden="true"
+        className="glyphicon glyphicon-search"
+      />
+    </button>
+  </form>
+</div>
+`;
