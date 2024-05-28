@@ -1,38 +1,31 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from 'vue'
-import axios from "axios";
+import { getPosts } from '../../utils/dataProvider'
 import PostList from "./PostList.vue"
 import PostForm from "./PostForm.vue"
 import SearchForm from "./SearchForm.vue"
+import { useCounterStore } from '../../stores/posts'
+import { storeToRefs } from 'pinia'
 
-const message = ref("hhahaha")
-const items = ref([])
-const count = ref(0)
-const pageSize = ref(2)
-const currentPage = ref(0)
-const keyword = ref("")
+const store = useCounterStore()
+const { items, count, keyword, pageSize, currentPage } = storeToRefs(store)
+const { setItems, setCount, setCurrentPage, setKeyword } = store
 
 onMounted(() => {
   fetchPosts();
 })
 
-function fetchPosts() {
-  const url = keyword.value ? `index.php?controller=search` : `index.php?controller=post&action=list&page=${currentPage.value > 0 ? currentPage.value - 1 : 0 }`;
-  const request = keyword.value ? axios.post(url, {
-    s: keyword.value
-  }, {
-    headers: {
-      'Content-Type': 'multipart/form-data'
-    }
-  }) : axios.get(url);
-  request.then((response) => {
-      // Handle the response data
-      items.value = response.data?.response?.comments;
-      count.value = response.data?.response?.total;
-    })
-    .catch((error) => {
-      console.error("Error fetching data:", error);
+async function fetchPosts() {
+  try {
+    const response = await getPosts({
+      keyword: keyword.value,
+      currentPage: currentPage.value
     });
+    setItems(response.data?.response?.comments)
+    setCount(response.data?.response?.total);
+  } catch(e) {
+    debugger;
+  }
 }
 
 const handlePosted = () => {
@@ -40,11 +33,11 @@ const handlePosted = () => {
 }
 
 function handleCurrentPageChanged(newPageNumber: number) {
-  currentPage.value = newPageNumber;
+  setCurrentPage(newPageNumber)
 }
 
 function onKeywordUpdated(newKeyword: string) {
-  keyword.value = newKeyword;
+  setKeyword(newKeyword)
 }
 
 watch(currentPage, fetchPosts)
@@ -53,7 +46,7 @@ watch(keyword, fetchPosts)
 
 <template>
   <SearchForm @updateKeyword="onKeywordUpdated" />
-  <PostList :msg="message" :items="items" :count="count" :pageSize="pageSize" @currentPageChanged="handleCurrentPageChanged" />
+  <PostList :items="items" :count="count" :pageSize="pageSize" @currentPageChanged="handleCurrentPageChanged" />
   <hr />
-  <PostForm :msg="message" :items="items" @posted="handlePosted" />
+  <PostForm :items="items" @posted="handlePosted" />
 </template>

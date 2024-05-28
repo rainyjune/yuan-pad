@@ -1,11 +1,6 @@
 <script setup lang="ts">
-import axios from "axios";
 import { ref } from 'vue'
-const props = defineProps<{
-  //keyword: string,
-}>()
 const keyword = ref("")
-console.log('keyword:', props.keyword)
 const emit = defineEmits(['updateKeyword'])
 const onSubmit = () => {
   emit('updateKeyword', keyword.value);

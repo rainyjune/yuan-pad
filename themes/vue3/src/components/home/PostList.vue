@@ -2,7 +2,6 @@
 const props = defineProps<{
   pageSize: number,
   count: number,
-  msg: string,
   items: Array<any>
 }>()
 

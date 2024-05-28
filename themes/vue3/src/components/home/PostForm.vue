@@ -2,7 +2,6 @@
 import axios from "axios";
 import { ref } from 'vue'
 defineProps<{
-  msg: string,
   items: Array<any>
 }>()
 
