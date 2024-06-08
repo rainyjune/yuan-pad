@@ -18,6 +18,9 @@ import HelloWorld from './components/HelloWorld.vue'
   </header>
 
   <RouterView />
+  <footer>
+    <p>Powered by Yuan-Pad</p>
+  </footer>
 </template>
 
 <style scoped>

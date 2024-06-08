@@ -19,3 +19,7 @@ export function getPosts({ keyword, currentPage }: { keyword?: string; currentPa
     : axios.get(url)
   return request
 }
+
+export function getAllPosts() {
+  return axios.get(`index.php?controller=post&action=all`);
+}
