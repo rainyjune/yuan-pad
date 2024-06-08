@@ -1,0 +1,3 @@
+<template>
+    Bad IPs
+</template>
