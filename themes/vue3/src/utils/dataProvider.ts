@@ -23,3 +23,19 @@ export function getPosts({ keyword, currentPage }: { keyword?: string; currentPa
 export function getAllPosts() {
   return axios.get(`index.php?controller=post&action=all`);
 }
+
+export function getSystemInfo() {
+  return axios.get(`index.php?controller=site&action=getSystemInformation`);
+}
+
+export function getConfigAll() {
+  return axios.get(`index.php?controller=config&action=showAll`);
+}
+
+export function updateConfig(data) {
+  return axios.post(`index.php?controller=config&action=update`, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+}
