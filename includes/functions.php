@@ -365,7 +365,7 @@ function formatDate($timestamp, $IntlDateFormat='y-MM-dd HH:mm') {
  */
 function filter_words($input)
 {
-    $filter_array=explode(',',  ZFramework::app()->filter_words);
+    $filter_array=explode(',',  ZFramework::app()->filter_words ?? '');
     $input=str_ireplace($filter_array,'***',$input);
     return $input;
 }
