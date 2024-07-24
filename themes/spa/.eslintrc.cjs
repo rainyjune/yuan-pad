@@ -7,7 +7,7 @@ module.exports = {
     'plugin:react-hooks/recommended',
     'plugin:cypress/recommended',
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  ignorePatterns: ['dist', '.eslintrc.cjs', 'cypress.config.ts'],
   parser: '@typescript-eslint/parser',
   plugins: ['react-refresh', 'cypress'],
   rules: {
