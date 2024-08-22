@@ -1,9 +1,16 @@
+import { lazy, Suspense } from 'react';
+
 import ACPOverview from './acp-overview';
-import ACPConfig from './acp-config';
-import ACPMessages from './acp-messages';
-import ACPIpConfig from './acp-ipconfig';
-import ACPUsers from './acp-users';
 import { ACPTabContentProps } from '../common/types';
+
+const ACPConfig = lazy(() => import('./acp-config'));
+const ACPMessages = lazy(() => import('./acp-messages'));
+const ACPIpConfig = lazy(() => import('./acp-ipconfig'));
+const ACPUsers = lazy(() => import('./acp-users'));
+
+function Loading() {
+  return <p><i>Loading...</i></p>;
+}
 
 function ACPTabContent(props: ACPTabContentProps) {
   function handleActiveChange(newTab: string) {
@@ -14,11 +21,13 @@ function ACPTabContent(props: ACPTabContentProps) {
 
   return (
     <div className="tagContent">
-      {props.activeTab === 'overview' && <ACPOverview />}
-      {props.activeTab === 'siteset' && <ACPConfig />}
-      {props.activeTab === 'message' && <ACPMessages onActiveTabChanged={handleActiveChange} />}
-      {props.activeTab === 'ban_ip' && <ACPIpConfig />}
-      {props.activeTab === 'user' && <ACPUsers />}
+      <Suspense fallback={<Loading />}>
+        {props.activeTab === 'overview' && <ACPOverview />}
+        {props.activeTab === 'siteset' && <ACPConfig />}
+        {props.activeTab === 'message' && <ACPMessages onActiveTabChanged={handleActiveChange} />}
+        {props.activeTab === 'ban_ip' && <ACPIpConfig />}
+        {props.activeTab === 'user' && <ACPUsers />}
+      </Suspense>
     </div>
   );
 }
