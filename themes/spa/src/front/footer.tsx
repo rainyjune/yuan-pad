@@ -1,7 +1,7 @@
-import { MouseEvent } from 'react';
+import { memo, MouseEvent } from 'react';
 import { useAppConfig, useUser, useTranslation } from '../common/dataHooks';
 
-function AppFooter() {
+const AppFooter = memo(function AppFooter() {
   const { data: appConfig } = useAppConfig();
   const { user: user } = useUser();
   const { data: lang } = useTranslation();
@@ -44,6 +44,6 @@ function AppFooter() {
       </p>
     </footer>
   );
-}
+});
 
 export default AppFooter;
