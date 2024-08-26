@@ -1,0 +1,45 @@
+@import './base.css';
+
+a {
+  cursor: pointer;
+}
+
+.flexbox {
+  display: flex;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-justify-center {
+  justify-content: center;
+}
+
+.flex-justify-between {
+  justify-content: space-between;
+}
+
+.flex-align-item-center {
+  align-items: center;
+}
+
+#app {
+}
+
+@media (hover: hover) {
+  a:hover {
+  }
+}
+
+@media (min-width: 1024px) {
+  body {
+  }
+
+  #app {
+  }
+}
