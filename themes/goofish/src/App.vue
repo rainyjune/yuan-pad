@@ -1,15 +1,12 @@
 <script setup>
 import Header from './components/Header.vue'
+import Main from './components/Main.vue'
 </script>
 
 <template>
   <Header />
 
-  <main>
-    <TheWelcome />
-  </main>
-
-  <footer></footer>
+  <Main />
 </template>
 
 <style scoped>

@@ -1,5 +1,10 @@
 @import './base.css';
 
+body {
+  background: url(https://img.alicdn.com/imgextra/i3/O1CN01L7tGiJ1Xr3fX1u9fl_!!6000000002976-2-tps-5760-3240.png);
+  background-size: cover;
+}
+
 a {
   cursor: pointer;
 }
@@ -22,6 +27,10 @@ a {
 
 .flex-justify-between {
   justify-content: space-between;
+}
+
+.flex-justify-end {
+  justify-content: flex-end;
 }
 
 .flex-align-item-center {
