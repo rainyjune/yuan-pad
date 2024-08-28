@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, ref } from 'vue'
+import PostForm from './PostForm.vue'
 
 const posts = ref({
   total: 0,
@@ -22,8 +23,12 @@ onMounted(() => {
 </script>
 <template>
   <main>
-    <div class="container">
+    <div class="container flexbox flex-col">
       <div class="post-list flexbox flex-col">
+        <div v-if="posts.total === 0" style="text-align: center;">
+          <img src="../assets/empty.svg" width="200" />
+          <p>暂无消息，请休息会儿吧</p>
+        </div>
         <div class="post-item" v-for="{ id, uname, post_content, time, reply_id, reply_content, reply_time, b_username} in posts.comments" :key="id">
           <div class="messagedate">{{ time }}</div>
           <div class="message-row flexbox">
@@ -42,9 +47,7 @@ onMounted(() => {
           </template>
         </div>
       </div>
-      <div class="post-form">
-        form goes here.
-      </div>
+      <PostForm @postSuccess="fetchPosts" />
     </div>
   </main>
 </template>
@@ -55,14 +58,16 @@ main {
 
   .container {
     max-width: 1090px;
-    height: 80vh;
+    height: 85vh;
     background: #f5f5f5;
     border-radius: 16px;
-    margin: 40px auto;
+    margin: 20px auto;
     padding: 16px;
     overflow: auto;
 
     .post-list {
+      overflow: auto;
+      height: calc(100% - 50px);
       gap: 16px;
 
       .message-container {
