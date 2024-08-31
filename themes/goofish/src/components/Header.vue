@@ -1,5 +1,6 @@
 <script setup>
-import { onMounted, reactive, ref } from "vue";
+import { onMounted, ref } from "vue";
+import { useRoute, useRouter } from 'vue-router';
 import Logo from "./Logo.vue"
 import LoginModal from "./LoginModal.vue";
 import UpdateModal from "./UpdateModal.vue";
@@ -9,6 +10,9 @@ import LogoutImg from "../assets/logout.png";
 const userInfo = ref(null);
 const dialogVisible = ref(false)
 const updateDialogVisible = ref(false);
+
+const router = useRouter();
+const route = useRoute();
 
 // Function to fetch data from the remote server
 const fetchData = async () => {
@@ -51,12 +55,20 @@ const handleLogoutClick = async (e) => {
   await logoutUser();
   await fetchData();
 }
+
+const handleACPClick = () => {
+  router.replace({ query: { action : 'control_panel' } })
+}
+
+const goHome = () => {
+  router.push({ path: route.path, query: {} });
+}
 </script>
 <template>
   <header>
     <div class="container flexbox flex-justify-between">
       <div class="logo-container">
-        <Logo />
+        <a @click="goHome"><Logo /></a>
       </div>
       <div class="user-container flexbox flex-align-item-center">
         <a v-if="userInfo === null">
@@ -82,6 +94,12 @@ const handleLogoutClick = async (e) => {
                   <a @click="handleUpdateClick" class="menu flexbox flex-align-item-center">
                     <img :src="ProfileImg" class="icon" />
                     更新用户
+                  </a>
+                </li>
+                <li v-if="userInfo.user_type === 'admin'">
+                  <a @click="handleACPClick" class="menu flexbox flex-align-item-center">
+                    <img :src="ProfileImg" class="icon" />
+                    管理面板
                   </a>
                 </li>
                 <li>
