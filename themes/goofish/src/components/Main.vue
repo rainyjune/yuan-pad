@@ -47,7 +47,7 @@ onMounted(() => {
           </template>
         </div>
       </div>
-      <PostForm @postSuccess="fetchPosts" />
+      <PostForm @post-success="fetchPosts" />
     </div>
   </main>
 </template>

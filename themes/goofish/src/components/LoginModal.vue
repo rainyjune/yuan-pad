@@ -53,8 +53,6 @@ const postLoginData = async () => {
 };
 
 const onSubmit = () => {
-  console.log('submit!')
-
   postLoginData();
 }
 

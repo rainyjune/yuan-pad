@@ -4,7 +4,7 @@
       <Overview />
     </el-tab-pane>
     <el-tab-pane label="Posts" name="posts" lazy>
-      <Posts :isActive="activeName === 'posts'" />
+      <Posts :is-active="activeName === 'posts'" />
     </el-tab-pane>
     <el-tab-pane label="Users" name="users">Task</el-tab-pane>
     <el-tab-pane label="Config" name="config">Config</el-tab-pane>

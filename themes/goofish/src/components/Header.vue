@@ -116,15 +116,15 @@ const goHome = () => {
     </div>
   </header>
   <LoginModal
-    :dialogVisible="dialogVisible"
-    @updateVisible="(arg) => dialogVisible = arg"
-    @loginSuccess="fetchData"
+    :dialog-visible="dialogVisible"
+    @update-visible="(arg) => dialogVisible = arg"
+    @login-success="fetchData"
   />
   <UpdateModal
-    :dialogVisible="updateDialogVisible"
-    :userData="userInfo"
-    @updateVisible="(arg) => updateDialogVisible = arg"
-    @updateSuccess="fetchData"
+    :dialog-visible="updateDialogVisible"
+    :user-data="userInfo"
+    @update-visible="(arg) => updateDialogVisible = arg"
+    @update-success="fetchData"
   />
 </template>
 <style scoped>

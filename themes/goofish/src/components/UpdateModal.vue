@@ -21,8 +21,6 @@ const form = reactive({
   pwd: ''
 });
 
-console.log('form:', form, 'props:', props);
-
 const localVisible = ref(props.dialogVisible)
 const hasError = ref(false)
 
@@ -64,8 +62,6 @@ const postLoginData = async () => {
 };
 
 const onSubmit = () => {
-  console.log('submit!')
-
   postLoginData();
 }
 
