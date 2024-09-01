@@ -4,8 +4,10 @@ import IconFishSmile from './icons/IconFishSmile.vue';
 import IconFishQuestion from './icons/IconFishQuestion.vue';
 
 const props = defineProps({
-  dialogVisible: Boolean,
-  required: true
+  dialogVisible: {
+    type: Boolean,
+    required: true
+  }
 })
 
 const form = reactive({

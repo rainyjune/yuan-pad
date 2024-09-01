@@ -41,7 +41,12 @@
 </template>
 
 <script setup>
-const props = defineProps(['isActive']);
+const props = defineProps({
+  isActive: {
+    type: Boolean,
+    required: true
+  }
+});
 
 import { Timer } from '@element-plus/icons-vue'
 import { onMounted, ref, watch } from 'vue';
