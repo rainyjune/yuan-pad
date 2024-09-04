@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from 'vue-router';
 import Logo from "./Logo.vue"
@@ -7,7 +7,7 @@ import UpdateModal from "./UpdateModal.vue";
 import ProfileImg from "../assets/profile.png";
 import LogoutImg from "../assets/logout.png";
 
-const userInfo = ref(null);
+const userInfo = ref<null | UserInfo>(null);
 const dialogVisible = ref(false)
 const updateDialogVisible = ref(false);
 
@@ -43,15 +43,15 @@ onMounted(() => {
   fetchData();
 })
 
-const handleLoginClick = (e) => {
+const handleLoginClick = () => {
   dialogVisible.value = true
 }
 
-const handleUpdateClick = (e) => {
+const handleUpdateClick = () => {
   updateDialogVisible.value = true
 };
 
-const handleLogoutClick = async (e) => {
+const handleLogoutClick = async () => {
   await logoutUser();
   await fetchData();
 }

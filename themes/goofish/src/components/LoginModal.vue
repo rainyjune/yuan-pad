@@ -1,16 +1,12 @@
-<script setup>
+<script setup lang="ts">
 import { reactive, ref, watch } from 'vue';
 import IconFishSmile from './icons/IconFishSmile.vue';
 import IconFishQuestion from './icons/IconFishQuestion.vue';
+import type { LoginModalProps } from './props'
 
-const props = defineProps({
-  dialogVisible: {
-    type: Boolean,
-    required: true
-  }
-})
+const props = defineProps<LoginModalProps>()
 
-const form = reactive({
+const form: LoginData = reactive({
   user: '',
   password: '',
 })
