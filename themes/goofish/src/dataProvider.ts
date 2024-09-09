@@ -4,6 +4,19 @@ export async function getUserInfo() {
   return result.response;
 };
 
+export async function createUser(userData: any) {
+  const urlEncodedData = new URLSearchParams(userData).toString();
+
+  const serverResponse = await fetch('index.php?controller=user&action=create', {
+    method: 'POST', // Specify the request method as POST
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded' // Specify the content type
+    },
+    body: urlEncodedData // Convert the data object to a JSON string
+  });
+  return await serverResponse.json();
+}
+
 export async function updateUser(userData: any) {
   const urlEncodedData = new URLSearchParams(userData).toString();
 

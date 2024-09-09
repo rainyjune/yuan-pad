@@ -5,12 +5,14 @@ import { getUserInfo, logoutUser } from "../dataProvider.ts";
 import Logo from "./Logo.vue"
 import LoginModal from "./LoginModal.vue";
 import UpdateModal from "./UpdateModal.vue";
+import SignUpModal from './SignUpModal.vue';
 import ProfileImg from "../assets/profile.png";
 import LogoutImg from "../assets/logout.png";
 
 const userInfo = ref<null | UserInfo>(null);
 const dialogVisible = ref(false)
 const updateDialogVisible = ref(false);
+const signupDialogVisible = ref(false);
 
 const router = useRouter();
 const route = useRoute();
@@ -40,6 +42,10 @@ onMounted(() => {
 const handleLoginClick = () => {
   dialogVisible.value = true
 }
+
+const handleSignUpClick = () => {
+  signupDialogVisible.value = true;
+};
 
 const handleUpdateClick = () => {
   updateDialogVisible.value = true
@@ -72,7 +78,10 @@ const goHome = () => {
             </template>
           </el-skeleton>
         </a>
-        <a v-else-if="userInfo.user_type === 'guest'" @click="handleLoginClick">登录</a>
+        <template v-else-if="userInfo.user_type === 'guest'">
+          <a @click="handleLoginClick">登录</a>
+          <a @click="handleSignUpClick">注册</a>
+        </template>
         <a v-else>
           <el-popover
             placement="bottom"
@@ -120,6 +129,11 @@ const goHome = () => {
     @update-visible="(arg) => updateDialogVisible = arg"
     @update-success="fetchData"
   />
+  <SignUpModal
+    :dialog-visible="signupDialogVisible"
+    @update-visible="(arg) => signupDialogVisible = arg"
+    @signup-success="fetchData"
+  />
 </template>
 <style scoped>
 header {
@@ -140,6 +154,7 @@ header {
     .user-container {
       padding: 0 20px;
       color: #fff;
+      gap: 1rem;
 
       .custom-skeleton-text {
         --el-skeleton-text-width: 40px;
