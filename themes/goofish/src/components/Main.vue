@@ -1,5 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { onMounted, ref } from 'vue'
+import { getPosts } from '../dataProvider.ts';
 import PostForm from './PostForm.vue'
 
 const posts = ref({
@@ -9,8 +10,7 @@ const posts = ref({
 
 async function fetchPosts() {
   try {
-    const response = await fetch('index.php?controller=post&action=list');
-    const result = await response.json();
+    const result = await getPosts();
     posts.value = result.response;
   } catch (error) {
     console.error('Error fetching data:', error);

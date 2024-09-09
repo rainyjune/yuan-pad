@@ -5,10 +5,13 @@
     </el-form-item>
   </el-form>
 </template>
-<script setup>
-import { ref, reactive } from 'vue';
+<script setup lang="ts">
+import { reactive } from 'vue';
+import { createPost } from '../dataProvider';
 
-const emit = defineEmits(['postSuccess'])
+const emit = defineEmits<{
+  postSuccess: []
+}>()
 
 const form = reactive({
   user: 'anonymous',
@@ -24,23 +27,14 @@ const onSubmit = () => {
 
 async function savePost() {
   try {
-    const urlEncodedData = new URLSearchParams({
-        user: form.user,
-        ajax: form.ajax,
-        valid_code: form.valid_code,
-        content: form.content
-      }).toString();
-
-    const serverResponse = await fetch('index.php?controller=post&action=create', {
-      method: 'POST', // Specify the request method as POST
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded' // Specify the content type
-      },
-      body: urlEncodedData // Convert the data object to a JSON string
+    const { response, statusCode } = await createPost({
+      user: form.user,
+      ajax: String(form.ajax),
+      valid_code: form.valid_code,
+      content: form.content
     });
-    const { response, statusCode } = await serverResponse.json();
     if (statusCode !== 200) {
-      alert(response)
+      alert(response);
     } else {
       form.content = '';
       emit('postSuccess');

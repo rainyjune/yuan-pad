@@ -1,5 +1,5 @@
 <template>
-  <el-tabs v-model="activeName" class="acp-tabs" @tab-click="handleClick">
+  <el-tabs v-model="activeName" class="acp-tabs">
     <el-tab-pane label="Overview" name="overview">
       <Overview />
     </el-tab-pane>
@@ -11,16 +11,12 @@
     <el-tab-pane label="IPs" name="ips">Task</el-tab-pane>
   </el-tabs>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref } from 'vue'
 import Overview from './Overview.vue';
 import Posts from './Posts.vue';
 
-const activeName = ref('overview')
-
-const handleClick = (tab, event) => {
-  console.log(tab, event)
-}
+const activeName = ref<ACPTabName>('overview')
 </script>
 
 <style scoped>

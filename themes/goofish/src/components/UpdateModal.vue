@@ -1,18 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import { reactive, ref, watch } from 'vue';
+import { updateUser } from '../dataProvider';
 import IconFishSmile from './icons/IconFishSmile.vue';
 import IconFishQuestion from './icons/IconFishQuestion.vue';
 
-const props = defineProps({
-  dialogVisible: {
-    type:  Boolean,
-    required: true
-  },
-  userData: {
-    type: [Object, null],
-    required: true
-  }
-})
+const props = defineProps<{
+  dialogVisible: boolean;
+  userData: UserData | null
+}>()
 
 const form = reactive({
   uid: props.userData?.uid ?? '',
@@ -24,30 +19,28 @@ const form = reactive({
 const localVisible = ref(props.dialogVisible)
 const hasError = ref(false)
 
-const emit = defineEmits(['updateVisible', 'updateSuccess'])
+const emit = defineEmits<{
+  updateVisible: [visible: boolean];
+  updateSuccess: [];
+}>()
 
 watch(() => props.dialogVisible, (newVal) => {
   localVisible.value = newVal;
 });
 
 watch(() => props.userData, (newVal) => {
-  form.uid = newVal.uid;
-  form.user = newVal.username;
-  form.email = newVal.email;
-})
+  if (newVal) {
+    form.uid = newVal.uid;
+    form.user = newVal.username;
+    form.email = newVal.email;
+  }
+});
 
 const postLoginData = async () => {
   try {
-    const urlEncodedData = new URLSearchParams(form).toString();
-
-    const serverResponse = await fetch('index.php?controller=user&action=update', {
-      method: 'POST', // Specify the request method as POST
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded' // Specify the content type
-      },
-      body: urlEncodedData // Convert the data object to a JSON string
-    });
-    const { response, statusCode } = await serverResponse.json();
+    const { response, statusCode } = updateUser(Object.fromEntries(
+      Object.entries(form).map(([key, value]) => [key, String(value)])
+    ));
     if (statusCode !== 200) {
       hasError.value = true;
       alert(response);

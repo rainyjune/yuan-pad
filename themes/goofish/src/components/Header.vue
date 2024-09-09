@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from 'vue-router';
+import { getUserInfo, logoutUser } from "../dataProvider.ts";
 import Logo from "./Logo.vue"
 import LoginModal from "./LoginModal.vue";
 import UpdateModal from "./UpdateModal.vue";
@@ -17,23 +18,16 @@ const route = useRoute();
 // Function to fetch data from the remote server
 const fetchData = async () => {
   try {
-    const response = await fetch('index.php?controller=user&action=getUserInfo');
-    const result = await response.json();
-    userInfo.value = result.response;
+    const data = await getUserInfo();
+    userInfo.value = data;
   } catch (error) {
     console.error('Error fetching data:', error);
   }
 };
 
-const logoutUser = async () => {
+const logout = async () => {
   try {
-    const response = await fetch('index.php?controller=user&action=logout', {
-      method: 'POST', // Specify the request method as POST
-      headers: {
-        "content-type": "application/x-www-form-urlencoded",
-      },
-    });
-    await response.json();
+    await logoutUser();
   } catch (error) {
     console.error('Error fetching data:', error);
   }
@@ -52,7 +46,7 @@ const handleUpdateClick = () => {
 };
 
 const handleLogoutClick = async () => {
-  await logoutUser();
+  await logout();
   await fetchData();
 }
 

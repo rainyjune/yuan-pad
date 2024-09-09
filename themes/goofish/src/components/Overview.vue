@@ -24,9 +24,9 @@
     </tbody>
   </table>
 </template>
-<script setup>
+<script setup lang="ts">
 import { onMounted, reactive } from 'vue';
-
+import { getSystemInformation } from '../dataProvider';
 
 const info = reactive({
   appVersion: '',
@@ -38,8 +38,7 @@ const info = reactive({
 
 const fetchData = async () => {
   try {
-    const response = await fetch('index.php?controller=site&action=getSystemInformation');
-    const result = await response.json();
+    const result = getSystemInformation();
     Object.assign(info, result.response)
   } catch (error) {
     console.error('Error fetching data:', error);

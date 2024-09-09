@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { reactive, ref, watch } from 'vue';
+import { loginUser } from '../dataProvider.ts';
 import IconFishSmile from './icons/IconFishSmile.vue';
 import IconFishQuestion from './icons/IconFishQuestion.vue';
-import type { LoginModalProps } from './props'
+import type { LoginModalProps } from './props';
 
 const props = defineProps<LoginModalProps>()
 
@@ -14,7 +15,10 @@ const form: LoginData = reactive({
 const localVisible = ref(props.dialogVisible)
 const hasError = ref(false)
 
-const emit = defineEmits(['updateVisible', 'loginSuccess'])
+const emit = defineEmits<{
+  updateVisible: [visible: boolean]
+  loginSuccess: [] 
+}>();
 
 watch(() => props.dialogVisible, (newVal) => {
   localVisible.value = newVal
@@ -22,19 +26,10 @@ watch(() => props.dialogVisible, (newVal) => {
 
 const postLoginData = async () => {
   try {
-    const urlEncodedData = new URLSearchParams({
-        user: form.user,
-        password: form.password
-      }).toString();
-
-    const serverResponse = await fetch('index.php?controller=user&action=login', {
-      method: 'POST', // Specify the request method as POST
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded' // Specify the content type
-      },
-      body: urlEncodedData // Convert the data object to a JSON string
+    const { response, statusCode } = await loginUser({
+      user: form.user,
+      password: form.password
     });
-    const { response, statusCode } = await serverResponse.json();
     if (statusCode !== 200) {
       hasError.value = true;
       alert(response);

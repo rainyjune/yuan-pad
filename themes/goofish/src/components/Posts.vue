@@ -40,21 +40,19 @@
   </el-table>
 </template>
 
-<script setup>
-const props = defineProps({
-  isActive: {
-    type: Boolean,
-    required: true
-  }
-});
+<script setup lang="ts">
+const props = defineProps<{
+  isActive: boolean
+}>();
 
 import { Timer } from '@element-plus/icons-vue'
 import { onMounted, ref, watch } from 'vue';
+import { getAllPosts } from '../dataProvider';
 
-const handleEdit = (index, row) => {
+const handleEdit: PostDataRowFunction = (index, row) => {
   console.log(index, row)
 }
-const handleDelete = (index, row) => {
+const handleDelete: PostDataRowFunction = (index, row) => {
   console.log(index, row)
 }
 
@@ -62,8 +60,7 @@ const tableData = ref([]);
 
 const fetchData = async () => {
   try {
-    const response = await fetch('index.php?controller=post&action=all');
-    const result = await response.json();
+    const result = await getAllPosts();
     tableData.value = result.response.comments;
   } catch (error) {
     console.error('Error fetching data:', error);
