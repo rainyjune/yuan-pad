@@ -2,12 +2,17 @@ import CommentForm from './CommentForm';
 import CommentList from './CommentList';
 import CommentStatistics from './CommentStatistics';
 import { useAppConfig, useTranslation } from '../common/dataHooks';
+import { isConfigEnabled, isValidItemsPerPage } from '../common/utils';
 import type { CommentBoxProps } from '../common/types';
 
 function CommentBox(props: CommentBoxProps) {
   const { currentPage, commentListType, comments, commentsTotalNumber } = props.commentsData;
   const { data: lang } = useTranslation();
-  const { data: appConfig } = useAppConfig();
+  const {
+    data: { page_on, num_perpage },
+  } = useAppConfig();
+  const pageNum =
+    isConfigEnabled(page_on) && isValidItemsPerPage(num_perpage) ? Math.ceil(commentsTotalNumber / num_perpage) : 1;
   return (
     <div className="commentBox">
       <h1>{lang.WELCOME_POST}</h1>
@@ -22,7 +27,7 @@ function CommentBox(props: CommentBoxProps) {
         onPageChanged={props.onPageChanged}
         total={commentsTotalNumber}
         currentPage={currentPage}
-        pagenum={appConfig?.page_on ? Math.ceil(commentsTotalNumber / appConfig.num_perpage) : 1}
+        pagenum={pageNum}
       />
       {commentListType === 1 && <CommentForm onCommentCreated={props.onCommentCreated} />}
     </div>
