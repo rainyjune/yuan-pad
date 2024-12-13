@@ -3,7 +3,7 @@ import type { CommentListProps, IComment } from '../common/types';
 
 export default function CommentList({ data, searchText, commentListType }: CommentListProps) {
   return (
-    <div className="commentList">
+    <div className="flex flex-col mt-6">
       {data.map((comment: IComment) => {
         return (
           <Comment key={comment.id} data={comment}>

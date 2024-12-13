@@ -7,10 +7,6 @@ import Progress from './common/progress';
 import OfflineWarning from './common/offlineMode';
 import { useAppConfig, useUser, useCommentsList } from './common/dataHooks';
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap-theme.css';
-import './css/style.css';
-
 export default function App() {
   const [search, setSearch] = useState({
     isSearch: false,

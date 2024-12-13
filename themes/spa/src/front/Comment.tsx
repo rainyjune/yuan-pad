@@ -11,9 +11,11 @@ export default function Comment(props: CommentProps) {
     };
   }
   return (
-    <div className="comment">
-      <span className="commentAuthor" dangerouslySetInnerHTML={rawAuthorMarkup()}></span>
-      <span className="commentDate">{props.data.time}</span>
+    <div className="comment py-3 flex flex-col gap-y-3">
+      <div className="flex justify-between">
+        <span className="commentAuthor" dangerouslySetInnerHTML={rawAuthorMarkup()}></span>
+        <span className="commentDate">{props.data.time}</span>
+      </div>
       <div className="commentText">
         <p dangerouslySetInnerHTML={rawMarkup()} />
       </div>

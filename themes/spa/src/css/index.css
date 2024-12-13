@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-color: rgba(35, 213, 153, 0.1);
+}
+
+.comment {
+  position: relative;
+
+  &:not(:last-child)::after {
+    content: ""; /* Creates an empty content */
+    position: absolute; /* Position it inside the flex item */
+    left: 0;
+    right: 0;
+    bottom: 0; /* Position the divider at the bottom */
+    height: 1px; /* Horizontal line height */
+    background-color: rgba(0, 0, 0, 0.06); /* Divider color */
+  }
+
+  &:nth-child(1) {
+    padding-top: 0;
+  }
+
+  &:nth-last-child(1) {
+    padding-bottom: 0;
+  }
+}
