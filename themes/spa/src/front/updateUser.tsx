@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import { mutate } from 'swr';
 import { useUser, useTranslation, useUpdateUser } from '../common/dataHooks';
 
-import ModalStyles from './ModalStyles';
+import ModalStyles from '../common/ModalStyles';
 function UserUpdate() {
   const { trigger: triggerUpdate } = useUpdateUser();
   const { data: language } = useTranslation();

@@ -2,7 +2,7 @@ import { useState, MouseEvent, FormEvent } from 'react';
 import Modal from 'react-modal';
 import { mutate } from 'swr';
 
-import ModalStyles from './ModalStyles';
+import ModalStyles from '../common/ModalStyles';
 import { useTranslation, useSignIn } from '../common/dataHooks';
 
 function SignIn() {

@@ -3,7 +3,7 @@ import Modal from 'react-modal';
 import { mutate } from 'swr';
 import { useTranslation, useSignUp } from '../common/dataHooks';
 
-import ModalStyles from './ModalStyles';
+import ModalStyles from '../common/ModalStyles';
 
 function SignUp() {
   const { trigger: signUp } = useSignUp();
