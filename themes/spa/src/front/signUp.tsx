@@ -50,42 +50,40 @@ function SignUp() {
       >
         <p>{errorMsg}</p>
         <form onSubmit={handleSubmit} action="#" method="post" autoComplete="off">
-          <fieldset>
-            <legend>{language.REGISTER}</legend>
+          <fieldset className="flex flex-col gap-[16px]">
+            <div className="text-center font-normal font-medium text-[18px] text-[#303030]">{language.REGISTER}</div>
             <div className="form-group">
-              <label htmlFor="inputUser">{language.USERNAME}</label>
               <input
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="form-control"
+                className="h-[35px] border border-[#E2E8F0] rounded-[6px] px-[12px] py-[7px]"
                 id="inputUser"
                 placeholder="Username"
               />
             </div>
             <div className="form-group">
-              <label htmlFor="inputPassword">{language.PASSWORD}</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="form-control"
+                className="h-[35px] border border-[#E2E8F0] rounded-[6px] px-[12px] py-[7px]"
                 id="inputPassword"
                 placeholder="Password"
               />
             </div>
             <div className="form-group">
-              <label htmlFor="inputEmail">{language.EMAIL}</label>
               <input
+                placeholder="Email"
                 type="email"
                 onChange={(e) => setEmail(e.target.value)}
                 value={email}
-                className="form-control"
+                className="h-[35px] border border-[#E2E8F0] rounded-[6px] px-[12px] py-[7px]"
                 id="inputEmail"
                 autoComplete="off"
               />
             </div>
-            <button type="submit" className="btn btn-default">
+            <button type="submit" className="bg-[#27B981] py-[6px] text-white rounded-[6px]">
               {language.REGISTER}
             </button>
           </fieldset>
