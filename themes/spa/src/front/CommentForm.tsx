@@ -32,30 +32,17 @@ export default function CommentForm({ onCommentCreated }: CommentFormProps) {
     return false;
   }
   return (
-    <form onSubmit={handleSubmit} className="commentForm form-horizontal">
-      <div className="form-group">
-        <span className="col-sm-2 col-lg-2 control-label">{lang.NICKNAME}</span>
-        <div className="col-sm-5 col-lg-5">
-          <span className="control-label">{user?.username || 'anonymous'}</span>
-        </div>
-      </div>
-      <div className="form-group">
-        <label htmlFor="inputContent" className="col-sm-2 col-lg-2 control-label">
-          {lang.CONTENT}
-        </label>
-        <div className="col-sm-10 col-lg-10">
-          <textarea
-            required
-            id="inputContent"
-            className="form-control"
-            rows={3}
-            onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-              setText(e.target.value);
-            }}
-            value={text}
-          ></textarea>
-        </div>
-      </div>
+    <form onSubmit={handleSubmit} className="flex flex-col items-center gap-2">
+      <textarea
+        required
+        id="inputContent"
+        className="w-full rounded-md p-2"
+        rows={3}
+        onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
+          setText(e.target.value);
+        }}
+        value={text}
+      ></textarea>
       {Number(appConfig.valid_code_open) === 1 && (
         <Captcha
           ref={captchaRef}
@@ -65,13 +52,9 @@ export default function CommentForm({ onCommentCreated }: CommentFormProps) {
           }}
         />
       )}
-      <div className="form-group">
-        <div className="col-sm-offset-2 col-sm-10 col-lg-offset-2 col-lg-10">
-          <button className="btn btn-default" type="submit">
-            {lang.SUBMIT}
-          </button>
-        </div>
-      </div>
+      <button className="w-3/5 bg-[#27B981] py-[6px] text-white rounded-[6px]" type="submit">
+        {lang.SUBMIT}
+      </button>
     </form>
   );
 }
