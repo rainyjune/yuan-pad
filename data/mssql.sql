@@ -19,5 +19,5 @@ INSERT INTO <sysvar> VALUES ('password','{adminpass}');
 INSERT INTO <sysvar> VALUES ('lang','{lang}');
 INSERT INTO <sysvar> VALUES ('timezone','8');
 INSERT INTO <sysvar> VALUES ('filter_type','1');
-INSERT INTO <sysvar> VALUES ('allowed_tags','&lt;a&gt;&lt;em&gt;&lt;strong&gt;&lt;cite&gt;&lt;code&gt;&lt;ul&gt;&lt;ol&gt;&lt;li&gt;&lt;dl&gt;&lt;dt&gt;&lt;dd&gt;');
+INSERT INTO <sysvar> VALUES ('allowed_tags','a,em,strong,cite,code,ul,ol,li,dl,dt,dd');
 INSERT INTO <sysvar> VALUES ('dateformat','y-MM-dd HH:mm')
