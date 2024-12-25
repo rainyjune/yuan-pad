@@ -12,6 +12,6 @@ export default {
   "lang": "en",
   "timezone": "8",
   "filter_type": "1",
-  "allowed_tags": "<a><em><strong><cite><code><ul><ol><li><dl><dt><dd>",
+  "allowed_tags": "a,em,strong,cite,code,ul,ol,li,dl,dt,dd",
   "dateformat": "y-MM-dd HH:mm"
 };

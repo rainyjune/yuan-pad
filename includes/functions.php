@@ -328,6 +328,15 @@ function parse_tbprefix($str)
     return strtr($str,array('<'=>$db_prefix,'>'=>''));
 }
 
+function getAllowedTags($allowedTagsStringFromDB) {
+    $allowedTags = null;
+    $tagsArr = strlen($allowedTagsStringFromDB) ? explode(",", $allowedTagsStringFromDB) : [];
+    if (count($tagsArr) > 0) {
+        $allowedTags = '<' . implode('><', $tagsArr) . '>';
+    }
+    return $allowedTags;
+}
+
 /**
  *
  * @param boolean $filter_words Defaults to TRUE
@@ -337,11 +346,11 @@ function parse_tbprefix($str)
 function formatComments($data, $filter_words=true, $stripTags=true) {
     $messages=getLangArray();
     $dateFormat = getConfigVar('dateformat');
-    //die($dateFormat);
+    $allowedTags = getAllowedTags(ZFramework::app()->allowed_tags);
     foreach ($data as &$_data) {
         if ($stripTags && ZFramework::app()->filter_type == constant('FILTER_TRIPTAGS')) {
-            $_data['post_content'] = strip_tags($_data['post_content'], ZFramework::app()->allowed_tags);
-            $_data['reply_content'] = strip_tags(isset($_data['reply_content']) ? $_data['reply_content'] : "", ZFramework::app()->allowed_tags);
+            $_data['post_content'] = strip_tags($_data['post_content'], $allowedTags);
+            $_data['reply_content'] = strip_tags(isset($_data['reply_content']) ? $_data['reply_content'] : "", $allowedTags);
         } else {
             $_data['post_content'] =  htmlentities($_data['post_content'],ENT_COMPAT,'UTF-8');
             $_data['reply_content'] = htmlentities(isset($_data['reply_content']) ? $_data['reply_content'] : "",ENT_COMPAT,'UTF-8');

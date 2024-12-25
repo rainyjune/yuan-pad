@@ -8,8 +8,6 @@ import ACPFooter from './acp/acp-footer';
 import Progress from './common/progress';
 import OfflineWarning from './common/offlineMode';
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap/dist/css/bootstrap-theme.css';
 import './css/acp.css';
 
 function ACPBox() {

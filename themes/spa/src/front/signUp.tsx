@@ -50,7 +50,7 @@ function SignUp() {
       >
         <p>{errorMsg}</p>
         <form onSubmit={handleSubmit} action="#" method="post" autoComplete="off">
-          <fieldset className="flex flex-col gap-[16px]">
+          <fieldset className="flex flex-col gap-4">
             <div className="text-center font-normal font-medium text-[18px] text-[#303030]">{language.REGISTER}</div>
             <div className="form-group">
               <input
