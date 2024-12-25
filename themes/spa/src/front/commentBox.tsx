@@ -15,7 +15,7 @@ function CommentBox(props: CommentBoxProps) {
     isConfigEnabled(page_on) && isValidItemsPerPage(num_perpage) ? Math.ceil(commentsTotalNumber / num_perpage) : 1;
   return (
     <div className="commentBox">
-      <h1 className="text-black text-base font-bold">{lang.WELCOME_POST}</h1>
+      <h1 className="text-black text-base font-bold text-center">{lang.WELCOME_POST}</h1>
       {props.isSearch && (
         <p>
           Search {props.searchText} :<button onClick={props.onCloseSearch}>Close</button>

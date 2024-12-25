@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Modal from 'react-modal';
 import SearchBar from './front/searchBar';
 import CommentBox from './front/commentBox';
 import Header from './front/header';
@@ -6,8 +7,10 @@ import Footer from './front/footer';
 import Progress from './common/progress';
 import OfflineWarning from './common/offlineMode';
 import { useAppConfig, useUser, useCommentsList } from './common/dataHooks';
+import SearchModalStyles from './front/SearchModalStyles';
 
 export default function App() {
+  const [isSearchModalOpen, setIsSearchModalOpen] = useState(false);
   const [search, setSearch] = useState({
     isSearch: false,
     keyword: '',
@@ -35,9 +38,17 @@ export default function App() {
   if (currentUser.user_type !== 'admin' && appConfig.site_close == 1) {
     return <div>{appConfig.close_reason}</div>;
   }
+
+  function closeSearchModal() {
+    setIsSearchModalOpen(false);
+  }
   return (
     <div id="appbox">
-      <Header />
+      <Header
+        onSearchClicked={() => {
+          setIsSearchModalOpen(true);
+        }}
+      />
       <OfflineWarning />
       <CommentBox
         onCommentCreated={mutateComments}
@@ -59,16 +70,19 @@ export default function App() {
         isSearch={search.isSearch}
         searchText={search.keyword}
       />
-      <SearchBar
-        onSubmit={(str: string) => {
-          setSearch({
-            isSearch: true,
-            keyword: str,
-          });
-        }}
-      />
       <Footer />
       <Progress loadingModalIsOpen={appConfigIsLoading || commentsIsLoading || currentUserIsLoading} />
+      <Modal isOpen={isSearchModalOpen} onRequestClose={closeSearchModal} style={SearchModalStyles}>
+        <SearchBar
+          onSubmit={(str: string) => {
+            setSearch({
+              isSearch: true,
+              keyword: str,
+            });
+            closeSearchModal();
+          }}
+        />
+      </Modal>
     </div>
   );
 }
