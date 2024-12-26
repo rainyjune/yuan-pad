@@ -7,6 +7,7 @@ import Footer from './front/footer';
 import Progress from './common/progress';
 import OfflineWarning from './common/offlineMode';
 import { useAppConfig, useUser, useCommentsList } from './common/dataHooks';
+import { CommentListType } from './constants';
 import SearchModalStyles from './front/SearchModalStyles';
 
 export default function App() {
@@ -17,7 +18,10 @@ export default function App() {
   });
 
   const [currentPage, setCurrentPage] = useState(0);
-  const { data: appConfig, isLoading: appConfigIsLoading } = useAppConfig();
+  const {
+    data: { board_name = '', close_reason = '', site_close = 0 },
+    isLoading: appConfigIsLoading,
+  } = useAppConfig();
   const { user: currentUser, isLoading: currentUserIsLoading } = useUser();
 
   const {
@@ -30,13 +34,13 @@ export default function App() {
   });
 
   useEffect(() => {
-    if (appConfig.board_name) {
-      document.title = appConfig.board_name;
+    if (board_name) {
+      document.title = board_name;
     }
-  }, [appConfig.board_name]);
+  }, [board_name]);
 
-  if (currentUser.user_type !== 'admin' && appConfig.site_close == 1) {
-    return <div>{appConfig.close_reason}</div>;
+  if (currentUser.user_type !== 'admin' && site_close == 1) {
+    return <div>{close_reason}</div>;
   }
 
   function closeSearchModal() {
@@ -64,7 +68,7 @@ export default function App() {
         commentsData={{
           comments: commentsData.comments, // Comments
           commentsTotalNumber: commentsData.total, // The total number of all comments or filtered comments.
-          commentListType: search.isSearch ? 2 : 1,
+          commentListType: search.isSearch ? CommentListType.SEARCH_RESULTS : CommentListType.DEFAULT_RESULTS,
           currentPage,
         }}
         isSearch={search.isSearch}
