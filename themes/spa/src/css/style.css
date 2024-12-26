@@ -56,17 +56,6 @@
   margin-right: 5px;
 }
 
-.commentBox h1 {
-  text-align: center;
-}
-.commentBox .statistics {
-  padding-bottom: 5px;
-}
-.commentBox .commentForm {
-  width: 90%;
-  margin: 20px auto 10px auto;
-}
-
 .searchbar {
   text-align: center;
   margin-top: 15px;

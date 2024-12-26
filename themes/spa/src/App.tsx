@@ -23,6 +23,7 @@ export default function App() {
     isLoading: appConfigIsLoading,
   } = useAppConfig();
   const { user: currentUser, isLoading: currentUserIsLoading } = useUser();
+  const isSiteClosed = site_close == 1;
 
   const {
     data: commentsData,
@@ -39,7 +40,7 @@ export default function App() {
     }
   }, [board_name]);
 
-  if (currentUser.user_type !== 'admin' && site_close == 1) {
+  if (currentUser.user_type !== 'admin' && isSiteClosed) {
     return <div>{close_reason}</div>;
   }
 
@@ -47,13 +48,13 @@ export default function App() {
     setIsSearchModalOpen(false);
   }
   return (
-    <div id="appbox">
+    <div>
       <Header
         onSearchClicked={() => {
           setIsSearchModalOpen(true);
         }}
       />
-      <OfflineWarning />
+      {isSiteClosed && <OfflineWarning />}
       <CommentBox
         onCommentCreated={mutateComments}
         onCloseSearch={() => {

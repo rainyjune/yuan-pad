@@ -6,7 +6,7 @@ import { isConfigEnabled, isValidItemsPerPage } from '../common/utils';
 import type { CommentBoxProps } from '../common/types';
 
 function CommentBox(props: CommentBoxProps) {
-  const { currentPage, commentListType, comments, commentsTotalNumber } = props.commentsData;
+  const { currentPage, commentListType, comments = [], commentsTotalNumber } = props.commentsData;
   const { data: lang } = useTranslation();
   const {
     data: { page_on, num_perpage },
@@ -14,7 +14,7 @@ function CommentBox(props: CommentBoxProps) {
   const pageNum =
     isConfigEnabled(page_on) && isValidItemsPerPage(num_perpage) ? Math.ceil(commentsTotalNumber / num_perpage) : 1;
   return (
-    <div className="commentBox">
+    <div>
       <h1 className="text-black text-base font-bold text-center">{lang.WELCOME_POST}</h1>
       {props.isSearch && (
         <p>

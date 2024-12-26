@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useUser } from './common/dataHooks';
+import { useAppConfig, useUser } from './common/dataHooks';
 
 import ACPLogin from './acp/acp-login';
 import ACPTabHeader from './acp/acp-tabHeader';
@@ -11,7 +11,11 @@ import OfflineWarning from './common/offlineMode';
 import './css/acp.css';
 
 function ACPBox() {
+  const {
+    data: { site_close = 0 },
+  } = useAppConfig();
   const { user: currentUser, isLoading: currentUserIsLoading } = useUser();
+  const isSiteClosed = site_close == 1;
   const [activeTab, setActiveTab] = useState('overview');
 
   function updateActiveTab(newTabName: string) {
@@ -28,7 +32,7 @@ function ACPBox() {
   return (
     <div id="acpBox">
       <ACPTabHeader activeTab={activeTab} onTabSelected={updateActiveTab} />
-      <OfflineWarning />
+      {isSiteClosed && <OfflineWarning />}
       <ACPTabContent activeTab={activeTab} onActiveTabChanged={updateActiveTab} />
       <ACPFooter />
       <Progress loadingModalIsOpen={currentUserIsLoading} />

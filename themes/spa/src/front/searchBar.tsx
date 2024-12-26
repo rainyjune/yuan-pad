@@ -9,7 +9,7 @@ function SearchBar({ onSubmit }: SearchBarProps) {
   };
   return (
     <form onSubmit={handleSubmit} className="flex w-full">
-      <label className="sr-only" htmlFor="inputSearch">
+      <label className="hidden" htmlFor="inputSearch">
         Search
       </label>
       <input

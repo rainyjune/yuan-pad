@@ -90,11 +90,8 @@ function ACPTabHeader(props: ACPTabHeaderProps) {
             </a>
           </div>
           {/* Collect the nav links, forms, and other content for toggling */}
-          <div
-            className={menuIsOpen ? 'navbar-collapse collapse in' : 'collapse navbar-collapse'}
-            id="bs-example-navbar-collapse-1"
-          >
-            <ul className="nav nav-pills nav-justified">{items}</ul>
+          <div className={menuIsOpen ? 'navbar-collapse in' : 'navbar-collapse'} id="bs-example-navbar-collapse-1">
+            <ul>{items}</ul>
           </div>
           {/* /.navbar-collapse */}
         </div>
